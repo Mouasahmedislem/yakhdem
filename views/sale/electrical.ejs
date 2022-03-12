@@ -1,0 +1,38 @@
+<% include ../partials/header %>
+
+  <!-- Main Navigation -->
+
+  <!-- Main Layout -->
+  <main>
+   
+
+    <div class="bm-page">
+      <div class="container">
+      <div class="row">
+      <div class="order-lg-last">
+      <div class="mb-4 mb-lg-5 bm-content">
+  <h2 class="text-center text-uppercase">ELECTRICALS</h2>
+      <ul class="row justify-content-center list-unstyled mb-4">
+        <% electricals.forEach(function(electrical){ %>
+  
+      <li class="col-6 col-sm-4 col-md-3">
+      <a class="d-block mt-4 text-center text-dark" href="<%= electrical.href %>">
+      <div class="mb-1 px-2">
+      <img alt="electrical" class="border img-fluid rounded-circle bm-lazyload lazyloaded"  width="160" height="160" src="<%= electrical.image %>">
+      </div>
+      <h2 class="h6 mb-0"><%= electrical.title %></h2>
+      </a>
+      </li>
+      <% }); %>
+      
+    </ul></div></div></div></div></div>
+
+  </main>
+  <!-- Main Layout -->
+
+  <!-- Footer -->
+ 
+
+    
+<% include ../partials/footer %>
+    
