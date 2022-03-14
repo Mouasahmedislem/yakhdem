@@ -14,8 +14,8 @@ var passport = require('passport');
 var flash = require('connect-flash');
 var validator = require('express-validator');
 
+var MongoDBStore = require('connect-mongodb-session')(session);
 
-var MongoStore = require('connect-mongo')(session);
 var vinyl = require("./models/vinyl");
 var User = require("./models/user");
 var Cart = require("./models/cart");
@@ -124,13 +124,29 @@ mongoose.connect('mongodb+srv://Islem:cmygNChSy2L9Q4xt@paintello.cu30n.mongodb.n
 
     app.use(validator());
     app.use(cookieParser());
-    app.use(session({
-        secret:'mysupersecret',
-        resave: false,
-        saveuninitialized: false,
-        store: new MongoStore({mongooseConnection: mongoose.connection}),
-        cookie: { maxAge: 180 * 60 * 1000}
+    var store = new MongoDBStore({
+      uri: 'mongodb+srv://Islem:cmygNChSy2L9Q4xt@paintello.cu30n.mongodb.net/paintello?retryWrites=true&w=majority',
+      collection: 'mySessions'
+    });
+    
+    // Catch errors
+    store.on('error', function(error) {
+      console.log(error);
+    });
+    
+    app.use(require('express-session')({
+      secret: 'This is a secret',
+      cookie: {
+        maxAge: 1000 * 60 * 60 * 24 * 7 // 1 week
+      },
+      store: store,
+      // Boilerplate options, see:
+      // * https://www.npmjs.com/package/express-session#resave
+      // * https://www.npmjs.com/package/express-session#saveuninitialized
+      resave: true,
+      saveUninitialized: true
     }));
+    
     app.use(flash());
     app.use(passport.initialize());
     app.use(passport.session());
