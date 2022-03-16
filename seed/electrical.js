@@ -52,11 +52,7 @@ var electricals = [
         title: "Gaming",
         href:"/sale/electricals/gaming"
     },
-    {
-        image: "//cdn.bmstores.co.uk/images/dmCategory/thumbnailImageResponsive/paint5.jpg",
-        title: "Garden",
-        href:"/sale/electricals/garden"
-    },
+   
     {
         image: "//cdn.bmstores.co.uk/images/dmCategory/thumbnailImageResponsive/paint5.jpg",
         title: "Health & Beauty",

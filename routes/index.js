@@ -554,7 +554,7 @@ router.get("/sale/electricals/garden", function(req, res){
             console.log(err);
         }
         else{
-            res.render("sale/rug", {gardens: gardens,headers:headers});
+            res.render("sale/garden", {gardens: gardens,headers:headers});
         }
     });
 });
@@ -694,7 +694,7 @@ router.get("/sale/electricals/vacuum", function(req, res){
             console.log(err);
         }
         else{
-            res.render("sale/rug", {vacuums: vacuums,headers:headers});
+            res.render("sale/vacum", {vacuums: vacuums,headers:headers});
         }
     });
 });
