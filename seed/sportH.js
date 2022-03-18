@@ -27,15 +27,11 @@ mongoose.connect('mongodb+srv://Islem:cmygNChSy2L9Q4xt@paintello.cu30n.mongodb.n
         href:"/sport/scooters"
     },
     {
-        image: "//cdn.bmstores.co.uk/images/dmCategory/thumbnailImageResponsive/tools-equipment1.jpg",
-        title: "Tools & Equipment",
-        href:"/sport/"
-    },
-    {
-        image: "//cdn.bmstores.co.uk/images/dmCategory/thumbnailImageResponsive/tools-equipment1.jpg",
-        title: "Tools & Equipment",
+        image: "//cdn.bmstores.co.uk/images/dmCategory/thumbnailImageResponsive/outdoor-toys52.jpg",
+        title: "Outdoor Toys",
         href:"/sport/"
     }
+    
 ];
 
 function seedsport(){
