@@ -20,7 +20,7 @@ var interiors = [
     },
     {
         image: "//cdn.bmstores.co.uk/images/dmCategory/thumbnailImageResponsive/paint5.jpg",
-        title: "Undercoat",
+        title: "Brillliant(Satin)",
         href:"/interior/satin"
     },
     {

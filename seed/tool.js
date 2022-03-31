@@ -13,18 +13,18 @@ mongoose.connect('mongodb+srv://Islem:cmygNChSy2L9Q4xt@paintello.cu30n.mongodb.n
 
 var tools = [
     {
-        image: "//cdn.bmstores.co.uk/images/hpcOneThirdContentWidthImage/image373/33pc-mobile-acc2.jpg",
-        title: "Mobile Accessories",
+        image: "//cdn.bmstores.co.uk/images/dmCategory/thumbnailImageResponsive/ladders1.jpg",
+        title: "Ladders",
         href:"/event/tool/ladder"
     },
     {
-        image: "//cdn.bmstores.co.uk/images/hpcSmallRectangleAds/imgSource/50pc-microwaves1.jpg",
-        title: "Microwaves",
+        image: "//cdn.bmstores.co.uk/images/dmCategory/thumbnailImageResponsive/hand-tools1.jpg",
+        title: "Hand Tools",
         href:"/event/tool/hand"
     },
     {
-        image: "//cdn.bmstores.co.uk/images/hpcOneThirdContentWidthImage/image745/66pc-blenders3.jpg",
-        title: "Blander & Food Processors",
+        image: "//cdn.bmstores.co.uk/images/dmCategory/thumbnailImageResponsive/power-tools1.jpg",
+        title: "Power Tools",
         href:"/event/tool/power"
     }
  
