@@ -727,6 +727,10 @@ var deco = require('../models/deco');
 var floor = require('../models/floor');
 var wow = require('../models/wow');
 var tool = require('../models/tool');
+var power = require('../models/power');
+var hand = require('../models/hand');
+var ladder = require('../models/ladder');
+
 var home = require('../models/home');
 var paint = require('../models/paintH');
 var sport = require('../models/sportH');
@@ -946,6 +950,90 @@ router.get("/wallpaper", function(req, res){
                 req.session.cart = cart;
                 console.log(req.session.cart);
                 res.redirect("/interior/gliter");
+            });
+        });
+
+        router.get("/event/tool/power", function(req, res){
+            power.find({}, function(err, powers){
+    header.find({}, function(err, headers){
+                if(err){
+                    console.log(err);
+                }
+                else{
+                    res.render("event/power", {powers: powers,headers:headers});
+                }
+            });
+        });
+        });
+       
+        router.get("/add-to-cart-power/:id", function(req, res){
+            var powerId = req.params.id;
+            var cart = new Cart(req.session.cart ? req.session.cart : {});
+            
+            power.findById(powerId, function(err, power){
+                if(err){
+                    return res.redirect("/event/power");
+                }
+                cart.add(power, power.id);
+                req.session.cart = cart;
+                console.log(req.session.cart);
+                res.redirect("/event/power");
+            });
+        });
+
+        router.get("/event/tool/hand", function(req, res){
+            hand.find({}, function(err, hands){
+    header.find({}, function(err, headers){
+                if(err){
+                    console.log(err);
+                }
+                else{
+                    res.render("event/hand", {hands: hands,headers:headers});
+                }
+            });
+        });
+        });
+       
+        router.get("/add-to-cart-hand/:id", function(req, res){
+            var handId = req.params.id;
+            var cart = new Cart(req.session.cart ? req.session.cart : {});
+            
+            hand.findById(handId, function(err, hand){
+                if(err){
+                    return res.redirect("/event/hand");
+                }
+                cart.add(hand, hand.id);
+                req.session.cart = cart;
+                console.log(req.session.cart);
+                res.redirect("/event/hand");
+            });
+        });
+
+        router.get("/event/tool/ladder", function(req, res){
+            ladder.find({}, function(err, ladders){
+    header.find({}, function(err, headers){
+                if(err){
+                    console.log(err);
+                }
+                else{
+                    res.render("event/ladder", {ladders: ladders,headers:headers});
+                }
+            });
+        });
+        });
+       
+        router.get("/add-to-cart-ladder/:id", function(req, res){
+            var ladderId = req.params.id;
+            var cart = new Cart(req.session.cart ? req.session.cart : {});
+            
+            ladder.findById(ladderId, function(err, ladder){
+                if(err){
+                    return res.redirect("/event/ladder");
+                }
+                cart.add(ladder, ladder.id);
+                req.session.cart = cart;
+                console.log(req.session.cart);
+                res.redirect("/event/ladder");
             });
         });
 

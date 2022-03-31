@@ -62,6 +62,9 @@ var seedmicro = require('./seed/emicro');
 var seedmobile = require('./seed/emobile');
 var seedvacuum = require('./seed/evacuum');
 var seedshipping = require('./seed/shipping');
+var seedpower = require('./seed/power');
+var seedhand = require('./seed/hand');
+var seedladder= require('./seed/ladder');
 
 
 
@@ -106,6 +109,9 @@ var iron = require('./models/iron');
 var micro = require('./models/micro');
 var mobile = require('./models/mobile');
 var vacuum = require('./models/vacuum');
+var power = require('./models/power');
+var ladder = require('./models/ladder');
+var hand = require('./models/hand');
 var shipping = require('./models/shipping');
 
 
@@ -181,7 +187,7 @@ seedvinyl(); seedWall(); seedsatin(); seedkitchen(); seedgliter(); seedspray(); 
 seedtool(); seedscooter(); seedfitnes(); seedtravel(); seedfurniteur(); seedelectrical(); seedrug();
 seedcuisin(); seeddecor(); seedsoft(); seedbedding(); seedcurtain(); seedstation(); seedclean(); seedhome();
 seedhome1(); seedpaint(); seedsport(); seedsale(); seeddeal(); seedinterior(); seedblander(); seedcleaning(); seedcoffee();seedfood();seedgaming();seedgarden();seedhealth();seediron();seedmicro();seedmobile();seedvacuum();
-seedheader();
+seedheader(); seedhand(); seedpower(); seedladder(); 
 seedshipping(); 
 
 //bring events routes

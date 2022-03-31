@@ -1,58 +1,38 @@
-
 <%- include ("../partials/header") %>.
 
+  <!-- Main Navigation -->
 
-<h2 class="text-center text-uppercase">Tools And Equipment</h2>
+  <!-- Main Layout -->
+  <main>
+   
 
-<div class="bm-page">
-<div class="container">
-<div class="row">
-<% tools.forEach(function(tool){ %>
-<div class="order-lg-last">
-<div class="mb-4 mb-lg-5 bm-content">
-<div class="mb-4">
-</div>
-<div class="prod-listing">
-<div class="d-none fa-3x prod-loading">
-<i class="fas fa-circle-notch fa-spin"></i>
-</div>
-<div aria-hidden="true" class="row border-bottom mt-4 mx-md-auto"></div>
-<ul class="row list-unstyled mb-0">
-<li class="col-sm-6 col-md-4 bm-col-md bm-product-item">
-<div class="align-items-center d-flex h-100 bm-product-link" href="/products/high-performance-rubber-underlay-3mm-365430">	
-<div class="flex-shrink-0 mw-100 position-relative bm-product-link-img" >
-<img id="myImg" class="myImgLightBox"  width="200" height="240" src="<%= tool.image %>" >	
-<!-- The Modal -->
-<div id="myModal" class="modal">
-  <!-- The Close Button -->
-  <span class="close" id="span">&times;</span>
-  <!-- Modal Content (The Image) -->
-  <img class="modal-content" id="img01">
-  <!-- Modal Caption (Image Text) -->
-  <div id="caption"></div>
-</div></div>
-<div id="myModal" class="modal">
-    <img class="modal-content" id="img">
-  </div>
-<div class="flex-fill mw-100 bm-product-link-text">
-<h3 class="d-block font-weight-normal h6 mb-0 text-body"><%= tool.title %></h3>
-<span class="d-block h5 mb-0 mt-1 text-body"><%= tool.price%>DA</span>
-<a href="/add-to-cart-tool/<%= tool._id %>" class="btn btn-pink btn-rounded"><i class="fas fa-cart-plus mr-2" aria-hidden="true"></i>buy</a>
-</div>	
-</div>	
-</li>
+    <div class="bm-page">
+      <div class="container">
+      <div class="row">
+      <div class="order-lg-last">
+      <div class="mb-4 mb-lg-5 bm-content">
+  <h2 class="text-center text-uppercase">Tools & Equipements</h2>
+      <ul class="row justify-content-center list-unstyled mb-4">
+        <% tools.forEach(function(tool){ %>
+  
+      <li class="col-6 col-sm-4 col-md-3">
+      <a class="d-block mt-4 text-center text-dark" href="<%= tool.href %>">
+      <div class="mb-1 px-2">
+      <img alt="Wallpaper" class="border img-fluid rounded-circle bm-lazyload lazyloaded" data-src="//cdn.bmstores.co.uk/images/dmCategory/thumbnailImageResponsive/wallpaper5.jpg" width="160" height="160" src="<%= tool.image %>">
+      </div>
+      <h2 class="h6 mb-0"><%= tool.title %></h2>
+      </a>
+      </li>
+      <% }); %>
+      
+    </ul></div></div></div></div></div>
 
-</ul>
+  </main>
+  <!-- Main Layout -->
 
-</div>
+  <!-- Footer -->
+ 
 
-
-</div>
-</div>
-<% }); %>
-</div>
-</div>
-</div>
-
-
-<%- include ("../partials/footer") %>.
+    
+  <%- include ("../partials/footer") %>.
+    
