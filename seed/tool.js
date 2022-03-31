@@ -15,17 +15,17 @@ var tools = [
     {
         image: "//cdn.bmstores.co.uk/images/hpcOneThirdContentWidthImage/image373/33pc-mobile-acc2.jpg",
         title: "Mobile Accessories",
-        href:"/sale/tool/ladder"
+        href:"/event/tool/ladder"
     },
     {
         image: "//cdn.bmstores.co.uk/images/hpcSmallRectangleAds/imgSource/50pc-microwaves1.jpg",
         title: "Microwaves",
-        href:"/sale/tool/hand"
+        href:"/event/tool/hand"
     },
     {
         image: "//cdn.bmstores.co.uk/images/hpcOneThirdContentWidthImage/image745/66pc-blenders3.jpg",
         title: "Blander & Food Processors",
-        href:"/sale/tool/power"
+        href:"/event/tool/power"
     }
  
 ];
