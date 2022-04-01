@@ -43,7 +43,7 @@ var powers = [
     },
     {
         image: "http://www.crown-tools-eu.com/content/images/thumbs/0003383_ct15212.png",
-        title: "",
+        title: "hammers",
         price: 6400.00
     },
     {
