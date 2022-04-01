@@ -12,15 +12,15 @@ mongoose.connect('mongodb+srv://Islem:cmygNChSy2L9Q4xt@paintello.cu30n.mongodb.n
     })
 var hands = [
     {
-        image: "//cdn.bmstores.co.uk/images/hpcProductImage/imgThumbResponsive/364546-gosford-laminate-flooring-2.jpg",
-        title: "Gosford Light Grey Oak Effect Laminate Flooring 2.22m²",
-        price: 900
+        image: "//mabricole.com/1992-large_default/kit-outils-a-main-avec-mallete-117-pieces-total.jpg",
+        title: "Kit outils à main avec mallete 117 pièces TOTAL",
+        price: 500
     },
     {
-        image: "//cdn.bmstores.co.uk/images/hpcProductImage/imgTeaserBox/351012-carrick-oak-effect-laminate--flooring-2.jpg",
-        title: "Carrick Oak Effect Laminate Flooring 2.22m²",
+        image: "//www.fedoul.com/storage/files/dz/12389/thumb-613x460-4dd297a94dd17ef4e630a4fe05595b1f.jpeg",
+        title: "Caisse à outils originale 146 pièce",
         price: 500
-    }
+    },
  
 ];
 

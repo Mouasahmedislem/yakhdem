@@ -11,14 +11,55 @@ mongoose.connect('mongodb+srv://Islem:cmygNChSy2L9Q4xt@paintello.cu30n.mongodb.n
     
     })
 var floors = [
+    
     {
-        image: "//cdn.bmstores.co.uk/images/hpcProductImage/imgThumbResponsive/364546-gosford-laminate-flooring-2.jpg",
-        title: "Gosford Light Grey Oak Effect Laminate Flooring 2.22m²",
-        price: 900
+        image: "https://cdn.bmstores.co.uk/images/hpcProductImage/imgDetail750/372476-friston-flooring-3.jpg",
+        title: "friston-flooring",
+        price: 500
     },
     {
-        image: "//cdn.bmstores.co.uk/images/hpcProductImage/imgTeaserBox/351012-carrick-oak-effect-laminate--flooring-2.jpg",
-        title: "Carrick Oak Effect Laminate Flooring 2.22m²",
+        image: "https://cdn.bmstores.co.uk/images/hpcProductImage/imgDetail750/364546-gosford-laminate-flooring-2.jpg",
+        title: "gosford-laminate-flooring",
+        price: 500
+    },
+    {
+        image: "https://cdn.bmstores.co.uk/images/hpcProductImage/imgFull/351012-carrick-oak-effect-laminate--flooring-2.jpg",
+        title: "carrick-oak-effect-laminate--flooring",
+        price: 500
+    },
+    {
+        image: "https://cdn.bmstores.co.uk/images/hpcProductImage/imgFull/3203361-Ashdown-Laminate-3.jpg",
+        title: "Ashdown-Laminate",
+        price: 500
+    },
+    {
+        image: "https://cdn.bmstores.co.uk/images/hpcProductImage/imgDetail750/364545-haldon-laminate-flooring-2.jpg",
+        title: "haldon-laminate-flooring",
+        price: 500
+    },
+    {
+        image: "https://cdn.bmstores.co.uk/images/hpcProductImage/imgFull/311288-darwin-laminate-flooring.jpg",
+        title: "darwin-laminate-flooring",
+        price: 500
+    },
+    {
+        image: "https://cdn.bmstores.co.uk/images/hpcProductImage/imgFull/339918-heartwood-laminate-flooring-2.jpg",
+        title: "heartwood-laminate-flooring",
+        price: 500
+    },
+    {
+        image: "https://cdn.bmstores.co.uk/images/hpcProductImage/imgFull/311289-wykeham-laminate-flooring.jpg",
+        title: "wykeham-laminate-flooring",
+        price: 500
+    },
+    {
+        image: "https://cdn.bmstores.co.uk/images/hpcProductImage/imgFull/329233-vinyl-rolls-floor-newark-dark-grey.jpg",
+        title: "vinyl-rolls-floor-newark-dark-grey",
+        price: 500
+    },
+    {
+        image: "https://cdn.bmstores.co.uk/images/hpcProductImage/imgFull/345018-sandstone-vinyl-tiles.jpg",
+        title: "sandstone-vinyl-tiles",
         price: 500
     }
  
