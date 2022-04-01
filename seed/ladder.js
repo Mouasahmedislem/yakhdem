@@ -14,12 +14,12 @@ var ladders = [
     {
         image: "https://www.eurlpmi.com/wp-content/uploads/2019/03/SY101.jpg",
         title: "Jakson 2+1 Marches",
-        price: 
+        price: 1
     },
     {
         image: "https://www.eurlpmi.com/wp-content/uploads/2019/03/SY102.jpg",
         title: "Jakson 3+1 Marches",
-        price: 
+        price: 1
     },
     {
         image: "https://www.eurlpmi.com/wp-content/uploads/2019/03/SY103.jpg",
