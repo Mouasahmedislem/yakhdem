@@ -12,12 +12,11 @@ mongoose.connect('mongodb+srv://Islem:cmygNChSy2L9Q4xt@paintello.cu30n.mongodb.n
     })
 
  homes1 = [
-    //Paint
-
+    
   
     //SPORT
     {
-        image: "//cdn.bmstores.co.uk/images/hpcCatFullWidthImage/img1150/fitness-cat-1678x9459.jpg",
+        image: "https://icecube-eu-402.icedrive.io/thumbnail?p=aqMe4J3wUuVxeW.JGz0T70R9.bCKwux2dvLfsMQkWduJypycZxMxeEaSl4Srt1oL9Rjoov43x.OtarA.OA9TZ2JjIueBzPUfljoMuTeVKtL..lbnxZMrcyILJe4rYR4m&w=1024&h=1024&m=cropped",
         title: "Sports-and-Leisure"
     }
    

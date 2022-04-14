@@ -27,6 +27,21 @@ var hands = [
         price: 6400.00
     },
     {
+        image: "http://www.crown-tools-eu.com/content/images/thumbs/0006097_claw-hammers-wooden-handle_286.png",
+        title: "Claw hammers, wooden handle",
+        price: 6400.00
+    },
+    {
+        image: "http://www.crown-tools-eu.com/content/images/thumbs/0006113_lump-hammers-wooden-handle_286.png",
+        title: "LUMP AND SLEDGE HAMMERS",
+        price: 6400.00
+    },
+    {
+        image: "http://www.crown-tools-eu.com/content/images/thumbs/0006105_mechanics-hammers-wooden-handle_286.png",
+        title: "ENGINEER HAMMERS",
+        price: 6400.00
+    },
+    {
         image: "http://www.crown-tools-eu.com/content/images/thumbs/0006345_foldable-knives_286.png",
         title: "foldable-knives",
         price: 6400.00

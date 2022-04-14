@@ -13,7 +13,7 @@ mongoose.connect('mongodb+srv://Islem:cmygNChSy2L9Q4xt@paintello.cu30n.mongodb.n
 
 var headers = [
     {
-        image: "//cdn.bmstores.co.uk/images/hpcCatFullWidthImage/img1150/wallpaper-cat-1678x9456.jpg",
+        image: "https://s7.gifyu.com/images/retouch_1649436364149.jpg",
         href: "/wallpaper"
     }
  

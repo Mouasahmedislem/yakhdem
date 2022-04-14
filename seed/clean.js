@@ -13,15 +13,26 @@ mongoose.connect('mongodb+srv://Islem:cmygNChSy2L9Q4xt@paintello.cu30n.mongodb.n
 
 var cleans = [
     {
-        image: "//cdn.bmstores.co.uk/images/hpcProductImage/imgThumbResponsive/364546-gosford-laminate-flooring-2.jpg",
-        title: "Gosford Light Grey Oak Effect Laminate Flooring 2.22m²",
+        image: "https://dz.jumia.is/unsafe/fit-in/680x680/filters:fill(white)/product/07/4602/7.jpg?3069",
+        title: "Egotoire",
         price: 900
     },
     {
-        image: "//cdn.bmstores.co.uk/images/hpcProductImage/imgTeaserBox/351012-carrick-oak-effect-laminate--flooring-2.jpg",
-        title: "Carrick Oak Effect Laminate Flooring 2.22m²",
-        price: 500
-    }
+        image: "https://dz.jumia.is/unsafe/fit-in/680x680/filters:fill(white)/product/59/8173/1.jpg?3349",
+        title: "bain Porte Serviettes De Salle De Bain Murale Pivotant Rotatifs À 180 °",
+        price: 3250
+    },
+    {
+        image: "https://dz.jumia.is/unsafe/fit-in/680x680/filters:fill(white)/product/40/8973/1.jpg?6571",
+        title: "boite Boîte De Rangement Rose Pliable ",
+        price: 2175
+    },
+    {
+        image: "https://dz.jumia.is/unsafe/fit-in/680x680/filters:fill(white)/product/13/0572/1.jpg?9405",
+        title: "Support De Sechoir, Porte Sèche Cheveux",
+        price: 350
+    },
+    
  
 ];
 

@@ -16,11 +16,6 @@ var healths = [
         image: "//cdn.bmstores.co.uk/images/hpcProductImage/imgThumbResponsive/364546-gosford-laminate-flooring-2.jpg",
         title: "Gosford Light Grey Oak Effect Laminate Flooring 2.22m²",
         price: 900
-    },
-    {
-        image: "//cdn.bmstores.co.uk/images/hpcProductImage/imgTeaserBox/351012-carrick-oak-effect-laminate--flooring-2.jpg",
-        title: "Carrick Oak Effect Laminate Flooring 2.22m²",
-        price: 500
     }
  
 ];

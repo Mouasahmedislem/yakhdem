@@ -13,30 +13,21 @@ mongoose.connect('mongodb+srv://Islem:cmygNChSy2L9Q4xt@paintello.cu30n.mongodb.n
 
 var deals = [
     {
-        image: "//cdn.bmstores.co.uk/images/hpcSmallRectangleAds/image1150/kitchen-sale1.jpg",
+        image: "https://s7.gifyu.com/images/Polish_20220407_115636425_11zon.jpeg.jpg",
         href:"/sale/cuisin"
     },
     {
-        image: "//cdn.bmstores.co.uk/images/hpcSmallRectangleAds/image1150/organise-your-home1.jpg",
+        image: "https://s7.gifyu.com/images/retouch_1649436384437.jpg",
         href:"/sale/decor"
     },
     {
-        image: "//cdn.bmstores.co.uk/images/hpcSmallRectangleAds/image1150/electrical-sale4.jpg",
+        image: "https://icecube-eu-402.icedrive.io/thumbnail?p=aqMe4J3wUuVxeW.JGz0T70R9.bCKwux2dvLfsMQkWduJypycZxMxeEaSl4Srt1oL9Rjoov43x.OtarA.OA9TZ2JjIueBzPUfljoMuTeVKtL..lbnxZMrcyILJe4rYR4m&w=1024&h=1024&m=cropped",
+        href:"/sale/clean"
+    },
+    {
+        image: "https://s7.gifyu.com/images/retouch_1649436341703.jpg",
         href:"/sale/electrical"
-    },
-    {
-        image: "//cdn.bmstores.co.uk/images/hpcSmallRectangleAds/image1150/toy-offers2.jpg",
-        href:"/sport/toy"
-    },
-    {
-        image: "//cdn.bmstores.co.uk/images/hpcSmallRectangleAds/image1150/healthy-eating1.jpg",
-        href:"/sport/healty"
-    },
-    {
-        image: "//cdn.bmstores.co.uk/images/hpcSmallRectangleAds/image1150/wow-deals28.jpg",
-        href:"/deal"
     }
-    
  
 ];
 
