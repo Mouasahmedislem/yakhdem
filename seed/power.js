@@ -81,23 +81,7 @@ var powers = [
         image: "https://dz.jumia.is/unsafe/fit-in/680x680/filters:fill(white)/product/88/4291/1.jpg?9466",
         title: "Crown Pistolet A Enduit Plastique Réf: Ct38058 Orange",
         price: 4200 
-    },
-    {
-        image: "",
-        title: "",
-        price: 
-    },
-    {
-        image: "",
-        title: "",
-        price: 
-    },
-    {
-        image: "",
-        title: "",
-        price: 
     }
-   
  
 ];
 
