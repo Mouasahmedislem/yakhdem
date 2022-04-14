@@ -50,7 +50,7 @@ vinyls = [
         price: 1299.99
     },
     {
-        image: "https://s7.gifyu.com/images/IMG-20220413-WA00233e4df872b8be1ela.jpg",
+        image: "https://s7.gifyu.com/images/IMG-20220413-WA00233e4df872b8be1e1a.jpg",
         title: "Paintello Paint Vinyl Silk Emulsion - Rich Red 2.5L",
         price: 1299.99
     },
