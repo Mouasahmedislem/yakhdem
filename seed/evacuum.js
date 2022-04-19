@@ -13,15 +13,21 @@ mongoose.connect('mongodb+srv://Islem:cmygNChSy2L9Q4xt@paintello.cu30n.mongodb.n
 
 var vacuums = [
     {
-        image: "//cdn.bmstores.co.uk/images/hpcProductImage/imgThumbResponsive/364546-gosford-laminate-flooring-2.jpg",
-        title: "Gosford Light Grey Oak Effect Laminate Flooring 2.22m²",
-        price: 900
+        image: "https://dz.jumia.is/unsafe/fit-in/500x500/filters:fill(white)/product/63/5722/1.jpg?0534",
+        title: "Techwood Aspirateur À Main Pour Voiture Filaire-12 V-Prise Sur Allume-Cigare-Tav-8266 -Blanc-Noir",
+        price: 3240
     },
     {
-        image: "//cdn.bmstores.co.uk/images/hpcProductImage/imgTeaserBox/351012-carrick-oak-effect-laminate--flooring-2.jpg",
-        title: "Carrick Oak Effect Laminate Flooring 2.22m²",
-        price: 500
+        image: "https://dz.jumia.is/unsafe/fit-in/500x500/filters:fill(white)/product/40/2233/1.jpg?7827",
+        title: "Souffleur Et Aspirateur 2En1 800W Ingco Ab8008 - Jaune",
+        price: 6900
+    },
+    {
+        image: "https://dz.jumia.is/unsafe/fit-in/680x680/filters:fill(white)/product/55/7983/1.jpg?1851",
+        title: "Orca Aspirateur 3.5L 1600W Orca Vac-1600",
+        price:13000 
     }
+    
  
 ];
 

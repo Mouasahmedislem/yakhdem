@@ -13,15 +13,21 @@ mongoose.connect('mongodb+srv://Islem:cmygNChSy2L9Q4xt@paintello.cu30n.mongodb.n
 
 var decors = [
     {
-        image: "//cdn.bmstores.co.uk/images/hpcProductImage/imgThumbResponsive/364546-gosford-laminate-flooring-2.jpg",
-        title: "Gosford Light Grey Oak Effect Laminate Flooring 2.22m²",
-        price: 900
+        image: "https://dz.jumia.is/unsafe/fit-in/500x500/filters:fill(white)/product/26/2223/1.jpg?7486",
+        title: "Clock Horloges Murales 60Cm*60Cm Noir",
+        price: 1900
     },
     {
-        image: "//cdn.bmstores.co.uk/images/hpcProductImage/imgTeaserBox/351012-carrick-oak-effect-laminate--flooring-2.jpg",
-        title: "Carrick Oak Effect Laminate Flooring 2.22m²",
-        price: 500
+        image: "https://dz.jumia.is/unsafe/fit-in/500x500/filters:fill(white)/product/26/7103/1.jpg?9207",
+        title: "Dwm Deco Lot De 4 Étagères - Murale De Décoration - Noir",
+        price: 6450
+    },
+    {
+        image: "https://dz.jumia.is/unsafe/fit-in/680x680/filters:fill(white)/product/97/2273/1.jpg?5906",
+        title: "Miroir Rond - Moderne En Forex - 50cm - Noir",
+        price: 2750
     }
+    
  
 ];
 

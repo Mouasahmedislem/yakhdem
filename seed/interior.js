@@ -19,8 +19,8 @@ var interiors = [
         href:"/interior/emolusion"
     },
     {
-        image: "//cdn.bmstores.co.uk/images/dmCategory/thumbnailImageResponsive/paint5.jpg",
-        title: "Brillliant(Satin)",
+        image: "https://s7.gifyu.com/images/IMG-20220418-WA0017.jpg",
+        title: "Brillliant(Satinée)",
         href:"/interior/satin"
     },
     {

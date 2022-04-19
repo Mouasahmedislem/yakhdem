@@ -13,15 +13,41 @@ mongoose.connect('mongodb+srv://Islem:cmygNChSy2L9Q4xt@paintello.cu30n.mongodb.n
 
 var cuisins = [
     {
-        image: "//cdn.bmstores.co.uk/images/hpcProductImage/imgThumbResponsive/364546-gosford-laminate-flooring-2.jpg",
-        title: "Gosford Light Grey Oak Effect Laminate Flooring 2.22m²",
-        price: 900
+        image: "https://dz.jumia.is/unsafe/fit-in/500x500/filters:fill(white)/product/02/0804/1.jpg?3886",
+        title: "Pulvérisateur D'Huile En Verre Vaporisateur - Rechargeable",
+        price: 350
     },
     {
-        image: "//cdn.bmstores.co.uk/images/hpcProductImage/imgTeaserBox/351012-carrick-oak-effect-laminate--flooring-2.jpg",
-        title: "Carrick Oak Effect Laminate Flooring 2.22m²",
+        image: "https://dz.jumia.is/unsafe/fit-in/500x500/filters:fill(white)/product/23/1772/1.jpg?6140",
+        title: "Marteau À Viande Milanais En Bois",
         price: 500
+    },
+    {
+        image: "https://dz.jumia.is/unsafe/fit-in/500x500/filters:fill(white)/product/91/62/1.jpg?7630",
+        title: "Corbeille A Fruits/Planche À Découper (Fruit Basket) -Marron",
+        price: 920
+    },
+    {
+        image: "https://dz.jumia.is/unsafe/fit-in/680x680/filters:fill(white)/product/95/9393/4.jpg?6087",
+        title: "Organisateur De Cuisine Magnétique Porte Papier,Épices,Serviettes Multifonction ,Organisateur Réfrigérateur-Noir",
+        price: 2350
+    },
+    {
+        image: "https://dz.jumia.is/unsafe/fit-in/500x500/filters:fill(white)/product/97/8703/1.jpg?7085",
+        title: "Bestway Sac Glacière Isotherme - 15 Litres - Vert",
+        price: 3420
+    },
+    {
+        image: "https://dz.jumia.is/unsafe/fit-in/500x500/filters:fill(white)/product/10/5104/1.jpg?4728",
+        title: "MONTELLA Marmite - Vivo - Pot En Granit - Couvercle En Verre",
+        price: 3750
+    },
+    {
+        image: "https://dz.jumia.is/unsafe/fit-in/500x500/filters:fill(whie)/product/06/0822/1.jpg?5384",
+        title: "Poubelle Suspendue Pliable Pour Cuisine Voiture",
+        price: 1550
     }
+    
  
 ];
 

@@ -13,14 +13,19 @@ mongoose.connect('mongodb+srv://Islem:cmygNChSy2L9Q4xt@paintello.cu30n.mongodb.n
 
 var micros = [
     {
-        image: "//cdn.bmstores.co.uk/images/hpcProductImage/imgThumbResponsive/364546-gosford-laminate-flooring-2.jpg",
-        title: "Gosford Light Grey Oak Effect Laminate Flooring 2.22m²",
-        price: 900
+        image: "https://dz.jumia.is/unsafe/fit-in/500x500/filters:fill(white)/product/89/2033/1.jpg?0664",
+        title: "LG Micro-ondes Solo - NeoChef - 25L - Smart Inverter Noir",
+        price: 35900
     },
     {
-        image: "//cdn.bmstores.co.uk/images/hpcProductImage/imgTeaserBox/351012-carrick-oak-effect-laminate--flooring-2.jpg",
-        title: "Carrick Oak Effect Laminate Flooring 2.22m²",
-        price: 500
+        image: "https://dz.jumia.is/unsafe/fit-in/500x500/filters:fill(white)/product/87/6063/1.jpg?9318",
+        title: "Condor Micro-Onde 20L - Cmw-M2005W - Blanc",
+        price: 16500
+    },
+    {
+        image: "https://dz.jumia.is/unsafe/fit-in/500x500/filters:fill(white)/product/36/6504/1.jpg?6057",
+        title: "Sonashi Micro Onde Smo-922- Porte A Bouton 700 W- 20 L - Blanc",
+        price: 18500
     }
  
 ];

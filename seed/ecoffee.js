@@ -13,15 +13,22 @@ mongoose.connect('mongodb+srv://Islem:cmygNChSy2L9Q4xt@paintello.cu30n.mongodb.n
 
 var coffees = [
     {
-        image: "//cdn.bmstores.co.uk/images/hpcProductImage/imgThumbResponsive/364546-gosford-laminate-flooring-2.jpg",
-        title: "Gosford Light Grey Oak Effect Laminate Flooring 2.22m²",
-        price: 900
+        image: "https://dz.jumia.is/unsafe/fit-in/500x500/filters:fill(white)/product/33/2972/1.jpg?9085",
+        title: "Krups Machine À Café Nespresso Inissia Espresso Capsules 19 Bars Blanc",
+        price: 194500
     },
     {
-        image: "//cdn.bmstores.co.uk/images/hpcProductImage/imgTeaserBox/351012-carrick-oak-effect-laminate--flooring-2.jpg",
-        title: "Carrick Oak Effect Laminate Flooring 2.22m²",
-        price: 500
+        image: "https://dz.jumia.is/unsafe/fit-in/500x500/filters:fill(white)/product/32/0662/1.jpg?7129",
+        title: "Clatronic Cafetière A Filtre Avec Tasse - 300 Watts - Noir",
+        price: 2999
+    },
+    {
+        image: "https://dz.jumia.is/unsafe/fit-in/500x500/filters:fill(white)/product/13/7683/1.jpg?0846",
+        title: "Robuste Machine A Capsule - 0.7 L - 20 Bars - 1145 Watts - Italia - Gold",
+        price: 174500
     }
+    
+
  
 ];
 
