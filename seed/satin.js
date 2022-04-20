@@ -1,7 +1,7 @@
 var mongoose  = require('mongoose')
 var satin = require('../models/satin')
 
-mongoose.connect('mongodb+srv://Islem:cmygNChSy2L9Q4xt@'paintello's.cu30n.mongodb.net/'paintello's?retryWrites=true&w=majority' , (err)=> {
+mongoose.connect('mongodb+srv://Islem:cmygNChSy2L9Q4xt@paintello.cu30n.mongodb.net/paintello?retryWrites=true&w=majority' , (err)=> {
     if (err) {
         console.log(err)
     } else{
