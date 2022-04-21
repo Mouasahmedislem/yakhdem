@@ -13,13 +13,13 @@ mongoose.connect('mongodb+srv://Islem:cmygNChSy2L9Q4xt@paintello.cu30n.mongodb.n
 
 var mobiles = [
     {
-        image: "https://dz.jumia.is/unsafe/fit-in/500x500/filters:fill(white)/product/24/3071/1,jpg?9327",
+        image: "https://dz.jumia.is/unsafe/fit-in/500x500/filters:fill(white)/product/24/3071/1.jpg?9327",
         title: "Câble 1M Faste charge type CRouge",
         price: 450
     },
     
     {
-        image: "https://dz.jumia.is/unsafe/fit-in/500x500/filters:fill(white)/product/19/4804/1,jpg?8306",
+        image: "https://dz.jumia.is/unsafe/fit-in/500x500/filters:fill(white)/product/19/4804/1.jpg?8306",
         title: "Wd power Bank Power Bank 10000Mah - Noir",
         price: 950
     },
@@ -37,7 +37,7 @@ var mobiles = [
     },
     
     {
-        image: "https://dz.jumia.is/unsafe/fit-in/500x500/filters:fill(white)/product/40/8443/1,jpg?0888",
+        image: "https://dz.jumia.is/unsafe/fit-in/500x500/filters:fill(white)/product/40/8443/1.jpg?0888",
         title: "Hoco Chargeur Auto -Double Port Usb Et Type C - Blanc",
         price: 1850
     }

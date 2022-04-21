@@ -18,12 +18,12 @@ var healths = [
         price: 6550
     },
     {
-        image: "https://dz.jumia.is/unsafe/fit-in/500x500/filters:fill(white)/product/52/1132/1,jpg?5743",
+        image: "https://dz.jumia.is/unsafe/fit-in/500x500/filters:fill(white)/product/52/1132/1.jpg?5743",
         title: "Kemei Kit Épilateur Electrique Pour Femme - Kemei Km 8001 - 5 In 1 -Blanc",
         price: 3850
     },
     {
-        image: "https://dz.jumia.is/unsafe/fit-in/500x500/filters:fill(white)/product/46/0503/1,jpg?9704",
+        image: "https://dz.jumia.is/unsafe/fit-in/500x500/filters:fill(white)/product/46/0503/1.jpg?9704",
         title: "Pro Wax Pack Chauffe-Cire + 100 Spatules + 50 G Cire Granulée multicolores",
         price: 2400
     },
@@ -43,7 +43,7 @@ var healths = [
         price: 4650
     },
     {
-        image: "https://dz.jumia.is/unsafe/fit-in/500x500/filters:fill(white)/product/68/9123/1,jpg?9545",
+        image: "https://dz.jumia.is/unsafe/fit-in/500x500/filters:fill(white)/product/68/9123/1.jpg?9545",
         title: "Kemei Lisseur À Vapeur - Km-3011 -Rouge",
         price: 2750
     },

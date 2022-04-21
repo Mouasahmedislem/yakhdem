@@ -13,7 +13,7 @@ mongoose.connect('mongodb+srv://Islem:cmygNChSy2L9Q4xt@paintello.cu30n.mongodb.n
 
 var gamings = [
     {
-        image: "https://dz.jumia.is/unsafe/fit-in/500x500/filters:fill(white)/product/83/3141/1,jpg?7470",
+        image: "https://dz.jumia.is/unsafe/fit-in/500x500/filters:fill(white)/product/83/3141/1.jpg?7470",
         title: "Manette Six doigts PUBG AK66 - Noir",
         price: 720
     }
