@@ -13,15 +13,35 @@ mongoose.connect('mongodb+srv://Islem:cmygNChSy2L9Q4xt@paintello.cu30n.mongodb.n
 
 var mobiles = [
     {
-        image: "//cdn.bmstores.co.uk/images/hpcProductImage/imgThumbResponsive/364546-gosford-laminate-flooring-2.jpg",
-        title: "Gosford Light Grey Oak Effect Laminate Flooring 2.22m²",
-        price: 900
+        image: "https://dz.jumia.is/unsafe/fit-in/500x500/filters:fill(white)/product/24/3071/1,jpg?9327",
+        title: "Câble 1M Faste charge type CRouge",
+        price: 450
     },
+    
     {
-        image: "//cdn.bmstores.co.uk/images/hpcProductImage/imgTeaserBox/351012-carrick-oak-effect-laminate--flooring-2.jpg",
-        title: "Carrick Oak Effect Laminate Flooring 2.22m²",
-        price: 500
+        image: "https://dz.jumia.is/unsafe/fit-in/500x500/filters:fill(white)/product/19/4804/1,jpg?8306",
+        title: "Wd power Bank Power Bank 10000Mah - Noir",
+        price: 950
+    },
+    
+    {
+        image: "https://dz.jumia.is/unsafe/fit-in/500x500/filters:fill(white)/product/51/7812/4.jpg?4087",
+        title: "Support TéléphoneAvec Capteur Et Chargeur Sans Fil Pour Voiture Wireless Charge",
+        price: 1450
+    },
+    
+    {
+        image: "https://dz.jumia.is/unsafe/fit-in/500x500/filters:fill(white)/product/87/796/3.jpg?9964",
+        title: "mac tech Mobile Holder -MT-HL100 - Noir",
+        price: 950
+    },
+    
+    {
+        image: "https://dz.jumia.is/unsafe/fit-in/500x500/filters:fill(white)/product/40/8443/1,jpg?0888",
+        title: "Hoco Chargeur Auto -Double Port Usb Et Type C - Blanc",
+        price: 1850
     }
+    
  
 ];
 
