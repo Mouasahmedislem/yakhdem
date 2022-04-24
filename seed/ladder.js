@@ -12,34 +12,9 @@ mongoose.connect('mongodb+srv://Islem:cmygNChSy2L9Q4xt@paintello.cu30n.mongodb.n
     })
 var ladders = [
     {
-        image: "https://www.eurlpmi.com/wp-content/uploads/2019/03/SY101.jpg",
-        title: "Jakson 2+1 Marches",
-        price: 1
-    },
-    {
-        image: "https://www.eurlpmi.com/wp-content/uploads/2019/03/SY102.jpg",
-        title: "Jakson 3+1 Marches",
-        price: 1
-    },
-    {
-        image: "https://www.eurlpmi.com/wp-content/uploads/2019/03/SY103.jpg",
-        title: "Jakson 4+1 Marches",
-        price: 900
-    },
-    {
-        image: "https://www.eurlpmi.com/wp-content/uploads/2019/03/SY104.jpg",
-        title: "Jakson 5+1 Marches",
-        price: 900
-    },
-    {
-        image: "https://www.eurlpmi.com/wp-content/uploads/2019/03/SY1612.jpg",
-        title: "Pratical Metal Mega Lux 2 marches",
-        price: 900
-    },
-    {
-        image: "https://www.eurlpmi.com/wp-content/uploads/2019/03/SY1614.jpg",
-        title: "Pratical Metal Mega Lux 4 marches",
-        price: 900
+        image: "https://foorshop.com/wp-content/uploads/2020/12/crown-Echelle-4x4-4.8m-3.jpg",
+        title: "CROWN Multi-Position Folding Extension Ladder in Métal",
+        price: 7050
     }
     
  
