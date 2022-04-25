@@ -12,16 +12,10 @@ mongoose.connect('mongodb+srv://Islem:cmygNChSy2L9Q4xt@paintello.cu30n.mongodb.n
     })
 var wows = [
     {
-        image: "//cdn.bmstores.co.uk/images/hpcProductImage/imgThumbResponsive/364546-gosford-laminate-flooring-2.jpg",
-        title: "Gosford Light Grey Oak Effect Laminate Flooring 2.22m²",
-        price: 900,
-        was:2000
-    },
-    {
-        image: "//cdn.bmstores.co.uk/images/hpcProductImage/imgTeaserBox/351012-carrick-oak-effect-laminate--flooring-2.jpg",
-        title: "Carrick Oak Effect Laminate Flooring 2.22m²",
-        price: 500,
-        was:1000
+        image: "https://www.adler.com.pl/dane/zdjecia/ad_4459/ad_4459.jpg",
+        title: "Adler Cuiseur à 7 œufs Adler Ad 4459 - Blanc",
+        price: 3480,
+        was:3000
     }
  
 ];

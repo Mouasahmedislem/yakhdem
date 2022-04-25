@@ -15,7 +15,7 @@ var cleans = [
     {
         image: "https://dz.jumia.is/unsafe/fit-in/680x680/filters:fill(white)/product/07/4602/7.jpg?3069",
         title: "Egotoire",
-        price: 900
+        price: 200
     },
     {
         image: "https://dz.jumia.is/unsafe/fit-in/680x680/filters:fill(white)/product/59/8173/1.jpg?3349",
@@ -32,6 +32,28 @@ var cleans = [
         title: "Support De Sechoir, Porte Sèche Cheveux",
         price: 350
     },
+    {
+        image: "https://dz.jumia.is/unsafe/fit-in/500x500/filters:fill(white)/product/28/7273/1.jpg?6486",
+        title: "Balai Serpillière Auto Essorage 360° - Beige",
+        price: 1300
+    },
+    
+    {
+        image: "https://dz.jumia.is/unsafe/fit-in/500x500/filters:fill(white)/product/53/6942/1.jpg?9915",
+        title: "Lot De 6 Recharges Balai Serpillières Microfibres - Gris",
+        price: 1070
+    },
+    
+    {
+        image: "https://dz.jumia.is/unsafe/fit-in/500x500/filters:fill(white)/product/89/3132/1.jpg?7134",
+        title: "Seau Magique - 360° Clean Mop Balai Vadrouille Serpillière Auto Nettoyant À Double Compartiment Avec Balai À Tête Pivotante Et 2 Lingettes Microfibre- Bleu",
+        price: 3350
+    },
+    {
+        image: "https://dz.jumia.is/unsafe/fit-in/500x500/filters:fill(white)/product/06/2604/6.jpg?3705",
+        title: "Brosse Vaisselle Rechargeable",
+        price: 700
+    }
     
  
 ];

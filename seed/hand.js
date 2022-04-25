@@ -54,11 +54,7 @@ var hands = [
         title: "bolt-cutters",
         price: 2100.00
     },
-    {
-        image: "http://www.crown-tools-eu.com/content/images/thumbs/0006317_small-axe-wooden-handle_286.png",
-        title: "small-axe-wooden-handle",
-        price: 6400.00
-    },
+   
     {
         image: "http://www.crown-tools-eu.com/content/images/thumbs/0006181_phillips-screwdrivers_286.png",
         title: "phillips-screwdrivers",

@@ -16,7 +16,7 @@ vinyls = [
     {
         image: "https://s7.gifyu.com/images/IMG-20220413-WA00274b1dc76bfe75c8b3.jpg",
         title: "Paintello Paint Vinyl Silk Emulsion - Brilliant White 4KG",
-        price: 800
+        price: 800.00
     },
    
     {
