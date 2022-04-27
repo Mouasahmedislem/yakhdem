@@ -953,7 +953,7 @@ router.get("/wallpaper", function(req, res){
             });
         });
 
-        router.get("/power", function(req, res){
+        router.get("/tool/power", function(req, res){
             power.find({}, function(err, powers){
     header.find({}, function(err, headers){
                 if(err){
@@ -972,16 +972,16 @@ router.get("/wallpaper", function(req, res){
             
             power.findById(powerId, function(err, power){
                 if(err){
-                    return res.redirect("/power");
+                    return res.redirect("/tool/power");
                 }
                 cart.add(power, power.id);
                 req.session.cart = cart;
                 console.log(req.session.cart);
-                res.redirect("/power");
+                res.redirect("/tool/power");
             });
         });
 
-        router.get("/hand", function(req, res){
+        router.get("/tool/hand", function(req, res){
             hand.find({}, function(err, hands){
     header.find({}, function(err, headers){
                 if(err){
@@ -1000,16 +1000,16 @@ router.get("/wallpaper", function(req, res){
             
             hand.findById(handId, function(err, hand){
                 if(err){
-                    return res.redirect("/hand");
+                    return res.redirect("/tool/hand");
                 }
                 cart.add(hand, hand.id);
                 req.session.cart = cart;
                 console.log(req.session.cart);
-                res.redirect("/hand");
+                res.redirect("/tool/hand");
             });
         });
 
-        router.get("/ladder", function(req, res){
+        router.get("/tool/ladder", function(req, res){
             ladder.find({}, function(err, ladders){
     header.find({}, function(err, headers){
                 if(err){
@@ -1028,12 +1028,12 @@ router.get("/wallpaper", function(req, res){
             
             ladder.findById(ladderId, function(err, ladder){
                 if(err){
-                    return res.redirect("/ladder");
+                    return res.redirect("/tool/ladder");
                 }
                 cart.add(ladder, ladder.id);
                 req.session.cart = cart;
                 console.log(req.session.cart);
-                res.redirect("/ladder");
+                res.redirect("/tool/ladder");
             });
         });
 

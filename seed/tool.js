@@ -15,17 +15,17 @@ var tools = [
     {
         image: "//cdn.bmstores.co.uk/images/dmCategory/thumbnailImageResponsive/ladders1.jpg",
         title: "Ladders",
-        href:"/event/tool/ladder"
+        href:"/tool/ladder"
     },
     {
         image: "//cdn.bmstores.co.uk/images/dmCategory/thumbnailImageResponsive/hand-tools1.jpg",
         title: "Hand Tools",
-        href:"/event/tool/hand"
+        href:"/tool/hand"
     },
     {
         image: "//cdn.bmstores.co.uk/images/dmCategory/thumbnailImageResponsive/power-tools1.jpg",
         title: "Power Tools",
-        href:"/event/tool/power"
+        href:"/tool/power"
     }
  
 ];
