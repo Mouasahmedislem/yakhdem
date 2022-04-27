@@ -15,7 +15,7 @@ var wows = [
         image: "https://www.adler.com.pl/dane/zdjecia/ad_4459/ad_4459.jpg",
         title: "Adler Cuiseur à 7 œufs Adler Ad 4459 - Blanc",
         price: 3480,
-        was:3000
+        was:4000
     }
  
 ];

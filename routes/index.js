@@ -953,7 +953,7 @@ router.get("/wallpaper", function(req, res){
             });
         });
 
-        router.get("/event/tool/power", function(req, res){
+        router.get("/power", function(req, res){
             power.find({}, function(err, powers){
     header.find({}, function(err, headers){
                 if(err){
@@ -972,16 +972,16 @@ router.get("/wallpaper", function(req, res){
             
             power.findById(powerId, function(err, power){
                 if(err){
-                    return res.redirect("/event/power");
+                    return res.redirect("/power");
                 }
                 cart.add(power, power.id);
                 req.session.cart = cart;
                 console.log(req.session.cart);
-                res.redirect("/event/power");
+                res.redirect("/power");
             });
         });
 
-        router.get("/event/tool/hand", function(req, res){
+        router.get("/hand", function(req, res){
             hand.find({}, function(err, hands){
     header.find({}, function(err, headers){
                 if(err){
@@ -1000,16 +1000,16 @@ router.get("/wallpaper", function(req, res){
             
             hand.findById(handId, function(err, hand){
                 if(err){
-                    return res.redirect("/event/hand");
+                    return res.redirect("/hand");
                 }
                 cart.add(hand, hand.id);
                 req.session.cart = cart;
                 console.log(req.session.cart);
-                res.redirect("/event/hand");
+                res.redirect("/hand");
             });
         });
 
-        router.get("/event/tool/ladder", function(req, res){
+        router.get("/ladder", function(req, res){
             ladder.find({}, function(err, ladders){
     header.find({}, function(err, headers){
                 if(err){
@@ -1028,12 +1028,12 @@ router.get("/wallpaper", function(req, res){
             
             ladder.findById(ladderId, function(err, ladder){
                 if(err){
-                    return res.redirect("/event/ladder");
+                    return res.redirect("/ladder");
                 }
                 cart.add(ladder, ladder.id);
                 req.session.cart = cart;
                 console.log(req.session.cart);
-                res.redirect("/event/ladder");
+                res.redirect("/ladder");
             });
         });
 
