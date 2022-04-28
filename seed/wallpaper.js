@@ -44,7 +44,7 @@ var Walls = [
     {
         image: "https://cdn.bmstores.co.uk/images/hpcProductImage/imgFull/346184-debona-metallic-brick-charcoal-wallpaper.jpg",
         title: "debona-metallic-brick-charcoal-wallpaper 10mètres/0.53",
-        price: 900
+        price: 2500
     },
     {
         image: "https://cdn.bmstores.co.uk/images/hpcProductImage/imgDetail750/358178-house-brick-black-wallpaper-2.jpg",
