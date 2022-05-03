@@ -14,7 +14,7 @@ mongoose.connect('mongodb+srv://Islem:cmygNChSy2L9Q4xt@paintello.cu30n.mongodb.n
 var interiors = [
     
     {
-        image: "https://s7.gifyu.com/images/IMG-20220413-WA00274b1dc76bfe75c8b3.jpg",
+        image: "https://s8.gifyu.com/images/IMG-20220413-WA0027.jpg",
         title: "Emulsion (Vinyl)",
         href:"/interior/emolusion"
     },
