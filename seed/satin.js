@@ -13,7 +13,7 @@ var satins = [
     {
         image: "https://s7.gifyu.com/images/IMG-20220418-WA0017.jpg",
         title: "'Paintello's Paint Washable Satinée - Brilliant White 4KG",
-        price: 1590.00
+        price: 2390.00
     },
    
     {
