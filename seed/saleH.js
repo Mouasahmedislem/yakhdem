@@ -16,7 +16,7 @@ mongoose.connect('mongodb+srv://Islem:cmygNChSy2L9Q4xt@paintello.cu30n.mongodb.n
 {
     image: "https://img.ltwebstatic.com/images3_pi/2022/11/05/1667631493cbab69d546706071caa80ee75ecea1ed_thumbnail_600x.webp",
     title: "ROBES",
-    href:"/sale/electrical"
+    href:"/sale/clean"
 
 },
 {
