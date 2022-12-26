@@ -34,34 +34,7 @@ mongoose.connect('mongodb+srv://Islem:cmygNChSy2L9Q4xt@paintello.cu30n.mongodb.n
     image: "//cdn.bmstores.co.uk/images/hpcSmallRectangleAds/imgSource/50pc-kitchen8.jpg",
     title: "Kitchen Sale",
     href:"/sale/cuisin"
-},
-{
-    image: "//cdn.bmstores.co.uk/images/hpcSmallRectangleAds/imgSource/50pc-blogs1.jpg",
-    title: "Home Decor Sale",
-    href:"/sale/decor"
-},
-{
-    image: "//cdn.bmstores.co.uk/images/hpcSmallRectangleAds/imgSource/50pc-soft-furnishings8.jpg",
-    title: "Soft Furnishings Sale",
-    href:"/sale/soft"
-},
-{
-    image: "//cdn.bmstores.co.uk/images/hpcSmallRectangleAds/imgSource/50pc-bedding18.jpg",
-    title: "Bedding Sale",
-    href:"/sale/bedding"
-},
-{
-    image: "//cdn.bmstores.co.uk/images/hpcSmallRectangleAds/imgSource/50pc-curtains8.jpg",
-    title: "Curtains Sale",
-    href:"/sale/curtain"
-},
-
-{
-    image: "//cdn.bmstores.co.uk/images/hpcSmallRectangleAds/imgSource/50pc-storage5.jpg",
-    title: "Laundry & Cleaning Sale",
-    href:"/sale/clean"
 }
-
 
 ];
 
