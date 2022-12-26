@@ -109,7 +109,7 @@ app.use('/scss',express.static(__dirname + '/scss'))
 app.use('/roboto',express.static(__dirname + 'font/roboto'))
 app.use(express.static('node_modules'))
 app.use(flash());
- seedwow(); seedfurniteur();  seedrug(); seedcuisin();  seedclean(); seedsaleH();
+ seedwow(); seedfurniteur();  seedrug(); seedcuisin();  seedclean(); seedsale();
 seedheader();  seedshipping(); 
 
 //bring events routes
