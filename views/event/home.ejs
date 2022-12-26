@@ -4,91 +4,10 @@
   <div class="alert alert-success"><%= successMsg %></div>
   <% } %>
   <!-- Navigation & Intro -->
- 
-  
-
-  
-  <!-- paint content -->
-  <main>
-    <div class="bm-page">
-      <div class="container">
-      <div class="row">
-      <div class="order-lg-last">
-      <div class="mb-4 mb-lg-5 bm-content">
-  <h2 class="text-center text-uppercase">DIY</h2>
-      <ul class="row justify-content-center list-unstyled mb-4">
-        <% paints.forEach(function(paint){ %>
-  
-      <li class="col-6 col-sm-4 col-md-3">
-      <a class="d-block mt-4 text-center text-dark" href="<%= paint.href %>">
-      <div class="mb-1 px-2">
-      <img alt="Wallpaper" class="border img-fluid rounded-circle bm-lazyload lazyloaded" data-src="//cdn.bmstores.co.uk/images/dmCategory/thumbnailImageResponsive/wallpaper5.jpg" width="160" height="160" src="<%= paint.image %>">
-      </div>
-      <h2 class="h6 mb-0"><%= paint.title %></h2>
-      </a>
-      </li>
-      <% }); %>
-      
-    </ul></div></div></div></div></div>
-  <!-- paint content -->
-
-  <!-- sport content 
-  
-      <div class="mb-4"> 
-        <% homes.forEach(function(home){ %>
-      <div class="container bm-container-md">	
-      <a class="d-block h-100 overflow-hidden bm-img-link"  target="_self">
-      <picture>
-      <img alt="Save on Fitness at B&amp;M." class="w-100 bm-lazyload ls-is-cached lazyloaded" data-src="//cdn.bmstores.co.uk/images/hpcCatFullWidthImage/img1150/fitness-cat-1678x9459.jpg" src="<%= home.image %>">
-      </picture>
-      </a>
-      </div>	
-      <% }); %>
-      </div>
-
-      <hr class="mt-4">
-     
-<div class="bm-page">
-      <div class="container">
-      <div class="row">
-      <div class="order-lg-last">
-      <div class="mb-4 mb-lg-5 bm-content">
-  <h2 class="text-center text-uppercase">sports-and-leisure</h2>
-  <ul class="row justify-content-center list-unstyled mb-4">
-    <% sports.forEach(function(sport){ %>
-
-  <li class="col-6 col-sm-4 col-md-3">
-  <a class="d-block mt-4 text-center text-dark" href="<%= sport.href %>">
-  <div class="mb-1 px-2">
-  <img  class="border img-fluid rounded-circle bm-lazyload lazyloaded" data-src="//cdn.bmstores.co.uk/images/dmCategory/thumbnailImageResponsive/wallpaper5.jpg" width="160" height="160" src="<%= sport.image %>">
-  </div>
-  <h2 class="h6 mb-0"><%= sport.title %></h2>
-  </a>
-  </li>
-  <% }); %>
-  
-</ul></div></div></div></div></div>
-        
-   sport content -->
-
   <!-- sale content -->
-
-
-          <div class="mb-4"> 
-        <% homes1.forEach(function(home1){ %>
-            <div class="container bm-container-md">	
-            <a class="d-block bm-slider-link"  target="_self">
-            <picture>
-            <img alt="Sale now in store at B&amp;M." class="w-100" src="<%= home1.image %>">
-            </picture>
-            </a>
-            </div>
-      <% }); %>
-            </div>
       <hr class="mt-4">
-    
-            <div class="bm-page">
-              <div class="container">
+       <div class="bm-page">
+          <div class="container">
               <div class="row">
               <div class="order-lg-last">
               <div class="mb-4 mb-lg-5 bm-content">
@@ -110,50 +29,7 @@
 </ul></div></div></div></div></div>
         
   <!-- sale content -->
-             
-
-      <hr class="mt-4">
-  <h2 class="text-center text-uppercase">Saving your money</h2>
-<!-- Grid row -->
-<div class="mb-4">
-  <div class="container bm-container-md">
-  <div class="bm-img-list">
-  <% deals.forEach(function(deal){ %>
-
-  <a class="d-block overflow-hidden bm-img-list-item" href="<%= deal.href %>" target="_self">
-  <picture>
-  <img  class="h-100 w-100 bm-lazyload ls-is-cached lazyloaded" src="<%= deal.image %>">
-  </picture>
-  </a>
-  <% }); %>
-
- </div>
-
-  </div>
-  </div>
-   <!-- Carousel Wrapper -->
-
-      
- <!-- Section heading -->
-
-      
-      <!-- Section: Testimonials v.4 -->
-
-      <hr class="mt-4">
-
-      
-   
-
-    <!-- Streak -->
-    <!-- Grid row -->
-
-    
-    <!-- Grid column -->
-  
-    <!-- Streak -->
-
-   
-    <!-- Second container -->
+             <hr class="mt-4">
 
   </main>
   <!-- Main content -->
