@@ -14,25 +14,25 @@ mongoose.connect('mongodb+srv://Islem:cmygNChSy2L9Q4xt@paintello.cu30n.mongodb.n
  sales = [
     
 {
-    image: "//cdn.bmstores.co.uk/images/dmCategory/thumbnailImageResponsive/electrical-320x3201.jpg",
-    title: "Electrical Sale",
+    image: "https://img.ltwebstatic.com/images3_pi/2022/11/05/1667631493cbab69d546706071caa80ee75ecea1ed_thumbnail_600x.webp",
+    title: "ROBES",
     href:"/sale/electrical"
 
 },
 {
-    image: "//cdn.bmstores.co.uk/images/hpcCatFullWidthImage/img1150/100pc-furniture21.jpg",
-    title: "Furniture Sale",
+    image: "https://img.ltwebstatic.com/images3_pi/2022/01/14/16421248099e159d74be5564f8e6955460141e7113_thumbnail_600x.webp",
+    title: "LINGERIES & PYJAMAS",
     href:"/sale/furniteur"
 
 },
 {
-    image: "//cdn.bmstores.co.uk/images/hpcSmallRectangleAds/imgSource/50pc-rugs7.jpg",
-    title: "Rugs Sale",
+    image: "https://img.ltwebstatic.com/images3_app/2022/11/07/1667784596a5090608716f61a8a003d3658acbad66.webp",
+    title: "FASHION",
     href:"/sale/rug"
 },
 {
-    image: "//cdn.bmstores.co.uk/images/hpcSmallRectangleAds/imgSource/50pc-kitchen8.jpg",
-    title: "Kitchen Sale",
+    image: "https://img.ltwebstatic.com/images3_pi/2022/10/27/16668411525081cb5dbe7c66e924badcb4ed6e871f_thumbnail_600x.webp",
+    title: "TENUES DE SPORT",
     href:"/sale/cuisin"
 }
 
