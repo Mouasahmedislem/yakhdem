@@ -159,7 +159,7 @@ router.get("/return", function(req, res){
     });
 });
 
-router.get("//sale/ROBE1", function(req, res){
+router.get("/sale/ROBE1", function(req, res){
     
         header.find({}, function(err, headers){
         if(err){
