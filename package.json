@@ -35,7 +35,7 @@
     "lint": "eslint --debug /"
   },
   "engines": {
-    "node": "*",
+    "node": "14.17.0",
     "npm": "*"
   },
   "author": "",
