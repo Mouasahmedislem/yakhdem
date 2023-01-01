@@ -158,6 +158,19 @@ router.get("/return", function(req, res){
         }
     });
 });
+
+router.get("//sale/ROBE1", function(req, res){
+    
+        header.find({}, function(err, headers){
+        if(err){
+            console.log(err);
+        }
+        else{
+            res.render("sale/ROBE1", {headers:headers});
+        }
+    });
+});
+
 router.get("/favicon.ico", function(req, res){
     
     
