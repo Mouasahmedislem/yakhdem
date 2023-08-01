@@ -12,48 +12,84 @@ mongoose.connect('mongodb+srv://Islem:cmygNChSy2L9Q4xt@paintello.cu30n.mongodb.n
     })
 
 var cleans = [
+     {
+        image: "https://s7.gifyu.com/images/IMG-20220418-WA0017.jpg",
+        title: "'Paintello's Paint Washable Satinée - Brilliant White 4KG",
+        price: 2390.00
+    },
+   
     {
-        image: "https://dz.jumia.is/unsafe/fit-in/680x680/filters:fill(white)/product/07/4602/7.jpg?3069",
-        title: "Egotoire",
-        price: 200
+        image: "https://s7.gifyu.com/images/IMG-20220418-WA0012.jpg",
+        title: "'Paintello's Paint Washable Satinée - Red Spice 4KG",
+        price: 2490.00
     },
     {
-        image: "https://dz.jumia.is/unsafe/fit-in/680x680/filters:fill(white)/product/59/8173/1.jpg?3349",
-        title: "bain Porte Serviettes De Salle De Bain Murale Pivotant Rotatifs À 180 °",
-        price: 3250
+        image: "https://s7.gifyu.com/images/IMG-20220418-WA0013.jpg",
+        title: "'Paintello's Paint Washable Satinée - Mocha 4KG",
+        price: 2490.00
     },
     {
-        image: "https://dz.jumia.is/unsafe/fit-in/680x680/filters:fill(white)/product/40/8973/1.jpg?6571",
-        title: "boite Boîte De Rangement Rose Pliable ",
-        price: 2175
+        image: "https://s7.gifyu.com/images/IMG-20220418-WA0011.jpg",
+        title: "'Paintello's Paint Washable Satinée - Deep Amethyst 4KG",
+        price: 2490.00
     },
     {
-        image: "https://dz.jumia.is/unsafe/fit-in/680x680/filters:fill(white)/product/13/0572/1.jpg?9405",
-        title: "Support De Sechoir, Porte Sèche Cheveux",
-        price: 350
+        image: "https://s7.gifyu.com/images/IMG-20220418-WA0010.jpg",
+        title: "'Paintello's Paint Washable Satinée - Dark Angel 4KG",
+        price: 2490.00
     },
     {
-        image: "https://dz.jumia.is/unsafe/fit-in/500x500/filters:fill(white)/product/28/7273/1.jpg?6486",
-        title: "Balai Serpillière Auto Essorage 360° - Beige",
-        price: 1300
+        image: "https://s7.gifyu.com/images/IMG-20220418-WA0009.jpg",
+        title: "'Paintello's Paint Washable Satinée - Burnt Sugar 4KG",
+        price: 2490.00
+    },
+    {
+        image: "https://s7.gifyu.com/images/IMG-20220418-WA0008.jpg",
+        title: "'Paintello's Paint Washable Satinée - Aqua 4KG",
+        price: 2490.00
+    },
+    {
+        image: "https://s7.gifyu.com/images/IMG-20220418-WA0007.jpg",
+        title: "'Paintello's Paint Washable Satinée - Rich Red 4KG",
+        price: 2490.00
+    },
+    {
+        image: "https://s7.gifyu.com/images/IMG-20220418-WA0006.jpg",
+        title: "'Paintello's Paint Washable Satinée - Sweet Lavender 4KG",
+        price: 2490.00
+    },
+    {
+        image: "https://s7.gifyu.com/images/IMG-20220418-WA0005.jpg",
+        title: "'Paintello's Paint Washable Satinée - Lime Crush 4KG",
+        price: 2490.00
+    },
+    {
+        image: "https://s7.gifyu.com/images/IMG-20220418-WA0004.jpg",
+        title: "'Paintello's Paint Washable Satinée - Waterfall 4KG",
+        price: 2490.00
+    },
+    {
+        image: "https://s7.gifyu.com/images/IMG-20220418-WA0002.jpg",
+        title: "'Paintello's Paint Washable Satinée - New Duck Egg 4KG",
+        price: 2490.00
     },
     
     {
-        image: "https://dz.jumia.is/unsafe/fit-in/500x500/filters:fill(white)/product/53/6942/1.jpg?9915",
-        title: "Lot De 6 Recharges Balai Serpillières Microfibres - Gris",
-        price: 1070
-    },
-    
-    {
-        image: "https://dz.jumia.is/unsafe/fit-in/500x500/filters:fill(white)/product/89/3132/1.jpg?7134",
-        title: "Seau Magique - 360° Clean Mop Balai Vadrouille Serpillière Auto Nettoyant À Double Compartiment Avec Balai À Tête Pivotante Et 2 Lingettes Microfibre- Bleu",
-        price: 3350
+        image: "https://s7.gifyu.com/images/IMG-20220418-WA0001.jpg",
+        title: "'Paintello's Paint Washable Satinée - Moonlit Sky 4KG",
+        price: 2490.00
     },
     {
-        image: "https://dz.jumia.is/unsafe/fit-in/500x500/filters:fill(white)/product/06/2604/6.jpg?3705",
-        title: "Brosse Vaisselle Rechargeable",
-        price: 700
+        image: "https://s7.gifyu.com/images/IMG-20220418-WA0000.jpg",
+        title: "'Paintello's Paint Washable Satinée - Steel Smoke 4KG",
+        price: 2490.00
+    },
+    {
+        image: "https://s7.gifyu.com/images/IMG-20220418-WA0003262f55a722470303.jpg",
+        title: "Paintello's Paint Washable Satinée - Manhattan Grey 4KG",
+        price: 2490.00
     }
+ 
     
  
 ];
