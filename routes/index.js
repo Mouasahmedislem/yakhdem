@@ -171,6 +171,18 @@ router.get("/sale/ROBE1", function(req, res){
     });
 });
 
+router.get("/sale/ROBE2", function(req, res){
+    
+        header.find({}, function(err, headers){
+        if(err){
+            console.log(err);
+        }
+        else{
+            res.render("sale/ROBE2", {headers:headers});
+        }
+    });
+});
+
 router.get("/favicon.ico", function(req, res){
     
     
