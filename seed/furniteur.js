@@ -13,53 +13,53 @@ mongoose.connect('mongodb+srv://Islem:cmygNChSy2L9Q4xt@paintello.cu30n.mongodb.n
 
 var furniteurs = [
     {
-        image: "https://gifyu.com/image/SRVVH",
+        image: "https://s5.gifyu.com/images/SRVVH.jpg",
         title: "Paintello Paint Vinyl Silk Emulsion - Brilliant White 4KG",
         price: 800.00
     },
    
     {
-        image: "https://gifyu.com/image/SRVVx",
+        image: "https://gifyu.com/image/SRVVx.jpg",
         title: "Paintello Paint Vinyl Silk Emulsion - Red Spice 4KG",
         price: 900.00
     },
     {
-        image: "https://gifyu.com/image/SRVVs",
+        image: "https://gifyu.com/image/SRVVs.jpg",
         title: "Paintello Paint Vinyl Silk Emulsion - Mocha 4KG",
         price: 900.00
     },
     {
-        image: "https://gifyu.com/image/SRVVHL",
+        image: "https://gifyu.com/image/SRVVHL.jpg",
         title: "Paintello Paint Vinyl Silk Emulsion - Deep Amethyst 4KG",
         price: 900.00
     },
     {
-        image: "https://gifyu.com/image/SRVVp",
+        image: "https://gifyu.com/image/SRVVp.jpg",
         title: "Paintello Paint Vinyl Silk Emulsion - Dark Angel 4KG",
         price: 900.00
     },
     {
-        image: "https://gifyu.com/image/SRVVHz",
+        image: "https://gifyu.com/image/SRVVHz.jpg",
         title: "Paintello Paint Vinyl Silk Emulsion - Burnt Sugar 4KG",
         price: 900.00
     },
     {
-        image: "https://gifyu.com/image/SRVVb",
+        image: "https://gifyu.com/image/SRVVb.jpg",
         title: "Paintello Paint Vinyl Silk Emulsion - Aqua 4KG",
         price: 900.00
     },
     {
-        image: "https://gifyu.com/image/SRVVS",
+        image: "https://gifyu.com/image/SRVVS.jpg",
         title: "Paintello Paint Vinyl Silk Emulsion - Rich Red 4KG",
         price: 900.00
     },
     {
-        image: "https://gifyu.com/image/SRVV2",
+        image: "https://gifyu.com/image/SRVV2.jpg",
         title: "Paintello Paint Vinyl Silk Emulsion - Sweet Lavender 4KG",
         price: 900.00
     },
     {
-        image: "https://gifyu.com/image/SRVUe",
+        image: "https://gifyu.com/image/SRVUe.jpg",
         title: "Paintello Paint Vinyl Silk Emulsion - Lime Crush 4KG",
         price: 900.00
     }
