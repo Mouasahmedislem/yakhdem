@@ -59,7 +59,7 @@ var cleans = [
         price: 2490.00
     },
     {
-        image: "https://s5.gifyu.com/images/SRFT1.jpg",
+        image: "https://s5.gifyu.com/images/SRFTl.jpg",
         title: "'Paintello's Paint Washable Satinée - Lime Crush 4KG",
         price: 2490.00
     },
@@ -69,7 +69,7 @@ var cleans = [
         price: 2490.00
     },
     {
-        image: "https://s5.gifyu.com/images/SRFTW.jpg",
+        image: "https://s5.gifyu.com/images/SRFTW.png",
         title: "'Paintello's Paint Washable Satinée - New Duck Egg 4KG",
         price: 2490.00
     }
