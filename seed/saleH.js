@@ -36,7 +36,7 @@ mongoose.connect('mongodb+srv://Islem:cmygNChSy2L9Q4xt@paintello.cu30n.mongodb.n
     href:"/sale/rug"
 },
 {
-    image: "https://cdn.bmstores.co.uk/images/dmCategory/thumbnailImageResponsive/decorating-tools1.jpg",
+    image: "https://cdn.bmstores.co.uk/images/dmCategory/thumbnailImageResponsive/decorating-320x3201.jpg",
     title: "Outils paint",
     href:"/sale/cuisin"
 }
