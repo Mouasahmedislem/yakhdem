@@ -39,7 +39,7 @@ var furniteurs = [
         price: 900.00
     },
     {
-        image: "https://s5.gifyu.com/images/SRVVHz.jpg",
+        image: "https://s5.gifyu.com/images/SRVVz.jpg",
         title: "Paintello Paint Vinyl Silk Emulsion - Burnt Sugar 4KG",
         price: 900.00
     },
