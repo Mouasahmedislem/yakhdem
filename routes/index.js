@@ -108,6 +108,7 @@ router.get("/add-to-cart-cuisin/:id", function(req, res){
     });
 });
 
+
 router.get("/sale/clean", function(req, res){
     clean.find({}, function(err, cleans){
     header.find({}, function(err, headers){
