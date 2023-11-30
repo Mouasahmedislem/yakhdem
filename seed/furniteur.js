@@ -29,7 +29,7 @@ var furniteurs = [
         price: 900.00
     },
     {
-        image: "https://s5.gifyu.com/images/SRVVHL.jpg",
+        image: "https://s5.gifyu.com/images/SRVVL.jpg",
         title: "Paintello Paint Vinyl Silk Emulsion - Deep Amethyst 4KG",
         price: 900.00
     },
@@ -54,7 +54,7 @@ var furniteurs = [
         price: 900.00
     },
     {
-        image: "https://s5.gifyu.com/image/SRVV2.jpg",
+        image: "https://s5.gifyu.com/images/SRVV2.jpg",
         title: "Paintello Paint Vinyl Silk Emulsion - Sweet Lavender 4KG",
         price: 900.00
     },
