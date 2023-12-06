@@ -46,7 +46,7 @@ var furniteurs = [
     {
         image: "https://s5.gifyu.com/images/SRVVb.jpg",
         title: "Paintello Paint Vinyl Silk Emulsion - Aqua 4KG",
-        price: 900.00
+        price: 1100.00
     },
     {
         image: "https://s5.gifyu.com/images/SRVVS.jpg",
