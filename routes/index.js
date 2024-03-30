@@ -18,7 +18,7 @@ var furniteur = require('../models/furniteur');
 var rug = require('../models/rug');
 var cuisin = require('../models/cuisin');
 var clean = require('../models/clean');
-
+var coat = require('../models/coat');
 
 
 router.get("/sale/furniteur", function(req, res){
@@ -136,6 +136,35 @@ router.get("/add-to-cart-clean/:id", function(req, res){
         res.redirect("/sale/clean");
     });
 });
+
+router.get("/sale/coat", function(req, res){
+    coat.find({}, function(err, coats){
+    header.find({}, function(err, headers){
+        if(err){
+            console.log(err);
+        }
+        else{
+            res.render("sale/coat", {coats: coats,headers:headers});
+        }
+    });
+});
+});
+
+router.get("/add-to-cart-coat/:id", function(req, res){
+    var coatId = req.params.id;
+    var cart = new Cart(req.session.cart ? req.session.cart : {});
+    
+    coat.findById(coatId, function(err, coat){
+        if(err){
+            return res.redirect("/sale/coat");
+        }
+        cart.add(coat, coat.id);
+        req.session.cart = cart;
+        console.log(req.session.cart);
+        res.redirect("/sale/coat");
+    });
+});
+
 
 
 
