@@ -42,7 +42,7 @@ mongoose.connect('mongodb+srv://Islem:cmygNChSy2L9Q4xt@paintello.cu30n.mongodb.n
 },
 {
     image: "https://cdn.bmstores.co.uk/images/dmCategory/thumbnailImageResponsive/decorating-320x3201.jpg",
-    title: "Onecoat Paint",
+    title: "OnecoatPaint",
     href:"/sale/coat"
 }
 
