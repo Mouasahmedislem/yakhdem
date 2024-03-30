@@ -9,7 +9,7 @@ if (process.env.NODE_ENV !== 'production') {
 var cart = require("../models/cart");
 var blander = require('../models/blander');
 var cleaning = require('../models/cleaning');
-var coffee = require('../models/coffee');
+
 var food = require('../models/food');
 var gaming = require('../models/gaming');
 var garden = require('../models/garden');
@@ -78,33 +78,6 @@ router.get("/add-to-cart-cleaning/:id", function(req, res){
     });
 });
 
-router.get("/coffee", function(req, res){
-    coffee.find({}, function(err, coffees){
-    header.find({}, function(err, headers){
-        if(err){
-            console.log(err);
-        }
-        else{
-            res.render("sale/coffee", {coffees: coffees,headers:headers});
-        }
-    });
-});
-});
-
-router.get("/add-to-cart-coffee/:id", function(req, res){
-    var coffeeId = req.params.id;
-    var cart = new Cart(req.session.cart ? req.session.cart : {});
-    
-    coffee.findById(coffeeId, function(err, coffee){
-        if(err){
-            return res.redirect("coffee");
-        }
-        cart.add(coffee, coffee.id);
-        req.session.cart = cart;
-        console.log(req.session.cart);
-        res.redirect("/coffee");
-    });
-});
 
 router.get("/food", function(req, res){
     food.find({}, function(err, foods){
