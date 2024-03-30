@@ -29,6 +29,7 @@ var seedclean = require('./seed/clean');
 var seedsale = require('./seed/saleH');
 var seedheader = require('./seed/header');
 var seedshipping = require('./seed/shipping');
+var seedcoat = require('./seed/coat');
 
 
 var wow = require('./models/wow');
@@ -39,7 +40,7 @@ var clean = require('./models/clean');
 var sale = require('./models/saleH');
 var header = require('./models/header');
 var shipping = require('./models/shipping');
-
+var coat = require('./models/coat');
 
 
 
