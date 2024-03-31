@@ -6,7 +6,7 @@
 <div class="bm-page">
 <div class="container">
 <div class="row">
-<% cleans.forEach(function(clean){ %>
+<% coats.forEach(function(coat){ %>
 <div class="order-lg-last">
 <div class="mb-4 mb-lg-5 bm-content">
 <div class="mb-4">
@@ -20,7 +20,7 @@
 <li class="col-sm-6 col-md-4 bm-col-md bm-product-item">
 <div class="align-items-center d-flex h-100 bm-product-link" href="/products/high-performance-rubber-underlay-3mm-365430">	
 <div class="flex-shrink-0 mw-100 position-relative bm-product-link-img">
-<img id="myImg" class="myImgLightBox"  width="200" height="240" src="<%= clean.image %>" >	
+<img id="myImg" class="myImgLightBox"  width="200" height="240" src="<%= coat.image %>" >	
 <!-- The Modal -->
 <div id="myModal" class="modal">
   <!-- The Close Button -->
@@ -31,9 +31,9 @@
   <div id="caption"></div>
 </div></div>
 <div class="flex-fill mw-100 bm-product-link-text">
-<h3 class="d-block font-weight-normal h6 mb-0 text-body"><%= clean.title %></h3>
-<span class="d-block h5 mb-0 mt-1 text-body"><%= clean.price %>DA</span>
-<a href="/add-to-cart-clean/<%= clean._id %>" class="btn btn-pink btn-rounded"><i class="fas fa-cart-plus mr-2" aria-hidden="true"></i>buy</a>
+<h3 class="d-block font-weight-normal h6 mb-0 text-body"><%= coat.title %></h3>
+<span class="d-block h5 mb-0 mt-1 text-body"><%= coat.price %>DA</span>
+<a href="/add-to-cart-coat/<%= coat._id %>" class="btn btn-pink btn-rounded"><i class="fas fa-cart-plus mr-2" aria-hidden="true"></i>buy</a>
 <a href="/sale/ROBE1" class="btn btn-pink btn-rounded"><i class="bi bi-eye"></i>view</a>
 </div>	
 </div>	
