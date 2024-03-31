@@ -58,11 +58,7 @@ var rugs = [
         title: "Paintello's Paint Onecoat Taupe 01 Matt 4KG",
         price: 2590.00
     },
-    {
-        image: "https://s5.gifyu.com/images/SRFTl.jpg",
-        title: "Paintello's Paint Onecoat 4KG",
-        price: 2590.00
-    },
+   
     {
         image: "https://s12.gifyu.com/images/SV82k.png",
         title: "Paintello's Paint Onecoat White 01 4KG",
