@@ -26,8 +26,8 @@ mongoose.connect('mongodb+srv://Islem:cmygNChSy2L9Q4xt@paintello.cu30n.mongodb.n
 
 },
 {
-    image: "https://s7.gifyu.com/images/IMG-20220413-WA003403cc89faebbf9981.jpg",
-    title: "Cuisine Paint",
+    image: "https://s9.gifyu.com/images/SV6ra.png",
+    title: "Onecoat Paint",
     href:"/sale/rug"
 },
    {
@@ -35,11 +35,7 @@ mongoose.connect('mongodb+srv://Islem:cmygNChSy2L9Q4xt@paintello.cu30n.mongodb.n
     title: "Bathroom Paint",
     href:"/sale/cuisin"
 },
-   {
- image: "https://s9.gifyu.com/images/SV6ra.png",
-    title: "Onecoat Paint",
-    href:"/sale/coat"
-},
+ 
 {
     image: "https://cdn.bmstores.co.uk/images/dmCategory/thumbnailImageResponsive/decorating-320x3201.jpg",
     title: "Outils paint",
