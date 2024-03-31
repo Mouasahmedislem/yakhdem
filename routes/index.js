@@ -213,14 +213,14 @@ router.get("/sale/ROBE2", function(req, res){
     });
 });
 
-router.get("/color/yallaw", function(req, res){
+router.get("/sale/yallaw", function(req, res){
     
         header.find({}, function(err, headers){
         if(err){
             console.log(err);
         }
         else{
-            res.render("color/yallaw", {headers:headers});
+            res.render("sale/yallaw", {headers:headers});
         }
     });
 });
