@@ -14,20 +14,20 @@ mongoose.connect('mongodb+srv://Islem:cmygNChSy2L9Q4xt@paintello.cu30n.mongodb.n
  sales = [
     
 {
-    image: "https://s7.gifyu.com/images/IMG-20220418-WA0010.jpg",
-    title: "Interior Paint",
+    image: "https://s9.gifyu.com/images/SVZ73.png",
+    title: "Satiné Paint",
     href:"/sale/clean"
 
 },
 {
-    image: "https://s8.gifyu.com/images/IMG-20220413-WA0027.jpg",
+    image: "https://s12.gifyu.com/images/SVZ7i.png",
     title: "Vinyl Paint",
     href:"/sale/furniteur"
 
 },
 {
     image: "https://s9.gifyu.com/images/SV6ra.png",
-    title: "Onecoat Paint",
+    title: "Onecoat Matt Paint",
     href:"/sale/rug"
 },
    {
