@@ -77,7 +77,7 @@ var rugs = [
     {
         image: "https://s9.gifyu.com/images/SV82v.png",
         title: "Paintello's Paint Onecoat Yellow 06 Matt 4KG",
-        href : "/sale/yallaw",
+        href : "/onecoat/yallaw",
         price: 2590.00
     }
  
