@@ -31,8 +31,8 @@ mongoose.connect('mongodb+srv://Islem:cmygNChSy2L9Q4xt@paintello.cu30n.mongodb.n
     href:"/sale/rug"
 },
    {
-    image: "https://s7.gifyu.com/images/IMG-20220413-WA003403cc89faebbf9981.jpg",
-    title: "Bathroom Paint",
+    image: "https://s12.gifyu.com/images/SYnoR.jpg",
+    title: "My Fixature",
     href:"/sale/cuisin"
 },
  
