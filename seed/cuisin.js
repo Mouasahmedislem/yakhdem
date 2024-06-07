@@ -13,9 +13,9 @@ mongoose.connect('mongodb+srv://Islem:cmygNChSy2L9Q4xt@paintello.cu30n.mongodb.n
 
 var cuisins = [
     {
-        image: "https://rolux.dz/wp-content/uploads/2022/02/platoir-decorative-inox-trapeze-768x512.jpg",
-        title: "Platoir inox ",
-        price: 350
+        image: "https://s12.gifyu.com/images/SYnoR.jpg",
+        title: "My Fixature By Paintello's Paint ",
+        price: 1500
     }
   
  
