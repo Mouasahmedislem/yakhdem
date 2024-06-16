@@ -79,6 +79,81 @@ var rugs = [
         title: "Paintello's Paint Onecoat Yellow 06 Matt 4KG",
         href : "/onecoat/yallaw",
         price: 2700.00
+    },
+   {
+        image: "https://s10.gifyu.com/images/SY4FH.png",
+        title: "Paintello's Paint Onecoat bleue 14 4KG",
+        price: 2700.00
+    },
+  {
+        image: "https://s10.gifyu.com/images/SY4FK.png",
+        title: "Paintello's Paint Onecoat bleue08 4KG",
+        price: 2700.00
+    },
+  {
+        image: "https://s10.gifyu.com/images/SY4FN.png",
+        title: "Paintello's Paint Onecoat BEIGE 09 4KG",
+        price: 2700.00
+    },
+  {
+        image: "https://s12.gifyu.com/images/SY4Fw.png",
+        title: "Paintello's Paint Onecoat BEIGE 01 4KG",
+        price: 2700.00
+    },
+  {
+        image: "https://s12.gifyu.com/images/SY4F3.png",
+        title: "Paintello's Paint Onecoat bleue15 4KG",
+        price: 2700.00
+    },
+  {
+        image: "https://s12.gifyu.com/images/SY4F9.png",
+        title: "Paintello's Paint Onecoat green09 4KG",
+        price: 2700.00
+    },
+  {
+        image: "https://s10.gifyu.com/images/SY4Fh.png",
+        title: "Paintello's Paint Onecoat grey03 4KG",
+        price: 2700.00
+    },
+  {
+        image: "https://s12.gifyu.com/images/SY4FE.png",
+        title: "Paintello's Paint Onecoat green13 4KG",
+        price: 2700.00
+    },
+  {
+        image: "https://s10.gifyu.com/images/SY4Fk.png",
+        title: "Paintello's Paint Onecoat grey14 4KG",
+        price: 2700.00
+    },
+  {
+        image: "https://s10.gifyu.com/images/SY4Fv.png",
+        title: "Paintello's Paint Onecoat pink02 4KG",
+        price: 2700.00
+    },
+  {
+        image: "https://s12.gifyu.com/images/SY4Fm.png",
+        title: "Paintello's Paint Onecoat pink03 4KG",
+        price: 2700.00
+    },
+  {
+        image: "https://s12.gifyu.com/images/SY4Fq.png",
+        title: "Paintello's Paint Onecoat pink04 4KG",
+        price: 2700.00
+    },
+  {
+        image: "https://s12.gifyu.com/images/SY4F7.png",
+        title: "Paintello's Paint Onecoat pink07 4KG",
+        price: 2700.00
+    },
+  {
+        image: "https://s10.gifyu.com/images/SY4Fd.png",
+        title: "Paintello's Paint Onecoat yellow01 4KG",
+        price: 2700.00
+    },
+  {
+        image: "https://s10.gifyu.com/images/SY4Fl.png",
+        title: "Paintello's Paint Onecoat yellow07 4KG",
+        price: 2700.00
     }
  
  
