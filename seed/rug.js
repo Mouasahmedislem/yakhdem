@@ -16,7 +16,7 @@ var rugs = [
         image: "https://s9.gifyu.com/images/SV82T.png",
         title: "Paintello's Paint Onecoat BEIG 02 4KG",
         href : "/onecoat/beig02",
-        price: 2490.00
+        price: 2700.00
     },
    
     {
@@ -83,85 +83,85 @@ var rugs = [
    {
         image: "https://s10.gifyu.com/images/SY4FH.png",
         title: "Paintello's Paint Onecoat bleue 14 4KG",
-        href : "/onecoat/yallaw",
+        href : "/onecoat/bleue14",
         price: 2700.00
     },
   {
         image: "https://s10.gifyu.com/images/SY4FK.png",
         title: "Paintello's Paint Onecoat bleue08 4KG",
-        href : "/onecoat/yallaw",
+        href : "/onecoat/blue08",
         price: 2700.00
     },
   {
         image: "https://s10.gifyu.com/images/SY4FN.png",
         title: "Paintello's Paint Onecoat BEIGE 09 4KG",
-        href : "/onecoat/yallaw",
+        href : "/onecoat/BEIGE09",
         price: 2700.00
     },
   {
         image: "https://s12.gifyu.com/images/SY4Fw.png",
         title: "Paintello's Paint Onecoat BEIGE 01 4KG",
-        href : "/onecoat/yallaw",
+        href : "/onecoat/beige01",
         price: 2700.00
     },
   {
         image: "https://s12.gifyu.com/images/SY4F3.png",
         title: "Paintello's Paint Onecoat bleue15 4KG",
-        href : "/onecoat/yallaw",
+        href : "/onecoat/blue15",
         price: 2700.00
     },
   {
         image: "https://s12.gifyu.com/images/SY4F9.png",
         title: "Paintello's Paint Onecoat green09 4KG",
-        href : "/onecoat/yallaw",
+        href : "/onecoat/green09",
         price: 2700.00
     },
   {
         image: "https://s10.gifyu.com/images/SY4Fh.png",
         title: "Paintello's Paint Onecoat grey03 4KG",
-        href : "/onecoat/yallaw",
+        href : "/onecoat/grey03",
         price: 2700.00
     },
   {
         image: "https://s12.gifyu.com/images/SY4FE.png",
         title: "Paintello's Paint Onecoat green13 4KG",
-        href : "/onecoat/yallaw",
+        href : "/onecoat/green13",
         price: 2700.00
     },
   {
         image: "https://s10.gifyu.com/images/SY4Fk.png",
         title: "Paintello's Paint Onecoat grey14 4KG",
-        href : "/onecoat/yallaw",
+        href : "/onecoat/grey14",
         price: 2700.00
     },
   {
         image: "https://s10.gifyu.com/images/SY4Fv.png",
         title: "Paintello's Paint Onecoat pink02 4KG",
-        href : "/onecoat/yallaw",
+        href : "/onecoat/pink02",
         price: 2700.00
     },
   {
         image: "https://s12.gifyu.com/images/SY4Fm.png",
         title: "Paintello's Paint Onecoat pink03 4KG",
-        href : "/onecoat/yallaw",
+        href : "/onecoat/pink03",
         price: 2700.00
     },
   {
         image: "https://s12.gifyu.com/images/SY4Fq.png",
         title: "Paintello's Paint Onecoat pink04 4KG",
-        href : "/onecoat/yallaw",
+        href : "/onecoat/pink04",
         price: 2700.00
     },
   {
         image: "https://s12.gifyu.com/images/SY4F7.png",
         title: "Paintello's Paint Onecoat pink07 4KG",
-        href : "/onecoat/yallaw",
+        href : "/onecoat/pink07",
         price: 2700.00
     },
   {
         image: "https://s10.gifyu.com/images/SY4Fd.png",
         title: "Paintello's Paint Onecoat yellow01 4KG",
-        href : "/onecoat/yallaw",
+        href : "/onecoat/yallaw01",
         price: 2700.00
     },
   {
