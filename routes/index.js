@@ -344,6 +344,17 @@ router.get("/onecoat/beig02", function(req, res){
         }
     });
 });
+router.get("/myfixateur/fixateur", function(req, res){
+    
+        header.find({}, function(err, headers){
+        if(err){
+            console.log(err);
+        }
+        else{
+            res.render("myfixateur/fixateur", {headers:headers});
+        }
+    });
+});
 
 router.get("/favicon.ico", function(req, res){
     
