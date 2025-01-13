@@ -97,7 +97,7 @@ router.get("/add-to-cart-cuisin/:id", function(req, res){
     var cuisinId = req.params.id;
     var cart = new Cart(req.session.cart ? req.session.cart : {});
     
-    rug.findById(cuisinId, function(err, cuisin){
+    cuisin.findById(cuisinId, function(err, cuisin){
         if(err){
             return res.redirect("/sale/cuisin");
         }
