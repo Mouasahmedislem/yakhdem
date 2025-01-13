@@ -1,7 +1,7 @@
 <%- include ("../partials/header") %>.
 
 
-<h2 class="text-center text-uppercase">OUTILS PAINT</h2>
+<h2 class="text-center text-uppercase">MY FIXATEUR</h2>
 
 <div class="bm-page">
 <div class="container">
@@ -34,6 +34,7 @@
 <h3 class="d-block font-weight-normal h6 mb-0 text-body"><%= cuisin.title %></h3>
 <span class="d-block h5 mb-0 mt-1 text-body"><%= cuisin.price%>DA</span>
 <a href="/add-to-cart-cuisin/<%= cuisin._id %>" class="btn btn-pink btn-rounded"><i class="fas fa-cart-plus mr-2" aria-hidden="true"></i>buy</a>
+<a href= "<%= cuisin.href%>" class="btn btn-pink btn-rounded"><i class="bi bi-eye"></i>view</a>
 </div>	
 </div>	
 </li>
