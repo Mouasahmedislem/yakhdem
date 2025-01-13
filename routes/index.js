@@ -355,6 +355,150 @@ router.get("/myfixateur/fixateur", function(req, res){
         }
     });
 });
+router.get("/onecoat/pink02", function(req, res){
+    
+        header.find({}, function(err, headers){
+        if(err){
+            console.log(err);
+        }
+        else{
+            res.render("onecoat/pink02", {headers:headers});
+        }
+    });
+});
+router.get("/onecoat/pink03", function(req, res){
+    
+        header.find({}, function(err, headers){
+        if(err){
+            console.log(err);
+        }
+        else{
+            res.render("onecoat/pink03", {headers:headers});
+        }
+    });
+});
+router.get("/onecoat/pink04", function(req, res){
+    
+        header.find({}, function(err, headers){
+        if(err){
+            console.log(err);
+        }
+        else{
+            res.render("onecoat/pink04", {headers:headers});
+        }
+    });
+});
+router.get("/onecoat/pink07", function(req, res){
+    
+        header.find({}, function(err, headers){
+        if(err){
+            console.log(err);
+        }
+        else{
+            res.render("onecoat/pink07", {headers:headers});
+        }
+    });
+});
+router.get("/onecoat/yellow01", function(req, res){
+    
+        header.find({}, function(err, headers){
+        if(err){
+            console.log(err);
+        }
+        else{
+            res.render("onecoat/yellow01", {headers:headers});
+        }
+    });
+});
+router.get("/onecoat/grey14", function(req, res){
+    
+        header.find({}, function(err, headers){
+        if(err){
+            console.log(err);
+        }
+        else{
+            res.render("onecoat/grey14", {headers:headers});
+        }
+    });
+});
+router.get("/onecoat/grey03", function(req, res){
+    
+        header.find({}, function(err, headers){
+        if(err){
+            console.log(err);
+        }
+        else{
+            res.render("onecoat/grey03", {headers:headers});
+        }
+    });
+});
+router.get("/onecoat/green09", function(req, res){
+    
+        header.find({}, function(err, headers){
+        if(err){
+            console.log(err);
+        }
+        else{
+            res.render("onecoat/green09", {headers:headers});
+        }
+    });
+});
+router.get("/onecoat/green13", function(req, res){
+    
+        header.find({}, function(err, headers){
+        if(err){
+            console.log(err);
+        }
+        else{
+            res.render("onecoat/green13", {headers:headers});
+        }
+    });
+});
+router.get("/onecoat/beige01", function(req, res){
+    
+        header.find({}, function(err, headers){
+        if(err){
+            console.log(err);
+        }
+        else{
+            res.render("onecoat/beige01", {headers:headers});
+        }
+    });
+});
+router.get("/onecoat/BEIGE09", function(req, res){
+    
+        header.find({}, function(err, headers){
+        if(err){
+            console.log(err);
+        }
+        else{
+            res.render("onecoat/BEIGE09", {headers:headers});
+        }
+    });
+});
+router.get("/onecoat/bleue14", function(req, res){
+    
+        header.find({}, function(err, headers){
+        if(err){
+            console.log(err);
+        }
+        else{
+            res.render("onecoat/bleue14", {headers:headers});
+        }
+    });
+});
+router.get("/onecoat/blue15", function(req, res){
+    
+        header.find({}, function(err, headers){
+        if(err){
+            console.log(err);
+        }
+        else{
+            res.render("onecoat/blue15", {headers:headers});
+        }
+    });
+});
+
 
 router.get("/favicon.ico", function(req, res){
     
@@ -362,10 +506,6 @@ router.get("/favicon.ico", function(req, res){
         res.render("views/favicon");
     
 });
-
-
-
-
 
 router.get('/shop', (req, res)=> {
             if(!req.session.cart) {
