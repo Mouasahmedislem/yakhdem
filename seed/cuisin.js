@@ -15,7 +15,7 @@ var cuisins = [
     {
         image: "https://s12.gifyu.com/images/SYnoR.jpg",
         title: "My Fixature By Paintello's Paint ",
-        href : "/onecoat/beig02",
+        href : "/myfixateur/fixateur",
         price: 1500
     }
   
