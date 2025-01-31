@@ -12,12 +12,11 @@ mongoose.connect('mongodb+srv://Islem:cmygNChSy2L9Q4xt@paintello.cu30n.mongodb.n
     })
 
 var samples = [
-    {
-        image: "https://s12.gifyu.com/images/SYnoR.jpg",
-        title: "My Fixature By Paintello's Paint ",
-        href : "/myfixateur/fixateur",
-        price: 1500
-    }
+   {
+        image: "https://s9.gifyu.com/images/SV82T.png",
+        title: "Paintello's Sample ",
+        price: 150.00
+    },
   
  
 ];
