@@ -384,6 +384,18 @@ router.get("/myfixateur/fixateur", function(req, res){
         }
     });
 });
+
+router.get("/paintellomac/paintellomac", function(req, res){
+    
+        header.find({}, function(err, headers){
+        if(err){
+            console.log(err);
+        }
+        else{
+            res.render("paintellomac/paintellomac", {headers:headers});
+        }
+    });
+});
 router.get("/onecoat/pink02", function(req, res){
     
         header.find({}, function(err, headers){
