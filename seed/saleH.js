@@ -35,11 +35,7 @@ mongoose.connect('mongodb+srv://Islem:cmygNChSy2L9Q4xt@paintello.cu30n.mongodb.n
     title: "My Fixature",
     href:"/sale/cuisin"
 },
-    {
-    image: "https://s13.gifyu.com/images/SeaG9.png",
-    title: "Samples",
-    href:"/sale/sample"
-},
+ 
     {
     image: "https://s13.gifyu.com/images/b2pmM.jpg",
     title: "Paintello's MAC",
@@ -50,6 +46,11 @@ mongoose.connect('mongodb+srv://Islem:cmygNChSy2L9Q4xt@paintello.cu30n.mongodb.n
     image: "https://cdn.bmstores.co.uk/images/dmCategory/thumbnailImageResponsive/decorating-320x3201.jpg",
     title: "Outils paint",
     href:"/wow"
+},
+    {
+    image: "https://s13.gifyu.com/images/SeaG9.png",
+    title: "Samples",
+    href:"/sale/sample"
 }
 
 ];
