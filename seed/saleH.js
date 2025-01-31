@@ -38,7 +38,7 @@ mongoose.connect('mongodb+srv://Islem:cmygNChSy2L9Q4xt@paintello.cu30n.mongodb.n
     {
     image: "https://s13.gifyu.com/images/SeaG9.png",
     title: "SAMPLES",
-    href:"/sale/rug"
+    href:"/sale/sample"
 },
  
 {
