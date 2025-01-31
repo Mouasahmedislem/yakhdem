@@ -19,6 +19,7 @@ var rug = require('../models/rug');
 var cuisin = require('../models/cuisin');
 var clean = require('../models/clean');
 var coat = require('../models/coat');
+var sample = require('../models/sample');
 
 
 router.get("/sale/furniteur", function(req, res){
@@ -162,6 +163,34 @@ router.get("/add-to-cart-coat/:id", function(req, res){
         req.session.cart = cart;
         console.log(req.session.cart);
         res.redirect("/sale/coat");
+    });
+});
+
+router.get("/sale/sample", function(req, res){
+    sample.find({}, function(err, samples){
+    header.find({}, function(err, headers){
+        if(err){
+            console.log(err);
+        }
+        else{
+            res.render("sale/sample", {samples: samples,headers:headers});
+        }
+    });
+});
+});
+
+router.get("/add-to-cart-sample/:id", function(req, res){
+    var sampleId = req.params.id;
+    var cart = new Cart(req.session.cart ? req.session.cart : {});
+    
+    sample.findById(sampleId, function(err, sample){
+        if(err){
+            return res.redirect("/sale/sample");
+        }
+        cart.add(sample, sample.id);
+        req.session.cart = cart;
+        console.log(req.session.cart);
+        res.redirect("/sale/sample");
     });
 });
 
