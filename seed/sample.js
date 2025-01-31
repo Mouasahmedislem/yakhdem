@@ -16,7 +16,7 @@ var samples = [
         image: "https://s9.gifyu.com/images/SV82T.png",
         title: "Paintello's Sample ",
         price: 150.00
-    },
+    }
   
  
 ];
