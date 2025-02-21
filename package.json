@@ -34,10 +34,7 @@
     "dev": "nodemon ./bin/www",
     "lint": "eslint --debug /"
   },
-  "engines": {
-    "node": "14.17.0",
-    "npm": "*"
-  },
+ 
   "author": "",
   "license": "ISC"
 }
