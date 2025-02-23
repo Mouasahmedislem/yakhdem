@@ -547,6 +547,12 @@ router.get("/favicon.ico", function(req, res){
         res.render("views/favicon");
     
 });
+router.get("/power", function(req, res){
+    
+    
+        res.render("event/power");
+    
+});
 
 router.get('/shop', (req, res)=> {
             if(!req.session.cart) {
