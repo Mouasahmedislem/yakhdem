@@ -1,55 +1,590 @@
+<!DOCTYPE html>
+<html lang="en">
 
-<%- include ("../partials/header") %>.
+<head>
 
-
-<h2 class="text-center text-uppercase">Power Tools</h2>
-
-<div class="bm-page">
-<div class="container">
-<div class="row">
-<% powers.forEach(function(power){ %>
-<div class="order-lg-last">
-<div class="mb-4 mb-lg-5 bm-content">
-<div class="mb-4">
-</div>
-<div class="prod-listing">
-<div class="d-none fa-3x prod-loading">
-<i class="fas fa-circle-notch fa-spin"></i>
-</div>
-<div aria-hidden="true" class="row border-bottom mt-4 mx-md-auto"></div>
-<ul class="row list-unstyled mb-0">
-<li class="col-sm-6 col-md-4 bm-col-md bm-product-item">
-<div class="align-items-center d-flex h-100 bm-product-link" href="/products/high-performance-rubber-underlay-3mm-365430">	
-<div class="flex-shrink-0 mw-100 position-relative bm-product-link-img">
-<img id="myImg" class="myImgLightBox"  width="200" height="240" src="<%= power.image %>" >	
-<!-- The Modal -->
-<div id="myModal" class="modal">
-  <!-- The Close Button -->
-  <span class="close" id="span">&times;</span>
-  <!-- Modal Content (The Image) -->
-  <img class="modal-content" id="img01">
-  <!-- Modal Caption (Image Text) -->
-  <div id="caption"></div>
-</div></div>
-<div class="flex-fill mw-100 bm-product-link-text">
-<h3 class="d-block font-weight-normal h6 mb-0 text-body"><%= power.title %></h3>
-<span class="d-block h5 mb-0 mt-1 text-body"><%= power.price%>DA</span>
-<a href="/add-to-cart-power/<%= power._id %>"class="btn btn-pink btn-rounded"><i class="fas fa-cart-plus mr-2" aria-hidden="true"></i>buy</a>
-</div>	
-</div>	
-</li>
-
-</ul>
-<div aria-hidden="true" class="row border-bottom mb-4 mx-md-auto"></div>
-</div>
+<link href='http://fonts.googleapis.com/css?family=Roboto' rel='stylesheet' type='text/css'>
+  <meta name="facebook-domain-verification" content="plfly5a8dktgdy17nvv2h8zsrpc9g5" />
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  <title>Paintello</title>
+  
+<link rel="apple-touch-icon" sizes="180x180" href="/favicon/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon/favicon-16x16.png">
+<link rel="manifest" href="/favicon/site.webmanifest">  
+  <meta name="theme-color" content="#ffffff">  <link href='https://cdn.jsdelivr.net/npm/boxicons@2.0.5/css/boxicons.min.css' rel='stylesheet'>
+  <link rel="stylesheet" href="/assets/vendor/font-awesome/css/fontawesome-all.min.css">
+  <link rel="stylesheet" href="/assets/vendor/animate.css/animate.min.css">
+  <link rel="stylesheet" href="/assets/vendor/hs-megamenu/src/hs.megamenu.css">
+  
+  <!-- Font Awesome -->
+  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.11.2/css/all.css">
+  <!-- Bootstrap core CSS -->
+  <link href="/css/bootstrap.min.css" rel="stylesheet">
+  <link href="/css/bmo.min.css" rel="stylesheet">
+<!-- Add the slick-theme.css if you want default styling -->
+<link rel="stylesheet" type="text/css" href="//cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.css"/>
+<!-- Add the slick-theme.css if you want default styling -->
+<link rel="stylesheet" type="text/css" href="//cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick-theme.css"/>
+  <!-- Material Design Bootstrap -->
+  <link href="/css/mdb.min.css" rel="stylesheet">
+  <link href="/css/magiczoomplus.css" rel="stylesheet">
+  <link href="/css/zoomm.css" rel="stylesheet">
 
 
-</div>
-</div>
-<% }); %>
-</div>
-</div>
-</div>
+
+ 
 
 
-<%- include ("../partials/footer") %>.
+  <style>
+  .body{
+    font-family: 'Roboto', sans-serif;
+}
+    .zoom {
+ 
+  transition: transform .2s; /* Animation */
+ 
+}
+  
+
+
+.zoom:hover {
+  transform: scale(2); /* (150% zoom - Note: if the zoom is too large, it will go outside of the viewport) */
+right: 12px;
+    bottom: 12px;
+    top: auto;
+    left: auto;
+}
+   
+.img{
+  display: block;
+  max-width: 230px;
+  max-height: 95px;
+  width: auto;
+  height: auto;
+}
+      .prod-listing {
+    position: relative;
+    }
+    .list-unstyled {
+    padding-left: 0;
+    list-style: none;
+}
+html,
+    body,
+    header,
+    .view {
+      height: auto;
+    }
+    @media (max-width: 740px) {
+      html,
+      body,
+      header,
+      .view {
+        height: auto;
+      }
+    }
+    @media (min-width: 800px) and (max-width: 850px) {
+      html,
+      body,
+      header,
+      .view {
+        height: auto;
+      }
+    }
+  
+    
+  </style>
+</head>
+
+<body>
+
+  <!-- Navigation & Intro -->
+  <header>
+
+    <!-- Navbar -->
+    
+    <nav class="navbar navbar-expand-lg navbar-light fixed-top scrolling-navbar white">
+      <div class="container">
+        <a class="navbar-brand font-weight-bold title"href="/">Paintello</a>
+        <!--Navigation icons-->
+        <ul class="nav navbar-nav nav-flex-icons ml-auto">
+          <li class="nav-item dropdown">
+                       <a class="nav-link dropdown" id="menu1" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        <i class="fas fa-user  black-text"></i>
+                      </a>
+                      <div class="dropdown-menu dropdown-menu-right bootstrap-menu  white scrollbar-default" aria-labelledby="menu1">
+                        <% if (login){ %>
+                          <a class="dropdown-item" href="/user/profile">profile</a>
+                           <a class="dropdown-item" href="/user/logout">Logout</a>
+                           <% } else{ %>
+                           <a class="dropdown-item" href="/user/signup">Register</a>
+                           <a class="dropdown-item" href="/user/signin">Sing up</a>
+                           <% } %>
+                 </div> 
+          </li>
+          <li class="nav-item ">
+                      <a class="nav-link " id="menu2" href="/shop" role="button"  aria-haspopup="true" aria-expanded="false">
+                        <i class="fas fa-shopping-cart black-text"></i>
+                        <% if(session.cart){ %>
+                      <span class="mycounter"><%= session.cart.totalQty %></span>
+                      <% } %>
+                      </a>
+          </li>
+    
+        </ul>
+        
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarTogglerDemo02"
+          aria-controls="navbarTogglerDemo02" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+          
+        </button>
+        
+        
+        <div class="collapse navbar-collapse" id="navbarTogglerDemo02">
+          <ul class="list-unstyled navbar-nav mr-auto">
+         
+            </li>
+            <li class="nav-item ml-4">
+              <a class="nav-link title" href="/sale/wow" data-offset="90">Nos Services</a>
+            </li>
+            <li class="nav-item ml-4">
+              <a class="nav-link title" href="/sale/clean" data-offset="90">interior paint</a>
+            </li>
+            <li class="nav-item ml-4">
+              <a class="nav-link title" href="/sale/furniteur" data-offset="90">Vinyl paint</a>
+            </li>
+            <li class="nav-item ml-4">
+              <a class="nav-link title" href="/sale/wow" data-offset="90">outils</a>
+            </li>
+            <li class="nav-item ml-4">
+              <a class="nav-link title" href="/return" data-offset="90">Returns</a>
+            </li>
+            
+          </ul>
+          
+          <!-- Social Icon  -->
+         
+              </div>
+      </div>
+  
+         
+      </div>
+      </div>
+    </nav>
+   <h2 class="text-center text-uppercase">WELCOME TO Paintello</h2>
+<section class="view intro-2" style="background-image: url(https://mdbootstrap.com/img/Photos/Others/architecture.jpg); background-repeat: no-repeat; background-size: cover; background-position: center center;">
+      <div class="mask rgba-gradient-1">
+        <div class="container h-100 d-flex justify-content-center align-items-center">
+          <div class="row h-100 d-flex justify-content-center align-items-center">
+
+            <div class="col-md-10 col-lg-6 text-center text-md-left mt-5 pt-4 pt-md-0 mt-lg-0 mb-5 mb-md-0">
+              <div class="white-text">
+                <h1 class="h1-responsive font-weight-bold mt-sm-5 mb-4 wow fadeInLeft" data-wow-delay="0.3s">Clean Modern Layout For Your Web</h1>
+                <hr class="hr-light wow fadeInLeft" data-wow-delay="0.3s">
+                <h6 class="wow fadeInLeft" data-wow-delay="0.3s">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Rem repellendus quasi fuga nesciunt dolorum nulla magnam veniam sapiente, fugiat! Commodi sequi non animi ea dolor molestiae iste.</h6>
+                <a class="btn pink-gradient btn-rounded btn-lg font-weight-bold wow fadeInLeft" data-wow-delay="0.4s">Get started</a>
+                <a class="btn btn-white btn-rounded btn-lg orange-text font-weight-bold ml-lg-0 wow fadeInLeft" data-wow-delay="0.4s"><i class="fas fa-play-circle orange-text mr-2" aria-hidden="true"></i> Watch demo</a>
+              </div>
+            </div>
+
+            <div class="col-md-10 col-lg-6 mt-5 mt-lg-0 wow fadeInRight" data-wow-delay="0.3s">
+              <img src="https://mdbootstrap.com/img/Mockups/Transparent/Small/admin-new.png" alt="Sample Image" class="img-fluid">
+            </div>
+
+          </div>
+        </div>
+      </div>
+    </section>
+    <div class="mb-4"> 
+     
+      <div class="container bm-container-md">	
+      <a class="d-block h-100 overflow-hidden bm-img-link" href="/wow" target="_self">
+        <picture>
+            <img alt="New Wallpaper now in store at B&amp;M." class="w-100 bm-lazyload ls-is-cached lazyloaded"  src="https://s12.gifyu.com/images/SY8pm.jpg">
+          </picture>
+      </a>
+      </div>	
+      
+      </div>
+  </header>
+
+<hr class="mt-4">
+<!-- Main Layout -->
+  <main>
+
+<!-- Section: Team -->
+      <section class="team-section pb-5 mb-4">
+
+        <!-- Secion heading -->
+        <h3 class="my-5 pt-4 text-center title font-weight-bold wow fadeIn" data-wow-delay="0.2s">
+          <strong>Quality Paint For Your Home</strong>
+        </h3>
+        <!-- Section description -->
+        <p class="grey-text w-responsive text-center mx-auto mb-5">لا يوجد منزل خالٍ من العيوب - الحياة المزدحمة تعني أنه في بعض الأحيان قد يكون من الصعب تجنب الانسكابات والعلامات والبقع على جدرانك.</p>
+
+        <!-- Grid row -->
+        <div class="row mb-lg-4 text-center text-md-left">
+
+          <!-- Grid column -->
+          <div class="col-lg-6 col-md-12 mb-5">
+
+            <div class="col-md-6 float-left">
+              <div class="avatar mx-auto white mb-md-0 mb-4">
+                <img src="https://images.prismic.io/johnstones-paint/ZyzcXK8jQArT0gVL_DiningRoom_FineFabric_SeaSprite.jpg?auto=format%2Ccompress&rect=48%2C0%2C952%2C667&w=802&h=562" class="rounded z-depth-1"
+                  alt="First sample avatar image">
+              </div>
+            </div>
+
+            <div class="col-md-6 float-right">
+              <h4>
+                <strong>Colour Combinations</strong>
+              </h4>
+              
+              <p class="grey-text">اجمع بين ألوان الطلاء بثقة باستخدام ألوان الطلاء المفضلة لديك من Paintello. </p>
+
+             
+            </div>
+
+          </div>
+          <!-- Grid column -->
+
+          <!-- Grid column -->
+          <div class="col-lg-6 col-md-12 mb-5">
+
+            <div class="col-md-6 float-left">
+              <div class="avatar mx-auto white mb-md-0 mb-4">
+                <img src="https://images.prismic.io/johnstones-paint/Z2qVy5bqstJ98z9M_JSR_Ceiling_Lifestyle_ChinaClay.jpg?auto=format%2Ccompress&rect=0%2C291%2C1500%2C1051&w=802&h=562" class="rounded z-depth-1"
+                  alt="Second sample avatar image">
+              </div>
+            </div>
+
+            <div class="col-md-6 float-right">
+              <h4>
+                <strong>Colour & Inspiration Guides</strong>
+              </h4>
+              
+              <p class="grey-text">تصفح أحدث الاتجاهات، واقرأ نصائحنا المفيدة وأدلة التصميم، أو تعرف على المزيد حول مجموعتنا من دهانات paintello.</p>
+
+            
+            </div>
+
+          </div>
+          <!-- Grid column -->
+
+        </div>
+        <!-- Grid row -->
+
+        <!-- Grid row -->
+        <div class="row text-center text-md-left">
+
+          <!-- Grid column -->
+          <div class="col-lg-6 col-md-12 mb-5">
+
+            <div class="col-md-6 float-left">
+              <div class="avatar mx-auto white mb-md-0 mb-4">
+                <img src="https://images.prismic.io/johnstones-paint/66612ddf-db79-4198-91cf-c5d3f10cef40_Maple+Haze.jpg+1000x666.jpg?auto=compress,format&rect=83,0,833,666&w=794&h=568" class="rounded z-depth-1"
+                  alt="Fourth sample avatar image">
+              </div>
+            </div>
+
+            <div class="col-md-6 float-right">
+              <h4>
+                <strong>Colour Trends</strong>
+              </h4>
+              
+              <p class="grey-text">هل تبحث عن نصائح حول ألوان الطلاء وأفكار الديكور؟ اطلع على أحدث مقالاتنا لمساعدتك في إلهام مشروعك القادم في مجال الرسم! تصفح أحدث اتجاهات الألوان وأدلة الديكور والصور الملهمة لمساعدتك في العثور على فكرتك الرائعة القادمة.</p>
+
+            
+            </div>
+
+          </div>
+          <!-- Grid column -->
+
+        </div>
+        <!-- Grid row -->
+
+      </section>
+      <!-- Section: Team -->
+
+
+    <div class="container-fluid mb-5">
+
+      <!-- Grid row -->
+      <div class="row" style="margin-top: -100px;">
+
+        <!-- Grid column -->
+        <div class="col-md-12">
+
+          <div class="card pb-5">
+            <div class="card-body">
+
+              <div class="container">
+
+                <!-- Section: Contact v.2 -->
+                <section class="text-center">
+
+                  <!-- Section heading -->
+                  <h2 class="font-weight-bold title h1 my-5">Contact us</h2>
+                  <!-- Section description -->
+                  <p class="grey-text w-responsive mx-auto mb-5">Lorem ipsum dolor sit amet, consectetur adipisicing
+                    elit. Fugit, error amet numquam iure
+                    provident voluptate esse quasi, veritatis totam voluptas nostrum quisquam eum porro
+                    a pariatur accusamus veniam.</p>
+
+                  <div class="row pt-5">
+
+                    <!-- Grid column -->
+                    <div class="col-md-8 col-xl-9 mb-4">
+                      <form>
+
+                        <!-- Grid row -->
+                        <div class="row">
+
+                          <!-- Grid column -->
+                          <div class="col-md-6">
+                            <div class="md-form mb-0">
+                              <div class="md-form mb-0">
+                                <input type="text" id="contact-name" class="form-control">
+                                <label for="contact-name" class="">Your name</label>
+                              </div>
+                            </div>
+                          </div>
+                          <!-- Grid column -->
+
+                          <!-- Grid column -->
+                          <div class="col-md-6">
+                            <div class="md-form mb-0">
+                              <div class="md-form mb-0">
+                                <input type="text" id="contact-email" class="form-control">
+                                <label for="contact-email" class="">Your email</label>
+                              </div>
+                            </div>
+                          </div>
+                          <!-- Grid column -->
+
+                        </div>
+                        <!-- Grid row -->
+
+                        <!-- Grid row -->
+                        <div class="row">
+                          <div class="col-md-12">
+                            <div class="md-form mb-0">
+                              <input type="text" id="contact-Subject" class="form-control">
+                              <label for="contact-Subject" class="">Subject</label>
+                            </div>
+                          </div>
+                        </div>
+                        <!-- Grid row -->
+
+                        <!-- Grid row -->
+                        <div class="row">
+
+                          <!-- Grid column -->
+                          <div class="col-md-12">
+
+                            <div class="md-form mb-0">
+                              <textarea type="text" id="contact-message" class="md-textarea form-control"
+                                rows="3"></textarea>
+                              <label for="contact-message">Your message</label>
+                            </div>
+
+                          </div>
+                        </div>
+                        <!-- Grid row -->
+
+                      </form>
+
+                      <div class="text-center text-md-left mt-4">
+                        <a class="btn pink-gradient btn-rounded">Send</a>
+                      </div>
+                    </div>
+                    <!-- Grid column -->
+
+                    <!-- Grid column -->
+                    <div class="col-md-4 col-xl-3">
+                      <ul class="list-unstyled contact-icons">
+                        <li>
+                          <i class="fas fa-map-marker-alt fa-2x orange-text"></i>
+                          <p>San Francisco, CA 94126, USA</p>
+                        </li>
+
+                        <li>
+                          <i class="fas fa-phone fa-2x orange-text"></i>
+                          <p>+ 01 234 567 89</p>
+                        </li>
+
+                        <li>
+                          <i class="fas fa-envelope fa-2x orange-text"></i>
+                          <p>contact@mdbootstrap.com</p>
+                        </li>
+                      </ul>
+                    </div>
+                    <!-- Grid column -->
+
+                  </div>
+
+                </section>
+                <!-- Section: Contact v.2 -->
+
+              </div>
+            </div>
+
+          </div>
+          <!-- Grid column -->
+
+        </div>
+        <!-- Grid row -->
+
+      </div>
+
+    </div>
+
+  </main>
+  <!-- Main Layout -->
+
+
+ <!-- Footer -->
+ <footer class="page-footer text-center text-md-left unique-color-dark pt-0">
+
+    <div class="top-pink-footer">
+      <div class="container">
+
+        <!-- Grid row -->
+        <div class="row py-4 d-flex align-items-center">
+
+          <!-- Grid column -->
+          <div class="col-md-6 col-lg-5 text-center text-md-left mb-md-0">
+            <h6 class="mb-4 mb-md-0 white-text">Get connected with us on social networks!</h6>
+          </div>
+          <!-- Grid column -->
+
+          <!-- Grid column -->
+          <div class="col-md-6 col-lg-7 text-center text-md-right">
+            <!-- Facebook -->
+            <a href='https://www.facebook.com/paintelllo'class="p-2 m-2 fa-lg fb-ic ml-0">
+              <i class="fab fa-facebook-f white-text mr-lg-4"> </i>
+            </a>
+            
+            <!-- Google + -->
+            <a class="p-2 m-2 fa-lg gplus-ic">
+              <i class="fab fa-google-plus-g white-text mr-lg-4"> </i>
+            </a>
+            
+            <!-- Instagram -->
+            <a href='https://www.instagram.com/paintelloo/'class="p-2 m-2 fa-lg ins-ic">
+              <i class="fab fa-instagram white-text mr-lg-4"> </i>
+            </a>
+          </div>
+          <!-- Grid column -->
+
+        </div>
+        <!-- Grid row -->
+
+      </div>
+    </div>
+
+    <!-- Footer Links -->
+    <div class="container mt-5 mb-4 text-center text-md-left">
+      <div class="row mt-3">
+
+        <!-- First column -->
+        <div class="col-md-3 col-lg-4 col-xl-3 mb-5">
+          <h6 class="spacing font-weight-bold">
+            <strong>Paintello</strong>
+          </h6>
+          <hr class="pink accent-2 mb-4 mt-0 d-inline-block mx-auto" style="width: 60px;">
+          <p>Paintello team is proud to be one of the most 
+            popular paint companies in the city.</p>
+        </div>
+        
+        <!-- Fourth column -->
+        <div class="col-md-4 col-lg-3 col-xl-3">
+          <h6 class="spacing font-weight-bold">
+            <strong>Contact</strong>
+          </h6>
+          <hr class="pink accent-2 mb-4 mt-0 d-inline-block mx-auto" style="width: 60px;">
+          <p>
+            <i class="fas fa-home mr-3"></i> CHERAGA, Alger, Algerie</p>
+          <p>
+            <i class="fas fa-envelope mr-3"></i> PAINTELLO.CONTACT@GMAIL.com</p>
+          <p>
+            <i class="fas fa-phone mr-3"></i> + 213 555 73 75 57</p>
+          <p>
+            <i class="fas fa-phone mr-3"></i> + 213 791 67 96 11</p>
+        </div>
+        <!-- Fourth column -->
+
+      </div>
+    </div>
+    <!-- Footer Links -->
+
+    <!-- Copyright -->
+    <div class="footer-copyright text-center py-3">
+      <div class="container-fluid">
+        © 2023 Copyright: Paintello.com
+      </div>
+    </div>
+    <!-- Copyright -->
+
+  </footer>
+  <!-- Footer -->
+  <script type="text/javascript" src="//cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.min.js"></script>
+  <!-- JQuery -->
+  <script type="text/javascript" src="../../js/jquery-3.4.1.min.js"></script>
+  <!-- Bootstrap tooltips -->
+  <script type="text/javascript" src="../../js/popper.min.js"></script>
+  <!-- Bootstrap core JavaScript -->
+  <script type="text/javascript" src="../../js/bootstrap.min.js"></script>
+  <!-- MDB core JavaScript -->
+  <script type="text/javascript" src="../../js/mdb.min.js"></script>
+  <script type="text/javascript" src="../../js/magiczoomplus.js"></script>
+<script src="https://scripts.sirv.com/sirv.js"></script>
+<script src="https://scripts.sirv.com/sirv.nospin.js"></script>
+  <script>
+
+// Get the modal
+var modal = document.getElementById("myModal");
+
+// Get the image and insert it inside the modal - use its "alt" text as a caption
+var imgs = document.getElementsByClassName("myImgLightBox");
+var modalImg = document.getElementById("img01");
+var captionText = document.getElementById("caption");
+for(let img of imgs){
+img.onclick = function(){
+  modal.style.display = "block";
+  modalImg.src = this.src;
+  captionText.innerHTML = this.alt;
+}
+}
+
+// Get the <span> element that closes the modal
+var span = document.getElementsByClassName("close")[0];
+
+// When the user clicks on <span> (x), close the modal
+span.onclick = function() {
+  modal.style.display = "none";
+}
+window.onclick= function(event) {
+  if (event.target == modal){
+    modal.style.display="none";
+
+  } 
+}
+    
+  </script>
+ 
+ 
+  <script>
+    $('.carousel').carousel({
+    pause: "false" /* Change to true to make it paused when your mouse cursor enter the background */
+});
+    // Animation init
+    new WOW().init();
+  </script>
+
+</body>
+
+</html>
