@@ -2,6 +2,7 @@ var express = require('express')
 var router = express.Router()
 
 const Order = require('../models/order');
+const power = require('../models/power');
 const middleware = require('../middleware');
 const stripe = require("stripe")(process.env.STRIPE_API_KEY);
 
@@ -662,6 +663,37 @@ router.get('/shop', (req, res)=> {
                 else{
                 req.flash('success', 'Successfully bought product!');
                 req.session.cart = null;
+                res.redirect('/')};
+              });
+           
+          })
+
+router.post('/power', function(req, res, next) {
+            
+           
+              let power = new power({
+                
+                chambre: req.body.chambre,
+                help: req.body.help,
+                etat: req.body.etat,
+                product: req.body.product,
+                owner: req.body.owner,
+                time: req.body.time,
+                etape: req.body.etape,
+                budge: req.body.budge,
+                contactemail: req.body.contactemail,
+                contactnum: req.body.contactnum
+                
+              });
+              power.save(function(err, result) {
+                if (err) {
+                    
+                    req.flash('error', err.message);
+                    
+                 return res.redirect('/power');
+                }
+                else{
+                req.flash('success', 'Successfully order painter!');
                 res.redirect('/')};
               });
            
