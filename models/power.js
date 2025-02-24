@@ -1,9 +1,17 @@
-var mongoose = require("mongoose");
+const mongoose = require('mongoose');
+const Schema = mongoose.Schema;
 
-var powerSchema = new mongoose.Schema({
-    image: {type: String, required: true},
-    title: {type: String, required: true},
-    price: {type: Number, required: true}
+const powerSchema = new Schema({
+  chambre: {type: String, required: true},
+  help: {type: String, required: true},
+  etat: {type: String, required: true},
+  owner: {type: String, required: true},
+  time: {type: String, required: true},
+  etape: {type: String, required: true},
+  budge: {type: String, required: true},
+  contactemail: {type: String, required: true},
+  contactnum : {type: Number, required: true}
+
 });
 
-module.exports = mongoose.model("power", powerSchema);
+module.exports = mongoose.model('power', powerSchema);
