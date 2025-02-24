@@ -203,7 +203,7 @@ html,
       <div class="container bm-container-md">	
       <a class="d-block h-100 overflow-hidden bm-img-link" href="/wow" target="_self">
         <picture>
-            <img alt="New Wallpaper now in store at B&amp;M." class="w-100 bm-lazyload ls-is-cached lazyloaded"  src="https://s12.gifyu.com/images/SY8pm.jpg">
+            <img alt="New Wallpaper now in store at B&amp;M." class="w-100 bm-lazyload ls-is-cached lazyloaded"  src="https://s3.gifyu.com/images/bSimU.png">
           </picture>
       </a>
       </div>	
@@ -214,7 +214,39 @@ html,
 <hr class="mt-4">
 <!-- Main Layout -->
   <main>
+<hr class="mt-4">
+ <!-- Section: About 1 -->
+      <section id="about" class="mt-5 mb-5 py-3 wow fadeIn" data-wow-delay="0.2s">
 
+        <!-- Grid row -->
+        <div class="row pt-2 mt-lg-5">
+
+          <!-- Grid column -->
+          <div class="col-lg-6 col-md-12 mb-3 wow fadeIn" data-wow-delay="0.4s">
+            <!-- Image -->
+            <img src="https://images.prismic.io/johnstones-paint/ZvqoRLVsGrYSwJEi_Dyrup_Bedroom01.tif?auto=format%2Ccompress&rect=0%2C1003%2C6000%2C2270&w=2220&h=840" class="img-fluid rounded" alt="My photo">
+          </div>
+          <!-- Grid column -->
+
+          <!-- Grid column -->
+          <div class="col-lg-6 ml-auto col-md-12 wow fadeIn" data-wow-delay="0.4s">
+
+            <!-- Secion heading -->
+            <h2 class="mb-5 title font-weight-bold wow fadeIn" data-wow-delay="0.2s">
+              <strong>Paint Colour Trends</strong>
+            </h2>
+
+            <!-- Description -->
+            <p align="justify" class="grey-text">تصفح قصص اتجاهاتنا للحصول على الإلهام حول كيفية استخدام الألوان والجمع بينها لإنشاء غرف ذات شخصية..</p>
+            
+          </div>
+          <!-- Grid column -->
+
+        </div>
+        <!-- Grid row -->
+
+      </section>
+      <!-- Section: About 1 -->
 <!-- Section: Team -->
       <section class="team-section pb-5 mb-4">
 
@@ -249,63 +281,12 @@ html,
             </div>
 
           </div>
-          <!-- Grid column -->
-
-          <!-- Grid column -->
-          <div class="col-lg-6 col-md-12 mb-5">
-
-            <div class="col-md-6 float-left">
-              <div class="avatar mx-auto white mb-md-0 mb-4">
-                <img src="https://images.prismic.io/johnstones-paint/Z2qVy5bqstJ98z9M_JSR_Ceiling_Lifestyle_ChinaClay.jpg?auto=format%2Ccompress&rect=0%2C291%2C1500%2C1051&w=802&h=562" class="rounded z-depth-1"
-                  alt="Second sample avatar image">
-              </div>
-            </div>
-
-            <div class="col-md-6 float-right">
-              <h4>
-                <strong>Colour & Inspiration Guides</strong>
-              </h4>
-              
-              <p class="grey-text">تصفح أحدث الاتجاهات، واقرأ نصائحنا المفيدة وأدلة التصميم، أو تعرف على المزيد حول مجموعتنا من دهانات paintello.</p>
-
-            
-            </div>
-
-          </div>
-          <!-- Grid column -->
+        
 
         </div>
         <!-- Grid row -->
 
-        <!-- Grid row -->
-        <div class="row text-center text-md-left">
-
-          <!-- Grid column -->
-          <div class="col-lg-6 col-md-12 mb-5">
-
-            <div class="col-md-6 float-left">
-              <div class="avatar mx-auto white mb-md-0 mb-4">
-                <img src="https://images.prismic.io/johnstones-paint/66612ddf-db79-4198-91cf-c5d3f10cef40_Maple+Haze.jpg+1000x666.jpg?auto=compress,format&rect=83,0,833,666&w=794&h=568" class="rounded z-depth-1"
-                  alt="Fourth sample avatar image">
-              </div>
-            </div>
-
-            <div class="col-md-6 float-right">
-              <h4>
-                <strong>Colour Trends</strong>
-              </h4>
-              
-              <p class="grey-text">هل تبحث عن نصائح حول ألوان الطلاء وأفكار الديكور؟ اطلع على أحدث مقالاتنا لمساعدتك في إلهام مشروعك القادم في مجال الرسم! تصفح أحدث اتجاهات الألوان وأدلة الديكور والصور الملهمة لمساعدتك في العثور على فكرتك الرائعة القادمة.</p>
-
-            
-            </div>
-
-          </div>
-          <!-- Grid column -->
-
-        </div>
-        <!-- Grid row -->
-
+       
       </section>
       <!-- Section: Team -->
 
@@ -343,7 +324,7 @@ html,
                           <!-- Grid column -->
                           
                             <label class="form-label select-label">كم عدد الغرف التي تحتاج إلى طلاء/تزيين؟</label>
-                                <select data-mdb-select-init type="text" class="custom-select" name="commune" id="commune">
+                                <select data-mdb-select-init type="text" class="custom-select" name="chambre" id="chambre">
                                  <option value="1">One</option>
                                   <option value="2">Two</option>
                                    <option value="3">Three</option>
@@ -358,7 +339,7 @@ html,
                            
                           <!-- Grid column -->
                          <label class="form-label select-label">ما الذي تريد المساعدة فيه؟</label>
-                                <select data-mdb-select-init  type="text" class="custom-select" name="commune" id="commune">
+                                <select data-mdb-select-init  type="text" class="custom-select" name="help" id="help">
                                  <option value="1">دهن/ طلي</option>
                                   <option value="2">إزالة الطلاء</option>
                                    <option value="3">Other</option>
@@ -369,7 +350,7 @@ html,
                         
                           <!-- Grid column -->
                            <label class="form-label select-label">ما هي حالة الجدران/الأسطح؟</label>
-                                <select data-mdb-select-init  type="text" class="custom-select" name="commune" id="commune">
+                                <select data-mdb-select-init  type="text" class="custom-select" name="etat" id="etat">
                                  <option value="1">في حالة جيدة (أي وجود عدد قليل من ثقوب خطاف الصورة أو الشقوق الصغيرة)</option>
                                   <option value="2">يحتاج إلى بعض الإصلاحات (أي الشقوق أو الثقوب المتعددة)</option>
                                    <option value="3">يحتاج إلى الكثير من الإصلاح (أي الشقوق الأكبر والجص التالف)</option>
@@ -379,7 +360,7 @@ html,
                           <!-- Grid column -->
                            <!-- Grid column -->
                           <label class="form-label select-label">هل ستحتاج إلى المواد الموردة؟</label>
-                                <select data-mdb-select-init  type="text" class="custom-select" name="commune" id="commune">
+                                <select data-mdb-select-init  type="text" class="custom-select" name="product" id="product">
                                  <option value="1">لقد حصلت بالفعل على المواد</option>
                                   <option value="2">أرغب في أن يقوم Paintello بتوريد المواد</option>
                                    <option value="3">أحتاج إلى مناقشة الأمر مع التاجر</option>
@@ -388,7 +369,7 @@ html,
                               
                           <!-- Grid column -->
                           <label class="form-label select-label">هل أنت المالك أو المخول لإجراء تغييرات على الملكية؟</label>
-                                <select data-mdb-select-init  type="text" class="custom-select" name="commune" id="commune">
+                                <select data-mdb-select-init  type="text" class="custom-select" name="owner" id="owner">
                                  <option value="1">انا المالك</option>
                                   <option value="2">أنا أملك وأعيش في هذا العقار</option>
                                    <option value="3">أنا مستأجر، ولكن لدي الحق في إجراء تغييرات على هذه الخاصية</option>
@@ -398,7 +379,7 @@ html,
                           <!-- Grid column -->
 
                              <label class="form-label select-label">متى تريد أن تبدأ العمل؟</label>
-                                <select data-mdb-select-init  type="text" class="custom-select" name="commune" id="commune">
+                                <select data-mdb-select-init  type="text" class="custom-select" name="time" id="time">
                                  <option value="1">عاجلا</option>
                                   <option value="2">خلال يومين</option>
                                    <option value="3">خلال اسبوعين</option>
@@ -409,7 +390,7 @@ html,
                           <!-- Grid column -->
 
                                   <label class="form-label select-label">في أي مرحلة أنت؟</label>
-                                <select data-mdb-select-init  type="text" class="custom-select" name="commune" id="commune">
+                                <select data-mdb-select-init  type="text" class="custom-select" name="etape" id="etape">
                                  <option value="1">أنا مستعد </option>
                                   <option value="2">أنا أخطط وأضع الميزانية</option>
                                    <option value="3">أحتاج إلى عرض أسعار لأغراض التأمين</option>
@@ -418,7 +399,7 @@ html,
                               
                           <!-- Grid column -->
                             <label class="form-label select-label">تقريبًا، ما هي ميزانيتك؟</label>
-                                <select data-mdb-select-init  type="text" class="custom-select" name="commune" id="commune">
+                                <select data-mdb-select-init  type="text" class="custom-select" name="budge" id="budge">
                                  <option value="1">تحت 20000DA</option>
                                   <option value="2">تحت 50000DA</option>
                                    <option value="3">تحت 100000DA</option>
@@ -431,7 +412,7 @@ html,
                           <div class="col-md-6">
                             <div class="md-form mb-0">
                               <div class="md-form mb-0">
-                                <input type="text" id="contact-email" class="form-control">
+                                <input type="text" name="contact-email" id="contact-email" class="form-control">
                                 <label for="contact-email" class="">Your email</label>
                               </div>
                             </div>
@@ -445,28 +426,14 @@ html,
                         <div class="row">
                           <div class="col-md-12">
                             <div class="md-form mb-0">
-                              <input type="text" id="contact-Subject" class="form-control">
+                              <input type="text" name="contact-num" id="contact-num" class="form-control">
                               <label for="contact-Subject" class="">Numéro téléphone</label>
                             </div>
                           </div>
                         </div>
                         <!-- Grid row -->
 
-                        <!-- Grid row -->
-                        <div class="row">
-
-                          <!-- Grid column -->
-                          <div class="col-md-12">
-
-                            <div class="md-form mb-0">
-                              <textarea type="text" id="contact-message" class="md-textarea form-control"
-                                rows="3"></textarea>
-                              <label for="contact-message">Your message</label>
-                            </div>
-
-                          </div>
-                        </div>
-                        <!-- Grid row -->
+                       
 
                       </form>
 
