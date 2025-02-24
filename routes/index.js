@@ -2,7 +2,7 @@ var express = require('express')
 var router = express.Router()
 
 const Order = require('../models/order');
-const power = require('../models/power');
+const powers = require('../models/powers');
 const middleware = require('../middleware');
 const stripe = require("stripe")(process.env.STRIPE_API_KEY);
 
@@ -671,7 +671,7 @@ router.get('/shop', (req, res)=> {
 router.post('/power', function(req, res, next) {
             
            
-              let power = new power({
+              let powers = new powers({
                 
                 chambre: req.body.chambre,
                 help: req.body.help,
@@ -685,10 +685,10 @@ router.post('/power', function(req, res, next) {
                 contactnum: req.body.contactnum
                 
               });
-              power.save(function(err, result) {
+              powers.save(function(err, result) {
                 if (err) {
                     
-                    req.flash('error', err.message);
+                    
                     
                  return res.redirect('/power');
                 }
