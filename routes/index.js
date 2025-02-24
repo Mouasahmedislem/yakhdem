@@ -548,7 +548,7 @@ router.get("/favicon.ico", function(req, res){
         res.render("views/favicon");
     
 });
-router.get("/power", function(req, res){
+router.get("/power", function(req, res, next){
     
     
         res.render("event/power");
