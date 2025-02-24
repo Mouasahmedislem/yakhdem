@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
-const powerSchema = new Schema({
+const powersSchema = new Schema({
   chambre: {type: String, required: true},
   help: {type: String, required: true},
   etat: {type: String, required: true},
@@ -14,4 +14,4 @@ const powerSchema = new Schema({
 
 });
 
-module.exports = mongoose.model('power', powerSchema);
+module.exports = mongoose.model('powers', powersSchema);
