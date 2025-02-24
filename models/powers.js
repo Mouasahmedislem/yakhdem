@@ -14,4 +14,4 @@ const powersSchema = new Schema({
 
 });
 
-module.exports = mongoose.model('powers', powersSchema);
+module.exports = mongoose.model('Powers', powersSchema);
