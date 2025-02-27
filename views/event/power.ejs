@@ -241,7 +241,9 @@ html,
                   <p class="grey-text w-responsive mx-auto mb-5">عندما يتعلق الأمر بمنازلنا، فإن الثقة والجودة أمران مهمان. يتعين على دهان إثبات هويتهم الحقيقية، وأنهم مؤهلون للقيام بالعمل عند الضرورة. </p>
 
                   <div class="row pt-5">
-
+                     <div id="payment -errors" class="alert alert-danger  <% if (noError) { %> hidden <% } %>">
+                      <%= errMsg %>
+                    </div>
                     <!-- Grid column -->
                     <div class="col-md-8 col-xl-9 mb-4">
                      
