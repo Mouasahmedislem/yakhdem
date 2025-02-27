@@ -550,8 +550,8 @@ router.get("/favicon.ico", function(req, res){
 });
 router.get("/power", function(req, res, next){
     
-    
-        res.render("event/power");
+     var errMsg = req.flash('error')[0];
+        res.render("event/power", { errMsg: errMsg, noError: !errMsg });
     
 });
 
@@ -688,7 +688,7 @@ router.post('/power', function(req, res, next) {
               powers.save(function(err, result) {
                 if (err) {
                     
-                    
+                    req.flash('error', err.message);
                     
                  return res.redirect('/power');
                 }
