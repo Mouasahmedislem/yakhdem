@@ -21,7 +21,7 @@ var furniteurs = [
     {
         image: "https://s3.gifyu.com/images/bbQa6.png",
         title: "Paintello Paint Vinyl Silk Emulsion - Brilliant White  10KG",
-        price: 1100.00
+        price: 2000.00
     },
     {
         image: "https://s3.gifyu.com/images/bbQZl.png",
