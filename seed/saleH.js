@@ -14,13 +14,13 @@ mongoose.connect('mongodb+srv://Islem:cmygNChSy2L9Q4xt@paintello.cu30n.mongodb.n
  sales = [
     
 {
-    image: "https://s9.gifyu.com/images/SVZ73.png",
+    image: "https://s3.gifyu.com/images/bbQVj.png",
     title: "Satiné Paint",
     href:"/sale/clean"
 
 },
 {
-    image: "https://s12.gifyu.com/images/SVZ7i.png",
+    image: "https://s3.gifyu.com/images/bbQZf.png",
     title: "Vinyl Paint",
     href:"/sale/furniteur"
 
