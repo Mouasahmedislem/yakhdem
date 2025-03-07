@@ -13,59 +13,119 @@ mongoose.connect('mongodb+srv://Islem:cmygNChSy2L9Q4xt@paintello.cu30n.mongodb.n
 
 var cleans = [
      {
-        image: "https://s12.gifyu.com/images/SVZ7k.png",
+        image: "https://s3.gifyu.com/images/bbQVj.png",
         title: "'Paintello's Paint Washable Satinée - Brilliant White 4KG",
         price: 2390.00
     },
    
     {
-        image: "https://s12.gifyu.com/images/SVZ7E.png",
-        title: "'Paintello's Paint Washable Satinée - Red Spice 4KG",
+        image: "https://s3.gifyu.com/images/bbQVq.png",
+        title: "'Paintello's Paint Washable Satinée - beige01 4KG",
         price: 2590.00
     },
     {
-        image: "https://s12.gifyu.com/images/SVZ7v.png",
-        title: "'Paintello's Paint Washable Satinée - Mocha 4KG",
+        image: "https://s3.gifyu.com/images/bbQVh.png",
+        title: "'Paintello's Paint Washable Satinée - blue09 4KG",
         price: 2590.00
     },
     {
-        image: "https://s12.gifyu.com/images/SVZ7h.png",
-        title: "'Paintello's Paint Washable Satinée - Deep Amethyst 4KG",
+        image: "https://s3.gifyu.com/images/bbQVk.png",
+        title: "'Paintello's Paint Washable Satinée - blue08 4KG",
         price: 2590.00
     },
     {
-        image: "https://s9.gifyu.com/images/SVZ79.png",
-        title: "'Paintello's Paint Washable Satinée - Dark Angel 4KG",
+        image: "https://s3.gifyu.com/images/bbQVv.png",
+        title: "'Paintello's Paint Washable Satinée - beige09 4KG",
         price: 2590.00
     },
     {
-        image: "https://s9.gifyu.com/images/SVZ73.png",
-        title: "'Paintello's Paint Washable Satinée - Burnt Sugar 4KG",
+        image: "https://s3.gifyu.com/images/bbQVm.png",
+        title: "'Paintello's Paint Washable Satinée - beige02 4KG",
         price: 2590.00
     },
     {
-        image: "https://s12.gifyu.com/images/SVZ7H.png",
-        title: "'Paintello's Paint Washable Satinée - Aqua 4KG",
+        image: "https://s3.gifyu.com/images/bbQV7.png",
+        title: "'Paintello's Paint Washable Satinée - blue14 4KG",
         price: 2590.00
     },
     {
-        image: "https://s12.gifyu.com/images/SVZ7K.png",
-        title: "'Paintello's Paint Washable Satinée - Rich Red 4KG",
+        image: "https://s3.gifyu.com/images/bbQVI.png",
+        title: "'Paintello's Paint Washable Satinée - blue15 4KG",
         price: 2590.00
     },
     {
-        image: "https://s12.gifyu.com/images/SVZ7N.png",
-        title: "'Paintello's Paint Washable Satinée - Sweet Lavender 4KG",
+        image: "https://s3.gifyu.com/images/bbQVl.png",
+        title: "'Paintello's Paint Washable Satinée - green08 4KG",
         price: 2590.00
     },
     {
-        image: "https://s12.gifyu.com/images/SVZ7T.png",
-        title: "'Paintello's Paint Washable Satinée - Lime Crush 4KG",
+        image: "https://s3.gifyu.com/images/bbQVn.png",
+        title: "'Paintello's Paint Washable Satinée - green09 4KG",
+        price: 2590.00
+    },
+     {
+        image: "https://s3.gifyu.com/images/bbQVu.png",
+        title: "'Paintello's Paint Washable Satinée - green13 4KG",
+        price: 2590.00
+    },
+     {
+        image: "https://s3.gifyu.com/images/bbQVQ.png",
+        title: "'Paintello's Paint Washable Satinée - grey01 4KG",
+        price: 2590.00
+    },
+     {
+        image: "https://s3.gifyu.com/images/bbQVW.png",
+        title: "'Paintello's Paint Washable Satinée - grey03 4KG",
+        price: 2590.00
+    },
+     {
+        image: "https://s3.gifyu.com/images/bbQVc.png",
+        title: "'Paintello's Paint Washable Satinée - grey14 4KG",
+        price: 2590.00
+    },
+     {
+        image: "https://s3.gifyu.com/images/bbQVg.png",
+        title: "'Paintello's Paint Washable Satinée - pink02 4KG",
+        price: 2590.00
+    },
+     {
+        image: "https://s3.gifyu.com/images/bbQV6.png",
+        title: "'Paintello's Paint Washable Satinée - pink03 4KG",
+        price: 2590.00
+    },
+     {
+        image: "https://s3.gifyu.com/images/bbQV8.png",
+        title: "'Paintello's Paint Washable Satinée - pink07 4KG",
+        price: 2590.00
+    },
+     {
+        image: "https://s3.gifyu.com/images/bbQVR.png",
+        title: "'Paintello's Paint Washable Satinée - pink09 4KG",
         price: 2590.00
     },
     {
-        image: "https://s12.gifyu.com/images/SVZ7w.png",
-        title: "'Paintello's Paint Washable Satinée - Waterfall 4KG",
+        image: "https://s3.gifyu.com/images/bbQVi.png",
+        title: "'Paintello's Paint Washable Satinée - pink13 4KG",
+        price: 2590.00
+    },
+    {
+        image: "https://s3.gifyu.com/images/bbQV0.png",
+        title: "'Paintello's Paint Washable Satinée - taupe01 4KG",
+        price: 2590.00
+    },
+    {
+        image: "https://s3.gifyu.com/images/bbQVC.png",
+        title: "'Paintello's Paint Washable Satinée - yellow01 4KG",
+        price: 2590.00
+    },
+    {
+        image: "https://s3.gifyu.com/images/bbQVF.png",
+        title: "'Paintello's Paint Washable Satinée - yellow05 4KG",
+        price: 2590.00
+    },
+    {
+        image: "https://s3.gifyu.com/images/bbQVU.png",
+        title: "'Paintello's Paint Washable Satinée - yellow06 4KG",
         price: 2590.00
     }
     
