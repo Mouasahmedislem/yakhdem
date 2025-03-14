@@ -16,7 +16,7 @@ var cuisins = [
         image: "https://s12.gifyu.com/images/SYnoR.jpg",
         title: "My Fixature By Paintello's Paint ",
         href : "/myfixateur/fixateur",
-        price: 1500
+        price: 1650
     }
   
  
