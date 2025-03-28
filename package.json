@@ -4,7 +4,7 @@
   "description": "Material Design for Bootstrap",
   "main": ".eslintrc.js",
   "dependencies": {
-    "all": "*",
+    "all": "^0.0.0",
     "bcrypt": "*",
     "bcrypt-nodejs": "*",
     "bcryptjs": "*",
@@ -14,16 +14,17 @@
     "connect-mongodb-session": "^3.1.1",
     "cookie-parser": "*",
     "csurf": "*",
-    "debug": "*",
+    "debug": "^4.4.0",
     "dotenv": "*",
     "ejs": "*",
     "express": "*",
     "express-parser": "*",
     "express-session": "*",
-    "express-validator": "^5.3.1",
+    "express-validator": "^7.2.1",
     "http-errors": "*",
     "mongoose": "*",
     "morgan": "*",
+    "n": "file:",
     "passport": "*",
     "passport-local": "*",
     "slick-carousel": "*",
@@ -34,7 +35,7 @@
     "dev": "nodemon ./bin/www",
     "lint": "eslint --debug /"
   },
- 
   "author": "",
   "license": "ISC"
 }
+
