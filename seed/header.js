@@ -13,7 +13,7 @@ mongoose.connect('mongodb+srv://Islem:cmygNChSy2L9Q4xt@paintello.cu30n.mongodb.n
 
 var headers = [
     {
-        image: "https://s3.gifyu.com/images/SUTRA2.jpg",
+        image: "https://live.staticflickr.com/65535/54424056395_fe456898d8_k.jpg",
         href: "/wallpaper"
     }
  
