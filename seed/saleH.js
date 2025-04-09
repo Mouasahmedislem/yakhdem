@@ -26,7 +26,7 @@ mongoose.connect('mongodb+srv://Islem:cmygNChSy2L9Q4xt@paintello.cu30n.mongodb.n
 
 },
 {
-    image: "https://s9.gifyu.com/images/SV6ra.png",
+    image: "https://live.staticflickr.com/65535/54442054690_4858678fa0_c.jpg",
     title: "Onecoat Matt Paint",
     href:"/sale/rug"
 },
@@ -48,7 +48,7 @@ mongoose.connect('mongodb+srv://Islem:cmygNChSy2L9Q4xt@paintello.cu30n.mongodb.n
     href:"/wow"
 },
     {
-    image: "https://s13.gifyu.com/images/SeaG9.png",
+    image: "https://live.staticflickr.com/65535/54424106620_55363280c4_c.jpg",
     title: "Samples",
     href:"/sale/sample"
 }
