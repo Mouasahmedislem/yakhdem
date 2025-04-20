@@ -43,8 +43,8 @@ mongoose.connect('mongodb+srv://Islem:cmygNChSy2L9Q4xt@paintello.cu30n.mongodb.n
 },
  
 {
-    image: "https://cdn.bmstores.co.uk/images/dmCategory/thumbnailImageResponsive/decorating-320x3201.jpg",
-    title: "Outils paint",
+    image: "https://live.staticflickr.com/65535/54463331231_d36f306cb4_c.jpg",
+    title: "Paintello's Tile paint",
     href:"/wow"
 },
     {
