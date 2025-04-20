@@ -13,7 +13,7 @@ mongoose.connect('mongodb+srv://Islem:cmygNChSy2L9Q4xt@paintello.cu30n.mongodb.n
 var shippings = [
     {
         wilaya: "Alger",
-        price: 300
+        price: 400
     }
 ];
 
