@@ -14,7 +14,7 @@ var wows = [
     {
         image: "https://live.staticflickr.com/65535/54462517577_300e7d50b3_c.jpg",
         title: "Paintello's Tile Paint BLACK 1KG + Mini Rouleaux offret ",
-        price: 3500
+        price: 3650
     },
     {
         image: "https://live.staticflickr.com/65535/54463354461_df6e1384da_c.jpg",
