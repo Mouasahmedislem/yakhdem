@@ -541,6 +541,18 @@ router.get("/onecoat/blue15", function(req, res){
     });
 });
 
+router.get("/coulors/blue", function(req, res){
+    
+        header.find({}, function(err, headers){
+        if(err){
+            console.log(err);
+        }
+        else{
+            res.render("coulors/blue", {headers:headers});
+        }
+    });
+});
+
 
 router.get("/favicon.ico", function(req, res){
     
