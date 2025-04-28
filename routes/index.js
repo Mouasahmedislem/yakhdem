@@ -463,6 +463,7 @@ router.get("/onecoat/grey14", function(req, res){
         }
     });
 });
+
 router.get("/onecoat/grey03", function(req, res){
     
         header.find({}, function(err, headers){
@@ -473,6 +474,7 @@ router.get("/onecoat/grey03", function(req, res){
             res.render("onecoat/grey03", {headers:headers});
         }
     });
+  });
 
   router.get("/onecoat/grey15", function(req, res){
     
@@ -483,6 +485,7 @@ router.get("/onecoat/grey03", function(req, res){
         else{
             res.render("onecoat/grey15", {headers:headers});
         }
+    });
     });
 
     router.get("/onecoat/grey16", function(req, res){
@@ -495,6 +498,7 @@ router.get("/onecoat/grey03", function(req, res){
             res.render("onecoat/grey16", {headers:headers});
         }
     });
+      });
 
       router.get("/onecoat/grey17", function(req, res){
     
@@ -645,14 +649,14 @@ router.get("/coulors/greens", function(req, res){
         }
     });
 });
-      router.get("/coulors/greY", function(req, res){
+      router.get("/coulors/grey", function(req, res){
     
         header.find({}, function(err, headers){
         if(err){
             console.log(err);
         }
         else{
-            res.render("coulors/greY", {headers:headers});
+            res.render("coulors/grey", {headers:headers});
         }
     });
 });
