@@ -496,6 +496,54 @@ router.get("/onecoat/green13", function(req, res){
         }
     });
 });
+
+router.get("/onecoat/green19", function(req, res){
+    
+        header.find({}, function(err, headers){
+        if(err){
+            console.log(err);
+        }
+        else{
+            res.render("onecoat/green19", {headers:headers});
+        }
+    });
+});
+
+router.get("/onecoat/green20", function(req, res){
+    
+        header.find({}, function(err, headers){
+        if(err){
+            console.log(err);
+        }
+        else{
+            res.render("onecoat/green20", {headers:headers});
+        }
+    });
+});
+
+router.get("/onecoat/green21", function(req, res){
+    
+        header.find({}, function(err, headers){
+        if(err){
+            console.log(err);
+        }
+        else{
+            res.render("onecoat/green21", {headers:headers});
+        }
+    });
+});
+
+router.get("/onecoat/green22", function(req, res){
+    
+        header.find({}, function(err, headers){
+        if(err){
+            console.log(err);
+        }
+        else{
+            res.render("onecoat/green22", {headers:headers});
+        }
+    });
+});
 router.get("/onecoat/beige01", function(req, res){
     
         header.find({}, function(err, headers){
@@ -553,6 +601,17 @@ router.get("/coulors/blue", function(req, res){
     });
 });
 
+router.get("/coulors/greens", function(req, res){
+    
+        header.find({}, function(err, headers){
+        if(err){
+            console.log(err);
+        }
+        else{
+            res.render("coulors/greens", {headers:headers});
+        }
+    });
+});
 
 router.get("/favicon.ico", function(req, res){
     
