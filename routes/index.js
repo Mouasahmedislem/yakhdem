@@ -226,7 +226,7 @@ router.get("/onecoat/blue08", function(req, res){
             console.log(err);
         }
         else{
-            res.render("/onecoat/blue08", {headers:headers});
+            res.render("onecoat/blue08", {headers:headers});
         }
     });
 });
