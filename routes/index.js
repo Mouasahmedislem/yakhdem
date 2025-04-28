@@ -661,6 +661,30 @@ router.get("/coulors/greens", function(req, res){
     });
 });
 
+ router.get("/coulors/yellowv2", function(req, res){
+    
+        header.find({}, function(err, headers){
+        if(err){
+            console.log(err);
+        }
+        else{
+            res.render("coulors/yellowv2", {headers:headers});
+        }
+    });
+});
+
+ router.get("/coulors/pink", function(req, res){
+    
+        header.find({}, function(err, headers){
+        if(err){
+            console.log(err);
+        }
+        else{
+            res.render("coulors/pink", {headers:headers});
+        }
+    });
+});
+
 router.get("/favicon.ico", function(req, res){
     
     
