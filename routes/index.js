@@ -219,14 +219,14 @@ router.get("/return", function(req, res){
     });
 });
 
-router.get("/onecoat/bleu08", function(req, res){
+router.get("/onecoat/blue08", function(req, res){
     
         header.find({}, function(err, headers){
         if(err){
             console.log(err);
         }
         else{
-            res.render("/onecoat/bleu08", {headers:headers});
+            res.render("/onecoat/blue08", {headers:headers});
         }
     });
 });
