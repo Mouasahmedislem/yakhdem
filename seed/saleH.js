@@ -14,13 +14,12 @@ mongoose.connect('mongodb+srv://Islem:cmygNChSy2L9Q4xt@paintello.cu30n.mongodb.n
  sales = [
     
 {
-    image: "https://live.staticflickr.com/65535/54484395216_d227a00f2e.jpg",
+    image: "https://live.staticflickr.com/65535/54484395216_e110327224.jpg",
     title: "Satiné Paint",
     href:"/sale/clean"
-
 },
 {
-    image: "https://live.staticflickr.com/65535/54484751175_3ef27d731f.jpg" ,
+    image: "https://live.staticflickr.com/65535/54484751175_41c6dd91d8.jpg" ,
     title: "Vinyl Paint",
     href:"/sale/furniteur"
 
@@ -31,11 +30,10 @@ mongoose.connect('mongodb+srv://Islem:cmygNChSy2L9Q4xt@paintello.cu30n.mongodb.n
     href:"/sale/rug"
 },
    {
-    image: "https://live.staticflickr.com/65535/54484395221_33b5de2e0e.jpg",
+    image: "https://live.staticflickr.com/65535/54484395221_896db824f8.jpg",
     title: "My Fixature",
     href:"/sale/cuisin"
 },
- 
     {
     image: "https://live.staticflickr.com/65535/54484751190_bcae07662f.jpg",
     title: "Paintello's MAC",
