@@ -592,6 +592,193 @@ router.get("/onecoat/beige01", function(req, res){
         }
     });
 });
+router.get("/onecoat/beige03", function(req, res){
+    
+        header.find({}, function(err, headers){
+        if(err){
+            console.log(err);
+        }
+        else{
+            res.render("onecoat/beige03", {headers:headers});
+        }
+    });
+});
+router.get("/onecoat/beige04", function(req, res){
+    
+        header.find({}, function(err, headers){
+        if(err){
+            console.log(err);
+        }
+        else{
+            res.render("onecoat/beige04", {headers:headers});
+        }
+    });
+});
+router.get("/onecoat/beige05", function(req, res){
+    
+        header.find({}, function(err, headers){
+        if(err){
+            console.log(err);
+        }
+        else{
+            res.render("onecoat/beige05", {headers:headers});
+        }
+    });
+});
+router.get("/onecoat/beige06", function(req, res){
+    
+        header.find({}, function(err, headers){
+        if(err){
+            console.log(err);
+        }
+        else{
+            res.render("onecoat/beige06", {headers:headers});
+        }
+    });
+});
+router.get("/onecoat/beige07", function(req, res){
+    
+        header.find({}, function(err, headers){
+        if(err){
+            console.log(err);
+        }
+        else{
+            res.render("onecoat/beige07", {headers:headers});
+        }
+    });
+});
+router.get("/onecoat/beige08", function(req, res){
+    
+        header.find({}, function(err, headers){
+        if(err){
+            console.log(err);
+        }
+        else{
+            res.render("onecoat/beige08", {headers:headers});
+        }
+    });
+});
+router.get("/onecoat/beige20", function(req, res){
+    
+        header.find({}, function(err, headers){
+        if(err){
+            console.log(err);
+        }
+        else{
+            res.render("onecoat/beige20", {headers:headers});
+        }
+    });
+});
+router.get("/onecoat/beige10", function(req, res){
+    
+        header.find({}, function(err, headers){
+        if(err){
+            console.log(err);
+        }
+        else{
+            res.render("onecoat/beige10", {headers:headers});
+        }
+    });
+});
+router.get("/onecoat/beige11", function(req, res){
+    
+        header.find({}, function(err, headers){
+        if(err){
+            console.log(err);
+        }
+        else{
+            res.render("onecoat/beige11", {headers:headers});
+        }
+    });
+});
+router.get("/onecoat/beige12", function(req, res){
+    
+        header.find({}, function(err, headers){
+        if(err){
+            console.log(err);
+        }
+        else{
+            res.render("onecoat/beige12", {headers:headers});
+        }
+    });
+});
+router.get("/onecoat/beige13", function(req, res){
+    
+        header.find({}, function(err, headers){
+        if(err){
+            console.log(err);
+        }
+        else{
+            res.render("onecoat/beige13", {headers:headers});
+        }
+    });
+});
+router.get("/onecoat/beige14", function(req, res){
+    
+        header.find({}, function(err, headers){
+        if(err){
+            console.log(err);
+        }
+        else{
+            res.render("onecoat/beige14", {headers:headers});
+        }
+    });
+});
+router.get("/onecoat/beige15", function(req, res){
+    
+        header.find({}, function(err, headers){
+        if(err){
+            console.log(err);
+        }
+        else{
+            res.render("onecoat/beige15", {headers:headers});
+        }
+    });
+});
+router.get("/onecoat/beige16", function(req, res){
+    
+        header.find({}, function(err, headers){
+        if(err){
+            console.log(err);
+        }
+        else{
+            res.render("onecoat/beige16", {headers:headers});
+        }
+    });
+});
+router.get("/onecoat/beige17", function(req, res){
+    
+        header.find({}, function(err, headers){
+        if(err){
+            console.log(err);
+        }
+        else{
+            res.render("onecoat/beige17", {headers:headers});
+        }
+    });
+});
+router.get("/onecoat/beige18", function(req, res){
+    
+        header.find({}, function(err, headers){
+        if(err){
+            console.log(err);
+        }
+        else{
+            res.render("onecoat/beige18", {headers:headers});
+        }
+    });
+});
+router.get("/onecoat/beige19", function(req, res){
+    
+        header.find({}, function(err, headers){
+        if(err){
+            console.log(err);
+        }
+        else{
+            res.render("onecoat/beige19", {headers:headers});
+        }
+    });
+});
 router.get("/onecoat/BEIGE09", function(req, res){
     
         header.find({}, function(err, headers){
