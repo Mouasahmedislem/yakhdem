@@ -16,7 +16,7 @@ var cuisins = [
         image: "https://live.staticflickr.com/65535/54484395221_896db824f8.jpg",
         title: "My Fixature By Paintello's Paint ",
         href : "/myfixateur/fixateur",
-        price: 1 650
+        price: 1650
     }
   
  
