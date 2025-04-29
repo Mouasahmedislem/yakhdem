@@ -39,9 +39,8 @@ mongoose.connect('mongodb+srv://Islem:cmygNChSy2L9Q4xt@paintello.cu30n.mongodb.n
     title: "Paintello's MAC",
     href:"/sale/coat"
 },
- 
 {
-    image: "https://live.staticflickr.com/65535/54463331231_d36f306cb4_c.jpg",
+    image: "https://live.staticflickr.com/65535/54485036715_df1a8141a4.jpg",
     title: "Paintello's Tile paint",
     href:"/wow"
 },
