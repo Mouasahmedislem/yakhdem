@@ -14,30 +14,30 @@ mongoose.connect('mongodb+srv://Islem:cmygNChSy2L9Q4xt@paintello.cu30n.mongodb.n
  sales = [
     
 {
-    image: "https://s3.gifyu.com/images/bbQVj.png",
+    image: "https://live.staticflickr.com/65535/54484395216_d227a00f2e.jpg",
     title: "Satiné Paint",
     href:"/sale/clean"
 
 },
 {
-    image: "https://s3.gifyu.com/images/bbQZf.png",
+    image: "https://live.staticflickr.com/65535/54484751175_3ef27d731f.jpg" ,
     title: "Vinyl Paint",
     href:"/sale/furniteur"
 
 },
 {
-    image: "https://live.staticflickr.com/65535/54442054690_4858678fa0_c.jpg",
+    image: "https://live.staticflickr.com/65535/54484598224_b88ac10983.jpg",
     title: "Onecoat Matt Paint",
     href:"/sale/rug"
 },
    {
-    image: "https://s12.gifyu.com/images/SYnoR.jpg",
+    image: "https://live.staticflickr.com/65535/54484395221_33b5de2e0e.jpg",
     title: "My Fixature",
     href:"/sale/cuisin"
 },
  
     {
-    image: "https://s13.gifyu.com/images/b2pmM.jpg",
+    image: "https://live.staticflickr.com/65535/54484751190_bcae07662f.jpg",
     title: "Paintello's MAC",
     href:"/sale/coat"
 },
