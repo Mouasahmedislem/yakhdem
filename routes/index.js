@@ -21,6 +21,7 @@ var cuisin = require('../models/cuisin');
 var clean = require('../models/clean');
 var coat = require('../models/coat');
 var sample = require('../models/sample');
+var tool = require('../models/tool');
 
 
 router.get("/sale/furniteur", function(req, res){
@@ -192,6 +193,34 @@ router.get("/add-to-cart-sample/:id", function(req, res){
         req.session.cart = cart;
         console.log(req.session.cart);
         res.redirect("/sale/sample");
+    });
+});
+
+router.get("/sale/tool", function(req, res){
+    tool.find({}, function(err, tools){
+    header.find({}, function(err, headers){
+        if(err){
+            console.log(err);
+        }
+        else{
+            res.render("sale/tool", {tools: tools,headers:headers});
+        }
+    });
+});
+});
+
+router.get("/add-to-cart-tool/:id", function(req, res){
+    var toolId = req.params.id;
+    var cart = new Cart(req.session.cart ? req.session.cart : {});
+    
+    tool.findById(toolId, function(err, tool){
+        if(err){
+            return res.redirect("/sale/tool");
+        }
+        cart.add(tool, tool.id);
+        req.session.cart = cart;
+        console.log(req.session.cart);
+        res.redirect("/sale/tool");
     });
 });
 
