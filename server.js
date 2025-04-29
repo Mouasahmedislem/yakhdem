@@ -31,6 +31,7 @@ var seedheader = require('./seed/header');
 var seedshipping = require('./seed/shipping');
 var seedcoat = require('./seed/coat');
 var seedsample = require('./seed/sample');
+var seedtool = require('./seed/tool');
 
 
 var wow = require('./models/wow');
@@ -43,6 +44,7 @@ var header = require('./models/header');
 var shipping = require('./models/shipping');
 var coat = require('./models/coat');
 var sample = require('./models/sample');
+var tool = require('./models/tool');
 
 
 
