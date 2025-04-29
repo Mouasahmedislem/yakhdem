@@ -15,7 +15,7 @@ var cleans = [
      {
         image: "https://live.staticflickr.com/65535/54484395216_e110327224.jpg",
         title: "Paintello's Paint Washable Satinée - Brilliant White 4KG",
-        price: 2 800.00
+        price: 2800.00
     }
    
   
