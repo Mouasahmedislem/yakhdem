@@ -12,17 +12,15 @@ mongoose.connect('mongodb+srv://Islem:cmygNChSy2L9Q4xt@paintello.cu30n.mongodb.n
     })
 var wows = [
     {
-        image: "https://live.staticflickr.com/65535/54462517577_300e7d50b3_c.jpg",
+        image: "https://live.staticflickr.com/65535/54484923974_c91b3fedd5.jpg",
         title: "Paintello's Tile Paint BLACK 1.5KG + Mini Rouleaux offret ",
         price: 3650
     },
     {
-        image: "https://live.staticflickr.com/65535/54463354461_df6e1384da_c.jpg",
+        image: "https://live.staticflickr.com/65535/54485082775_b762fc787d.jpg",
         title: "Paintello's Tile Paint white 1.5KG  + Mini Rouleaux offret",
         price: 3500
     }
-  
- 
 ];
 
 
