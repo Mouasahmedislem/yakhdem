@@ -169,7 +169,116 @@ var rugs = [
         title: "Paintello's Paint Onecoat COOLYELLOW_174P Matt 4KG",
         href : "/onecoat/yellow01",
         price: 3300.00
-    }
+    },
+        {
+        image: "https://live.staticflickr.com/65535/54482441609_bd43ddfea1.jpg",
+        title: "Paintello's Paint Onecoat STONE_1186P Matt 4KG",
+        href : "/onecoat/grey01",
+        price: 3300.00
+    },
+   {
+        image: "https://live.staticflickr.com/65535/54482525388_dc0abb73c8.jpg",
+        title: "Paintello's Paint Onecoat PRINCE_1194P Matt 4KG",
+        href : "/onecoat/grey03",
+        price: 3300.00
+    },
+   {
+        image: "https://live.staticflickr.com/65535/54481397447_9b42e4783b.jpg",
+        title: "Paintello's Paint Onecoat LITTELGREY_148P Matt 4KG",
+        href : "/onecoat/grey14",
+        price: 3300.00
+    },
+   {
+        image: "https://live.staticflickr.com/65535/54482441759_d9fcb960fe.jpg",
+        title: "Paintello's Paint Onecoat FRESHOGREY_168P Matt 4KG",
+        href : "/onecoat/grey15",
+        price: 3300.00
+    },
+   {
+        image: "https://live.staticflickr.com/65535/54482441799_7815311a50.jpg",
+        title: "Paintello's Paint Onecoat DROPGREY_158P Matt 4KG",
+        href : "/onecoat/grey16",
+        price: 3300.00
+    },
+   {
+        image: "https://live.staticflickr.com/65535/54482525483_4fed617ea7.jpg",
+        title: "Paintello's Paint Onecoat BRIGHT_1196P Matt 4KG",
+        href : "/onecoat/grey17",
+        price: 3300.00
+    },
+   {
+        image: "https://live.staticflickr.com/65535/54481290707_f73e099c43.jpg",
+        title: "Paintello's Paint Onecoat FRESHOGREEN_758P Matt 4KG",
+        href : "/onecoat/green08",
+        price: 3300.00
+    },
+   {
+        image: "https://live.staticflickr.com/65535/54482500420_d33a1c9c1f.jpg",
+        title: "Paintello's Paint Onecoat DROPGREEN_176P Matt 4KG",
+        href : "/onecoat/green09",
+        price: 3300.00
+    },
+   {
+        image: "https://live.staticflickr.com/65535/54482135126_bdc1a068c5.jpg",
+        title: "Paintello's Paint Onecoat BRIGDE_1188P Matt 4KG",
+        href : "/onecoat/green13",
+        price: 3300.00
+    },
+   {
+        image: "https://live.staticflickr.com/65535/54482500685_f25f402b5b.jpg",
+        title: "Paintello's Paint Onecoat BLUSHGREEN_152P Matt 4KG",
+        href : "/onecoat/green18",
+        price: 3300.00
+    },
+   {
+        image: "https://live.staticflickr.com/65535/54482135326_76287a4b39.jpg",
+        title: "Paintello's Paint Onecoat SAPLINGGREEN_750P Matt 4KG",
+        href : "/onecoat/green19",
+        price: 3300.00
+    },
+   {
+        image: "https://live.staticflickr.com/65535/54482335509_01471e2b62.jpg",
+        title: "Paintello's Paint Onecoat PLUMEGREEN_162P Matt 4KG",
+        href : "/onecoat/green20",
+        price: 3300.00
+    },
+   {
+        image: "https://live.staticflickr.com/65535/54482417943_8c2b32a7b3.jpg",
+        title: "Paintello's Paint Onecoat LITTELGREEN_182P Matt 4KG",
+        href : "/onecoat/green21",
+        price: 3300.00
+    },
+   {
+        image: "https://live.staticflickr.com/65535/54482500350_19c6cfc28d.jpg",
+        title: "Paintello's Paint Onecoat GARDEN_1198P Matt 4KG",
+        href : "/onecoat/green22",
+        price: 3300.00
+    },
+   {
+        image: "https://live.staticflickr.com/65535/54481135987_b23529b174.jpg",
+        title: "Paintello's Paint Onecoat BLUEDROP_756P Matt 4KG",
+        href : "/onecoat/bleu09",
+        price: 3300.00
+    },
+   {
+        image: "https://live.staticflickr.com/65535/54482180389_5e8774ddf9.jpg",
+        title: "Paintello's Paint Onecoat COOLMORA_744P Matt 4KG",
+        href : "/onecoat/bleue14",
+        price: 3300.00
+    },
+   {
+        image: "https://live.staticflickr.com/65535/54482263638_167c17c6e5.jpg",
+        title: "Paintello's Paint Onecoat FRESHOBLUE_742P Matt 4KG",
+        href : "/onecoat/blue08",
+        price: 3300.00
+    },
+   {
+        image: "https://live.staticflickr.com/65535/54481135862_0261d66c2a.jpg",
+        title: "Paintello's Paint Onecoat TWEEDIA_752P Matt 4KG",
+        href : "/onecoat/blue15",
+        price: 3300.00
+    },
+     
  
  
 ];
