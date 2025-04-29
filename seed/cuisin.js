@@ -13,10 +13,10 @@ mongoose.connect('mongodb+srv://Islem:cmygNChSy2L9Q4xt@paintello.cu30n.mongodb.n
 
 var cuisins = [
     {
-        image: "https://s12.gifyu.com/images/SYnoR.jpg",
+        image: "https://live.staticflickr.com/65535/54484395221_896db824f8.jpg",
         title: "My Fixature By Paintello's Paint ",
         href : "/myfixateur/fixateur",
-        price: 1650
+        price: 1 650
     }
   
  
