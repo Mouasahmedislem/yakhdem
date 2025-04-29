@@ -871,6 +871,17 @@ router.get("/coulors/greens", function(req, res){
         }
     });
 });
+ router.get("/coulors/neutral", function(req, res){
+    
+        header.find({}, function(err, headers){
+        if(err){
+            console.log(err);
+        }
+        else{
+            res.render("coulors/neutral", {headers:headers});
+        }
+    });
+});
 
 router.get("/favicon.ico", function(req, res){
     
