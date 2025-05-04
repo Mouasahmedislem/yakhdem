@@ -60,7 +60,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 <span class="d-block h5 mb-0 mt-1 text-body"><%= clean.price %>DA</span>
 <a href="/add-to-cart-clean/<%= clean._id %>"  id="add-to-cart-clean" class="btn btn-pink btn-rounded"><i class="fas fa-cart-plus mr-2" aria-hidden="true"></i>buy</a>
 <script type="text/javascript">
-  $('#/add-to-cart-clean/<%= clean._id %>').click(function() {
+  $('#add-to-cart-clean').click(function() {
     fbq('track', 'Purchase', {currency: "USD", value: 30.00});
   });
 </script>
