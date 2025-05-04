@@ -22,7 +22,7 @@ src="https://www.facebook.com/tr?id=549728007869525&ev=PageView&noscript=1"
  <body>
         <!-- Main Container -->
   <div class="container mt-5 pt-3">
-
+<% pinksaps.forEach(function(pinksap){ %>
     <!-- Section: Product detail -->
    <section id="productDetails" class="pb-5">  
 
@@ -30,8 +30,8 @@ src="https://www.facebook.com/tr?id=549728007869525&ev=PageView&noscript=1"
       <div class="card mt-5 hoverable">
 
         <div class="row mt-5">
-       <div class="row">
-<% pinksaps.forEach(function(pinksap){ %>
+       
+
       
           <div class="col-lg-6">
 
@@ -112,8 +112,8 @@ src="https://www.facebook.com/tr?id=549728007869525&ev=PageView&noscript=1"
             </h3>
 
 <a href="/add-to-cart-pinksap/<%= pinksap._id %>"  class="btn btn-pink btn-rounded"><i class="fas fa-cart-plus mr-2" aria-hidden="true"></i>buy</a>
-        <% }); %>
-</div>
+       
+
 
  
 <!-- Accordion wrapper -->
@@ -258,7 +258,7 @@ Eau à base d'eau ou de solvant
    </section> 
 
     
-
+ <% }); %>
   </div>
   <!-- Main Container -->
 </body>
