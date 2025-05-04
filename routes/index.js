@@ -233,7 +233,7 @@ var wow = require('../models/wow');
 var sale = require('../models/saleH');
 var header = require('../models/header');
 var shipping = require('../models/shipping');
-var pink02 = require('../models/pink02');
+var pinksap = require('../models/pinksap');
 
 
 
@@ -441,15 +441,15 @@ router.get("/onecoat/pink02", function(req, res){
 });
 
 
-router.get("/add-to-cart-pink02/:id", function(req, res){
-    var pink02Id = req.params.id;
+router.get("/add-to-cart-pinksap/:id", function(req, res){
+    var pinksapId = req.params.id;
     var cart = new Cart(req.session.cart ? req.session.cart : {});
     
-    pink02.findById(pink02Id, function(err, pink02){
+    pinksap.findById(pinksapId, function(err, pinksap){
         if(err){
             return res.redirect("/onecoat/pink02");
         }
-        cart.add(pink02, pink02.id);
+        cart.add(pinksap, pinksap.id);
         req.session.cart = cart;
         console.log(req.session.cart);
         res.redirect("/onecoat/pink02");
