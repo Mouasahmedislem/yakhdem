@@ -81,20 +81,7 @@ router.get("/add-to-cart-rug/:id", function(req, res){
         res.redirect("/sale/rug");
     });
 });
-router.get("/add-to-cart-rug/:id", function(req, res){
-    var rugId = req.params.id;
-    var cart = new Cart(req.session.cart ? req.session.cart : {});
-    
-    rug.findById(rugId, function(err, rug){
-        if(err){
-            return res.redirect("/onecoat/pink02");
-        }
-        cart.add(rug, rug.id);
-        req.session.cart = cart;
-        console.log(req.session.cart);
-        res.redirect("/onecoat/pink02");
-    });
-});
+
 
 
 router.get("/sale/cuisin", function(req, res){
