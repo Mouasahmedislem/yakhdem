@@ -59,9 +59,9 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 <div class="flex-fill mw-100 bm-product-link-text">
 <h3 class="d-block font-weight-normal h6 mb-0 text-body"><%= clean.title %></h3>
 <span class="d-block h5 mb-0 mt-1 text-body"><%= clean.price %>DA</span>
-<button href="/add-to-cart-clean/<%= clean._id %>"  id="addToCartButton" class="btn btn-pink btn-rounded"><i class="fas fa-cart-plus mr-2" aria-hidden="true"></i>buy</button>
+<a href="/add-to-cart-clean/<%= clean._id %>"   class="btn btn-pink btn-rounded"><i class="fas fa-cart-plus mr-2" aria-hidden="true"></i>buy</a>
 <script type="text/javascript">
-  $('#addToCartButton').click(function() {
+  $('#<%= clean._id %>').click(function() {
     fbq('track', 'AddToCart';)
   });
 </script>
