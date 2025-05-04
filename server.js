@@ -32,7 +32,7 @@ var seedshipping = require('./seed/shipping');
 var seedcoat = require('./seed/coat');
 var seedsample = require('./seed/sample');
 var seedtool = require('./seed/tool');
-var seedpink02 = require('./seed/pink02');
+var seedpinksap = require('./seed/pinksap');
 
 
 var wow = require('./models/wow');
@@ -46,7 +46,7 @@ var shipping = require('./models/shipping');
 var coat = require('./models/coat');
 var sample = require('./models/sample');
 var tool = require('./models/tool');
-var pink02 = require('./models/pink02');
+var pinksap = require('./models/pinksap');
 
 
 
