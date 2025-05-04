@@ -30,7 +30,7 @@ src="https://www.facebook.com/tr?id=549728007869525&ev=PageView&noscript=1"
       <div class="card mt-5 hoverable">
 
         <div class="row mt-5">
-
+<% rugs.forEach(function(rug){ %>
           <div class="col-lg-6">
 
             <!-- Carousel Wrapper -->
@@ -109,7 +109,7 @@ src="https://www.facebook.com/tr?id=549728007869525&ev=PageView&noscript=1"
               </span>
             </h3>
 
-<a href="https://www.paintello.uk/add-to-cart-rug/68179a90d392cbbf45b82e88"  class="btn btn-pink btn-rounded"><i class="fas fa-cart-plus mr-2" aria-hidden="true"></i>buy</a>
+<a href="/add-to-cart-rug/<%= rug._id %>"  class="btn btn-pink btn-rounded"><i class="fas fa-cart-plus mr-2" aria-hidden="true"></i>buy</a>
             <!-- Accordion wrapper -->
             <div class="accordion md-accordion" id="accordionEx" role="tablist" aria-multiselectable="true">
 
@@ -242,7 +242,7 @@ Eau à base d'eau ou de solvant
 
             
 
-                     
+               <% }); %>      
           </div>
 
         </div>
