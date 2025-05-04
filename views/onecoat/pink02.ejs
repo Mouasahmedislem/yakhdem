@@ -30,13 +30,14 @@ src="https://www.facebook.com/tr?id=549728007869525&ev=PageView&noscript=1"
       <div class="card mt-5 hoverable">
 
         <div class="row mt-5">
-
+       <div class="row">
+<% pinksaps.forEach(function(pinksap){ %>
       
           <div class="col-lg-6">
 
             <!-- Carousel Wrapper -->
             <div id="carousel-thumb" class="carousel slide carousel-fade carousel-thumbnails" data-ride="carousel">
-<% pinksaps.forEach(function(pinksap){ %>
+
               <!-- Slides -->
               <div class="carousel-inner text-center text-md-left" role="listbox">
 
@@ -111,8 +112,10 @@ src="https://www.facebook.com/tr?id=549728007869525&ev=PageView&noscript=1"
             </h3>
 
 <a href="/add-to-cart-pinksap/<%= pinksap._id %>"  class="btn btn-pink btn-rounded"><i class="fas fa-cart-plus mr-2" aria-hidden="true"></i>buy</a>
-           
- <% }); %>
+        <% }); %>
+</div>
+
+ 
 <!-- Accordion wrapper -->
 
             <div class="accordion md-accordion" id="accordionEx" role="tablist" aria-multiselectable="true">
