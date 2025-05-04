@@ -26,7 +26,7 @@ src="https://www.facebook.com/tr?id=549728007869525&ev=PageView&noscript=1"
 
     <!-- Section: Product detail -->
    <section id="productDetails" class="pb-5">  
-<% pinksaps.forEach(function(pinksap){ %>
+
       <!-- News card -->
       <div class="card mt-5 hoverable">
 
@@ -44,7 +44,7 @@ src="https://www.facebook.com/tr?id=549728007869525&ev=PageView&noscript=1"
 
                 <div class="carousel-item active">
 
-                 <img src="<%= pinksap.image %>" alt="First slide"
+                 <img src="" alt="First slide"
                     class="img-fluid">
 
 
@@ -93,9 +93,8 @@ src="https://www.facebook.com/tr?id=549728007869525&ev=PageView&noscript=1"
           </div>
 
           <div class="col-lg-5 mr-3 text-center text-md-left">
-
-            <h2
-              class="h2-responsive text-center text-md-left product-name font-weight-bold dark-grey-text mb-1 ml-xl-0 ml-4">
+<% pinksaps.forEach(function(pinksap){ %>
+            <h2 class="h2-responsive text-center text-md-left product-name font-weight-bold dark-grey-text mb-1 ml-xl-0 ml-4">
 
               <strong><%= pinksap.title %> </strong>
 
@@ -107,7 +106,7 @@ src="https://www.facebook.com/tr?id=549728007869525&ev=PageView&noscript=1"
 
               <span class="red-text font-weight-bold">
 
-                <strong><%= pinksap.price%> DA</strong>
+                <strong> <%= pinksap.price %>DA</strong>
 
               </span>
             </h3>
@@ -115,6 +114,7 @@ src="https://www.facebook.com/tr?id=549728007869525&ev=PageView&noscript=1"
 <a href="/add-to-cart-pinksap/<%= pinksap._id %>"  class="btn btn-pink btn-rounded"><i class="fas fa-cart-plus mr-2" aria-hidden="true"></i>buy</a>
        
 
+ <% }); %>
 
  
 <!-- Accordion wrapper -->
@@ -255,7 +255,6 @@ Eau à base d'eau ou de solvant
         </div>
 
       </div>
- <% }); %>
    </section> 
 
     
