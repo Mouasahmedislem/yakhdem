@@ -1,5 +1,5 @@
 var mongoose  = require('mongoose')
-var pinksap = require('../models/pink02')
+var pinksap = require('../models/pinksap')
 
 
 mongoose.connect('mongodb+srv://Islem:cmygNChSy2L9Q4xt@paintello.cu30n.mongodb.net/paintello?retryWrites=true&w=majority' , (err)=> {
