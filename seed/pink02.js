@@ -1,5 +1,5 @@
 var mongoose  = require('mongoose')
-var pink02 = require('../models/pink02')
+var pinksap = require('../models/pink02')
 
 
 mongoose.connect('mongodb+srv://Islem:cmygNChSy2L9Q4xt@paintello.cu30n.mongodb.net/paintello?retryWrites=true&w=majority' , (err)=> {
@@ -11,7 +11,7 @@ mongoose.connect('mongodb+srv://Islem:cmygNChSy2L9Q4xt@paintello.cu30n.mongodb.n
     
     })
 
-var pink02s = [
+var pinksaps = [
      {
         image: "https://live.staticflickr.com/65535/54483207460_1e36b3f486.jpg",
         title: "Paintello's Paint Washable Satinée - Brilliant White 4KG",
@@ -23,16 +23,16 @@ var pink02s = [
  
 ];
 
-function seedpink02(){
-    pink02.remove({}, err => {
+function seedpinksap(){
+    pinksap.remove({}, err => {
         if(err) console.log(err);
-        pink02s.forEach(seed => {
-            pink02.create(seed, (err, pink02) => {
+        pinksaps.forEach(seed => {
+            pinksap.create(seed, (err, pinksap) => {
                 if(err) console.log(err);
-                pink02.save();
+                pinksap.save();
             });
         });
     });
 }
 
-module.exports = seedpink02;
+module.exports = seedpinksap;
