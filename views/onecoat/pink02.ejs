@@ -24,19 +24,19 @@ src="https://www.facebook.com/tr?id=549728007869525&ev=PageView&noscript=1"
   <div class="container mt-5 pt-3">
 
     <!-- Section: Product detail -->
-    <!--  <section id="productDetails" class="pb-5">  -->
+   <section id="productDetails" class="pb-5">  
 
       <!-- News card -->
       <div class="card mt-5 hoverable">
 
         <div class="row mt-5">
 
-      <% pinksaps.forEach(function(pinksap){ %>
+      
           <div class="col-lg-6">
 
             <!-- Carousel Wrapper -->
             <div id="carousel-thumb" class="carousel slide carousel-fade carousel-thumbnails" data-ride="carousel">
-
+<% pinksaps.forEach(function(pinksap){ %>
               <!-- Slides -->
               <div class="carousel-inner text-center text-md-left" role="listbox">
 
@@ -111,7 +111,10 @@ src="https://www.facebook.com/tr?id=549728007869525&ev=PageView&noscript=1"
             </h3>
 
 <a href="/add-to-cart-pinksap/<%= pinksap._id %>"  class="btn btn-pink btn-rounded"><i class="fas fa-cart-plus mr-2" aria-hidden="true"></i>buy</a>
-            <!-- Accordion wrapper -->
+           
+ <% }); %>
+<!-- Accordion wrapper -->
+
             <div class="accordion md-accordion" id="accordionEx" role="tablist" aria-multiselectable="true">
 
               <!-- Accordion card -->
@@ -244,12 +247,12 @@ Eau à base d'eau ou de solvant
             
       
           </div>
-        <% }); %>
+       
         </div>
 
       </div>
 
-  <!--   </section> -->
+   </section> 
 
     
 
