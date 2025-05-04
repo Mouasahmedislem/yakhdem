@@ -429,17 +429,17 @@ router.get("/paintellomac/paintellomac", function(req, res){
     });
 });
 router.get("/onecoat/pink02", function(req, res){
-    
-        header.find({}, function(err, headers){
+    pinksap.find({}, function(err, pinksaps){
+    header.find({}, function(err, headers){
         if(err){
             console.log(err);
         }
         else{
-            res.render("onecoat/pink02", {headers:headers});
+            res.render("onecoat/pink02", {pinksaps: pinksaps,headers:headers});
         }
     });
 });
-
+});
 
 router.get("/add-to-cart-pinksap/:id", function(req, res){
     var pinksapId = req.params.id;
