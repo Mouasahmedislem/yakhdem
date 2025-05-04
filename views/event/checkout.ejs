@@ -54,10 +54,34 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
   </style>
 </head>
 
-<body class="login-page">
+
 
   <!-- Main Navigation -->
   <header>
+<script type="text/javascript" src="javascripts/checkout.js"></script>
+<script type="text/javascript" src="https://js.stripe.com/v2/"></script>
+
+<!-- Meta Pixel Code -->
+<script>
+!function(f,b,e,v,n,t,s)
+{if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+n.callMethod.apply(n,arguments):n.queue.push(arguments)};
+if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
+n.queue=[];t=b.createElement(e);t.async=!0;
+t.src=v;s=b.getElementsByTagName(e)[0];
+s.parentNode.insertBefore(t,s)}(window, document,'script',
+'https://connect.facebook.net/en_US/fbevents.js');
+fbq('init', '549728007869525');
+fbq('track', 'PageView');
+fbq('track', 'AddToCart');
+fbq('track', 'ViewContent'); 
+fbq('track', 'AddToWishlist')
+</script>
+<noscript><img height="1" width="1" style="display:none"
+src="https://www.facebook.com/tr?id=549728007869525&ev=PageView&noscript=1"
+/></noscript>
+<!-- End Meta Pixel Code -->
+
 
     <!-- Navbar -->
      <nav class="navbar navbar-expand-lg navbar-light fixed-top scrolling-navbar white">
@@ -127,7 +151,9 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
       </div>
       </div>
     </nav>
+</header>
 
+<body class="login-page">
     <!-- Intro Section -->
       <div class="mask rgba-indigo-light h-100 d-flex justify-content-center align-items-center">
         <div class="container">
@@ -184,8 +210,13 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
                 
                  
                   <div class="text-center">
-                    <button type="submit" class="btn pink-gradient btn-lg">Valide <i class="fas fa-shipping-fast prefix black-text"></i></button>
-                  </form>
+                    <button type="submit" id="addToCartButton" class="btn pink-gradient btn-lg">Valide <i class="fas fa-shipping-fast prefix black-text"></i></button>
+                  <script type="text/javascript">
+  $('#addToCartButton').click(function() {
+    fbq('track', 'Purchase');
+  });
+</script>
+</form>
                     <hr>
                     
                 
@@ -199,32 +230,11 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
           </div>
         </div>
       </div>
-<script type="text/javascript" src="javascripts/checkout.js"></script>
-<script type="text/javascript" src="https://js.stripe.com/v2/"></script>
+<body>
+
+  
 
 
-  </header>
-
-<!-- Meta Pixel Code -->
-<script>
-!function(f,b,e,v,n,t,s)
-{if(f.fbq)return;n=f.fbq=function(){n.callMethod?
-n.callMethod.apply(n,arguments):n.queue.push(arguments)};
-if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
-n.queue=[];t=b.createElement(e);t.async=!0;
-t.src=v;s=b.getElementsByTagName(e)[0];
-s.parentNode.insertBefore(t,s)}(window, document,'script',
-'https://connect.facebook.net/en_US/fbevents.js');
-fbq('init', '549728007869525');
-fbq('track', 'PageView');
-fbq('track', 'AddToCart');
-fbq('track', 'ViewContent'); 
-fbq('track', 'AddToWishlist')
-</script>
-<noscript><img height="1" width="1" style="display:none"
-src="https://www.facebook.com/tr?id=549728007869525&ev=PageView&noscript=1"
-/></noscript>
-<!-- End Meta Pixel Code -->
 
 
   <!-- Main Navigation -->
