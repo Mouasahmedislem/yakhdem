@@ -12,7 +12,7 @@ s.parentNode.insertBefore(t,s)}(window, document,'script',
 'https://connect.facebook.net/en_US/fbevents.js');
 fbq('init', '549728007869525');
 fbq('track', 'PageView');
-fbq('track', 'Purchase', {currency: "USD", value: 30.00});
+
 
 </script>
 <noscript><img height="1" width="1" style="display:none"
@@ -59,10 +59,10 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 <div class="flex-fill mw-100 bm-product-link-text">
 <h3 class="d-block font-weight-normal h6 mb-0 text-body"><%= clean.title %></h3>
 <span class="d-block h5 mb-0 mt-1 text-body"><%= clean.price %>DA</span>
-<a href="/add-to-cart-clean/<%= clean._id %>"  id="add-to-cart-clean" class="btn btn-pink btn-rounded"><i class="fas fa-cart-plus mr-2" aria-hidden="true"></i>buy</a>
+<button href="/add-to-cart-clean/<%= clean._id %>"  id="add-to-cart-clean" class="btn btn-pink btn-rounded"><i class="fas fa-cart-plus mr-2" aria-hidden="true"></i>buy</button>
 <script type="text/javascript">
   $('#add-to-cart-clean').click(function() {
-    fbq('track', 'Purchase', {currency: "USD", value: 30.00});
+    fbq('track', 'AddToCart';)
   });
 </script>
 </div>	
