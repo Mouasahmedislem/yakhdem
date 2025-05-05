@@ -44,8 +44,14 @@ var seedgreyc = require('./seed/greyc');
 var seedgreyd = require('./seed/greyd');
 var seedgreye = require('./seed/greye');
 var seedgreyf = require('./seed/greyf');
-
-
+var seedgreena = require('./seed/greena');
+var seedgreenb = require('./seed/greenb');
+var seedgreenc = require('./seed/greenc');
+var seedgreend = require('./seed/greend');
+var seedgreene = require('./seed/greene');
+var seedgreenf = require('./seed/greenf');
+var seedgreeng = require('./seed/greeng');
+var seedgreenh = require('./seed/greenh');
 
 
 var wow = require('./models/wow');
@@ -71,7 +77,14 @@ var greyc = require('./models/greyc');
 var greyd = require('./models/greyd');
 var greye = require('./models/greye');
 var greyf = require('./models/greyf');
-
+var greena = require('./models/greena');
+var greenb = require('./models/greenb');
+var greenc = require('./models/greenc');
+var greend = require('./models/greend');
+var greene = require('./models/greene');
+var greenf = require('./models/greenf');
+var greeng = require('./models/greeng');
+var greenh = require('./models/greenh');
 
 
 mongoose.connect('mongodb+srv://Islem:cmygNChSy2L9Q4xt@paintello.cu30n.mongodb.net/paintello?retryWrites=true&w=majority' , (err)=> {
