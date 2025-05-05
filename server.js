@@ -123,7 +123,7 @@ seedheader();  seedshipping();
 var routes = require('./routes/index');
 var userRoutes = require("./routes/user");
 var sportRoutes = require("./routes/sport");
-var saleRoutes = require("./routes/sale");
+//var saleRoutes = require("./routes/sale");
 var electricalsRoutes = require("./routes/electricals");
 
 
@@ -131,7 +131,7 @@ var electricalsRoutes = require("./routes/electricals");
 app.use('/', routes)
 app.use("/user", userRoutes);
 app.use("/sport", sportRoutes);
-app.use("/sale", saleRoutes);
+//app.use("/sale", saleRoutes);
 app.use("/sale/electricals", electricalsRoutes);
 
 
