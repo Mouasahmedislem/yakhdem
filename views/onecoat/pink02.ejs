@@ -32,11 +32,12 @@ src="https://www.facebook.com/tr?id=549728007869525&ev=PageView&noscript=1"
          <div class="col-lg-6">
           <!-- Carousel Wrapper -->
             <div id="carousel-thumb" class="carousel slide carousel-fade carousel-thumbnails" data-ride="carousel">
+           <% pinksaps.forEach(function(pinksap){ %>
               <!-- Slides -->
               <div class="carousel-inner text-center text-md-left" role="listbox">
                 <div class="carousel-item active">
 
-                 <img src="https://live.staticflickr.com/65535/54483207460_1e36b3f486.jpg" alt="First slide"
+                 <img src="<%= pinksap.image %>" alt="First slide"
                     class="img-fluid">
                 </div>
 
@@ -76,7 +77,7 @@ src="https://www.facebook.com/tr?id=549728007869525&ev=PageView&noscript=1"
           </div>
 
           <div class="col-lg-5 mr-3 text-center text-md-left">
-          <% pinksaps.forEach(function(pinksap){ %>
+          
             <h2 class="h2-responsive text-center text-md-left product-name font-weight-bold dark-grey-text mb-1 ml-xl-0 ml-4">
               <strong> <%= pinksap.title %></strong>
             </h2>
