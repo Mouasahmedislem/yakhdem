@@ -12,9 +12,7 @@ s.parentNode.insertBefore(t,s)}(window, document,'script',
 'https://connect.facebook.net/en_US/fbevents.js');
 fbq('init', '549728007869525');
 fbq('track', 'PageView');
-fbq('track', 'AddToCart');
-fbq('track', 'ViewContent'); 
-fbq('track', 'carousel-thumb')
+
 </script>
 <noscript><img height="1" width="1" style="display:none"
 src="https://www.facebook.com/tr?id=549728007869525&ev=PageView&noscript=1"
@@ -37,13 +35,13 @@ src="https://www.facebook.com/tr?id=549728007869525&ev=PageView&noscript=1"
 
             <!-- Carousel Wrapper -->
             <div id="carousel-thumb" class="carousel slide carousel-fade carousel-thumbnails" data-ride="carousel">
-
+<% pinkcools.forEach(function(pinkcool){ %>
               <!-- Slides -->
               <div class="carousel-inner text-center text-md-left" role="listbox">
 
                 <div class="carousel-item active">
 
-                 <img src="https://live.staticflickr.com/65535/54483207425_1db2c5a2b5.jpg" alt="First slide"
+                 <img src="<%= pinkcool.image %>" alt="First slide"
                     class="img-fluid">
 
 
@@ -96,7 +94,7 @@ src="https://www.facebook.com/tr?id=549728007869525&ev=PageView&noscript=1"
             <h2
               class="h2-responsive text-center text-md-left product-name font-weight-bold dark-grey-text mb-1 ml-xl-0 ml-4">
 
-              <strong>Paintello's Paint Onecoat COOLPINK_126P </strong>
+              <strong><%= pinkcool.title %> 4kg </strong>
 
             </h2>
 
@@ -106,7 +104,7 @@ src="https://www.facebook.com/tr?id=549728007869525&ev=PageView&noscript=1"
 
               <span class="red-text font-weight-bold">
 
-                <strong>3 300,00 DA</strong>
+                <strong>Prix :<%= pinkcool.price %> DA </strong>
 
               </span>
 
@@ -114,6 +112,9 @@ src="https://www.facebook.com/tr?id=549728007869525&ev=PageView&noscript=1"
 
             </h3>
 
+<a href="/add-to-cart-pinkcool/<%= pinkcool._id %>"  class="btn btn-pink btn-rounded"><i class="fas fa-cart-plus mr-2" aria-hidden="true"></i>ajouter au panier</a>
+  
+<% }); %>
             <!-- Accordion wrapper -->
             <div class="accordion md-accordion" id="accordionEx" role="tablist" aria-multiselectable="true">
 
