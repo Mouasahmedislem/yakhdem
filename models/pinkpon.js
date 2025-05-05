@@ -6,4 +6,4 @@ var pinkponSchema = new mongoose.Schema({
     price: {type: Number, required: true}
 });
 
-module.exports = mongoose.model("pinkpon", pinponSchema);
+module.exports = mongoose.model("pinkpon", pinkponSchema);
