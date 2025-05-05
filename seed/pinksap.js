@@ -13,7 +13,7 @@ mongoose.connect('mongodb+srv://Islem:cmygNChSy2L9Q4xt@paintello.cu30n.mongodb.n
 
 var pinksaps = [
      {
-        image: "https://live.staticflickr.com/65535/54483207460_1e36b3f486.jpg",
+        
         title: "Paintello's Paint Washable Satinée - Brilliant White 4KG",
         price: 2800.00
     }
