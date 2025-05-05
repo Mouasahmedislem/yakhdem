@@ -38,6 +38,7 @@ var seedpinklit = require('./seed/pinklit');
 var seedpinkcool = require('./seed/pinkcool');
 var seedyallaw = require('./seed/yallaw');
 var seedyellow = require('./seed/yellow');
+var seedgrey01 = require('./seed/grey01');
 
 
 
@@ -58,6 +59,7 @@ var pinklit = require('./models/pinklit');
 var pinkcool = require('./models/pinkcool');
 var yallaw = require('./models/yallaw');
 var yellow = require('./models/yellow');
+var grey01 = require('./models/grey01');
 
 
 
