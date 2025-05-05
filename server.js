@@ -129,9 +129,9 @@ seedheader();  seedshipping();
 //bring events routes
 var routes = require('./routes/index');
 var userRoutes = require("./routes/user");
-var sportRoutes = require("./routes/sport");
+//var sportRoutes = require("./routes/sport");
 //var saleRoutes = require("./routes/sale");
-var electricalsRoutes = require("./routes/electricals");
+//var electricalsRoutes = require("./routes/electricals");
 
 
 
