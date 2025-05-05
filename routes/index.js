@@ -253,6 +253,10 @@ var greene = require('../models/greene');
 var greenf = require('../models/greenf');
 var greeng = require('../models/greeng');
 var greenh = require('../models/greenh');
+var bluea = require('../models/bluea');
+var blueb = require('../models/blueb');
+var bluec = require('../models/bluec');
+var blued = require('../models/blued');
 
 
 
@@ -268,17 +272,7 @@ router.get("/return", function(req, res){
     });
 });
 
-router.get("/onecoat/blue08", function(req, res){
-    
-        header.find({}, function(err, headers){
-        if(err){
-            console.log(err);
-        }
-        else{
-            res.render("onecoat/blue08", {headers:headers});
-        }
-    });
-});
+
 
 router.get("/sale/ROBE2", function(req, res){
     
@@ -765,19 +759,119 @@ router.get("/add-to-cart-greenh/:id", function(req, res){
     });
 });
 
-
-
 router.get("/onecoat/bleu09", function(req, res){
-    
-        header.find({}, function(err, headers){
+    bluea.find({}, function(err, blueas){
+    header.find({}, function(err, headers){
         if(err){
             console.log(err);
         }
         else{
-            res.render("onecoat/bleu09", {headers:headers});
+            res.render("onecoat/bleu09", {blueas: blueas,headers:headers});
         }
     });
 });
+});
+
+router.get("/add-to-cart-bluea/:id", function(req, res){
+    var blueaId = req.params.id;
+    var cart = new Cart(req.session.cart ? req.session.cart : {});
+    
+    bluea.findById(blueaId, function(err, bluea){
+        if(err){
+            return res.redirect("/onecoat/bleu09");
+        }
+        cart.add(bluea, bluea.id);
+        req.session.cart = cart;
+        console.log(req.session.cart);
+        res.redirect("/onecoat/bleu09");
+    });
+});
+router.get("/onecoat/bleue14", function(req, res){
+    blueb.find({}, function(err, bluebs){
+    header.find({}, function(err, headers){
+        if(err){
+            console.log(err);
+        }
+        else{
+            res.render("onecoat/bleue14", {bluebs: bluebs,headers:headers});
+        }
+    });
+});
+});
+
+router.get("/add-to-cart-blueb/:id", function(req, res){
+    var bluebId = req.params.id;
+    var cart = new Cart(req.session.cart ? req.session.cart : {});
+    
+    blueb.findById(bluebId, function(err, blueb){
+        if(err){
+            return res.redirect("/onecoat/bleue14");
+        }
+        cart.add(blueb, blueb.id);
+        req.session.cart = cart;
+        console.log(req.session.cart);
+        res.redirect("/onecoat/bleue14");
+    });
+});
+router.get("/onecoat/blue08", function(req, res){
+    bluec.find({}, function(err, bluecs){
+    header.find({}, function(err, headers){
+        if(err){
+            console.log(err);
+        }
+        else{
+            res.render("onecoat/blue08", {bluecs: bluecs,headers:headers});
+        }
+    });
+});
+});
+
+router.get("/add-to-cart-bluec/:id", function(req, res){
+    var bluecId = req.params.id;
+    var cart = new Cart(req.session.cart ? req.session.cart : {});
+    
+    bluec.findById(bluecId, function(err, bluec){
+        if(err){
+            return res.redirect("/onecoat/blue08");
+        }
+        cart.add(bluec, bluec.id);
+        req.session.cart = cart;
+        console.log(req.session.cart);
+        res.redirect("/onecoat/blue08");
+    });
+});
+router.get("/onecoat/blue15", function(req, res){
+    blued.find({}, function(err, blueds){
+    header.find({}, function(err, headers){
+        if(err){
+            console.log(err);
+        }
+        else{
+            res.render("onecoat/blue15", {blueds: blueds,headers:headers});
+        }
+    });
+});
+});
+
+router.get("/add-to-cart-blued/:id", function(req, res){
+    var bluedId = req.params.id;
+    var cart = new Cart(req.session.cart ? req.session.cart : {});
+    
+    blued.findById(bluedId, function(err, blued){
+        if(err){
+            return res.redirect("/onecoat/blue15");
+        }
+        cart.add(blued, blued.id);
+        req.session.cart = cart;
+        console.log(req.session.cart);
+        res.redirect("/onecoat/blue15");
+    });
+});
+
+
+
+
+
 
 router.get("/onecoat/beig02", function(req, res){
     
@@ -1136,28 +1230,6 @@ router.get("/onecoat/BEIGE09", function(req, res){
         }
         else{
             res.render("onecoat/BEIGE09", {headers:headers});
-        }
-    });
-});
-router.get("/onecoat/bleue14", function(req, res){
-    
-        header.find({}, function(err, headers){
-        if(err){
-            console.log(err);
-        }
-        else{
-            res.render("onecoat/bleue14", {headers:headers});
-        }
-    });
-});
-router.get("/onecoat/blue15", function(req, res){
-    
-        header.find({}, function(err, headers){
-        if(err){
-            console.log(err);
-        }
-        else{
-            res.render("onecoat/blue15", {headers:headers});
         }
     });
 });
