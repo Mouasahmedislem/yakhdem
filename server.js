@@ -33,6 +33,10 @@ var seedcoat = require('./seed/coat');
 var seedsample = require('./seed/sample');
 var seedtool = require('./seed/tool');
 var seedpinksap = require('./seed/pinksap');
+var seedpinkpon = require('./seed/pinkpon');
+var seedpinklit = require('./seed/pinklit');
+var seedpinkcool = require('./seed/pinkcool');
+
 
 
 var wow = require('./models/wow');
@@ -47,6 +51,9 @@ var coat = require('./models/coat');
 var sample = require('./models/sample');
 var tool = require('./models/tool');
 var pinksap = require('./models/pinksap');
+var pinkpon = require('./models/pinkpon');
+var pinklit = require('./models/pinklit');
+var pinkcool = require('./models/pinkcool');
 
 
 
