@@ -1,34 +1,4 @@
-<%- include ("../partials/header") %>
-
-<!-- Meta Pixel Code -->
-<script>
-!function(f,b,e,v,n,t,s)
-{if(f.fbq)return;n=f.fbq=function(){n.callMethod?
-n.callMethod.apply(n,arguments):n.queue.push(arguments)};
-if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
-n.queue=[];t=b.createElement(e);t.async=!0;
-t.src=v;s=b.getElementsByTagName(e)[0];
-s.parentNode.insertBefore(t,s)}(window, document,'script',
-'https://connect.facebook.net/en_US/fbevents.js');
-fbq('init', '549728007869525');
-fbq('track', 'PageView');
-fbq('track', 'AddToCart');
-fbq('track', 'ViewContent'); 
-fbq('track', 'AddToWishlist')
-</script>
-<noscript><img height="1" width="1" style="display:none"
-src="https://www.facebook.com/tr?id=549728007869525&ev=PageView&noscript=1"
-/></noscript>
-<!-- End Meta Pixel Code -->
-
-
-        <!-- Main Container -->
-  <div class="container mt-5 pt-3">
-
-    <!-- Section: Product detail -->
-    <section id="productDetails" class="pb-5">
-
-      <!-- News card -->
+<!-- News card -->
       <div class="card mt-5 hoverable">
 
         <div class="row mt-5">
@@ -37,13 +7,13 @@ src="https://www.facebook.com/tr?id=549728007869525&ev=PageView&noscript=1"
 
             <!-- Carousel Wrapper -->
             <div id="carousel-thumb" class="carousel slide carousel-fade carousel-thumbnails" data-ride="carousel">
-
+<% greends.forEach(function(greend){ %>
               <!-- Slides -->
               <div class="carousel-inner text-center text-md-left" role="listbox">
 
                 <div class="carousel-item active">
 
-                 <img src="https://live.staticflickr.com/65535/54482500685_f25f402b5b.jpg" alt="First slide"
+                 <img src="<%= greend.image %>" alt="First slide"
                     class="img-fluid">
 
 
@@ -51,7 +21,7 @@ src="https://www.facebook.com/tr?id=549728007869525&ev=PageView&noscript=1"
 
                 <div class="carousel-item">
 
-               <img src="https://live.staticflickr.com/65535/54481290822_e6af2d5b5a.jpg"
+               <img src="https://live.staticflickr.com/65535/54481397292_0ef79bb1ea.jpg"
                     class="img-fluid">
   
 
@@ -59,7 +29,7 @@ src="https://www.facebook.com/tr?id=549728007869525&ev=PageView&noscript=1"
 
                 <div class="carousel-item">
 
-                <img src="https://live.staticflickr.com/65535/54481290857_cb2132fd05.jpg"
+               <img src="https://live.staticflickr.com/65535/54482525318_8fb2c5e424.jpg"
                     class="img-fluid">
 
 
@@ -96,7 +66,7 @@ src="https://www.facebook.com/tr?id=549728007869525&ev=PageView&noscript=1"
             <h2
               class="h2-responsive text-center text-md-left product-name font-weight-bold dark-grey-text mb-1 ml-xl-0 ml-4">
 
-              <strong>Paintello's Paint Onecoat BLUSHGREEN_152P </strong>
+              <strong> <%= greend.title %> 4kg</strong>
 
             </h2>
 
@@ -106,14 +76,16 @@ src="https://www.facebook.com/tr?id=549728007869525&ev=PageView&noscript=1"
 
               <span class="red-text font-weight-bold">
 
-                <strong>3 300,00 DA</strong>
+                <strong>Prix :<%= greend.price %> DA</strong>
 
               </span>
 
           
 
             </h3>
-
+<a href="/add-to-cart-greend/<%= greend._id %>"  class="btn btn-pink btn-rounded"><i class="fas fa-cart-plus mr-2" aria-hidden="true"></i>ajouter au panier</a>
+  
+<% }); %>
             <!-- Accordion wrapper -->
             <div class="accordion md-accordion" id="accordionEx" role="tablist" aria-multiselectable="true">
 
