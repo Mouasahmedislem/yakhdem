@@ -234,6 +234,9 @@ var sale = require('../models/saleH');
 var header = require('../models/header');
 var shipping = require('../models/shipping');
 var pinksap = require('../models/pinksap');
+var pinkpon = require('../models/pinkpon');
+var pinklit = require('../models/pinklit');
+var pinkcool = require('../models/pinkcool');
 
 
 
@@ -322,29 +325,6 @@ router.get("/onecoat/red01", function(req, res){
     });
 });
 
-router.get("/onecoat/pink13", function(req, res){
-    
-        header.find({}, function(err, headers){
-        if(err){
-            console.log(err);
-        }
-        else{
-            res.render("onecoat/pink13", {headers:headers});
-        }
-    });
-});
-
-router.get("/onecoat/pink09", function(req, res){
-    
-        header.find({}, function(err, headers){
-        if(err){
-            console.log(err);
-        }
-        else{
-            res.render("onecoat/pink09", {headers:headers});
-        }
-    });
-});
 
 router.get("/onecoat/grey01", function(req, res){
     
@@ -456,39 +436,92 @@ router.get("/add-to-cart-pinksap/:id", function(req, res){
     });
 });
 
-router.get("/onecoat/pink03", function(req, res){
-    
-        header.find({}, function(err, headers){
+router.get("/onecoat/pink04", function(req, res){
+    pinkpon.find({}, function(err, pinkpons){
+    header.find({}, function(err, headers){
         if(err){
             console.log(err);
         }
         else{
-            res.render("onecoat/pink03", {headers:headers});
+            res.render("onecoat/pink04", {pinkpons: pinkpons,headers:headers});
         }
     });
 });
-router.get("/onecoat/pink04", function(req, res){
+});
+
+router.get("/add-to-cart-pinkpon/:id", function(req, res){
+    var pinkponId = req.params.id;
+    var cart = new Cart(req.session.cart ? req.session.cart : {});
     
-        header.find({}, function(err, headers){
+    pinkpon.findById(pinkponId, function(err, pinkpon){
         if(err){
-            console.log(err);
+            return res.redirect("/onecoat/pink04");
         }
-        else{
-            res.render("onecoat/pink04", {headers:headers});
-        }
+        cart.add(pinkpon, pinkpon.id);
+        req.session.cart = cart;
+        console.log(req.session.cart);
+        res.redirect("/onecoat/pink04");
     });
 });
 router.get("/onecoat/pink07", function(req, res){
-    
-        header.find({}, function(err, headers){
+    pinklit.find({}, function(err, pinklits){
+    header.find({}, function(err, headers){
         if(err){
             console.log(err);
         }
         else{
-            res.render("onecoat/pink07", {headers:headers});
+            res.render("onecoat/pink07", {pinklits: pinklits,headers:headers});
         }
     });
 });
+});
+
+router.get("/add-to-cart-pinklit/:id", function(req, res){
+    var pinklitId = req.params.id;
+    var cart = new Cart(req.session.cart ? req.session.cart : {});
+    
+    pinklit.findById(pinklitId, function(err, pinklit){
+        if(err){
+            return res.redirect("/onecoat/pink07");
+        }
+        cart.add(pinklit, pinklit.id);
+        req.session.cart = cart;
+        console.log(req.session.cart);
+        res.redirect("/onecoat/pink07");
+    });
+});
+
+router.get("/onecoat/pink09", function(req, res){
+    pinkcool.find({}, function(err, pinkcools){
+    header.find({}, function(err, headers){
+        if(err){
+            console.log(err);
+        }
+        else{
+            res.render("onecoat/pink09", {pinkcools: pinkcools,headers:headers});
+        }
+    });
+});
+});
+
+router.get("/add-to-cart-pinkcool/:id", function(req, res){
+    var pinkcoolId = req.params.id;
+    var cart = new Cart(req.session.cart ? req.session.cart : {});
+    
+    pink.findById(pinkcoolId, function(err, pinkcool){
+        if(err){
+            return res.redirect("/onecoat/pink09");
+        }
+        cart.add(pinkcool, pinkcool.id);
+        req.session.cart = cart;
+        console.log(req.session.cart);
+        res.redirect("/onecoat/pink09");
+    });
+});
+
+
+
+
 router.get("/onecoat/yellow01", function(req, res){
     
         header.find({}, function(err, headers){
