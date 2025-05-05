@@ -74,10 +74,9 @@ src="https://www.facebook.com/tr?id=549728007869525&ev=PageView&noscript=1"
           </div>
 
           <div class="col-lg-5 mr-3 text-center text-md-left">
-         <div class="mb-1 px-2">
-          <% pinksaps.forEach(function(pinksap){ %>
+         
             <h2 class="h2-responsive text-center text-md-left product-name font-weight-bold dark-grey-text mb-1 ml-xl-0 ml-4">
-              <strong><%= pinksap.title %> </strong>
+              <strong> </strong>
             </h2>
 
             <span class="badge badge-danger product mb-4 ml-xl-0 ml-4">bestprix</span>
@@ -86,16 +85,12 @@ src="https://www.facebook.com/tr?id=549728007869525&ev=PageView&noscript=1"
 
               <span class="red-text font-weight-bold">
 
-                <strong><%= pinksap.price %> DA </strong>
+                <strong> DA </strong>
 
               </span>
             </h3>
 
 
-      <a href="/add-to-cart-pinksap/<%= pinksap._id %>"  class="btn btn-pink btn-rounded"><i class="fas fa-cart-plus mr-2" aria-hidden="true"></i>buy</a>
-<!-- Accordion wrapper -->
-              <% }); %>
-            </div>
             <div class="accordion md-accordion" id="accordionEx" role="tablist" aria-multiselectable="true">
 
               <!-- Accordion card -->
@@ -237,7 +232,27 @@ Eau à base d'eau ou de solvant
     
 
   </div>
+ <div class="bm-page">
+          <div class="container">
+              <div class="row">
+              <div class="order-lg-last">
+              <div class="mb-4 mb-lg-5 bm-content">
+ <% pinksaps.forEach(function(pinksap){ %>
+  <h2 class="text-center text-uppercase"><%= pinksap.title %></h2>
+  <ul class="row justify-content-center list-unstyled mb-4">
+   
 
+  <li class="col-6 col-sm-4 col-md-3">
+  
+  <div class="mb-1 px-2">
+  <img  class="border img-fluid rounded bm-lazyload lazyloaded" data-src="//cdn.bmstores.co.uk/images/dmCategory/thumbnailImageResponsive/wallpaper5.jpg" width="160" height="160" src="<%= pinksap.image %>">
+  </div>
+  <h2 class="h6 mb-0"><%= pinksap.title %></h2>
+ <a href="/add-to-cart-pinksap/<%= pinksap._id %>"  class="btn btn-pink btn-rounded"><i class="fas fa-cart-plus mr-2" aria-hidden="true"></i>buy</a>
+  
+  </li> </ul>
+<% }); %>
+</div></div></div></div></div>
  
 
   
