@@ -21,52 +21,33 @@ src="https://www.facebook.com/tr?id=549728007869525&ev=PageView&noscript=1"
 
  <body>
         <!-- Main Container -->
-
   <div class="container mt-5 pt-3">
-
     <!-- Section: Product detail -->
    <section id="productDetails" class="pb-5">  
-
       <!-- News card -->
       <div class="card mt-5 hoverable">
-
         <div class="row mt-5">
-       
-
-      
-          <div class="col-lg-6">
-
-            <!-- Carousel Wrapper -->
+         <div class="col-lg-6">
+          <!-- Carousel Wrapper -->
             <div id="carousel-thumb" class="carousel slide carousel-fade carousel-thumbnails" data-ride="carousel">
-
               <!-- Slides -->
               <div class="carousel-inner text-center text-md-left" role="listbox">
-
                 <div class="carousel-item active">
 
-                 <img src="" alt="First slide"
+                 <img src="https://live.staticflickr.com/65535/54483207460_1e36b3f486.jpg" alt="First slide"
                     class="img-fluid">
-
-
                 </div>
 
                 <div class="carousel-item">
-
               <img src="https://live.staticflickr.com/65535/54483043584_2fd2118bfe.jpg" 
                     class="img-fluid">
-  
-
                 </div>
 
                 <div class="carousel-item">
-
                 <img src="https://live.staticflickr.com/65535/54482003792_b3e48fe94d.jpg"
                     class="img-fluid">
-
-
                 </div>
-
-              </div>
+                  </div>
               <!-- Slides -->
 
               <!-- Thumbnails -->
@@ -93,14 +74,9 @@ src="https://www.facebook.com/tr?id=549728007869525&ev=PageView&noscript=1"
           </div>
 
           <div class="col-lg-5 mr-3 text-center text-md-left">
-<% pinksaps.forEach(function(pinksap){ %>
             <h2 class="h2-responsive text-center text-md-left product-name font-weight-bold dark-grey-text mb-1 ml-xl-0 ml-4">
-
-              <strong><%= pinksap.title %> </strong>
-
+              <strong>Paintello's Paint Onecoat SAPLINGPINK_300P 4kg </strong>
             </h2>
-<a href="/add-to-cart-pinksap/<%= pinksap._id %>"  class="btn btn-pink btn-rounded"><i class="fas fa-cart-plus mr-2" aria-hidden="true"></i>buy</a>
- <% }); %>
 
             <span class="badge badge-danger product mb-4 ml-xl-0 ml-4">bestprix</span>
 
@@ -108,16 +84,13 @@ src="https://www.facebook.com/tr?id=549728007869525&ev=PageView&noscript=1"
 
               <span class="red-text font-weight-bold">
 
-                <strong> </strong>
+                <strong>3 300.00 DA </strong>
 
               </span>
             </h3>
 
 
-       
-
-
- 
+      
 <!-- Accordion wrapper -->
 
             <div class="accordion md-accordion" id="accordionEx" role="tablist" aria-multiselectable="true">
@@ -263,6 +236,56 @@ Eau à base d'eau ou de solvant
   </div>
 
   <!-- Main Container -->
+
+<div class="bm-page">
+<div class="container">
+<div class="row">
+<% pinksaps.forEach(function(pinksap){ %>
+<div class="order-lg-last">
+<div class="mb-4 mb-lg-5 bm-content">
+<div class="mb-4">
+</div>
+<div class="prod-listing">
+<div class="d-none fa-3x prod-loading">
+<i class="fas fa-circle-notch fa-spin"></i>
+</div>
+<div aria-hidden="true" class="row border-bottom mt-4 mx-md-auto"></div>
+<ul class="row list-unstyled mb-0">
+<li class="col-sm-6 col-md-4 bm-col-md bm-product-item">
+<div class="align-items-center d-flex h-100 bm-product-link" href="/products/high-performance-rubber-underlay-3mm-365430">	
+<div class="flex-shrink-0 mw-100 position-relative bm-product-link-img">
+<img id="myImg" class="myImgLightBox"  width="200" height="240" src="<%= pinksap.image %>" >	
+<!-- The Modal -->
+<div id="myModal" class="modal">
+  <!-- The Close Button -->
+  <span class="close" id="span">&times;</span>
+  <!-- Modal Content (The Image) -->
+  <img class="modal-content" id="img01">
+  <!-- Modal Caption (Image Text) -->
+  <div id="caption"></div>
+</div></div>
+<div class="flex-fill mw-100 bm-product-link-text">
+<h3 class="d-block font-weight-normal h6 mb-0 text-body"><%= pinksap.title %></h3>
+<span class="d-block h5 mb-0 mt-1 text-body"><%= pinksap.price %>DA</span>
+<a href="/add-to-cart-pinksap/<%= pinksap._id %>"  class="btn btn-pink btn-rounded"><i class="fas fa-cart-plus mr-2" aria-hidden="true"></i>buy</a>
+
+
+
+</div>	
+</div>	
+</li>
+
+</ul>
+<div aria-hidden="true" class="row border-bottom mb-4 mx-md-auto"></div>
+</div>
+
+
+</div>
+</div>
+<% }); %>
+</div>
+</div>
+</div>
 </body>
   
   <%- include ("../partials/footer") %>.
