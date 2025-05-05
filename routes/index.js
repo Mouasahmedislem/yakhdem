@@ -245,7 +245,14 @@ var greyc = require('../models/greyc');
 var greyd = require('../models/greyd');
 var greye = require('../models/greye');
 var greyf = require('../models/greyf');
-
+var greena = require('../models/greena');
+var greenb = require('../models/greenb');
+var greenc = require('../models/greenc');
+var greend = require('../models/greend');
+var greene = require('../models/greene');
+var greenf = require('../models/greenf');
+var greeng = require('../models/greeng');
+var greenh = require('../models/greenh');
 
 
 
@@ -539,29 +546,226 @@ router.get("/add-to-cart-greyf/:id", function(req, res){
         res.redirect("/onecoat/grey17");
     });
 });
-router.get("/onecoat/green18", function(req, res){
-    
-        header.find({}, function(err, headers){
+
+
+router.get("/onecoat/green08", function(req, res){
+    greena.find({}, function(err, greenas){
+    header.find({}, function(err, headers){
         if(err){
             console.log(err);
         }
         else{
-            res.render("onecoat/green18", {headers:headers});
+            res.render("onecoat/green08", {greenas: greenas,headers:headers});
         }
+    });
+});
+});
+
+router.get("/add-to-cart-greena/:id", function(req, res){
+    var greenaId = req.params.id;
+    var cart = new Cart(req.session.cart ? req.session.cart : {});
+    
+    greena.findById(greenaId, function(err, greena){
+        if(err){
+            return res.redirect("/onecoat/green08");
+        }
+        cart.add(greena, greena.id);
+        req.session.cart = cart;
+        console.log(req.session.cart);
+        res.redirect("/onecoat/green08");
+    });
+});
+router.get("/onecoat/green09", function(req, res){
+    greenb.find({}, function(err, greenbs){
+    header.find({}, function(err, headers){
+        if(err){
+            console.log(err);
+        }
+        else{
+            res.render("onecoat/green09", {greenbs: greenbs,headers:headers});
+        }
+    });
+});
+});
+
+router.get("/add-to-cart-greenb/:id", function(req, res){
+    var greenbId = req.params.id;
+    var cart = new Cart(req.session.cart ? req.session.cart : {});
+    
+    greenb.findById(greenbId, function(err, greenb){
+        if(err){
+            return res.redirect("/onecoat/green09");
+        }
+        cart.add(greenb, greenb.id);
+        req.session.cart = cart;
+        console.log(req.session.cart);
+        res.redirect("/onecoat/green09");
+    });
+});
+router.get("/onecoat/green13", function(req, res){
+    greenc.find({}, function(err, greencs){
+    header.find({}, function(err, headers){
+        if(err){
+            console.log(err);
+        }
+        else{
+            res.render("onecoat/green13", {greencs: greencs,headers:headers});
+        }
+    });
+});
+});
+
+router.get("/add-to-cart-greenc/:id", function(req, res){
+    var greencId = req.params.id;
+    var cart = new Cart(req.session.cart ? req.session.cart : {});
+    
+    greenc.findById(greencId, function(err, greenc){
+        if(err){
+            return res.redirect("/onecoat/green13");
+        }
+        cart.add(greenc, greenc.id);
+        req.session.cart = cart;
+        console.log(req.session.cart);
+        res.redirect("/onecoat/green13");
+    });
+});
+router.get("/onecoat/green18", function(req, res){
+    greend.find({}, function(err, greends){
+    header.find({}, function(err, headers){
+        if(err){
+            console.log(err);
+        }
+        else{
+            res.render("onecoat/green18", {greends: greends,headers:headers});
+        }
+    });
+});
+});
+
+router.get("/add-to-cart-greend/:id", function(req, res){
+    var greendId = req.params.id;
+    var cart = new Cart(req.session.cart ? req.session.cart : {});
+    
+    greend.findById(greendId, function(err, greend){
+        if(err){
+            return res.redirect("/onecoat/green18");
+        }
+        cart.add(greend, greend.id);
+        req.session.cart = cart;
+        console.log(req.session.cart);
+        res.redirect("/onecoat/green18");
+    });
+});
+router.get("/onecoat/green19", function(req, res){
+    greene.find({}, function(err, greenes){
+    header.find({}, function(err, headers){
+        if(err){
+            console.log(err);
+        }
+        else{
+            res.render("onecoat/green19", {greenes: greenes,headers:headers});
+        }
+    });
+});
+});
+
+router.get("/add-to-cart-greene/:id", function(req, res){
+    var greeneId = req.params.id;
+    var cart = new Cart(req.session.cart ? req.session.cart : {});
+    
+    greene.findById(greeneId, function(err, greene){
+        if(err){
+            return res.redirect("/onecoat/green19");
+        }
+        cart.add(greene, greene.id);
+        req.session.cart = cart;
+        console.log(req.session.cart);
+        res.redirect("/onecoat/green19");
+    });
+});
+router.get("/onecoat/green20", function(req, res){
+    greenf.find({}, function(err, greenfs){
+    header.find({}, function(err, headers){
+        if(err){
+            console.log(err);
+        }
+        else{
+            res.render("onecoat/green20", {greenfs: greenfs,headers:headers});
+        }
+    });
+});
+});
+
+router.get("/add-to-cart-greenf/:id", function(req, res){
+    var greenfId = req.params.id;
+    var cart = new Cart(req.session.cart ? req.session.cart : {});
+    
+    greenf.findById(greenfId, function(err, greenf){
+        if(err){
+            return res.redirect("/onecoat/green20");
+        }
+        cart.add(greenf, greenf.id);
+        req.session.cart = cart;
+        console.log(req.session.cart);
+        res.redirect("/onecoat/green20");
+    });
+});
+router.get("/onecoat/green21", function(req, res){
+    greeng.find({}, function(err, greengs){
+    header.find({}, function(err, headers){
+        if(err){
+            console.log(err);
+        }
+        else{
+            res.render("onecoat/green21", {greengs: greengs,headers:headers});
+        }
+    });
+});
+});
+
+router.get("/add-to-cart-greeng/:id", function(req, res){
+    var greengId = req.params.id;
+    var cart = new Cart(req.session.cart ? req.session.cart : {});
+    
+    greeng.findById(greengId, function(err, greeng){
+        if(err){
+            return res.redirect("/onecoat/green21");
+        }
+        cart.add(greeng, greeng.id);
+        req.session.cart = cart;
+        console.log(req.session.cart);
+        res.redirect("/onecoat/green21");
+    });
+});
+router.get("/onecoat/green22", function(req, res){
+    greenh.find({}, function(err, greenhs){
+    header.find({}, function(err, headers){
+        if(err){
+            console.log(err);
+        }
+        else{
+            res.render("onecoat/green22", {greenhs: greenhs,headers:headers});
+        }
+    });
+});
+});
+
+router.get("/add-to-cart-greenh/:id", function(req, res){
+    var greenhId = req.params.id;
+    var cart = new Cart(req.session.cart ? req.session.cart : {});
+    
+    greenh.findById(greenhId, function(err, greenh){
+        if(err){
+            return res.redirect("/onecoat/green22");
+        }
+        cart.add(greenh, greenh.id);
+        req.session.cart = cart;
+        console.log(req.session.cart);
+        res.redirect("/onecoat/green22");
     });
 });
 
-router.get("/onecoat/green08", function(req, res){
-    
-        header.find({}, function(err, headers){
-        if(err){
-            console.log(err);
-        }
-        else{
-            res.render("onecoat/green08", {headers:headers});
-        }
-    });
-});
+
 
 router.get("/onecoat/bleu09", function(req, res){
     
@@ -725,76 +929,7 @@ router.get("/add-to-cart-pinkcool/:id", function(req, res){
 
 
 
-router.get("/onecoat/green09", function(req, res){
-    
-        header.find({}, function(err, headers){
-        if(err){
-            console.log(err);
-        }
-        else{
-            res.render("onecoat/green09", {headers:headers});
-        }
-    });
-});
-router.get("/onecoat/green13", function(req, res){
-    
-        header.find({}, function(err, headers){
-        if(err){
-            console.log(err);
-        }
-        else{
-            res.render("onecoat/green13", {headers:headers});
-        }
-    });
-});
 
-router.get("/onecoat/green19", function(req, res){
-    
-        header.find({}, function(err, headers){
-        if(err){
-            console.log(err);
-        }
-        else{
-            res.render("onecoat/green19", {headers:headers});
-        }
-    });
-});
-
-router.get("/onecoat/green20", function(req, res){
-    
-        header.find({}, function(err, headers){
-        if(err){
-            console.log(err);
-        }
-        else{
-            res.render("onecoat/green20", {headers:headers});
-        }
-    });
-});
-
-router.get("/onecoat/green21", function(req, res){
-    
-        header.find({}, function(err, headers){
-        if(err){
-            console.log(err);
-        }
-        else{
-            res.render("onecoat/green21", {headers:headers});
-        }
-    });
-});
-
-router.get("/onecoat/green22", function(req, res){
-    
-        header.find({}, function(err, headers){
-        if(err){
-            console.log(err);
-        }
-        else{
-            res.render("onecoat/green22", {headers:headers});
-        }
-    });
-});
 router.get("/onecoat/beige01", function(req, res){
     
         header.find({}, function(err, headers){
