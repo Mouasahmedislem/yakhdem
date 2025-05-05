@@ -12,9 +12,7 @@ s.parentNode.insertBefore(t,s)}(window, document,'script',
 'https://connect.facebook.net/en_US/fbevents.js');
 fbq('init', '549728007869525');
 fbq('track', 'PageView');
-fbq('track', 'AddToCart');
-fbq('track', 'ViewContent'); 
-fbq('track', 'carousel-thumb')
+
 </script>
 <noscript><img height="1" width="1" style="display:none"
 src="https://www.facebook.com/tr?id=549728007869525&ev=PageView&noscript=1"
@@ -37,13 +35,13 @@ src="https://www.facebook.com/tr?id=549728007869525&ev=PageView&noscript=1"
 
             <!-- Carousel Wrapper -->
             <div id="carousel-thumb" class="carousel slide carousel-fade carousel-thumbnails" data-ride="carousel">
-
+<% greyds.forEach(function(greyd){ %>
               <!-- Slides -->
               <div class="carousel-inner text-center text-md-left" role="listbox">
 
                 <div class="carousel-item active">
 
-                 <img src="https://live.staticflickr.com/65535/54482441759_d9fcb960fe.jpg" alt="First slide"
+                 <img src="<%= greyd.image %>" alt="First slide"
                     class="img-fluid">
 
 
@@ -51,7 +49,7 @@ src="https://www.facebook.com/tr?id=549728007869525&ev=PageView&noscript=1"
 
                 <div class="carousel-item">
 
-               <img src="https://live.staticflickr.com/65535/54481397452_195de16516.jpg"
+               <img src="https://live.staticflickr.com/65535/54481397292_0ef79bb1ea.jpg"
                     class="img-fluid">
   
 
@@ -59,7 +57,7 @@ src="https://www.facebook.com/tr?id=549728007869525&ev=PageView&noscript=1"
 
                 <div class="carousel-item">
 
-                <img src="https://live.staticflickr.com/65535/54482441709_8dd0678077.jpg"
+               <img src="https://live.staticflickr.com/65535/54482525318_8fb2c5e424.jpg"
                     class="img-fluid">
 
 
@@ -96,7 +94,7 @@ src="https://www.facebook.com/tr?id=549728007869525&ev=PageView&noscript=1"
             <h2
               class="h2-responsive text-center text-md-left product-name font-weight-bold dark-grey-text mb-1 ml-xl-0 ml-4">
 
-              <strong>Paintello's Paint Onecoat FRESHOGREY_168P  </strong>
+              <strong> <%= greyd.title %> 4kg</strong>
 
             </h2>
 
@@ -106,14 +104,16 @@ src="https://www.facebook.com/tr?id=549728007869525&ev=PageView&noscript=1"
 
               <span class="red-text font-weight-bold">
 
-                <strong>3 300,00 DA</strong>
+                <strong>Prix :<%= greyd.price %> DA</strong>
 
               </span>
 
           
 
             </h3>
-
+<a href="/add-to-cart-greyd/<%= greyd._id %>"  class="btn btn-pink btn-rounded"><i class="fas fa-cart-plus mr-2" aria-hidden="true"></i>ajouter au panier</a>
+  
+<% }); %>
             <!-- Accordion wrapper -->
             <div class="accordion md-accordion" id="accordionEx" role="tablist" aria-multiselectable="true">
 
@@ -254,4 +254,10 @@ Eau à base d'eau ou de solvant
       </div>
 
     </section>
+
+    
+
+  </div>
+  <!-- Main Container -->
+  
   <%- include ("../partials/footer") %>.
