@@ -52,6 +52,10 @@ var seedgreene = require('./seed/greene');
 var seedgreenf = require('./seed/greenf');
 var seedgreeng = require('./seed/greeng');
 var seedgreenh = require('./seed/greenh');
+var seedbluea = require('./seed/bluea');
+var seedblueb = require('./seed/blueb');
+var seedbluec = require('./seed/bluec');
+var seedblued = require('./seed/blued');
 
 
 var wow = require('./models/wow');
@@ -85,6 +89,10 @@ var greene = require('./models/greene');
 var greenf = require('./models/greenf');
 var greeng = require('./models/greeng');
 var greenh = require('./models/greenh');
+var bluea = require('./models/bluea');
+var blueb = require('./models/blueb');
+var bluec = require('./models/bluec');
+var blued = require('./models/blued');
 
 
 mongoose.connect('mongodb+srv://Islem:cmygNChSy2L9Q4xt@paintello.cu30n.mongodb.net/paintello?retryWrites=true&w=majority' , (err)=> {
