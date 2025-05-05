@@ -38,12 +38,13 @@ src="https://www.facebook.com/tr?id=549728007869525&ev=PageView&noscript=1"
             <!-- Carousel Wrapper -->
             <div id="carousel-thumb" class="carousel slide carousel-fade carousel-thumbnails" data-ride="carousel">
 
+ <% pinkpons.forEach(function(pinkpon){ %>
               <!-- Slides -->
               <div class="carousel-inner text-center text-md-left" role="listbox">
 
                 <div class="carousel-item active">
 
-                 <img src="https://live.staticflickr.com/65535/54483127673_8c66470154.jpg" alt="First slide"
+                 <img src="<%= pinkpon.image %>" alt="First slide"
                     class="img-fluid">
 
 
@@ -97,7 +98,7 @@ src="https://www.facebook.com/tr?id=549728007869525&ev=PageView&noscript=1"
             <h2
               class="h2-responsive text-center text-md-left product-name font-weight-bold dark-grey-text mb-1 ml-xl-0 ml-4">
 
-              <strong>Paintello's Paint Onecoat PONPONETTPINK_136P </strong>
+              <strong><%= pinkpon.title %> 4kg</strong>
 
             </h2>
 
@@ -107,13 +108,16 @@ src="https://www.facebook.com/tr?id=549728007869525&ev=PageView&noscript=1"
 
               <span class="red-text font-weight-bold">
 
-                <strong>3 300,00 DA</strong>
+                <strong>Prix :<%= pinkpon.price %> DA </strong>
 
               </span>
 
           
 
             </h3>
+<a href="/add-to-cart-pink/<%= pink._id %>"  class="btn btn-pink btn-rounded"><i class="fas fa-cart-plus mr-2" aria-hidden="true"></i>ajouter au panier</a>
+  
+<% }); %>
 
             <!-- Accordion wrapper -->
             <div class="accordion md-accordion" id="accordionEx" role="tablist" aria-multiselectable="true">
