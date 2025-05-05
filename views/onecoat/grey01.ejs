@@ -35,13 +35,13 @@ src="https://www.facebook.com/tr?id=549728007869525&ev=PageView&noscript=1"
 
             <!-- Carousel Wrapper -->
             <div id="carousel-thumb" class="carousel slide carousel-fade carousel-thumbnails" data-ride="carousel">
-<% grey01s.forEach(function(grey01){ %>
+<% greyas.forEach(function(greya){ %>
               <!-- Slides -->
               <div class="carousel-inner text-center text-md-left" role="listbox">
 
                 <div class="carousel-item active">
 
-                 <img src="<%= grey01.image %>" alt="First slide"
+                 <img src="<%= greya.image %>" alt="First slide"
                     class="img-fluid">
 
 
@@ -94,7 +94,7 @@ src="https://www.facebook.com/tr?id=549728007869525&ev=PageView&noscript=1"
             <h2
               class="h2-responsive text-center text-md-left product-name font-weight-bold dark-grey-text mb-1 ml-xl-0 ml-4">
 
-              <strong> <%= grey01.title %> 4kg</strong>
+              <strong> <%= greya.title %> 4kg</strong>
 
             </h2>
 
@@ -104,14 +104,14 @@ src="https://www.facebook.com/tr?id=549728007869525&ev=PageView&noscript=1"
 
               <span class="red-text font-weight-bold">
 
-                <strong>Prix :<%= grey01.price %> DA</strong>
+                <strong>Prix :<%= greya.price %> DA</strong>
 
               </span>
 
           
 
             </h3>
-<a href="/add-to-cart-grey01/<%= grey01._id %>"  class="btn btn-pink btn-rounded"><i class="fas fa-cart-plus mr-2" aria-hidden="true"></i>ajouter au panier</a>
+<a href="/add-to-cart-greya/<%= greya._id %>"  class="btn btn-pink btn-rounded"><i class="fas fa-cart-plus mr-2" aria-hidden="true"></i>ajouter au panier</a>
   
 <% }); %>
             <!-- Accordion wrapper -->
