@@ -724,65 +724,7 @@ router.get("/add-to-cart-pinkcool/:id", function(req, res){
 
 
 
-router.get("/onecoat/grey14", function(req, res){
-    
-        header.find({}, function(err, headers){
-        if(err){
-            console.log(err);
-        }
-        else{
-            res.render("onecoat/grey14", {headers:headers});
-        }
-    });
-});
 
-router.get("/onecoat/grey03", function(req, res){
-    
-        header.find({}, function(err, headers){
-        if(err){
-            console.log(err);
-        }
-        else{
-            res.render("onecoat/grey03", {headers:headers});
-        }
-    });
-  });
-
-  router.get("/onecoat/grey15", function(req, res){
-    
-        header.find({}, function(err, headers){
-        if(err){
-            console.log(err);
-        }
-        else{
-            res.render("onecoat/grey15", {headers:headers});
-        }
-    });
-    });
-
-    router.get("/onecoat/grey16", function(req, res){
-    
-        header.find({}, function(err, headers){
-        if(err){
-            console.log(err);
-        }
-        else{
-            res.render("onecoat/grey16", {headers:headers});
-        }
-    });
-      });
-
-      router.get("/onecoat/grey17", function(req, res){
-    
-        header.find({}, function(err, headers){
-        if(err){
-            console.log(err);
-        }
-        else{
-            res.render("onecoat/grey17", {headers:headers});
-        }
-    });
-});
 router.get("/onecoat/green09", function(req, res){
     
         header.find({}, function(err, headers){
