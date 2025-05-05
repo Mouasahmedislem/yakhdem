@@ -39,6 +39,12 @@ var seedpinkcool = require('./seed/pinkcool');
 var seedyallaw = require('./seed/yallaw');
 var seedyellow = require('./seed/yellow');
 var seedgreya = require('./seed/greya');
+var seedgreyb = require('./seed/greyb');
+var seedgreyc = require('./seed/greyc');
+var seedgreyd = require('./seed/greyd');
+var seedgreye = require('./seed/greye');
+var seedgreyf = require('./seed/greyf');
+
 
 
 
@@ -60,6 +66,11 @@ var pinkcool = require('./models/pinkcool');
 var yallaw = require('./models/yallaw');
 var yellow = require('./models/yellow');
 var greya = require('./models/greya');
+var greyb = require('./models/greyb');
+var greyc = require('./models/greyc');
+var greyd = require('./models/greyd');
+var greye = require('./models/greye');
+var greyf = require('./models/greyf');
 
 
 
