@@ -1,5 +1,5 @@
 var mongoose  = require('mongoose')
-var grey01 = require('../models/grey01')
+var greya = require('../models/greya')
 
 
 mongoose.connect('mongodb+srv://Islem:cmygNChSy2L9Q4xt@paintello.cu30n.mongodb.net/paintello?retryWrites=true&w=majority' , (err)=> {
@@ -11,7 +11,7 @@ mongoose.connect('mongodb+srv://Islem:cmygNChSy2L9Q4xt@paintello.cu30n.mongodb.n
     
     })
 
-var grey01s = [
+var greyas = [
      {
         image: "https://live.staticflickr.com/65535/54484395216_e110327224.jpg",
         title: "Paintello's Paint Washable Satinée - Brilliant White 4KG",
@@ -23,16 +23,16 @@ var grey01s = [
  
 ];
 
-function seedgrey01(){
-    grey01.remove({}, err => {
+function seedgreya(){
+    greya.remove({}, err => {
         if(err) console.log(err);
-        grey01s.forEach(seed => {
-            grey01.create(seed, (err, grey01) => {
+        greyas.forEach(seed => {
+            greya.create(seed, (err, greya) => {
                 if(err) console.log(err);
-                grey01.save();
+                greya.save();
             });
         });
     });
 }
 
-module.exports = seedgrey01;
+module.exports = seedgreya;
