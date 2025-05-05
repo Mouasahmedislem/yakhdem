@@ -239,6 +239,7 @@ var pinklit = require('../models/pinklit');
 var pinkcool = require('../models/pinkcool');
 var yallaw = require('../models/yallaw');
 var yellow = require('../models/yellow');
+var grey01 = require('../models/grey01');
 
 
 
@@ -372,17 +373,32 @@ router.get("/onecoat/red01", function(req, res){
 
 
 router.get("/onecoat/grey01", function(req, res){
-    
-        header.find({}, function(err, headers){
+    grey01.find({}, function(err, grey01s){
+    header.find({}, function(err, headers){
         if(err){
             console.log(err);
         }
         else{
-            res.render("onecoat/grey01", {headers:headers});
+            res.render("onecoat/grey01", {grey01s: grey01s,headers:headers});
         }
     });
 });
+});
 
+router.get("/add-to-cart-grey01/:id", function(req, res){
+    var grey01Id = req.params.id;
+    var cart = new Cart(req.session.cart ? req.session.cart : {});
+    
+    grey01.findById(grey01Id, function(err, grey01){
+        if(err){
+            return res.redirect("/onecoat/grey01");
+        }
+        cart.add(grey01, grey01.id);
+        req.session.cart = cart;
+        console.log(req.session.cart);
+        res.redirect("/onecoat/grey01");
+    });
+});
 router.get("/onecoat/green18", function(req, res){
     
         header.find({}, function(err, headers){
