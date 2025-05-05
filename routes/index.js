@@ -323,7 +323,7 @@ router.get("/add-to-cart-yellow/:id", function(req, res){
     var yellowId = req.params.id;
     var cart = new Cart(req.session.cart ? req.session.cart : {});
     
-    yellow.findById(yallowId, function(err, yellow){
+    yellow.findById(yellowId, function(err, yellow){
         if(err){
             return res.redirect("/onecoat/yellow01");
         }
