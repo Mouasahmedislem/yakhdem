@@ -240,6 +240,11 @@ var pinkcool = require('../models/pinkcool');
 var yallaw = require('../models/yallaw');
 var yellow = require('../models/yellow');
 var greya = require('../models/greya');
+var greyb = require('../models/greyb');
+var greyc = require('../models/greyc');
+var greyd = require('../models/greyd');
+var greye = require('../models/greye');
+var greyf = require('../models/greyf');
 
 
 
@@ -397,6 +402,141 @@ router.get("/add-to-cart-greya/:id", function(req, res){
         req.session.cart = cart;
         console.log(req.session.cart);
         res.redirect("/onecoat/grey01");
+    });
+});
+router.get("/onecoat/grey03", function(req, res){
+    greyb.find({}, function(err, greybs){
+    header.find({}, function(err, headers){
+        if(err){
+            console.log(err);
+        }
+        else{
+            res.render("onecoat/grey03", {greybs: greybs,headers:headers});
+        }
+    });
+});
+});
+
+router.get("/add-to-cart-greyb/:id", function(req, res){
+    var greybId = req.params.id;
+    var cart = new Cart(req.session.cart ? req.session.cart : {});
+    
+    greyb.findById(greybId, function(err, greyb){
+        if(err){
+            return res.redirect("/onecoat/grey03");
+        }
+        cart.add(greyb, greyb.id);
+        req.session.cart = cart;
+        console.log(req.session.cart);
+        res.redirect("/onecoat/grey03");
+    });
+});
+router.get("/onecoat/grey14", function(req, res){
+    greyc.find({}, function(err, greycs){
+    header.find({}, function(err, headers){
+        if(err){
+            console.log(err);
+        }
+        else{
+            res.render("onecoat/grey14", {greycs: greycs,headers:headers});
+        }
+    });
+});
+});
+
+router.get("/add-to-cart-greyc/:id", function(req, res){
+    var greycId = req.params.id;
+    var cart = new Cart(req.session.cart ? req.session.cart : {});
+    
+    greyc.findById(greycId, function(err, greyc){
+        if(err){
+            return res.redirect("/onecoat/grey14");
+        }
+        cart.add(greyc, greyc.id);
+        req.session.cart = cart;
+        console.log(req.session.cart);
+        res.redirect("/onecoat/grey14");
+    });
+});
+router.get("/onecoat/grey15", function(req, res){
+    greyd.find({}, function(err, greyds){
+    header.find({}, function(err, headers){
+        if(err){
+            console.log(err);
+        }
+        else{
+            res.render("onecoat/grey15", {greyds: greyds,headers:headers});
+        }
+    });
+});
+});
+
+router.get("/add-to-cart-greyd/:id", function(req, res){
+    var greydId = req.params.id;
+    var cart = new Cart(req.session.cart ? req.session.cart : {});
+    
+    greyd.findById(greydId, function(err, greyd){
+        if(err){
+            return res.redirect("/onecoat/grey15");
+        }
+        cart.add(greyd, greyd.id);
+        req.session.cart = cart;
+        console.log(req.session.cart);
+        res.redirect("/onecoat/grey15");
+    });
+});
+router.get("/onecoat/grey16", function(req, res){
+    greye.find({}, function(err, greyes){
+    header.find({}, function(err, headers){
+        if(err){
+            console.log(err);
+        }
+        else{
+            res.render("onecoat/grey16", {greyes: greyes,headers:headers});
+        }
+    });
+});
+});
+
+router.get("/add-to-cart-greye/:id", function(req, res){
+    var greyeId = req.params.id;
+    var cart = new Cart(req.session.cart ? req.session.cart : {});
+    
+    greye.findById(greyeId, function(err, greye){
+        if(err){
+            return res.redirect("/onecoat/grey16");
+        }
+        cart.add(greye, greye.id);
+        req.session.cart = cart;
+        console.log(req.session.cart);
+        res.redirect("/onecoat/grey16");
+    });
+});
+router.get("/onecoat/grey17", function(req, res){
+    greyf.find({}, function(err, greyfs){
+    header.find({}, function(err, headers){
+        if(err){
+            console.log(err);
+        }
+        else{
+            res.render("onecoat/grey17", {greyfs: greyfs,headers:headers});
+        }
+    });
+});
+});
+
+router.get("/add-to-cart-greyf/:id", function(req, res){
+    var greyfId = req.params.id;
+    var cart = new Cart(req.session.cart ? req.session.cart : {});
+    
+    greyf.findById(greyfId, function(err, greyf){
+        if(err){
+            return res.redirect("/onecoat/grey17");
+        }
+        cart.add(greyf, greyf.id);
+        req.session.cart = cart;
+        console.log(req.session.cart);
+        res.redirect("/onecoat/grey17");
     });
 });
 router.get("/onecoat/green18", function(req, res){
