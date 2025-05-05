@@ -237,6 +237,8 @@ var pinksap = require('../models/pinksap');
 var pinkpon = require('../models/pinkpon');
 var pinklit = require('../models/pinklit');
 var pinkcool = require('../models/pinkcool');
+var yallaw = require('../models/yallaw');
+var yellow = require('../models/yellow');
 
 
 
@@ -278,14 +280,57 @@ router.get("/sale/ROBE2", function(req, res){
 });
 
 router.get("/onecoat/yallaw", function(req, res){
-    
-        header.find({}, function(err, headers){
+    yallaw.find({}, function(err, yallaws){
+    header.find({}, function(err, headers){
         if(err){
             console.log(err);
         }
         else{
-            res.render("onecoat/yallaw", {headers:headers});
+            res.render("onecoat/yallaw", {yallaws: yallaws,headers:headers});
         }
+    });
+});
+});
+
+router.get("/add-to-cart-yallaw/:id", function(req, res){
+    var yallawId = req.params.id;
+    var cart = new Cart(req.session.cart ? req.session.cart : {});
+    
+    yallaw.findById(yallawId, function(err, yallaw){
+        if(err){
+            return res.redirect("/onecoat/yallaw");
+        }
+        cart.add(yallaw, yallaw.id);
+        req.session.cart = cart;
+        console.log(req.session.cart);
+        res.redirect("/onecoat/yallaw");
+    });
+});
+router.get("/onecoat/yallow01", function(req, res){
+    yallow.find({}, function(err, yallows){
+    header.find({}, function(err, headers){
+        if(err){
+            console.log(err);
+        }
+        else{
+            res.render("onecoat/yallow01", {yallows: yallows,headers:headers});
+        }
+    });
+});
+});
+
+router.get("/add-to-cart-yallow/:id", function(req, res){
+    var yallowId = req.params.id;
+    var cart = new Cart(req.session.cart ? req.session.cart : {});
+    
+    yallow.findById(yallowId, function(err, yallow){
+        if(err){
+            return res.redirect("/onecoat/yallow01");
+        }
+        cart.add(yallow, yallow.id);
+        req.session.cart = cart;
+        console.log(req.session.cart);
+        res.redirect("/onecoat/yallow01");
     });
 });
 
@@ -522,17 +567,7 @@ router.get("/add-to-cart-pinkcool/:id", function(req, res){
 
 
 
-router.get("/onecoat/yellow01", function(req, res){
-    
-        header.find({}, function(err, headers){
-        if(err){
-            console.log(err);
-        }
-        else{
-            res.render("onecoat/yellow01", {headers:headers});
-        }
-    });
-});
+
 router.get("/onecoat/grey14", function(req, res){
     
         header.find({}, function(err, headers){
