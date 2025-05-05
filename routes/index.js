@@ -306,31 +306,31 @@ router.get("/add-to-cart-yallaw/:id", function(req, res){
         res.redirect("/onecoat/yallaw");
     });
 });
-router.get("/onecoat/yallow01", function(req, res){
-    yallow.find({}, function(err, yallows){
+router.get("/onecoat/yellow01", function(req, res){
+    yellow.find({}, function(err, yellows){
     header.find({}, function(err, headers){
         if(err){
             console.log(err);
         }
         else{
-            res.render("onecoat/yallow01", {yallows: yallows,headers:headers});
+            res.render("onecoat/yellow01", {yellows: yellows,headers:headers});
         }
     });
 });
 });
 
-router.get("/add-to-cart-yallow/:id", function(req, res){
-    var yallowId = req.params.id;
+router.get("/add-to-cart-yellow/:id", function(req, res){
+    var yellowId = req.params.id;
     var cart = new Cart(req.session.cart ? req.session.cart : {});
     
-    yallow.findById(yallowId, function(err, yallow){
+    yellow.findById(yallowId, function(err, yellow){
         if(err){
-            return res.redirect("/onecoat/yallow01");
+            return res.redirect("/onecoat/yellow01");
         }
-        cart.add(yallow, yallow.id);
+        cart.add(yellow, yellow.id);
         req.session.cart = cart;
         console.log(req.session.cart);
-        res.redirect("/onecoat/yallow01");
+        res.redirect("/onecoat/yellow01");
     });
 });
 
