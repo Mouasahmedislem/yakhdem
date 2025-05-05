@@ -16,7 +16,7 @@ var validator = require('express-validator');
 
 var MongoDBStore = require('connect-mongodb-session')(session);
 
-var vinyl = require("./models/vinyl");
+
 var User = require("./models/user");
 var Cart = require("./models/cart");
 
