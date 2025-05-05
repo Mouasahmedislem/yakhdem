@@ -137,9 +137,9 @@ var electricalsRoutes = require("./routes/electricals");
 
 app.use('/', routes)
 app.use("/user", userRoutes);
-app.use("/sport", sportRoutes);
+//app.use("/sport", sportRoutes);
 //app.use("/sale", saleRoutes);
-app.use("/sale/electricals", electricalsRoutes);
+//app.use("/sale/electricals", electricalsRoutes);
 
 
 // catch 404 and forward to error handler
