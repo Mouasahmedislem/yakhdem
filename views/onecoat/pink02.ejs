@@ -74,8 +74,9 @@ src="https://www.facebook.com/tr?id=549728007869525&ev=PageView&noscript=1"
           </div>
 
           <div class="col-lg-5 mr-3 text-center text-md-left">
+          <% pinksaps.forEach(function(pinksap){ %>
             <h2 class="h2-responsive text-center text-md-left product-name font-weight-bold dark-grey-text mb-1 ml-xl-0 ml-4">
-              <strong>Paintello's Paint Onecoat SAPLINGPINK_300P 4kg </strong>
+              <strong><%= pinksap.title %> </strong>
             </h2>
 
             <span class="badge badge-danger product mb-4 ml-xl-0 ml-4">bestprix</span>
@@ -84,15 +85,16 @@ src="https://www.facebook.com/tr?id=549728007869525&ev=PageView&noscript=1"
 
               <span class="red-text font-weight-bold">
 
-                <strong>3 300.00 DA </strong>
+                <strong><%= pinksap.price %> DA </strong>
 
               </span>
             </h3>
 
 
-      
+      <a href="/add-to-cart-pinksap/<%= pinksap._id %>"  class="btn btn-pink btn-rounded"><i class="fas fa-cart-plus mr-2" aria-hidden="true"></i>buy</a>
 <!-- Accordion wrapper -->
-
+              <% }); %>
+            </div>
             <div class="accordion md-accordion" id="accordionEx" role="tablist" aria-multiselectable="true">
 
               <!-- Accordion card -->
@@ -235,57 +237,7 @@ Eau à base d'eau ou de solvant
 
   </div>
 
-  <!-- Main Container -->
-
-<div class="bm-page">
-<div class="container">
-<div class="row">
-<% pinksaps.forEach(function(pinksap){ %>
-<div class="order-lg-last">
-<div class="mb-4 mb-lg-5 bm-content">
-<div class="mb-4">
-</div>
-<div class="prod-listing">
-<div class="d-none fa-3x prod-loading">
-<i class="fas fa-circle-notch fa-spin"></i>
-</div>
-<div aria-hidden="true" class="row border-bottom mt-4 mx-md-auto"></div>
-<ul class="row list-unstyled mb-0">
-<li class="col-sm-6 col-md-4 bm-col-md bm-product-item">
-<div class="align-items-center d-flex h-100 bm-product-link" href="/products/high-performance-rubber-underlay-3mm-365430">	
-<div class="flex-shrink-0 mw-100 position-relative bm-product-link-img">
-<img id="myImg" class="myImgLightBox"  width="200" height="240" src="<%= pinksap.image %>" >	
-<!-- The Modal -->
-<div id="myModal" class="modal">
-  <!-- The Close Button -->
-  <span class="close" id="span">&times;</span>
-  <!-- Modal Content (The Image) -->
-  <img class="modal-content" id="img01">
-  <!-- Modal Caption (Image Text) -->
-  <div id="caption"></div>
-</div></div>
-<div class="flex-fill mw-100 bm-product-link-text">
-<h3 class="d-block font-weight-normal h6 mb-0 text-body"><%= pinksap.title %></h3>
-<span class="d-block h5 mb-0 mt-1 text-body"><%= pinksap.price %>DA</span>
-<a href="/add-to-cart-pinksap/<%= pinksap._id %>"  class="btn btn-pink btn-rounded"><i class="fas fa-cart-plus mr-2" aria-hidden="true"></i>buy</a>
-
-
-
-</div>	
-</div>	
-</li>
-
-</ul>
-<div aria-hidden="true" class="row border-bottom mb-4 mx-md-auto"></div>
-</div>
-
-
-</div>
-</div>
-<% }); %>
-</div>
-</div>
-</div>
+ 
 
   
   <%- include ("../partials/footer") %>.
