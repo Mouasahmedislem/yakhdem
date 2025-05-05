@@ -239,7 +239,7 @@ var pinklit = require('../models/pinklit');
 var pinkcool = require('../models/pinkcool');
 var yallaw = require('../models/yallaw');
 var yellow = require('../models/yellow');
-var grey01 = require('../models/grey01');
+var greya = require('../models/greya');
 
 
 
@@ -373,27 +373,27 @@ router.get("/onecoat/red01", function(req, res){
 
 
 router.get("/onecoat/grey01", function(req, res){
-    grey01.find({}, function(err, grey01s){
+    greya.find({}, function(err, greyas){
     header.find({}, function(err, headers){
         if(err){
             console.log(err);
         }
         else{
-            res.render("onecoat/grey01", {grey01s: grey01s,headers:headers});
+            res.render("onecoat/grey01", {greyas: greyas,headers:headers});
         }
     });
 });
 });
 
-router.get("/add-to-cart-grey01/:id", function(req, res){
-    var grey01Id = req.params.id;
+router.get("/add-to-cart-greya/:id", function(req, res){
+    var greyaId = req.params.id;
     var cart = new Cart(req.session.cart ? req.session.cart : {});
     
-    grey01.findById(grey01Id, function(err, grey01){
+    greya.findById(greyaId, function(err, greya){
         if(err){
             return res.redirect("/onecoat/grey01");
         }
-        cart.add(grey01, grey01.id);
+        cart.add(greya, greya.id);
         req.session.cart = cart;
         console.log(req.session.cart);
         res.redirect("/onecoat/grey01");
