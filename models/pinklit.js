@@ -1,9 +1,9 @@
 var mongoose = require("mongoose");
 
-var pink04Schema = new mongoose.Schema({
+var pinklitSchema = new mongoose.Schema({
     image: {type: String, required: true},
     title: {type: String, required: true},
     price: {type: Number, required: true}
 });
 
-module.exports = mongoose.model("pink04", Schema);
+module.exports = mongoose.model("pinklit", pinklitSchema);
