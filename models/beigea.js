@@ -4,4 +4,4 @@ beigeaSchema = new mongoose.Schema({
     price: {type: Number, required: true}
 });
 
-module.exports = mongoose.model("beige", beigeaSchema);
+module.exports = mongoose.model("beigea", beigeaSchema);
