@@ -54,33 +54,7 @@ router.get("/add-to-cart-furniteur/:id", function(req, res){
 
 
 
-router.get("/sale/rug", function(req, res){
-    rug.find({}, function(err, rugs){
-    header.find({}, function(err, headers){
-        if(err){
-            console.log(err);
-        }
-        else{
-            res.render("sale/rug", {rugs: rugs,headers:headers});
-        }
-    });
-});
-});
 
-router.get("/add-to-cart-rug/:id", function(req, res){
-    var rugId = req.params.id;
-    var cart = new Cart(req.session.cart ? req.session.cart : {});
-    
-    rug.findById(rugId, function(err, rug){
-        if(err){
-            return res.redirect("/sale/rug");
-        }
-        cart.add(rug, rug.id);
-        req.session.cart = cart;
-        console.log(req.session.cart);
-        res.redirect("/sale/rug");
-    });
-});
 
 
 
