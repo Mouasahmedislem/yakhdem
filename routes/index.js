@@ -896,7 +896,7 @@ router.get("/onecoat/BEIGE09", function(req, res){
             console.log(err);
         }
         else{
-            res.render("onecoat/BEIGE09, {beigeas: beigeas,headers:headers});
+            res.render("onecoat/BEIGE09", {beigeas: beigeas,headers:headers});
         }
     });
 });
