@@ -56,6 +56,26 @@ var seedbluea = require('./seed/bluea');
 var seedblueb = require('./seed/blueb');
 var seedbluec = require('./seed/bluec');
 var seedblued = require('./seed/blued');
+var seedbeigea = require('./seed/beigea');
+var seedbeigeb = require('./seed/beigeb');
+var seedbeigec = require('./seed/beigec');
+var seedbeiged = require('./seed/beiged');
+var seedbeigee = require('./seed/beigee');
+var seedbeigef = require('./seed/beigef');
+var seedbeigeg = require('./seed/beigeg');
+var seedbeigeh = require('./seed/beigeh');
+var seedbeigei = require('./seed/beigei');
+var seedbeigek = require('./seed/beigek');
+var seedbeigel = require('./seed/beigel');
+var seedbeigem = require('./seed/beigem');
+var seedbeigen = require('./seed/beigen');
+var seedbeigeo = require('./seed/beigeo');
+var seedbeigep = require('./seed/beigep');
+var seedbeigeq = require('./seed/beigeq');
+var seedbeiger = require('./seed/beiger');
+var seedbeiges = require('./seed/beiges');
+var seedbeiget = require('./seed/beiget');
+var seedbeigej = require('./seed/beigea');
 
 
 var wow = require('./models/wow');
@@ -93,6 +113,27 @@ var bluea = require('./models/bluea');
 var blueb = require('./models/blueb');
 var bluec = require('./models/bluec');
 var blued = require('./models/blued');
+var beigea = require('./models/beigea');
+var beigeb = require('./models/beigeb');
+var beigec = require('./models/beigec');
+var beiged = require('./models/beiged');
+var beigee = require('./models/beigee');
+var beigef = require('./models/beigef');
+var beigeg = require('./models/beigeg');
+var beigeh = require('./models/beigeh');
+var beigei = require('./models/beigei');
+var beigej = require('./models/beigej');
+var beigek = require('./models/beigek');
+var beigel = require('./models/beigel');
+var beigem = require('./models/beigem');
+var beigen = require('./models/beigen');
+var beigeo = require('./models/beigeo');
+var beigep = require('./models/beigep');
+var beigeq = require('./models/beigeq');
+var beiger = require('./models/beiger');
+var beiges = require('./models/beiges');
+var beiget = require('./models/beiget');
+
 
 
 mongoose.connect('mongodb+srv://Islem:cmygNChSy2L9Q4xt@paintello.cu30n.mongodb.net/paintello?retryWrites=true&w=majority' , (err)=> {
