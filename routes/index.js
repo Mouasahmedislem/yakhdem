@@ -1641,8 +1641,9 @@ router.get('/shop', (req, res)=> {
                  res.render('event/shop', {products: null});
             }
             var cart = new Cart(req.session.cart);
+             res.json(item.shippingFees);
             shipping.find(function(err, shippings) {
-             res.render('event/shop', {products: cart.generateArray(),shippings:shippings, totalPrice: cart.totalPrice, price: shippings.price});
+             res.render('event/shop', {products: cart.generateArray(),shippings:shippings, shippingFee: fee, totalPrice: cart.totalPrice, price: shippings.price});
         });
  });
 
