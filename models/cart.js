@@ -1,3 +1,12 @@
+ const wilaya = document.getElementById('wilaya').value;
+      const costDisplay = document.getElementById('shipping-cost');
+      const shippingPrices = {
+        'Algiers': 400,
+        'Oran': 600,
+        'Constantine': 700,
+        'Blida': 500,
+        'Annaba': 650
+      };
 
 
 module.exports = function Cart(oldCart){
