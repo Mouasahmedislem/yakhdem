@@ -7,7 +7,7 @@ const orderSchema = new Schema({
   address: {type: String, required: true},
   name: {type: String, required: true},
   wilaya: {type: String, required: true},
-  commune: {type: String, required: true},
+
   
   numero : {type: Number, required: true}
 
