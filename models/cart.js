@@ -5,7 +5,27 @@ module.exports = function Cart(oldCart){
     this.items = oldCart.items || {};
     this.totalQty = oldCart.totalQty || 0;
     this.totalPrice = oldCart.totalPrice || 0;
-    this.shippingPrice = oldCart.shippingPrices || 0;
+    this.shippingPrice =  function updateShipping() {
+      const wilaya = document.getElementById('wilaya').value;
+      const costDisplay = document.getElementById('shipping-cost');
+      const shippingPrices = {
+        'Algiers': 400,
+        'Oran': 600,
+        'Constantine': 700,
+        'Blida': 500,
+        'Annaba': 650
+      };
+
+      shippingPrice = shippingPrices[wilaya] || 0;
+
+      if (shippingPrice > 0) {
+        costDisplay.textContent = `Shipping Cost: ${shippingPrice} DA`;
+      } else {
+        costDisplay.textContent = '';
+      }
+
+      updateTotal();
+    }
   
   
     this.add = function(item, id){
