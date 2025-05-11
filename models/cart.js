@@ -1,19 +1,12 @@
- const wilaya = document.getElementById('wilaya').value;
-      const costDisplay = document.getElementById('shipping-cost');
-      const shippingPrices = {
-        'Algiers': 400,
-        'Oran': 600,
-        'Constantine': 700,
-        'Blida': 500,
-        'Annaba': 650
-      };
+
 
 
 module.exports = function Cart(oldCart){
     this.items = oldCart.items || {};
     this.totalQty = oldCart.totalQty || 0;
     this.totalPrice = oldCart.totalPrice || 0;
-    this.shippingPrice = oldCart.shippingPrices[wilaya] || 0;
+    this.shippingPrice = oldCart.shippingPrices || 0;
+  
   
     this.add = function(item, id){
         var storedItem = this.items[id];
