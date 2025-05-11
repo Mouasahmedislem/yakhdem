@@ -1,5 +1,4 @@
-const basePrice = item.price;
-let shippingPrice = 0;
+
 
 module.exports = function Cart(oldCart){
     this.items = oldCart.items || {};
@@ -42,31 +41,5 @@ module.exports = function Cart(oldCart){
         }
         return arr;
     };
-   function updateShipping() {
-      const wilaya = document.getElementById('wilaya').value;
-      const costDisplay = document.getElementById('shipping-cost');
-      const shippingPrices = {
-        'Algiers': 400,
-        'Oran': 600,
-        'Constantine': 700,
-        'Blida': 500,
-        'Annaba': 650
-      };
-
-      shippingPrice = shippingPrices[wilaya] || 0;
-
-      if (shippingPrice > 0) {
-        costDisplay.textContent = `Shipping Cost: ${shippingPrice} DA`;
-      } else {
-        costDisplay.textContent = '';
-      }
-
-      updateTotal();
-    }
-
-    function updateTotal() {
-      const quantity = parseInt(document.getElementById('qty').value) || 1;
-      const total = basePrice * quantity + shippingPrice;
-      document.getElementById('total-price').textContent = `Total: ${total.toLocaleString()} DA`;
-    }
+  
 };
