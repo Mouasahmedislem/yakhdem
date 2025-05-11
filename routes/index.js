@@ -1730,7 +1730,6 @@ router.get('/shop', (req, res)=> {
                 address: req.body.address,
                 name: req.body.name,
                 wilaya: req.body.wilaya,
-                commune: req.body.commune,
                 numero: req.body.numero
                 
               });
