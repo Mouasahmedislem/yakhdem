@@ -28,28 +28,113 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
   <link href="../../css/bootstrap.min.css" rel="stylesheet">
   <!-- Material Design Bootstrap -->
   <link href="../../css/mdb.min.css" rel="stylesheet">
-  <style>
-    html,
-    body,
-    header,
-    .view {
-      height: 100vh;
+ <style>
+    body {
+      font-family: sans-serif;
+      margin: 0;
+      padding: 0;
+      background: #fefefe;
+      color: #333;
     }
-    @media (max-width: 740px) {
-      html,
-      body,
-      header,
-      .view {
-        height: 700px;
-      }
+    .container {
+      max-width: 800px;
+      margin: 40px auto;
+      padding: 20px;
     }
-    @media (min-width: 800px) and (max-width: 850px) {
-      html,
-      body,
-      header,
-      .view {
-        height: 650px;
-      }
+    .carousel {
+      position: relative;
+      overflow: hidden;
+      width: 100%;
+      border-radius: 12px;
+    }
+    .carousel-images {
+      display: flex;
+      transition: transform 0.5s ease-in-out;
+    }
+    .carousel-images img {
+      width: 100%;
+      flex-shrink: 0;
+    }
+    .carousel-buttons {
+      position: absolute;
+      top: 50%;
+      width: 100%;
+      display: flex;
+      justify-content: space-between;
+      transform: translateY(-50%);
+    }
+    .carousel-buttons button {
+      background-color: rgba(0, 0, 0, 0.5);
+      color: white;
+      border: none;
+      font-size: 2rem;
+      cursor: pointer;
+      padding: 0 12px;
+    }
+    .price {
+      color: #f4791f;
+      font-size: 1.5rem;
+      margin: 10px 0;
+    }
+    .btn {
+      display: inline-block;
+      background: #f4791f;
+      color: white;
+      padding: 10px 20px;
+      border: none;
+      border-radius: 30px;
+      text-decoration: none;
+      font-size: 1rem;
+      margin-top: 20px;
+      cursor: pointer;
+    }
+    .btn:hover {
+      background: #c85f0d;
+    }
+    .quantity {
+      margin-top: 20px;
+    }
+    .quantity label {
+      margin-right: 10px;
+      font-weight: bold;
+    }
+    .quantity input {
+      width: 60px;
+      padding: 5px;
+      font-size: 1rem;
+      text-align: center;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+    }
+    .cart-link {
+      display: block;
+      margin-top: 30px;
+      text-align: center;
+    }
+    .cart-link a {
+      color: #f4791f;
+      text-decoration: none;
+      font-weight: bold;
+    }
+    .cart-link a:hover {
+      text-decoration: underline;
+    }
+    .checkout-form {
+      margin-top: 40px;
+      border-top: 1px solid #ddd;
+      padding-top: 20px;
+    }
+    .checkout-form label {
+      display: block;
+      margin-bottom: 5px;
+      font-weight: bold;
+    }
+    .checkout-form input, .checkout-form select {
+      width: 100%;
+      padding: 10px;
+      margin-bottom: 15px;
+      border: 1px solid #ccc;
+      border-radius: 6px;
     }
   </style>
 </head>
