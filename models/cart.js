@@ -4,53 +4,7 @@ module.exports = function Cart(oldCart){
     this.items = oldCart.items || {};
     this.totalQty = oldCart.totalQty || 0;
     this.totalPrice = oldCart.totalPrice || 0;
-    const basePrice = 3300 ;
-    let shippingPrice = 0;
-
-    function addToCart() {
-      const quantity = document.getElementById('qty').value;
-
-      fetch('/api/cart', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({
-          price: product.price ,
-          quantity: parseInt(quantity)
-        })
-      })
-    }
-
-
-
-    function updateShipping() {
-      const wilaya = document.getElementById('wilaya').value;
-      const costDisplay = document.getElementById('shipping-cost');
-      const shippingPrices = {
-        'Algiers': 400,
-        'Oran': 600,
-        'Constantine': 700,
-        'Blida': 500,
-        'Annaba': 650
-      };
-
-      shippingPrice = shippingPrices[wilaya] || 0;
-
-      if (shippingPrice > 0) {
-        costDisplay.textContent = `Shipping Cost: ${shippingPrice} DA`;
-      } else {
-        costDisplay.textContent = '';
-      }
-
-      updateTotal();
-    }
-
-    function updateTotal() {
-      const quantity = parseInt(document.getElementById('qty').value) || 1;
-      const total = basePrice * quantity + shippingPrice;
-      document.getElementById('total-price').textContent = `Total: ${total.toLocaleString()} DA`;
-    }
+   
     this.add = function(item, id){
         var storedItem = this.items[id];
         if(!storedItem){
