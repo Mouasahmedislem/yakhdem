@@ -1778,7 +1778,18 @@ router.post('/power', function(req, res, next) {
               });
            
           })
- 
+
+router.get('/shipping-fee/:wilaya', (req, res) => {
+  const { wilaya } = req.params;
+  const fee = item.shippingFees[wilaya];
+
+  if (fee !== undefined) {
+    res.json({ wilaya, shippingFee: fee });
+  } else {
+    res.status(404).json({ error: 'Wilaya not found' });
+  }
+});
+
           
 
 
