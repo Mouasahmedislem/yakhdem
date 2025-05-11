@@ -175,47 +175,35 @@ src="https://www.facebook.com/tr?id=549728007869525&ev=PageView&noscript=1"
                   
                   
                   <!-- Body -->
-                  <form action="/checkout" method="post" >
-                  
-                  <div class="md-form mb-0">
-                   
-                    <i class="fas fa-user prefix black-text"></i>
-                   <input type="text" class="form-control form-control-sm black-text" id="name" name="name" aria-describedby="emailHelp" placeholder="Enter Name">
-                    <label for="name">Nom</label>
-                    </div>
 
-                  <div class="md-form mb-0">
-                    <i class="fas fa-home prefix black-text"></i>
-                  <input type="text" class="form-control form-control-sm black-text" name="address" id="address" aria-describedby="emailHelp" placeholder="Enter Address"> 
-                    <label for="Address">Adresse</label>
-                  </div>
+                   <div class="checkout-form">
+      <h2>Checkout (Algeria Only)</h2>
+      <form action="/checkout" method="POST">
+        <label for="fullname">Full Name</label>
+        <input type="text" id="name" name="name" required>
 
-                 
-                     <label >Province:
-      <select name="province" id="Wilaya" required>
-        <option value="">Select Province</option>
-        <option value="Algiers">Algiers</option>
-        <option value="Oran">Oran</option>
-        <option value="Constantine">Constantine</option>
-        <option value="Blida">Blida</option>
-        <option value="Tlemcen">Tlemcen</option>
-        <!-- Add more as needed -->
-      </select>
-    </label>
-                  
+        <label for="phone">Phone Number</label>
+        <input type="tel" name="numero" id="numero" pattern="0[5-7][0-9]{8}" placeholder="e.g. 0551234567" required>
 
-                  <div class="md-form mb-0">
-                    <i class="fas fa-phone prefix black-text"></i>
-                  <input type="text" class="form-control black-text" name="numero" id="numero" placeholder="Numéro telephone"> 
-                    <label for="text">(obligatoire)</label>
-                  </div>
+        <label for="wilaya">Wilaya</label>
+        <select id="wilaya" name="wilaya" required>
+          <option value="">Select your wilaya</option>
+          <option value="Algiers">Algiers</option>
+          <option value="Oran">Oran</option>
+          <option value="Constantine">Constantine</option>
+          <option value="Blida">Blida</option>
+          <option value="Annaba">Annaba</option>
+          <!-- Add more wilayas as needed -->
+        </select>
 
+        <label for="address">Full Address</label>
+        <input type="text" name="address" id="address" required>
+
+        <button type="submit" class="btn">Place Order</button>
+      </form>
+    </div>
+  </div>
                 
-                 
-                  <div class="text-center">
-                    <button type="submit"  class="btn pink-gradient btn-lg">Valide <i class="fas fa-shipping-fast prefix black-text"></i></button>
-                 
-</form>
                     <hr>
                     
                 
