@@ -4,7 +4,7 @@ module.exports = function Cart(oldCart){
     this.items = oldCart.items || {};
     this.totalQty = oldCart.totalQty || 0;
     this.totalPrice = oldCart.totalPrice || 0;
-    const basePrice = item.price ;
+    const basePrice = 3300 ;
     let shippingPrice = 0;
 
     function addToCart() {
