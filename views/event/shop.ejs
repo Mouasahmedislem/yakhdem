@@ -252,27 +252,32 @@ src="https://www.facebook.com/tr?id=549728007869525&ev=PageView&noscript=1"
                 </li>
                 <li class="list-group-item d-flex justify-content-between align-items-center px-0">
                   <label for="wilaya">Wilaya</label>
-<% shippings.forEach(function(shipping){ %>
+
         <select id="wilaya" name="wilaya" required onchange="updateShipping()">
-          <option value="">Select your wilaya</option>
-          <option value="Algiers"><%= shipping.wilaya%></option>
+              <option value="">Select your wilaya</option>
+
+
+
+          <option value="Algiers">Algiers</option>
+
+
+          <option value="Oran">Oran</option>
+
+
+          <option value="Constantine">Constantine</option>
+
+
+          <option value="Blida">Blida</option>
+
+
+          <option value="Annaba">Annaba</option>
           
         </select>
-<div id="shipping-cost" ><%= shipping.price%></div>
-<% }); %>
+<div id="shipping-cost" ></div>
+
                 </li>
 
-                <li class="list-group-item d-flex justify-content-between align-items-center border-0 px-0 mb-3">
-                  <div>
-                    <strong>The total amount of</strong>
-                    <strong>
-                      <p class="mb-0">(including VAT) </p>
-                    </strong>
-                  </div>
-        
-
-                  <div id="shipping-cost">Total:   <%= totalPrice%>  DA</div>
-                </li>
+               
            
               </ul>
               <form method="GET" action="/checkout">
