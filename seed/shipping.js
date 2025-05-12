@@ -14,7 +14,20 @@ var shippings = [
     {
         wilaya: "Alger",
         price: 400
+    },
+  {
+        wilaya: "Oran",
+        price: 600
+    },
+  {
+        wilaya: "Constantine",
+        price: 700
+    },
+  {
+        wilaya: "Blida",
+        price: 400
     }
+  
 ];
 
 function seedshipping(){
