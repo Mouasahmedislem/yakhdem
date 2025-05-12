@@ -1710,7 +1710,7 @@ router.get('/shop', (req, res)=> {
             res.redirect('/shop');
         });
         
-        router.get('/checkout', middleware.isLoggedIn, function(req, res, next) {
+        router.get('/checkout', function(req, res, next) {
             if (!req.session.cart) {
               return res.redirect('event/shop', {products: null});
             }
