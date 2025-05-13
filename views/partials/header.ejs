@@ -84,6 +84,9 @@ right: 12px;
 html,
     body,
     header,
+    .intro-2 {
+      height: 100%;
+    }
     .view {
       height: auto;
     }
@@ -91,6 +94,9 @@ html,
       html,
       body,
       header,
+      .intro-2 {
+        height: 900px;
+      }
       .view {
         height: auto;
       }
@@ -99,49 +105,45 @@ html,
       html,
       body,
       header,
+      .intro-2 {
+        height: 950px;
+      }
       .view {
         height: auto;
       }
 
     }
-  .carousel {
-      overflow-x: auto;
-      display: flex;
-      gap: 16px;
-      padding: 20px 0;
-      scroll-snap-type: x mandatory;
-      -webkit-overflow-scrolling: touch;
+   /* Carousel*/
+    .carousel,
+    .carousel-item,
+    .carousel-item.active {
+      height: 100%;
     }
 
-    .carousel-item {
-      flex: 0 0 auto;
-      width: 250px;
-      scroll-snap-align: center;
-      background: #fff8f0;
-      border: 1px solid #f9d9a9;
-      border-radius: 12px;
-      padding: 20px;
-      text-align: center;
+    .carousel-inner {
+      height: 100%;
     }
 
-    .carousel-item img {
-      width: 100%;
-      border-radius: 8px;
-      margin-bottom: 10px;
+    .carousel-item:nth-child(1) {
+      background-image: url("https://mdbootstrap.com/img/Photos/Others/images/92.jpg");
+      background-repeat: no-repeat;
+      background-size: cover;
+      background-position: center center;
     }
 
-    .carousel-item a {
-      display: inline-block;
-      margin-top: 10px;
-      color: #f4791f;
-      text-decoration: none;
-      font-weight: bold;
+    .carousel-item:nth-child(2) {
+      background-image: url("https://mdbootstrap.com/img/Photos/Others/images/89.jpg");
+      background-repeat: no-repeat;
+      background-size: cover;
+      background-position: center center;
     }
 
-    .carousel-item a:hover {
-      text-decoration: underline;
+    .carousel-item:nth-child(3) {
+      background-image: url("https://mdbootstrap.com/img/Photos/Others/images/90.jpg");
+      background-repeat: no-repeat;
+      background-size: cover;
+      background-position: center center;
     }
-      
   </style>
 </head>
 
