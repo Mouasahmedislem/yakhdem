@@ -84,7 +84,9 @@ class="img-fluid">
           
 
             </h3>
-<a href="/add-to-cart-greenc/<%= greenc._id %>"  class="btn btn-green btn-rounded"><i class="fas fa-cart-plus mr-2" aria-hidden="true"></i>ajouter au panier</a>
+<a href="/add-to-cart-greenc/<%= greenc._id %>" 
+   class="btn btn-pink btn-rounded"
+   onclick="trackAddToCart('<%= greenc.title %>', <%= greenc.price %>, '<%= greenc._id %>')"><i class="fas fa-cart-plus mr-2" aria-hidden="true"></i>ajouter au panier</a>
   
 <% }); %>
             <!-- Accordion wrapper -->
@@ -232,5 +234,16 @@ Eau à base d'eau ou de solvant
 
   </div>
   <!-- Main Container -->
-  
+  <script>
+  function trackAddToCart(title, price, id) {
+    fbq('track', 'AddToCart', {
+      content_name: title,
+      content_ids: [id],
+      content_type: 'product',
+      value: price,
+      currency: 'DZD'
+    });
+  }
+</script>
+
   <%- include ("../partials/footer") %>.
