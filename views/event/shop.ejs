@@ -203,10 +203,12 @@ src="https://www.facebook.com/tr?id=549728007869525&ev=PageView&noscript=1"
               </div>
               <div class="flex-fill mw-100 bm-product-link-text">
                 <h3 class="d-block font-weight-normal h6 mb-0 text-body"><%= product.item.title %></h3>
-                <span class="d-block h5 mb-0 mt-1 text-body"><%= product.price%>DA</span>
-      
-            <a href="/remove/<%= product.item._id %>" type="button" class="card-link-secondary small text-uppercase mr-3"><i
-              class="fas fa-trash-alt mr-1"></i> Remove item </a>
+                <form method="POST" action="/update-cart/<%= product.item._id %>" style="display:inline-flex; gap: 10px; align-items:center;">
+  <input type="number" name="quantity" value="<%= product.qty %>" min="1" style="width: 60px;">
+  <button type="submit" class="btn btn-sm btn-outline-primary">Update</button>
+</form>
+<a href="/remove/<%= product.item._id %>" class="card-link-secondary small text-uppercase ml-3"><i
+  class="fas fa-trash-alt mr-1"></i> Remove</a>
 
               </div>
                 </div>
