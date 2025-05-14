@@ -1937,7 +1937,7 @@ router.post('/update-cart/:id', (req, res) => {
     cart.update(productId, newQty);
   }
   req.session.cart = cart;
-  res.redirect('/cart'); // or wherever the cart page is
+  res.redirect('/shop'); // or wherever the cart page is
 });
           
 
