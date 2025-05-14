@@ -65,4 +65,18 @@ module.exports = function Cart(oldCart){
         return arr;
     };
   
+  Cart.prototype.update = function(id, qty) {
+  let storedItem = this.items[id];
+  if (!storedItem) return;
+  this.totalQty -= storedItem.qty;
+  this.totalPrice -= storedItem.price;
+
+  storedItem.qty = qty;
+  storedItem.price = storedItem.item.price * qty;
+
+  this.totalQty += qty;
+  this.totalPrice += storedItem.price;
+  this.items[id] = storedItem;
+};
+  
 };
