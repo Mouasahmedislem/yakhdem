@@ -260,7 +260,92 @@ src="https://www.facebook.com/tr?id=549728007869525&ev=PageView&noscript=1"
       <a href="/">Go to Home</a>
     </div>
                   
-<body>
+<script>
+  const shippingFees = {
+    "ADRAR": 800,
+    "CHLEF": 500,
+    "LAGHOUAT": 650,
+    "OUM EL BOUAGHI": 550,
+    "BATNA": 550,
+    "BEJAIA": 500,
+    "BISKRA": 600,
+    "BECHAR": 750,
+    "BLIDA": 300,
+    "BOUIRA": 450,
+    "TAMANRASSET": 900,
+    "TEBESSA": 600,
+    "TLEMCAN": 500,
+    "TIARET": 500,
+    "TIZI OUZOU": 400,
+    "DJELFA": 600,
+    "JIJEL": 500,
+    "SETIF": 550,
+    "SAIDA": 500,
+    "SKIKDA": 550,
+    "SIDI BELABBES": 500,
+    "GEULMA": 550,
+    "ANNABA": 550,
+    "CONSTANTINE": 500,
+    "MEDEA": 450,
+    "MOSTAGANEM": 450,
+    "M'SILA": 500,
+    "MASCARA": 500,
+    "OUERGLA": 700,
+    "EL BAYADH": 750,
+    "BOUMERDAS": 350,
+    "EL TAREF": 600,
+    "TINDOUF": 1000,
+    "TISSEMSIL": 500,
+    "EL OUED": 700,
+    "KHENCHLA": 600,
+    "SOUK AHRAS": 600,
+    "TIPAZA": 350,
+    "MILA": 500,
+    "AIN DEFLA": 400,
+    "NAAMA": 750,
+    "AIN TEMOUCHENT": 500,
+    "GHARDAIA": 700,
+    "RELIZANE": 500,
+    "ALGIERS": 300,
+    "ORAN": 400,
+    "EL M'GHAIAR": 700,
+    "EL MENIA": 750,
+    "OULED DJELLAL": 650,
+    "BENI ABBES": 800,
+    "TIMIMOUN": 800,
+    "TOUGGOURT": 700,
+    "DJANET": 950,
+    "IN SALEH": 850,
+    "IN GUEZZAM": 1000,
+    "BORDJ BADJI MOKHTAR": 950,
+    "TARF": 600,
+    "ILLIZI": 950,
+    "Default": 700
+  };
+
+  const basePrice = <%= totalPrice %>;
+
+  document.addEventListener('DOMContentLoaded', () => {
+    const wilayaSelect = document.getElementById('wilaya');
+    const shippingEl = document.createElement('p');
+    const totalEl = document.createElement('p');
+
+    shippingEl.style.fontWeight = 'bold';
+    totalEl.style.fontWeight = 'bold';
+
+    wilayaSelect.parentNode.insertBefore(shippingEl, wilayaSelect.nextSibling);
+    wilayaSelect.parentNode.insertBefore(totalEl, shippingEl.nextSibling);
+
+    wilayaSelect.addEventListener('change', () => {
+      const selected = wilayaSelect.value;
+      const shipping = shippingFees[selected] || shippingFees["Default"];
+      const total = basePrice + shipping;
+      shippingEl.innerText = `Shipping Fee: ${shipping} DA`;
+      totalEl.innerText = `Total Price (incl. shipping): ${total} DA`;
+    });
+  });
+</script>
+
 
   
 
