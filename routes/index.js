@@ -1878,6 +1878,7 @@ const shippingFee = cart.totalPrice >= freeShippingThreshold ? 0 : shipping.fee;
         wilaya: selectedWilaya,
         address: req.body.address,
         cartTotal: cart.totalPrice,
+        deliveryDelay: shipping.delay,
         shippingFee: shippingFee,
         totalPrice: finalTotalPrice
       });
