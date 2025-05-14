@@ -97,9 +97,7 @@ s.parentNode.insertBefore(t,s)}(window, document,'script',
 'https://connect.facebook.net/en_US/fbevents.js');
 fbq('init', '549728007869525');
 fbq('track', 'PageView');
-fbq('track', 'AddToCart');
-fbq('track', 'ViewContent'); 
-fbq('track', 'AddToWishlist')
+
 </script>
 <noscript><img height="1" width="1" style="display:none"
 src="https://www.facebook.com/tr?id=549728007869525&ev=PageView&noscript=1"
@@ -368,5 +366,22 @@ src="https://www.facebook.com/tr?id=549728007869525&ev=PageView&noscript=1"
   
   </section>
   <!--Section: Block Content-->
+<script>
+  function trackCheckout(totalPrice) {
+    fbq('track', 'InitiateCheckout', {
+      value: totalPrice,
+      currency: 'DZD'
+    });
+  }
 
+  // Bind the tracking to the button click
+  document.addEventListener('DOMContentLoaded', function () {
+    const checkoutBtn = document.querySelector('form[action="/checkout"] button');
+    if (checkoutBtn) {
+      checkoutBtn.addEventListener('click', function () {
+        trackCheckout(<%= totalPrice %>);
+      });
+    }
+  });
+</script>
   <%- include ("../partials/footer") %>.
