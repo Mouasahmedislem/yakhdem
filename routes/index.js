@@ -1725,6 +1725,65 @@ router.get('/shop', (req, res)=> {
   }
 
   var cart = new Cart(req.session.cart);
+  const freeShippingThreshold = 5000;
+  const wilayaShippingInfo = {
+   "ADRAR": { fee: 800, delay: "4–6 days" },
+    "CHLEF": { fee: 600, delay: "3–5 days" },
+    "LAGHOUAT": { fee: 750, delay: "4–6 days" },
+    "OUM EL BOUAGHI": { fee: 600, delay: "3–5 days" },
+    "BATNA": { fee: 600, delay: "3–5 days" },
+    "BEJAIA": { fee: 500, delay: "2–4 days" },
+    "BISKRA": { fee: 700, delay: "3–5 days" },
+    "BECHAR": { fee: 850, delay: "4–6 days" },
+    "BLIDA": { fee: 300, delay: "1–2 days" },
+    "BOUIRA": { fee: 500, delay: "2–3 days" },
+    "TAMANRASSET": { fee: 1000, delay: "5–8 days" },
+    "TEBESSA": { fee: 700, delay: "3–5 days" },
+    "TLEMCAN": { fee: 500, delay: "2–3 days" },
+    "TIARET": { fee: 550, delay: "3–4 days" },
+    "TIZI OUZOU": { fee: 400, delay: "2–3 days" },
+    "DJELFA": { fee: 600, delay: "3–4 days" },
+    "JIJEL": { fee: 450, delay: "2–3 days" },
+    "SETIF": { fee: 500, delay: "2–3 days" },
+    "SAIDA": { fee: 600, delay: "3–4 days" },
+    "SKIKDA": { fee: 500, delay: "2–3 days" },
+    "SIDI BELABBAS": { fee: 550, delay: "3–4 days" },
+    "GEULMA": { fee: 600, delay: "3–4 days" },
+    "MEDEA": { fee: 400, delay: "2–3 days" },
+    "MOSTAGANEM": { fee: 450, delay: "2–3 days" },
+    "M'SILA": { fee: 500, delay: "2–3 days" },
+    "MASCARA": { fee: 500, delay: "2–3 days" },
+    "OUERGLA": { fee: 700, delay: "4–6 days" },
+    "EL BAYADH": { fee: 750, delay: "4–6 days" },
+    "BORJ BOU ARRERIDJ": { fee: 500, delay: "2–3 days" },
+    "BOUMERDAS": { fee: 350, delay: "1–2 days" },
+    "EL TAREF": { fee: 700, delay: "3–5 days" },
+    "TISSEMSIL": { fee: 550, delay: "3–4 days" },
+    "EL OUED": { fee: 750, delay: "4–6 days" },
+    "KHENCHLA": { fee: 650, delay: "3–5 days" },
+    "SOUK AHRAS": { fee: 600, delay: "3–4 days" },
+    "TIPAZA": { fee: 300, delay: "1–2 days" },
+    "MILA": { fee: 500, delay: "2–3 days" },
+    "AIN DEFLA": { fee: 400, delay: "2–3 days" },
+    "NAAMA": { fee: 800, delay: "4–6 days" },
+    "AIN TEMOUCHENT": { fee: 550, delay: "3–4 days" },
+    "GHARDAIA": { fee: 700, delay: "4–6 days" },
+    "GHILEZAN": { fee: 500, delay: "2–3 days" },
+    "EL M'GHAIAR": { fee: 800, delay: "4–6 days" },
+    "EL MENIA": { fee: 900, delay: "5–7 days" },
+    "OULED DJELLAL": { fee: 700, delay: "4–6 days" },
+    "BENI ABBAS": { fee: 900, delay: "5–7 days" },
+    "TIMIMOUN": { fee: 950, delay: "5–7 days" },
+    "TOUGGOURT": { fee: 850, delay: "4–6 days" },
+    "IN SALEH": { fee: 1000, delay: "6–8 days" },
+    "IN GUEZZAM": { fee: 1200, delay: "6–9 days" },
+    "ALGIERS": { fee: 300, delay: "1–2 days" },
+    "ORAN": { fee: 400, delay: "2–3 days" },
+    "CONSTANTINE": { fee: 500, delay: "2–3 days" },
+    "ANNABA": { fee: 500, delay: "2–3 days" }
+  // Add all wilayas with their respective info...
+};
+      
   const selectedWilaya = req.body.wilaya;
   const shippingFees = {
   "ADRAR": 800,
@@ -1788,10 +1847,11 @@ router.get('/shop', (req, res)=> {
   "TAMANRASSET": 900,
   "Default": 700
 };
-
+const selectedWilaya = req.body.wilaya;
+const shipping = wilayaShippingInfo[selectedWilaya] || { fee: 1000, delay: "3-5 days" };
   // Determine fee
-  const shippingFee = shippingFees[selectedWilaya] || shippingFees['Default'];
-  const finalTotalPrice = cart.totalPrice + shippingFee;
+const shippingFee = cart.totalPrice >= freeShippingThreshold ? 0 : shipping.fee;
+const totalWithShipping = cart.totalPrice + shippingFee;
 
   let order = new Order({
     user: req.user,
@@ -1801,7 +1861,8 @@ router.get('/shop', (req, res)=> {
     wilaya: selectedWilaya,
     numero: req.body.numero,
     shippingFee: shippingFee,
-    totalWithShipping: finalTotalPrice
+    deliveryDelay: shipping.delay,
+    totalPrice: totalWithShipping
   });
 
   order.save(function(err, result) {
