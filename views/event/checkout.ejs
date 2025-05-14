@@ -345,7 +345,99 @@ src="https://www.facebook.com/tr?id=549728007869525&ev=PageView&noscript=1"
 </script>
 
 
-  
+  <script>
+  const FREE_SHIPPING_THRESHOLD = 5000; // DA
+  const basePrice = <%= totalPrice %>; // coming from your server
+
+  // Full wilaya list with delivery times and estimated shipping fees (example data)
+  const shippingData = {
+    "ADRAR": { fee: 800, delay: "4–6 days" },
+    "CHLEF": { fee: 600, delay: "3–5 days" },
+    "LAGHOUAT": { fee: 750, delay: "4–6 days" },
+    "OUM EL BOUAGHI": { fee: 600, delay: "3–5 days" },
+    "BATNA": { fee: 600, delay: "3–5 days" },
+    "BEJAIA": { fee: 500, delay: "2–4 days" },
+    "BISKRA": { fee: 700, delay: "3–5 days" },
+    "BECHAR": { fee: 850, delay: "4–6 days" },
+    "BLIDA": { fee: 300, delay: "1–2 days" },
+    "BOUIRA": { fee: 500, delay: "2–3 days" },
+    "TAMANRASSET": { fee: 1000, delay: "5–8 days" },
+    "TEBESSA": { fee: 700, delay: "3–5 days" },
+    "TLEMCAN": { fee: 500, delay: "2–3 days" },
+    "TIARET": { fee: 550, delay: "3–4 days" },
+    "TIZI OUZOU": { fee: 400, delay: "2–3 days" },
+    "DJELFA": { fee: 600, delay: "3–4 days" },
+    "JIJEL": { fee: 450, delay: "2–3 days" },
+    "SETIF": { fee: 500, delay: "2–3 days" },
+    "SAIDA": { fee: 600, delay: "3–4 days" },
+    "SKIKDA": { fee: 500, delay: "2–3 days" },
+    "SIDI BELABBAS": { fee: 550, delay: "3–4 days" },
+    "GEULMA": { fee: 600, delay: "3–4 days" },
+    "MEDEA": { fee: 400, delay: "2–3 days" },
+    "MOSTAGANEM": { fee: 450, delay: "2–3 days" },
+    "M'SILA": { fee: 500, delay: "2–3 days" },
+    "MASCARA": { fee: 500, delay: "2–3 days" },
+    "OUERGLA": { fee: 700, delay: "4–6 days" },
+    "EL BAYADH": { fee: 750, delay: "4–6 days" },
+    "BORJ BOU ARRERIDJ": { fee: 500, delay: "2–3 days" },
+    "BOUMERDAS": { fee: 350, delay: "1–2 days" },
+    "EL TAREF": { fee: 700, delay: "3–5 days" },
+    "TISSEMSIL": { fee: 550, delay: "3–4 days" },
+    "EL OUED": { fee: 750, delay: "4–6 days" },
+    "KHENCHLA": { fee: 650, delay: "3–5 days" },
+    "SOUK AHRAS": { fee: 600, delay: "3–4 days" },
+    "TIPAZA": { fee: 300, delay: "1–2 days" },
+    "MILA": { fee: 500, delay: "2–3 days" },
+    "AIN DEFLA": { fee: 400, delay: "2–3 days" },
+    "NAAMA": { fee: 800, delay: "4–6 days" },
+    "AIN TEMOUCHENT": { fee: 550, delay: "3–4 days" },
+    "GHARDAIA": { fee: 700, delay: "4–6 days" },
+    "GHILEZAN": { fee: 500, delay: "2–3 days" },
+    "EL M'GHAIAR": { fee: 800, delay: "4–6 days" },
+    "EL MENIA": { fee: 900, delay: "5–7 days" },
+    "OULED DJELLAL": { fee: 700, delay: "4–6 days" },
+    "BENI ABBAS": { fee: 900, delay: "5–7 days" },
+    "TIMIMOUN": { fee: 950, delay: "5–7 days" },
+    "TOUGGOURT": { fee: 850, delay: "4–6 days" },
+    "IN SALEH": { fee: 1000, delay: "6–8 days" },
+    "IN GUEZZAM": { fee: 1200, delay: "6–9 days" },
+    "ALGIERS": { fee: 300, delay: "1–2 days" },
+    "ORAN": { fee: 400, delay: "2–3 days" },
+    "CONSTANTINE": { fee: 500, delay: "2–3 days" },
+    "ANNABA": { fee: 500, delay: "2–3 days" }
+  };
+
+  document.addEventListener('DOMContentLoaded', () => {
+    const wilayaSelect = document.getElementById('wilaya');
+    const infoBox = document.createElement('div');
+    infoBox.style.marginTop = '15px';
+    infoBox.style.fontWeight = 'bold';
+    wilayaSelect.parentNode.insertBefore(infoBox, wilayaSelect.nextSibling);
+
+    wilayaSelect.addEventListener('change', () => {
+      const selected = wilayaSelect.value.toUpperCase();
+      const data = shippingData[selected] || { fee: 700, delay: "3–5 days" };
+      let shippingFee = data.fee;
+      const deliveryTime = data.delay;
+
+      let shippingText = `${shippingFee} DA`;
+      let finalPrice = basePrice + shippingFee;
+
+      if (basePrice >= FREE_SHIPPING_THRESHOLD) {
+        shippingFee = 0;
+        shippingText = `Free (over ${FREE_SHIPPING_THRESHOLD} DA)`;
+        finalPrice = basePrice;
+      }
+
+      infoBox.innerHTML = `
+        🚚 <strong>Shipping Fee:</strong> ${shippingText}<br>
+        ⏱ <strong>Estimated Delivery:</strong> ${deliveryTime}<br>
+        💰 <strong>Total Including Shipping:</strong> ${finalPrice} DA
+      `;
+    });
+  });
+</script>
+
 
 
 
