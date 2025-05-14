@@ -398,7 +398,7 @@ document.querySelectorAll('.btn-decrease').forEach(button => {
 });
 
 function updateQty(productId, action) {
-  fetch(`/shop/${action}/${productId}`, {
+  fetch(`/cart/${action}/${productId}`, {
     method: 'POST'
   })
   .then(res => res.json())
