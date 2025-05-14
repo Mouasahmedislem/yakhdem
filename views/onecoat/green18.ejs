@@ -248,5 +248,16 @@ Eau à base d'eau ou de solvant
 
   </div>
   <!-- Main Container -->
-  
+  <script>
+  function trackAddToCart(title, price, id) {
+    fbq('track', 'AddToCart', {
+      content_name: title,
+      content_ids: [id],
+      content_type: 'product',
+      value: price,
+      currency: 'DZD'
+    });
+  }
+</script>
+
   <%- include ("../partials/footer") %>.
