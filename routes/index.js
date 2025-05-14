@@ -1847,11 +1847,11 @@ router.get('/shop', (req, res)=> {
   "TAMANRASSET": 900,
   "Default": 700
 };
-const selectedWilaya = req.body.wilaya;
+
 const shipping = wilayaShippingInfo[selectedWilaya] || { fee: 1000, delay: "3-5 days" };
   // Determine fee
 const shippingFee = cart.totalPrice >= freeShippingThreshold ? 0 : shipping.fee;
- const finalTotalPrice = cart.totalPrice + shippingFee;
+ const totalWithShipping = cart.totalPrice + shippingFee;
 
   let order = new Order({
     user: req.user,
@@ -1862,7 +1862,7 @@ const shippingFee = cart.totalPrice >= freeShippingThreshold ? 0 : shipping.fee;
     numero: req.body.numero,
     shippingFee: shippingFee,
     deliveryDelay: shipping.delay,
-    totalWithShipping: finalTotalPrice
+    totalPrice: totalWithShipping
   });
 
   order.save(function(err, result) {
