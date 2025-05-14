@@ -113,7 +113,9 @@ src="https://www.facebook.com/tr?id=549728007869525&ev=PageView&noscript=1"
           
 
             </h3>
-<a href="/add-to-cart-pinkpon/<%= pinkpon._id %>"  class="btn btn-pink btn-rounded"><i class="fas fa-cart-plus mr-2" aria-hidden="true"></i>ajouter au panier</a>
+<a href="/add-to-cart-pinkpon/<%= pinkpon._id %>" 
+   class="btn btn-pink btn-rounded"
+   onclick="trackAddToCart('<%= pinkpon.title %>', <%= pinkpon.price %>, '<%= pinkpon._id %>')"><i class="fas fa-cart-plus mr-2" aria-hidden="true"></i>ajouter au panier</a>
   
 <% }); %>
 
@@ -262,5 +264,16 @@ Eau à base d'eau ou de solvant
 
   </div>
   <!-- Main Container -->
-  
+  <script>
+  function trackAddToCart(title, price, id) {
+    fbq('track', 'AddToCart', {
+      content_name: title,
+      content_ids: [id],
+      content_type: 'product',
+      value: price,
+      currency: 'DZD'
+    });
+  }
+</script>
+
   <%- include ("../partials/footer") %>.
