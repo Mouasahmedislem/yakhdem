@@ -389,14 +389,25 @@ src="https://www.facebook.com/tr?id=549728007869525&ev=PageView&noscript=1"
   });
 </script>
 <script>
-  function changeQty(button, delta) {
-    const input = button.parentElement.querySelector('input[name="quantity"]');
-    let value = parseInt(input.value);
-    if (!isNaN(value)) {
-      value += delta;
-      if (value < 1) value = 1;
-      input.value = value;
-    }
-  }
+document.querySelectorAll('.btn-increase').forEach(button => {
+  button.addEventListener('click', () => updateQty(button.dataset.id, 'increase'));
+});
+
+document.querySelectorAll('.btn-decrease').forEach(button => {
+  button.addEventListener('click', () => updateQty(button.dataset.id, 'decrease'));
+});
+
+function updateQty(productId, action) {
+  fetch(`/shop/${action}/${productId}`, {
+    method: 'POST'
+  })
+  .then(res => res.json())
+  .then(data => {
+    document.querySelector(`.item-qty[data-id="${productId}"]`).innerText = data.qty;
+    document.getElementById('total-price').innerText = data.totalPrice + ' DA';
+  })
+  .catch(err => console.error(err));
+}
 </script>
+
   <%- include ("../partials/footer") %>.
