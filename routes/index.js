@@ -1928,7 +1928,17 @@ router.get('/shipping-fee/:wilaya', (req, res) => {
     res.status(404).json({ error: 'Wilaya not found' });
   }
 });
+router.post('/update-cart/:id', (req, res) => {
+  let cart = new Cart(req.session.cart ? req.session.cart : {});
+  let productId = req.params.id;
+  let newQty = parseInt(req.body.quantity);
 
+  if (newQty > 0) {
+    cart.update(productId, newQty);
+  }
+  req.session.cart = cart;
+  res.redirect('/cart'); // or wherever the cart page is
+});
           
 
 
