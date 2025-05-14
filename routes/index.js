@@ -1719,35 +1719,111 @@ router.get('/shop', (req, res)=> {
             res.render('event/checkout', { totalPrice: cart.totalPrice, errMsg: errMsg, noError: !errMsg });
           });
           
-          router.post('/checkout', function(req, res, next) {
-            if (!req.session.cart) {
-              return res.redirect('event/shop', {products: null});
-            }
-            var cart = new Cart(req.session.cart);
-           
-              let order = new Order({
-                user: req.user, // passport places signed in user in req object\
-                cart: cart,
-                address: req.body.address,
-                name: req.body.name,
-                wilaya: req.body.wilaya,
-                numero: req.body.numero
-                
-              });
-              order.save(function(err, result) {
-                if (err) {
-                    
-                    req.flash('error', err.message);
-                    
-                 return res.redirect('/checkout');
-                }
-                else{
-                req.flash('success', 'Successfully bought product!');
-                req.session.cart = null;
-                res.redirect('/')};
-              });
-           
-          })
+      router.post('/checkout', function(req, res, next) {
+  if (!req.session.cart) {
+    return res.redirect('event/shop', { products: null });
+  }
+
+  var cart = new Cart(req.session.cart);
+  const selectedWilaya = req.body.wilaya;
+  const shippingFees = {
+  "ADRAR": 800,
+  "CHLEF": 500,
+  "LAGHOUAT": 650,
+  "OUM EL BOUAGHI": 550,
+  "BATNA": 550,
+  "BEJAIA": 500,
+  "BISKRA": 600,
+  "BECHAR": 750,
+  "BLIDA": 300,
+  "BOUIRA": 450,
+  "TAMANRASSET": 900,
+  "TEBESSA": 600,
+  "TLEMCAN": 500,
+  "TIARET": 500,
+  "TIZI OUZOU": 400,
+  "DJELFA": 600,
+  "JIJEL": 500,
+  "SETIF": 550,
+  "SAIDA": 500,
+  "SKIKDA": 550,
+  "SIDI BELABBES": 500,
+  "GEULMA": 550,
+  "ANNABA": 550,
+  "CONSTANTINE": 500,
+  "MEDEA": 450,
+  "MOSTAGANEM": 450,
+  "M'SILA": 500,
+  "MASCARA": 500,
+  "OUERGLA": 700,
+  "EL BAYADH": 750,
+  "BOUMERDAS": 350,
+  "EL TAREF": 600,
+  "TINDOUF": 1000,
+  "TISSEMSIL": 500,
+  "EL OUED": 700,
+  "KHENCHLA": 600,
+  "SOUK AHRAS": 600,
+  "TIPAZA": 350,
+  "MILA": 500,
+  "AIN DEFLA": 400,
+  "NAAMA": 750,
+  "AIN TEMOUCHENT": 500,
+  "GHARDAIA": 700,
+  "RELIZANE": 500,
+  "ALGIERS": 300,
+  "ORAN": 400,
+  "EL M'GHAIAR": 700,
+  "EL MENIA": 750,
+  "OULED DJELLAL": 650,
+  "BENI ABBES": 800,
+  "TIMIMOUN": 800,
+  "TOUGGOURT": 700,
+  "DJANET": 950,
+  "IN SALEH": 850,
+  "IN GUEZZAM": 1000,
+  "BORDJ BADJI MOKHTAR": 950,
+  "TARF": 600,
+  "ILLIZI": 950,
+  "TAMANRASSET": 900,
+  "Default": 700
+};
+
+  // Determine fee
+  const shippingFee = shippingFees[selectedWilaya] || shippingFees['Default'];
+  const finalTotalPrice = cart.totalPrice + shippingFee;
+
+  let order = new Order({
+    user: req.user,
+    cart: cart,
+    address: req.body.address,
+    name: req.body.name,
+    wilaya: selectedWilaya,
+    numero: req.body.numero,
+    shippingFee: shippingFee,
+    totalWithShipping: finalTotalPrice
+  });
+
+  order.save(function(err, result) {
+    if (err) {
+      req.flash('error', err.message);
+      return res.redirect('/checkout');
+    } else {
+      req.session.cart = null;
+
+      res.render('event/confirmation', {
+        name: req.body.name,
+        numero: req.body.numero,
+        wilaya: selectedWilaya,
+        address: req.body.address,
+        cartTotal: cart.totalPrice,
+        shippingFee: shippingFee,
+        totalPrice: finalTotalPrice
+      });
+    }
+  });
+});
+
 
 router.post('/power', function(req, res, next) {
             
