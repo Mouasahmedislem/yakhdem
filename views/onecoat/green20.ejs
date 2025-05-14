@@ -1,4 +1,16 @@
 <%- include ("../partials/header") %>
+<script>
+!function(f,b,e,v,n,t,s)
+{if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+n.callMethod.apply(n,arguments):n.queue.push(arguments)};
+if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
+n.queue=[];t=b.createElement(e);t.async=!0;
+t.src=v;s=b.getElementsByTagName(e)[0];
+s.parentNode.insertBefore(t,s)}(window, document,'script',
+'https://connect.facebook.net/en_US/fbevents.js');
+fbq('init', '549728007869525');
+fbq('track', 'PageView');
+</script>
 <!-- News card -->
       <div class="card mt-5 hoverable">
 
@@ -84,7 +96,9 @@ class="img-fluid">
           
 
             </h3>
-<a href="/add-to-cart-greenf/<%= greenf._id %>"  class="btn btn-green btn-rounded"><i class="fas fa-cart-plus mr-2" aria-hidden="true"></i>ajouter au panier</a>
+<a href="/add-to-cart-greenf/<%= greenf._id %>" 
+   class="btn btn-pink btn-rounded"
+   onclick="trackAddToCart('<%= greenf.title %>', <%= greenf.price %>, '<%= greenf._id %>')"><i class="fas fa-cart-plus mr-2" aria-hidden="true"></i>ajouter au panier</a>
   
 <% }); %>
             <!-- Accordion wrapper -->
@@ -232,5 +246,16 @@ Eau à base d'eau ou de solvant
 
   </div>
   <!-- Main Container -->
-  
+  <script>
+  function trackAddToCart(title, price, id) {
+    fbq('track', 'AddToCart', {
+      content_name: title,
+      content_ids: [id],
+      content_type: 'product',
+      value: price,
+      currency: 'DZD'
+    });
+  }
+</script>
+
   <%- include ("../partials/footer") %>.
