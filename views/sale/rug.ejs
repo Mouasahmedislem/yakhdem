@@ -58,7 +58,9 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 <div class="flex-fill mw-100 bm-product-link-text">
 <h3 class="d-block font-weight-normal h6 mb-0 text-body"><%= rug.title %></h3>
 <span class="d-block h5 mb-0 mt-1 text-body"><%= rug.price%>DA</span>
-<a href="/add-to-cart-rug/<%= rug._id %>" class="btn btn-pink btn-rounded"><i class="fas fa-cart-plus mr-2" aria-hidden="true"></i>buy</a>
+<a href="/add-to-cart-rug/<%= rug._id %>" 
+   class="btn btn-pink btn-rounded"
+   onclick="trackAddToCart('<%= rug.title %>', <%= rug.price %>, '<%= rug._id %>')"><i class="fas fa-cart-plus mr-2" aria-hidden="true"></i>buy</a>
 <a href= "<%= rug.href%>" class="btn btn-pink btn-rounded"><i class="bi bi-eye"></i>view</a>
 </div>	
 </div>	
@@ -75,6 +77,17 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 </div>
 </div>
 </div>
-</body>
+<script>
+  function trackAddToCart(title, price, id) {
+    fbq('track', 'AddToCart', {
+      content_name: title,
+      content_ids: [id],
+      content_type: 'product',
+      value: price,
+      currency: 'DZD'
+    });
+  }
+</script>
+
 
 <%- include ("../partials/footer") %>.
