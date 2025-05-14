@@ -78,5 +78,28 @@ module.exports = function Cart(oldCart){
   this.totalPrice += storedItem.price;
   this.items[id] = storedItem;
 };
-  
+  this.increaseQty = function(id) {
+  var storedItem = this.items[id];
+  if (storedItem) {
+    storedItem.qty++;
+    storedItem.price = storedItem.item.price * storedItem.qty;
+    this.totalQty++;
+    this.totalPrice += storedItem.item.price;
+  }
+};
+
+this.decreaseQty = function(id) {
+  var storedItem = this.items[id];
+  if (storedItem) {
+    storedItem.qty--;
+    storedItem.price = storedItem.item.price * storedItem.qty;
+    this.totalQty--;
+    this.totalPrice -= storedItem.item.price;
+
+    if (storedItem.qty <= 0) {
+      delete this.items[id];
+    }
+  }
+};
+
 };
