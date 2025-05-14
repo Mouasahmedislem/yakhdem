@@ -1940,7 +1940,7 @@ router.post('/update-cart/:id', (req, res) => {
   res.redirect('/shop'); // or wherever the cart page is
 });
           
-router.post('/cart/increase/:id', function(req, res, next) {
+router.post('/cart/increase/:id', (req, res) => {
   const productId = req.params.id;
   const cart = new Cart(req.session.cart || {});
   cart.increaseQty(productId);
@@ -1948,26 +1948,30 @@ router.post('/cart/increase/:id', function(req, res, next) {
 
   res.json({
     qty: cart.items[productId].qty,
+    itemTotal: cart.items[productId].price,
     totalPrice: cart.totalPrice
   });
 });
 
-router.post('/cart/decrease/:id', function(req, res, next) {
+router.post('/cart/decrease/:id', (req, res) => {
   const productId = req.params.id;
   const cart = new Cart(req.session.cart || {});
   cart.decreaseQty(productId);
   req.session.cart = cart;
 
-  let qty = 0;
+  let qty = 0, itemTotal = 0;
   if (cart.items[productId]) {
     qty = cart.items[productId].qty;
+    itemTotal = cart.items[productId].price;
   }
 
   res.json({
     qty: qty,
+    itemTotal: itemTotal,
     totalPrice: cart.totalPrice
   });
 });
+
 
 
 module.exports = router
