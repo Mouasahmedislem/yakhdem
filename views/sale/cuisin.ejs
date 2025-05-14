@@ -12,9 +12,7 @@ s.parentNode.insertBefore(t,s)}(window, document,'script',
 'https://connect.facebook.net/en_US/fbevents.js');
 fbq('init', '549728007869525');
 fbq('track', 'PageView');
-fbq('track', 'AddToCart');
-fbq('track', 'ViewContent'); 
-fbq('track', 'AddToWishlist')
+
 </script>
 <noscript><img height="1" width="1" style="display:none"
 src="https://www.facebook.com/tr?id=549728007869525&ev=PageView&noscript=1"
@@ -59,7 +57,9 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 <div class="flex-fill mw-100 bm-product-link-text">
 <h3 class="d-block font-weight-normal h6 mb-0 text-body"><%= cuisin.title %></h3>
 <span class="d-block h5 mb-0 mt-1 text-body"><%= cuisin.price%>DA</span>
-<a href="/add-to-cart-cuisin/<%= cuisin._id %>" class="btn btn-pink btn-rounded"><i class="fas fa-cart-plus mr-2" aria-hidden="true"></i>buy</a>
+<a href="/add-to-cart-cuisin/<%= cuisin._id %>" 
+   class="btn btn-pink btn-rounded"
+   onclick="trackAddToCart('<%= cuisin.title %>', <%= cuisin.price %>, '<%= cuisin._id %>')"><i class="fas fa-cart-plus mr-2" aria-hidden="true"></i>buy</a>
 <a href= "<%= cuisin.href%>" class="btn btn-pink btn-rounded"><i class="bi bi-eye"></i>view</a>
 </div>	
 </div>	
@@ -77,5 +77,16 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 </div>
 </div>
 
-</body>
+<script>
+  function trackAddToCart(title, price, id) {
+    fbq('track', 'AddToCart', {
+      content_name: title,
+      content_ids: [id],
+      content_type: 'product',
+      value: price,
+      currency: 'DZD'
+    });
+  }
+</script>
+
 <%- include ("../partials/footer") %>.
