@@ -1851,7 +1851,7 @@ router.get('/shop', (req, res)=> {
 const shipping = wilayaShippingInfo[selectedWilaya] || { fee: 1000, delay: "3-5 days" };
   // Determine fee
 const shippingFee = cart.totalPrice >= freeShippingThreshold ? 0 : shipping.fee;
- const totalWithShipping = cart.totalPrice + shippingFee;
+ const finalTotalPrice = cart.totalPrice + shippingFee;
 
   let order = new Order({
     user: req.user,
@@ -1862,7 +1862,7 @@ const shippingFee = cart.totalPrice >= freeShippingThreshold ? 0 : shipping.fee;
     numero: req.body.numero,
     shippingFee: shippingFee,
     deliveryDelay: shipping.delay,
-    totalPrice: totalWithShipping
+     totalWithShipping: finalTotalPrice
   });
 
   order.save(function(err, result) {
