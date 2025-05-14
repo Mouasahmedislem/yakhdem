@@ -203,13 +203,13 @@ src="https://www.facebook.com/tr?id=549728007869525&ev=PageView&noscript=1"
               </div>
               <div class="flex-fill mw-100 bm-product-link-text">
                 <h3 class="d-block font-weight-normal h6 mb-0 text-body"><%= product.item.title %></h3>
-                <form method="POST" action="/update-cart/<%= product.item._id %>" style="display:inline-flex; gap: 10px; align-items:center;">
-  <input type="number" name="quantity" value="<%= product.qty %>" min="1" style="width: 60px;">
-  <button type="submit" class="btn btn-sm btn-outline-primary">Update</button>
+               <form method="POST" action="/update-cart/<%= product.item._id %>" class="d-inline-flex align-items-center" style="gap: 5px;">
+  <button type="button" class="btn btn-sm btn-light border" onclick="changeQty(this, -1)">−</button>
+  <input type="number" name="quantity" value="<%= product.qty %>" min="1" class="form-control text-center" style="width: 60px;" readonly>
+  <button type="button" class="btn btn-sm btn-light border" onclick="changeQty(this, 1)">+</button>
+  <button type="submit" class="btn btn-sm btn-outline-primary ml-2">Update</button>
 </form>
-<a href="/remove/<%= product.item._id %>" class="card-link-secondary small text-uppercase ml-3"><i
-  class="fas fa-trash-alt mr-1"></i> Remove</a>
-
+<span class="d-block h5 mb-0 mt-1 text-body">prix: <%= product.price%>DA</span>
               </div>
                 </div>
         <% }); %>
@@ -385,5 +385,16 @@ src="https://www.facebook.com/tr?id=549728007869525&ev=PageView&noscript=1"
       });
     }
   });
+</script>
+<script>
+  function changeQty(button, delta) {
+    const input = button.parentElement.querySelector('input[name="quantity"]');
+    let value = parseInt(input.value);
+    if (!isNaN(value)) {
+      value += delta;
+      if (value < 1) value = 1;
+      input.value = value;
+    }
+  }
 </script>
   <%- include ("../partials/footer") %>.
