@@ -59,7 +59,8 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 <span class="d-block h5 mb-0 mt-1 text-body"><%= tool.price %>DA</span>
 <a href="/add-to-cart-tool/<%= tool._id %>" 
    class="btn btn-pink btn-rounded"
-   onclick="trackAddToCart('<%= tool.title %>', <%= tool.price %>, '<%= tool._id %>')"><i class="fas fa-cart-plus mr-2" aria-hidden="true"></i>buy</a>
+   onclick="handleAddToCart(event, '<%= tool.title %>', <%= tool.price %>, '<%= tool._id %>')">
+   <i class="fas fa-cart-plus mr-2" aria-hidden="true"></i>buy</a>
 
 </div>	
 </div>	
@@ -79,7 +80,8 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 </div>
 
 <script>
-  function trackAddToCart(title, price, id) {
+  function handleAddToCart(event, title, price, id) {
+    event.preventDefault(); // Prevent link from immediately navigating
     fbq('track', 'AddToCart', {
       content_name: title,
       content_ids: [id],
@@ -87,8 +89,14 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
       value: price,
       currency: 'DZD'
     });
+
+    // Delay navigation slightly to ensure FB event is sent
+    setTimeout(function() {
+      window.location.href = event.currentTarget.href;
+    }, 300); // 300ms is usually enough
   }
 </script>
+
 
 
 <%- include ("../partials/footer") %>.
