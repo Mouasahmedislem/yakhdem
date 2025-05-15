@@ -113,13 +113,13 @@ src="https://www.facebook.com/tr?id=549728007869525&ev=PageView&noscript=1"
           
 
             </h3>
-
-<form id="cart-form-<%= beigea._id %>" action="/add-to-cart-beigea/<%= beigea._id %>" method="GET">
-  <button type="button" class="btn btn-pink btn-rounded"
-    onclick="handlePixelAndSubmit('<%= beigea.title %>', <%= beigea.price %>, '<%= beigea._id %>')">
+<form action="/add-to-cart-beigea/<%= beigea._id %>" method="GET"
+      onsubmit="return handleFormAddToCart(event, '<%= beigea.title %>', <%= beigea.price %>, '<%= beigea._id %>')">
+  <button type="submit" class="btn btn-pink btn-rounded">
     <i class="fas fa-cart-plus mr-2" aria-hidden="true"></i>ajouter au panier
   </button>
 </form>
+
 
 
 <% }); %>
