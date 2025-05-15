@@ -66,29 +66,68 @@ fbq('track', 'Purchase', {
       background: #d26312;
     }
 
-.popup-overlay {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: rgba(0,0,0,0.6);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  z-index: 9999;
-  display: none;
-}
+.popup-container {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%) scale(1);
+    background: white;
+    padding: 30px;
+    border-radius: 12px;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.3);
+    z-index: 9999;
+    text-align: center;
+    max-width: 400px;
+    width: 90%;
+    font-size: 16px;
+    display: none;
+  }
 
-.popup-box {
-  background: #fff;
-  padding: 25px 30px;
-  border-radius: 10px;
-  text-align: center;
-  max-width: 400px;
-  width: 90%;
-}
+  .popup-container h3 {
+    font-size: 20px;
+    margin-bottom: 10px;
+  }
 
+  .popup-container p {
+    font-size: 14px;
+    margin-bottom: 20px;
+  }
+
+  .popup-container input {
+    width: 80%;
+    padding: 10px;
+    margin-bottom: 10px;
+  }
+
+  .popup-container .logo-popup {
+    width: 100px;
+    margin-bottom: 15px;
+  }
+
+  .close-btn {
+    position: absolute;
+    top: 8px;
+    right: 12px;
+    background: transparent;
+    border: none;
+    font-size: 24px;
+    cursor: pointer;
+  }
+
+  .animated-popup {
+    animation: zoomIn 0.4s ease-out;
+  }
+
+  @keyframes zoomIn {
+    0% {
+      transform: translate(-50%, -50%) scale(0.7);
+      opacity: 0;
+    }
+    100% {
+      transform: translate(-50%, -50%) scale(1);
+      opacity: 1;
+    }
+  }
 
   </style>
 </head>
@@ -107,33 +146,41 @@ fbq('track', 'Purchase', {
     <a href="/" class="btn-home">Back to Home</a>
   </div>
 <!-- Newsletter Popup -->
-<div id="newsletter-popup" class="popup-overlay">
-  <div class="popup-box">
-    <h4>📩 Stay Updated with Paintello!</h4>
-    <form action="/newsletter-subscribe" method="POST">
-      <input type="email" name="email" placeholder="Enter your email" class="form-control my-2" required>
-      <div class="form-check text-left">
-        <input type="checkbox" class="form-check-input" id="newsletterConsent" name="newsletterConsent">
-        <label class="form-check-label" for="newsletterConsent">I agree to receive email updates.</label>
-      </div>
-      <button type="submit" class="btn btn-pink btn-block mt-3">Subscribe</button>
-    </form>
-    <button class="btn btn-sm btn-outline-secondary mt-2" onclick="closePopup()">Close</button>
-  </div>
+<div id="newsletter-popup" class="popup-container animated-popup">
+  <button id="close-popup" class="close-btn">&times;</button>
+  <img src="/favicon/android-chrome-192x192.png" alt="Paintello Logo" class="logo-popup" />
+  <h3>اشترك في النشرة البريدية</h3>
+  <p>كن أول من يعرف العروض والمنتجات الجديدة</p>
+  <form id="newsletter-form">
+    <input type="email" name="email" placeholder="ادخل بريدك الإلكتروني" required />
+    <button type="submit" class="btn btn-primary btn-sm">اشترك الآن</button>
+  </form>
 </div>
 
 <script>
-  function closePopup() {
-    document.getElementById("newsletter-popup").style.display = "none";
-  }
+  window.addEventListener('DOMContentLoaded', () => {
+    const popup = document.getElementById('newsletter-popup');
+    const closeBtn = document.getElementById('close-popup');
 
-  // Show popup after delay (e.g., 4 seconds)
-  window.addEventListener('load', function() {
-    setTimeout(function() {
-      document.getElementById("newsletter-popup").style.display = "flex";
-    }, 4000); // 4000ms = 4 seconds
+    // Show popup after 2 seconds
+    setTimeout(() => {
+      popup.style.display = 'block';
+    }, 2000);
+
+    // Close button logic
+    closeBtn.addEventListener('click', () => {
+      popup.style.display = 'none';
+    });
+
+    // Optional: Hide on ESC key
+    document.addEventListener('keydown', function(e) {
+      if (e.key === 'Escape') {
+        popup.style.display = 'none';
+      }
+    });
   });
 </script>
+
 
 </body>
 
