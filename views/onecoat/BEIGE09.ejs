@@ -268,7 +268,7 @@ Eau à base d'eau ou de solvant
 
   </div>
   <!-- Main Container -->
-
+<script>
 function handlePixelAndSubmit(title, price, id) {
     fbq('track', 'AddToCart', {
       content_name: title,
@@ -282,5 +282,5 @@ function handlePixelAndSubmit(title, price, id) {
     setTimeout(() => {
       document.getElementById('cart-form-' + id).submit();
     }, 300);
-
+</script>
   <%- include ("../partials/footer") %>.
