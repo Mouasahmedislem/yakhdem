@@ -18,6 +18,19 @@ src="https://www.facebook.com/tr?id=549728007869525&ev=PageView&noscript=1"
 /></noscript>
 <!-- End Meta Pixel Code -->
 
+your homepage content… -->
+
+<!-- Pop-Up here (before footer include) -->
+<div id="giftPopup" class="gift-popup">
+  <div class="popup-content text-center">
+    <span class="close-btn" onclick="closeGiftPopup()">&times;</span>
+    <h4>🎁 Hadiya b la flouss!</h4>
+    <p>Chri b 5000 DA wla ktar w tl9a bougie parfumée cadeau f’l-package dyalek.</p>
+    <img src="https://cdn.pixabay.com/animation/2022/11/08/06/36/06-36-35-978_512.gif" width="120" alt="Bougie Hdiya">
+    <br>
+    <a href="/shop" class="btn btn-success mt-2">Shtari Doka</a>
+  </div>
+</div>
 
 
 
@@ -457,5 +470,15 @@ src="https://www.facebook.com/tr?id=549728007869525&ev=PageView&noscript=1"
 
   </main>
   <!-- Main content -->
+<script>
+  function closeGiftPopup() {
+    document.getElementById('giftPopup').style.display = 'none';
+  }
+  window.addEventListener('DOMContentLoaded', () => {
+    setTimeout(() => {
+      document.getElementById('giftPopup').style.display = 'block';
+    }, 4000);
+  });
+</script>
 
   <%- include ("../partials/footer") %>.
