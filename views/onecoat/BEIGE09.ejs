@@ -11,20 +11,7 @@ t.src=v;s=b.getElementsByTagName(e)[0];
 s.parentNode.insertBefore(t,s)}(window, document,'script',
 'https://connect.facebook.net/en_US/fbevents.js');
 fbq('init', '549728007869525');
-fbq('track', 'PageView');
-function handlePixelAndSubmit(title, price, id) {
-    fbq('track', 'AddToCart', {
-      content_name: title,
-      content_ids: [id],
-      content_type: 'product',
-      value: price,
-      currency: 'DZD'
-    });
 
-    // Delay form submission slightly to ensure FB Pixel is triggered
-    setTimeout(() => {
-      document.getElementById('cart-form-' + id).submit();
-    }, 300);
   }
 
 </script>
@@ -282,6 +269,18 @@ Eau à base d'eau ou de solvant
   </div>
   <!-- Main Container -->
 
+function handlePixelAndSubmit(title, price, id) {
+    fbq('track', 'AddToCart', {
+      content_name: title,
+      content_ids: [id],
+      content_type: 'product',
+      value: price,
+      currency: 'DZD'
+    });
 
+    // Delay form submission slightly to ensure FB Pixel is triggered
+    setTimeout(() => {
+      document.getElementById('cart-form-' + id).submit();
+    }, 300);
 
   <%- include ("../partials/footer") %>.
