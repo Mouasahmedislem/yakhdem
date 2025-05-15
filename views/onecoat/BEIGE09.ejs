@@ -113,10 +113,12 @@ src="https://www.facebook.com/tr?id=549728007869525&ev=PageView&noscript=1"
 
             </h3>
 
-<a href="/add-to-cart-beigea/<%= beigea._id %>" 
-   class="btn btn-pink btn-rounded"
-   onclick="trackAddToCart('<%= beigea.title %>', <%= beigea.price %>, '<%= beigea._id %>')"><i class="fas fa-cart-plus mr-2" aria-hidden="true"></i>ajouter au panier</a>
-  
+<form action="/add-to-cart-beigea/<%= beigea._id %>" method="GET" onsubmit="return handleFormAddToCart(event, '<%= beigea.title %>', <%= beigea.price %>, '<%= beigea._id %>')">
+  <button type="submit" class="btn btn-pink btn-rounded">
+    <i class="fas fa-cart-plus mr-2" aria-hidden="true"></i>ajouter au panier
+  </button>
+</form>
+
 <% }); %>
             <!-- Accordion wrapper -->
             <div class="accordion md-accordion" id="accordionEx" role="tablist" aria-multiselectable="true">
@@ -263,8 +265,10 @@ Eau à base d'eau ou de solvant
 
   </div>
   <!-- Main Container -->
-  <script>
-  function trackAddToCart(title, price, id) {
+ <script>
+  function handleFormAddToCart(event, title, price, id) {
+    event.preventDefault(); // Prevent immediate form submission
+
     fbq('track', 'AddToCart', {
       content_name: title,
       content_ids: [id],
@@ -272,7 +276,15 @@ Eau à base d'eau ou de solvant
       value: price,
       currency: 'DZD'
     });
+
+    // Wait a bit to ensure event is sent before redirecting
+    setTimeout(function () {
+      event.target.submit(); // Now submit the form
+    }, 300);
+
+    return false; // Prevent default
   }
 </script>
+
 
   <%- include ("../partials/footer") %>.
