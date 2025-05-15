@@ -103,7 +103,49 @@ fbq('track', 'Purchase', {
     width: 100px;
     margin-bottom: 15px;
   }
+.popup-logo {
+  width: 120px;
+  margin-bottom: 15px;
+}
+.popup-overlay {
+  position: fixed;
+  top: 0; left: 0;
+  width: 100vw; height: 100vh;
+  background: rgba(0, 0, 0, 0.7);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 9999;
+}
 
+.popup-content {
+  background: #fff;
+  padding: 30px;
+  border-radius: 12px;
+  text-align: center;
+  max-width: 400px;
+  width: 90%;
+  position: relative;
+  font-family: 'Arial', sans-serif;
+}
+
+.popup-content h3 {
+  font-size: 24px;
+  margin-bottom: 10px;
+}
+
+.popup-content p {
+  font-size: 16px;
+  margin-bottom: 20px;
+}
+
+.popup-content input[type="email"] {
+  padding: 10px;
+  width: 90%;
+  margin-bottom: 15px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+}
   .close-btn {
     position: absolute;
     top: 8px;
@@ -128,6 +170,21 @@ fbq('track', 'Purchase', {
       opacity: 1;
     }
   }
+.btn-newsletter {
+  background-color: #f4791f;
+  color: white;
+  font-size: 18px;
+  padding: 12px 30px;
+  border: none;
+  border-radius: 30px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  width: 100%;
+}
+
+.btn-newsletter:hover {
+  background-color: #c85f0d;
+}
 
   </style>
 </head>
@@ -146,15 +203,21 @@ fbq('track', 'Purchase', {
     <a href="/" class="btn-home">Back to Home</a>
   </div>
 <!-- Newsletter Popup -->
-<div id="newsletter-popup" class="popup-container animated-popup">
-  <button id="close-popup" class="close-btn">&times;</button>
-  <img src="/favicon/android-chrome-192x192.png" alt="Paintello Logo" class="logo-popup" />
-  <h3>ا📩 Stay Updated with Paintello!</h3>
-  <p>كن أول من يعرف العروض والمنتجات الجديدة</p>
-  <form id="newsletter-form">
-    <input type="email" name="email" placeholder="ادخل بريدك الإلكتروني" required />
-    <button type="submit" class="btn btn-primary btn-sm">اشترك الآن</button>
-  </form>
+
+<div id="newsletter-popup" class="popup-overlay">
+  <div class="popup-content animate__animated animate__fadeInDown">
+    <button class="close-btn" onclick="closePopup()">×</button>
+    <img src="/img/logo.png" alt="Paintello Logo" class="popup-logo">
+    <h3>📩 Stay Updated with Paintello!</h3>
+    <p>احصل على آخر العروض والمنتجات الجديدة مباشرة في بريدك الإلكتروني.</p>
+    <form id="newsletter-form" onsubmit="handleNewsletterSubmit(event)">
+      <input type="email" name="email" placeholder="أدخل بريدك الإلكتروني" required>
+      <button type="submit" class="btn-newsletter">اشترك الآن</button>
+    </form>
+    <div id="newsletter-success" style="display:none; color: green; margin-top: 10px;">
+      ✅ تم الاشتراك بنجاح!
+    </div>
+  </div>
 </div>
 
 <script>
@@ -179,6 +242,35 @@ fbq('track', 'Purchase', {
       }
     });
   });
+</script>
+<script>
+  // Automatically show popup after delay
+  window.addEventListener('DOMContentLoaded', () => {
+    setTimeout(() => {
+      document.getElementById('newsletter-popup').style.display = 'flex';
+    }, 2000); // 2-second delay
+  });
+
+  function closePopup() {
+    document.getElementById('newsletter-popup').style.display = 'none';
+  }
+
+  function handleNewsletterSubmit(event) {
+    event.preventDefault();
+    const email = event.target.email.value;
+
+    // You can replace this with actual server-side logic if needed
+    console.log("Subscribed email:", email);
+
+    // Show success message
+    document.getElementById('newsletter-success').style.display = 'block';
+
+    // Optionally hide form
+    event.target.style.display = 'none';
+
+    // Optionally close after few seconds
+    setTimeout(closePopup, 3000);
+  }
 </script>
 
 
