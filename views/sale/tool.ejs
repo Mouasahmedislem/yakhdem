@@ -57,10 +57,11 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 <div class="flex-fill mw-100 bm-product-link-text">
 <h3 class="d-block font-weight-normal h6 mb-0 text-body"><%= tool.title %></h3>
 <span class="d-block h5 mb-0 mt-1 text-body"><%= tool.price %>DA</span>
-<a href="/add-to-cart-tool/<%= tool._id %>" 
+<a href="#" 
    class="btn btn-pink btn-rounded"
-   onclick="handleAddToCart(event, '<%= tool.title %>', <%= tool.price %>, '<%= tool._id %>')">
+   onclick="handleAddToCart(event, '<%= tool.title %>', <%= tool.price %>, '<%= tool._id %>', '/add-to-cart-tool/<%= tool._id %>')">
    <i class="fas fa-cart-plus mr-2" aria-hidden="true"></i>buy</a>
+
 
 </div>	
 </div>	
@@ -80,8 +81,9 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 </div>
 
 <script>
-  function handleAddToCart(event, title, price, id) {
-    event.preventDefault(); // Prevent link from immediately navigating
+  function handleAddToCart(event, title, price, id, redirectUrl) {
+    event.preventDefault(); // Stop the link from navigating
+
     fbq('track', 'AddToCart', {
       content_name: title,
       content_ids: [id],
@@ -90,10 +92,10 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
       currency: 'DZD'
     });
 
-    // Delay navigation slightly to ensure FB event is sent
-    setTimeout(function() {
-      window.location.href = event.currentTarget.href;
-    }, 300); // 300ms is usually enough
+    // Delay navigation slightly to let Meta Pixel send event
+    setTimeout(function () {
+      window.location.href = redirectUrl;
+    }, 300); // 300ms should be enough
   }
 </script>
 
