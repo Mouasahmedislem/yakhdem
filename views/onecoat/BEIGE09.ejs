@@ -12,6 +12,20 @@ s.parentNode.insertBefore(t,s)}(window, document,'script',
 'https://connect.facebook.net/en_US/fbevents.js');
 fbq('init', '549728007869525');
 fbq('track', 'PageView');
+function handlePixelAndSubmit(title, price, id) {
+    fbq('track', 'AddToCart', {
+      content_name: title,
+      content_ids: [id],
+      content_type: 'product',
+      value: price,
+      currency: 'DZD'
+    });
+
+    // Delay form submission slightly to ensure FB Pixel is triggered
+    setTimeout(() => {
+      document.getElementById('cart-form-' + id).submit();
+    }, 300);
+  }
 
 </script>
 <noscript><img height="1" width="1" style="display:none"
@@ -113,11 +127,13 @@ src="https://www.facebook.com/tr?id=549728007869525&ev=PageView&noscript=1"
 
             </h3>
 
-<form action="/add-to-cart-beigea/<%= beigea._id %>" method="GET" onsubmit="return handleFormAddToCart(event, '<%= beigea.title %>', <%= beigea.price %>, '<%= beigea._id %>')">
-  <button type="submit" class="btn btn-pink btn-rounded">
+<form id="cart-form-<%= beigea._id %>" action="/add-to-cart-beigea/<%= beigea._id %>" method="GET">
+  <button type="button" class="btn btn-pink btn-rounded"
+    onclick="handlePixelAndSubmit('<%= beigea.title %>', <%= beigea.price %>, '<%= beigea._id %>')">
     <i class="fas fa-cart-plus mr-2" aria-hidden="true"></i>ajouter au panier
   </button>
 </form>
+
 
 <% }); %>
             <!-- Accordion wrapper -->
@@ -265,26 +281,7 @@ Eau à base d'eau ou de solvant
 
   </div>
   <!-- Main Container -->
- <script>
-  function handleFormAddToCart(event, title, price, id) {
-    event.preventDefault(); // Prevent immediate form submission
 
-    fbq('track', 'AddToCart', {
-      content_name: title,
-      content_ids: [id],
-      content_type: 'product',
-      value: price,
-      currency: 'DZD'
-    });
-
-    // Wait a bit to ensure event is sent before redirecting
-    setTimeout(function () {
-      event.target.submit(); // Now submit the form
-    }, 300);
-
-    return false; // Prevent default
-  }
-</script>
 
 
   <%- include ("../partials/footer") %>.
