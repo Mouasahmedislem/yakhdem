@@ -21,7 +21,7 @@ src="https://www.facebook.com/tr?id=549728007869525&ev=PageView&noscript=1"
 
 
 <!-- Pop-Up here (before footer include) -->
-<div id="giftPopup" class="gift-popup">
+<!-- <div id="giftPopup" class="gift-popup">
   <div class="popup-content text-center">
     <span class="close-btn" onclick="closeGiftPopup()">&times;</span>
     <h4>🎁 Hadiya b la flouss!</h4>
@@ -30,14 +30,18 @@ src="https://www.facebook.com/tr?id=549728007869525&ev=PageView&noscript=1"
     <br>
     <a href="/wow" class="btn btn-success mt-2">Ashri Doka</a>
   </div>
-</div>
+</div> -->
 
 
 
     
-<% if (successMsg) { %>
-  <div class="alert alert-success"><%= successMsg %></div>
-  <% } %>
+<% if (success) { %>
+  <div class="alert alert-success"><%= success %></div>
+<% } %>
+<% if (error) { %>
+  <div class="alert alert-danger"><%= error %></div>
+<% } %>
+
 
 <!-- Navigation & Intro -->
   <!-- sale content -->
