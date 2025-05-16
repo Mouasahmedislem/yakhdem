@@ -210,10 +210,11 @@ fbq('track', 'Purchase', {
     <img src="/img/logo.png" alt="Paintello Logo" class="popup-logo">
     <h3>📩 Stay Updated with Paintello!</h3>
     <p>احصل على آخر العروض والمنتجات الجديدة مباشرة في بريدك الإلكتروني.</p>
-    <form id="newsletter-form" onsubmit="handleNewsletterSubmit(event)">
-      <input type="email" name="email" placeholder="أدخل بريدك الإلكتروني" required>
-      <button type="submit" class="btn-newsletter">اشترك الآن</button>
-    </form>
+    <form action="/subscribe" method="POST">
+  <input type="email" name="email" placeholder="أدخل بريدك الإلكتروني" required class="form-control mb-2">
+  <button type="submit" class="btn btn-primary btn-md">اشترك الآن</button>
+</form>
+
     <div id="newsletter-success" style="display:none; color: green; margin-top: 10px;">
       ✅ تم الاشتراك بنجاح!
     </div>
