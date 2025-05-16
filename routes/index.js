@@ -1995,18 +1995,17 @@ router.post('/subscribe', async (req, res) => {
     pass: process.env.EMAIL_PASS
   }
 });
-const mailOptions = {
+transporter.sendMail({
   from: '"Paintello" <' + process.env.EMAIL_USER + '>',
-  to: 'customer@example.com',
-  subject: 'Welcome to Paintello!',
-  html: '<h1>Thank you for registering!</h1><p>We’re glad to have you.</p>'
-};
-
-transporter.sendMail(mailOptions, (error, info) => {
+  to: newUser.email, // user email
+  subject: '🎉 Welcome to Paintello!',
+  html: `<h3>Hi ${newUser.username},</h3><p>Thanks for joining Paintello! We're excited to have you on board 🎨</p>`
+}, (error, info) => {
   if (error) {
-    return console.error(error);
+    console.log('Error sending welcome email:', error);
+  } else {
+    console.log('Welcome email sent:', info.response);
   }
-  console.log('Email sent: ' + info.response);
 });
 
 
