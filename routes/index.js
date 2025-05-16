@@ -1,8 +1,7 @@
-require('dotenv').config();
-const nodemailer = require('nodemailer');
-
 var express = require('express')
 var router = express.Router()
+const nodemailer = require('nodemailer');
+require('dotenv').config();
 
 const Order = require('../models/order');
 const Powers = require('../models/powers');
@@ -1976,42 +1975,44 @@ router.post('/cart/decrease/:id', (req, res) => {
 });
 
 
-const Newsletter = require('../models/newsletter'); // Create this model (see Step 2)
+var Newsletter = require('../models/newsletter')
 
-router.post('/subscribe', async (req, res) => {
-  const { email } = req.body;
+
+// Newsletter route
+router.post('/subscribe', async function (req, res) {
+  const email = req.body.email;
+
+  if (!email) {
+    return res.status(400).send('Email is required');
+  }
 
   try {
-    // Save to DB
-    const existing = await Newsletter.findOne({ email });
-    if (!existing) {
-      await new Newsletter({ email }).save();
+    // Save to database
+    const newEmail = new Newsletter({ email: email });
+    await newEmail.save();
 
-      // Send welcome email
-      const transporter = nodemailer.createTransport({
-  service: 'gmail',
-  auth: {
-    user: process.env.EMAIL_USER,
-    pass: process.env.EMAIL_PASS
-  }
-});
-transporter.sendMail({
-  from: '"Paintello" <' + process.env.EMAIL_USER + '>',
-  to: newUser.email, // user email
-  subject: '🎉 Welcome to Paintello!',
-  html: `<h3>Hi ${newUser.username},</h3><p>Thanks for joining Paintello! We're excited to have you on board 🎨</p>`
-}, (error, info) => {
-  if (error) {
-    console.log('Error sending welcome email:', error);
-  } else {
-    console.log('Welcome email sent:', info.response);
-  }
-});
+    // Setup nodemailer transporter
+    let transporter = nodemailer.createTransport({
+      service: 'gmail',
+      auth: {
+        user: process.env.EMAIL_USER, // Use environment variables
+        pass: process.env.EMAIL_PASS
+      }
+    });
 
+    // Mail options
+    let mailOptions = {
+      from: `"Paintello" <${process.env.EMAIL_USER}>`,
+      to: email,
+      subject: '🎉 Welcome to Paintello!',
+      html: `
+        <div style="font-family: Arial, sans-serif; padding: 20px;">
+          <h2>Thank you for subscribing!</h2>
+          <p>We’re excited to have you with us. Expect great offers and design inspiration in your inbox.</p>
+        </div>
+      `
+    };
 
-
- 
-});
-
+    // Send mail
 
 module.exports = router
