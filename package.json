@@ -5,6 +5,7 @@
   "description": "Material Design for Bootstrap",
   "main": ".eslintrc.js",
   "dependencies": {
+    "nodemailer": "github:nodemailer/nodemailer",
     "all": "*",
     "bcrypt": "*",
     "bcrypt-nodejs": "*",
