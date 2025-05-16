@@ -1996,15 +1996,19 @@ router.post('/subscribe', async (req, res) => {
   }
 });
 
-      const mailOptions = {
-        from: 'Paintello <paintello.contact@gmail.com>',
-        to: email,
-        subject: '🎉 Welcome to Paintello!',
-        html: `<h2>Welcome!</h2><p>Thank you for subscribing to our newsletter. Stay tuned for exclusive deals and color inspirations!</p>`
-      };
+      transporter.sendMail({
+  from: '"Paintello" <' + process.env.EMAIL_USER + '>',
+  to: newUser.email, // user email
+  subject: '🎉 Welcome to Paintello!',
+  html: `<h3>Hi ${newUser.username},</h3><p>Thanks for joining Paintello! We're excited to have you on board 🎨</p>`
+}, (error, info) => {
+  if (error) {
+    console.log('Error sending welcome email:', error);
+  } else {
+    console.log('Welcome email sent:', info.response);
+  }
+});
 
-      await transporter.sendMail(mailOptions);
-    }
 
     res.redirect('/?subscribed=true');
   } catch (err) {
