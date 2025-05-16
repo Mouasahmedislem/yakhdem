@@ -19,7 +19,7 @@ var MongoDBStore = require('connect-mongodb-session')(session);
 
 var User = require("./models/user");
 var Cart = require("./models/cart");
-
+const nodemailer = require('nodemailer');
 
 var seedwow = require('./seed/wow');
 var seedfurniteur = require('./seed/furniteur');
