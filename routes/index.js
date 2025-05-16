@@ -2010,11 +2010,7 @@ transporter.sendMail({
 
 
 
-    res.redirect('/?subscribed=true');
-  } catch (err) {
-    console.error(err);
-    res.redirect('/?error=true');
-  }
+ 
 });
 
 
