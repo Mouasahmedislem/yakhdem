@@ -1975,7 +1975,7 @@ router.post('/cart/decrease/:id', (req, res) => {
   });
 });
 
-const nodemailer = require('nodemailer');
+
 const Newsletter = require('../models/newsletter'); // Create this model (see Step 2)
 
 router.post('/subscribe', async (req, res) => {
