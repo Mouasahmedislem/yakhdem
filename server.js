@@ -22,7 +22,7 @@ var Cart = require("./models/cart");
 require('dotenv').config();
 const nodemailer = require('nodemailer');
 
-var seednewsletter = require('./seed/newsletter');
+
 var seedwow = require('./seed/wow');
 var seedfurniteur = require('./seed/furniteur');
 var seedrug = require('./seed/rug');
