@@ -1,11 +1,9 @@
-
 {
   "name": "n",
   "version": "1.0.0",
   "description": "Material Design for Bootstrap",
   "main": ".eslintrc.js",
   "dependencies": {
-    "nodemailer": "github:nodemailer/nodemailer",
     "all": "*",
     "bcrypt": "*",
     "bcrypt-nodejs": "*",
@@ -26,6 +24,7 @@
     "http-errors": "*",
     "mongoose": "*",
     "morgan": "*",
+    "nodemailer": "github:nodemailer/nodemailer",
     "passport": "*",
     "passport-local": "*",
     "slick-carousel": "*",
@@ -36,8 +35,6 @@
     "dev": "nodemon ./bin/www",
     "lint": "eslint --debug /"
   },
- 
   "author": "",
   "license": "ISC"
 }
-
