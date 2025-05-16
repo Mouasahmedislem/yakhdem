@@ -1983,7 +1983,8 @@ router.post('/subscribe', async function (req, res) {
   const email = req.body.email;
 
   if (!email) {
-    return res.status(400).send('Email is required');
+    req.flash('error', 'Email is required.');
+    return res.redirect('/'); // Redirect to homepage or newsletter page
   }
 
   try {
@@ -2016,10 +2017,12 @@ router.post('/subscribe', async function (req, res) {
     // Send mail
 await transporter.sendMail(mailOptions);
 
-    res.status(200).json({ message: 'Subscription and email successful!' });
+    req.flash('success', 'Subscription successful! Please check your email.');
+    res.redirect('/'); // Redirect to homepage (or any page you choose)
   } catch (err) {
     console.error('Newsletter error:', err);
-    res.status(500).send('Something went wrong.');
+    req.flash('error', 'Something went wrong. Please try again later.');
+    res.redirect('/'); // Redirect back with error
   }
 });
 module.exports = router
