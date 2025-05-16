@@ -2014,5 +2014,12 @@ router.post('/subscribe', async function (req, res) {
     };
 
     // Send mail
+await transporter.sendMail(mailOptions);
 
+    res.status(200).json({ message: 'Subscription and email successful!' });
+  } catch (err) {
+    console.error('Newsletter error:', err);
+    res.status(500).send('Something went wrong.');
+  }
+});
 module.exports = router
