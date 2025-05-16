@@ -1989,7 +1989,7 @@ router.post('/subscribe', async (req, res) => {
         service: 'gmail',
         auth: {
           user: 'paintello.contact@gmail.com',
-          pass: 'aA23091997$' // Use app-specific password if Gmail
+          pass: 'soklziysbqunxmrf' // Use app-specific password if Gmail
         }
       });
 
