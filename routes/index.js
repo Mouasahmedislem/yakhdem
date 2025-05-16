@@ -2018,11 +2018,11 @@ router.post('/subscribe', async function (req, res) {
 await transporter.sendMail(mailOptions);
 
     req.flash('success', 'Subscription successful! Please check your email.');
-    res.redirect('/'); // Redirect to homepage (or any page you choose)
+    res.redirect('event/confirmation'); // Redirect to homepage (or any page you choose)
   } catch (err) {
     console.error('Newsletter error:', err);
     req.flash('error', 'Something went wrong. Please try again later.');
-    res.redirect('/'); // Redirect back with error
+    res.redirect('event/confirmation'); // Redirect back with error
   }
 });
 module.exports = router
