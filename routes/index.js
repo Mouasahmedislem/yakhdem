@@ -1,3 +1,6 @@
+require('dotenv').config();
+const nodemailer = require('nodemailer');
+
 var express = require('express')
 var router = express.Router()
 
@@ -1986,12 +1989,12 @@ router.post('/subscribe', async (req, res) => {
 
       // Send welcome email
       const transporter = nodemailer.createTransport({
-        service: 'gmail',
-        auth: {
-          user: 'paintello.contact@gmail.com',
-          pass: 'soklziysbqunxmrf' // Use app-specific password if Gmail
-        }
-      });
+  service: 'gmail',
+  auth: {
+    user: process.env.EMAIL_USER,
+    pass: process.env.EMAIL_PASS
+  }
+});
 
       const mailOptions = {
         from: 'Paintello <paintello.contact@gmail.com>',
