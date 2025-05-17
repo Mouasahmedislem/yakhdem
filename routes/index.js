@@ -1972,6 +1972,43 @@ router.post('/cart/decrease/:id', (req, res) => {
   });
 });
 
+const nodemailer = require('nodemailer');
+const Newsletter = require('../models/newsletter'); // Create this model (see Step 2)
+
+router.post('/subscribe', async (req, res) => {
+  const { email } = req.body;
+
+  try {
+    // Save to DB
+    const existing = await Newsletter.findOne({ email });
+    if (!existing) {
+      await new Newsletter({ email }).save();
+
+      // Send welcome email
+      const transporter = nodemailer.createTransport({
+        service: 'gmail',
+        auth: {
+          user: 'paintello.contact@gmail.com',
+          pass: 'soklziysbqunxmrf' // Use app-specific password if Gmail
+        }
+      });
+
+      const mailOptions = {
+        from: 'Paintello <paintello.contact@gmail.com>',
+        to: email,
+        subject: '🎉 Welcome to Paintello!',
+        html: `<h2>Welcome!</h2><p>Thank you for subscribing to our newsletter. Stay tuned for exclusive deals and color inspirations!</p>`
+      };
+
+      await transporter.sendMail(mailOptions);
+    }
+
+    res.redirect('/?subscribed=true');
+  } catch (err) {
+    console.error(err);
+    res.redirect('/?error=true');
+  }
+});
 
 
 module.exports = router
