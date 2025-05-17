@@ -2,7 +2,8 @@ var express = require('express')
 var router = express.Router()
 const nodemailer = require('nodemailer');
 require('dotenv').config();
-
+const twilio = require('twilio');
+const client = twilio(process.env.TWILIO_ACCOUNT_SID, process.env.TWILIO_AUTH_TOKEN);
 const Order = require('../models/order');
 const Powers = require('../models/powers');
 const middleware = require('../middleware');
@@ -1867,25 +1868,46 @@ const shippingFee = cart.totalPrice >= freeShippingThreshold ? 0 : shipping.fee;
      totalWithShipping: finalTotalPrice
   });
 
-  order.save(function(err, result) {
-    if (err) {
-      req.flash('error', err.message);
-      return res.redirect('/checkout');
-    } else {
-      req.session.cart = null;
+order.save(function(err, result) {
+  if (err) {
+    req.flash('error', err.message);
+    return res.redirect('/checkout');
+  } else {
+    req.session.cart = null;
 
-      res.render('event/confirmation', {
-        name: req.body.name,
-        numero: req.body.numero,
-        wilaya: selectedWilaya,
-        address: req.body.address,
-        cartTotal: cart.totalPrice,
-        deliveryDelay: shipping.delay,
-        shippingFee: shippingFee,
-        totalPrice: finalTotalPrice
-      });
+    // ✅ Send WhatsApp to client (if phone is provided)
+    const customerPhone = req.body.numero;
+    if (customerPhone) {
+      const whatsappTo = 'whatsapp:+213' + customerPhone.replace(/^0+/, ''); // Clean leading zeros
+      const message = `✅ Bonjour ${req.body.name}, votre commande Paintello est confirmée !
+🛒 Total : ${cart.totalPrice} DA
+🚚 Livraison à : ${req.body.address}, ${selectedWilaya}
+⏱ Délai : ${shipping.delay}
+📞 Nous vous contacterons pour la livraison. Merci !`;
+
+      client.messages
+        .create({
+          from: process.env.TWILIO_WHATSAPP_NUMBER,
+          to: whatsappTo,
+          body: message
+        })
+        .then(msg => console.log("WhatsApp sent:", msg.sid))
+        .catch(err => console.error("WhatsApp error:", err));
     }
-  });
+
+    res.render('event/confirmation', {
+      name: req.body.name,
+      numero: req.body.numero,
+      wilaya: selectedWilaya,
+      address: req.body.address,
+      cartTotal: cart.totalPrice,
+      deliveryDelay: shipping.delay,
+      shippingFee: shippingFee,
+      totalPrice: finalTotalPrice
+    });
+  }
+});
+
 });
 
 
