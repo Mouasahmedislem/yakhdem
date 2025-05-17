@@ -1,6 +1,9 @@
 var express = require('express')
 var router = express.Router()
-
+const nodemailer = require('nodemailer');
+require('dotenv').config();
+const twilio = require('twilio');
+const client = twilio(process.env.TWILIO_ACCOUNT_SID, process.env.TWILIO_AUTH_TOKEN);
 const Order = require('../models/order');
 const Powers = require('../models/powers');
 const middleware = require('../middleware');
@@ -1865,25 +1868,46 @@ const shippingFee = cart.totalPrice >= freeShippingThreshold ? 0 : shipping.fee;
      totalWithShipping: finalTotalPrice
   });
 
-  order.save(function(err, result) {
-    if (err) {
-      req.flash('error', err.message);
-      return res.redirect('/checkout');
-    } else {
-      req.session.cart = null;
+order.save(function(err, result) {
+  if (err) {
+    req.flash('error', err.message);
+    return res.redirect('/checkout');
+  } else {
+    req.session.cart = null;
 
-      res.render('event/confirmation', {
-        name: req.body.name,
-        numero: req.body.numero,
-        wilaya: selectedWilaya,
-        address: req.body.address,
-        cartTotal: cart.totalPrice,
-        deliveryDelay: shipping.delay,
-        shippingFee: shippingFee,
-        totalPrice: finalTotalPrice
-      });
+    // ✅ Send WhatsApp to client (if phone is provided)
+    const customerPhone = req.body.numero;
+    if (customerPhone) {
+      const whatsappTo = 'whatsapp:+213' + customerPhone.replace(/^0+/, ''); // Clean leading zeros
+      const message = `✅ Bonjour ${req.body.name}, votre commande Paintello est confirmée !
+🛒 Total : ${cart.totalPrice} DA
+🚚 Livraison à : ${req.body.address}, ${selectedWilaya}
+⏱ Délai : ${shipping.delay}
+📞 Nous vous contacterons pour la livraison. Merci !`;
+
+      client.messages
+        .create({
+          from: process.env.TWILIO_WHATSAPP_NUMBER,
+          to: whatsappTo,
+          body: message
+        })
+        .then(msg => console.log("WhatsApp sent:", msg.sid))
+        .catch(err => console.error("WhatsApp error:", err));
     }
-  });
+
+    res.render('event/confirmation', {
+      name: req.body.name,
+      numero: req.body.numero,
+      wilaya: selectedWilaya,
+      address: req.body.address,
+      cartTotal: cart.totalPrice,
+      deliveryDelay: shipping.delay,
+      shippingFee: shippingFee,
+      totalPrice: finalTotalPrice
+    });
+  }
+});
+
 });
 
 
@@ -1972,43 +1996,55 @@ router.post('/cart/decrease/:id', (req, res) => {
   });
 });
 
-const nodemailer = require('nodemailer');
-const Newsletter = require('../models/newsletter'); // Create this model (see Step 2)
 
-router.post('/subscribe', async (req, res) => {
-  const { email } = req.body;
+var Newsletter = require('../models/newsletter')
+
+
+// Newsletter route
+router.post('/subscribe', async function (req, res) {
+  const email = req.body.email;
+
+  if (!email) {
+    req.flash('error', 'Email is required.');
+    return res.redirect('/'); // Redirect to homepage or newsletter page
+  }
 
   try {
-    // Save to DB
-    const existing = await Newsletter.findOne({ email });
-    if (!existing) {
-      await new Newsletter({ email }).save();
+    // Save to database
+    const newEmail = new Newsletter({ email: email });
+    await newEmail.save();
 
-      // Send welcome email
-      const transporter = nodemailer.createTransport({
-        service: 'gmail',
-        auth: {
-          user: 'paintello.contact@gmail.com',
-          pass: 'soklziysbqunxmrf' // Use app-specific password if Gmail
-        }
-      });
+    // Setup nodemailer transporter
+    let transporter = nodemailer.createTransport({
+      service: 'gmail',
+      auth: {
+        user: process.env.EMAIL_USER, // Use environment variables
+        pass: process.env.EMAIL_PASS
+      }
+    });
 
-      const mailOptions = {
-        from: 'Paintello <paintello.contact@gmail.com>',
-        to: email,
-        subject: '🎉 Welcome to Paintello!',
-        html: `<h2>Welcome!</h2><p>Thank you for subscribing to our newsletter. Stay tuned for exclusive deals and color inspirations!</p>`
-      };
+    // Mail options
+    let mailOptions = {
+      from: `"Paintello" <${process.env.EMAIL_USER}>`,
+      to: email,
+      subject: '🎉 Welcome to Paintello!',
+      html: `
+        <div style="font-family: Arial, sans-serif; padding: 20px;">
+          <h2>Thank you for subscribing!</h2>
+          <p>We’re excited to have you with us. Expect great offers and design inspiration in your inbox.</p>
+        </div>
+      `
+    };
 
-      await transporter.sendMail(mailOptions);
-    }
+    // Send mail
+await transporter.sendMail(mailOptions);
 
-    res.redirect('/?subscribed=true');
+    req.flash('success', 'Subscription successful! Please check your email.');
+    res.redirect('event/confirmation'); // Redirect to homepage (or any page you choose)
   } catch (err) {
-    console.error(err);
-    res.redirect('/?error=true');
+    console.error('Newsletter error:', err);
+    req.flash('error', 'Something went wrong. Please try again later.');
+    res.redirect('event/confirmation'); // Redirect back with error
   }
 });
-
-
 module.exports = router

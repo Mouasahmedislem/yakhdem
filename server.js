@@ -19,7 +19,9 @@ var MongoDBStore = require('connect-mongodb-session')(session);
 
 var User = require("./models/user");
 var Cart = require("./models/cart");
+require('dotenv').config();
 const nodemailer = require('nodemailer');
+
 
 var seedwow = require('./seed/wow');
 var seedfurniteur = require('./seed/furniteur');
@@ -77,7 +79,7 @@ var seedbeiges = require('./seed/beiges');
 var seedbeiget = require('./seed/beiget');
 var seedbeigej = require('./seed/beigea');
 
-
+var newsletter = require('./models/newsletter');
 var wow = require('./models/wow');
 var furniteur = require('./models/furniteur');
 var rug = require('./models/rug');
