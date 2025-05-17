@@ -1,0 +1,16 @@
+<h3>Your Orders</h3>
+<h2>تفاصيل الطلب</h2>
+<% orders.forEach(order => { %>
+  <div>
+    <p>الاسم: <%= order.name %></p>
+    <p>رقم الهاتف: <%= order.numero %></p>
+    <p>الولاية: <%= order.wilaya %></p>
+    <p>العنوان: <%= order.address %></p>
+    <p>المجموع: <%= order.cart.totalPrice %> دج</p>
+    <ul>
+      <% order.cart.items.forEach(item => { %>
+        <li><%= item.item.title %> × <%= item.qty %></li>
+      <% }) %>
+    </ul>
+  </div>
+<% }) %>
