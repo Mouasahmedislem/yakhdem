@@ -391,6 +391,122 @@ function updateQty(productId, action) {
   .catch(err => console.error(err));
 }
 </script>
+<script>
+ const basePrice = 3300 ;
+    let shippingPrice = 0;
+
+    function addToCart() {
+      const quantity = document.getElementById('qty').value;
+
+      fetch('/api/cart', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          price: product.price ,
+          quantity: parseInt(quantity)
+        })
+      })
+    }
 
 
-  <%- include ("../partials/footer") %>.
+
+    function updateShipping() {
+      const wilaya = document.getElementById('wilaya').value;
+      const costDisplay = document.getElementById('shipping-cost');
+      const shippingPrices = {
+        "ADRAR": 800,
+  "CHLEF": 500,
+  "LAGHOUAT": 650,
+  "OUM EL BOUAGHI": 550,
+  "BATNA": 550,
+  "BEJAIA": 500,
+  "BISKRA": 600,
+  "BECHAR": 750,
+  "BLIDA": 300,
+  "BOUIRA": 450,
+  "TAMANRASSET": 900,
+  "TEBESSA": 600,
+  "TLEMCAN": 500,
+  "TIARET": 500,
+  "TIZI OUZOU": 400,
+  "DJELFA": 600,
+  "JIJEL": 500,
+  "SETIF": 550,
+  "SAIDA": 500,
+  "SKIKDA": 550,
+  "SIDI BELABBES": 500,
+  "GEULMA": 550,
+  "ANNABA": 550,
+  "CONSTANTINE": 500,
+  "MEDEA": 450,
+  "MOSTAGANEM": 450,
+  "MESILA": 500,
+  "MASCARA": 500,
+  "OUERGLA": 700,
+  "EL BAYADH": 750,
+  "BOUMERDAS": 350,
+  "EL TAREF": 600,
+  "TINDOUF": 1000,
+  "TISSEMSIL": 500,
+  "EL OUED": 700,
+  "KHENCHLA": 600,
+  "SOUK AHRAS": 600,
+  "TIPAZA": 350,
+  "MILA": 500,
+  "AIN DEFLA": 400,
+  "NAAMA": 750,
+  "AIN TEMOUCHENT": 500,
+  "GHARDAIA": 700,
+  "RELIZANE": 500,
+  "ALGIERS": 300,
+  "ORAN": 400,
+  "EL MEGHAIAR": 700,
+  "EL MENIA": 750,
+  "OULED DJELLAL": 650,
+  "BENI ABBES": 800,
+  "TIMIMOUN": 800,
+  "TOUGGOURT": 700,
+  "DJANET": 950,
+  "IN SALEH": 850,
+  "IN GUEZZAM": 1000,
+  "BORDJ BADJI MOKHTAR": 950,
+  "TARF": 600,
+  "ILLIZI": 950,
+  "TAMANRASSET": 900
+};
+
+      shippingPrice = shippingPrices[wilaya] || 0;
+
+      if (shippingPrice > 0) {
+        costDisplay.textContent = `Shipping Cost: ${shippingPrice} DA`;
+      } else {
+        costDisplay.textContent = '';
+      }
+
+      updateTotal();
+    }
+
+    function updateTotal() {
+      const quantity = parseInt(document.getElementById('qty').value) || 1;
+      const total = basePrice * quantity + shippingPrice;
+      document.getElementById('total-price').textContent = `Total: ${total.toLocaleString()} DA`;
+    }
+  </script>
+<!--Start of Tawk.to Script-->
+<script type="text/javascript">
+var Tawk_API=Tawk_API||{}, Tawk_LoadStart=new Date();
+(function(){
+var s1=document.createElement("script"),s0=document.getElementsByTagName("script")[0];
+s1.async=true;
+s1.src='https://embed.tawk.to/682625d0a2b6be190d3ada7e/1irag7e08';
+s1.charset='UTF-8';
+s1.setAttribute('crossorigin','*');
+s0.parentNode.insertBefore(s1,s0);
+})();
+</script>
+<!--End of Tawk.to Script-->
+</body>
+ 
+</html>
