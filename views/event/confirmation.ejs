@@ -178,7 +178,7 @@ s.parentNode.insertBefore(t,s)}(window, document,'script',
 'https://connect.facebook.net/en_US/fbevents.js');
 fbq('init', '549728007869525');
 fbq('track', 'Purchase', {
-      value: '<%= totalPrice %>',
+      value: <%= totalPrice %>,
       currency: 'DZD',
       contents: [{
         name: '<%= name %>',
