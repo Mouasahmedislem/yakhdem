@@ -1,4 +1,4 @@
-<%- include ("../partials/header") %>
+
 <style>
   #fixed-logo-header {
     position: fixed;
@@ -36,11 +36,9 @@
     <p>العنوان: <%= order.address %></p>
     <p>المجموع: <%= order.cart.totalPrice %> دج</p>
     <ul>
-      <% order.cart.items.forEach(item => { %>
-        <li><%= item.item.title %> × <%= item.qty %></li>
-      <% }) %>
+      
     </ul>
   </div>
 <% }) %>
 </div>
-<%- include ("../partials/footer") %>.
+
