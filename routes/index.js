@@ -2047,4 +2047,35 @@ await transporter.sendMail(mailOptions);
     res.redirect('event/confirmation'); // Redirect back with error
   }
 });
+router.get("/track-login", function(req, res){
+    
+    
+        res.render("event/track-login");
+    
+});
+
+router.post('/track-login', async (req, res) => {
+  const numero = req.body.numero;
+  try {
+    const order = await Order.findOne({ numero: numero });
+    if (order) {
+      req.session.trackingUser = numero; // Store login
+      res.redirect('/track-order');
+    } else {
+      req.flash('error', 'No order found for this number.');
+      res.redirect('/track-login');
+    }
+  } catch (err) {
+    console.error(err);
+    res.redirect('/track-login');
+  }
+});
+
+router.get('/track-order', async (req, res) => {
+  if (!req.session.trackingUser) return res.redirect('/track-login');
+
+  const orders = await Order.find({ numero: req.session.trackingUser }).sort({ createdAt: -1 });
+  res.render('event/track-order', { orders });
+});
+            
 module.exports = router
