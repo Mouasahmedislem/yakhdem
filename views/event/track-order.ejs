@@ -1,3 +1,31 @@
+<%- include ("../partials/header") %>
+<style>
+  #fixed-logo-header {
+    position: fixed;
+    top: 0;
+    width: 100%;
+    background-color: white; /* or transparent */
+    padding: 10px 0;
+    text-align: center;
+    z-index: 9999;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1); /* optional shadow */
+  }
+
+  #fixed-logo-header img {
+    max-height: 60px;
+  }
+
+  /* Optional: Push content down */
+  .content-with-logo {
+    margin-top: 100px; /* Adjust based on your logo height */
+  }
+</style>
+
+<div id="fixed-logo-header">
+  <img src="/img/logo.png" alt="Paintello Logo">
+</div>
+<div class="content-with-logo">
+
 <h3>Your Orders</h3>
 <h2>تفاصيل الطلب</h2>
 <% orders.forEach(order => { %>
@@ -14,3 +42,5 @@
     </ul>
   </div>
 <% }) %>
+</div>
+<%- include ("../partials/footer") %>.
