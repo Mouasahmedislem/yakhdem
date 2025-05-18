@@ -1,13 +1,13 @@
 // seeds/productSeed.js
 const mongoose = require('mongoose');
-const Product = require('../models/product');
+const Product = require('../models/producthome');
 
 mongoose.connect('mongodb+srv://Islem:cmygNChSy2L9Q4xt@paintello.cu30n.mongodb.net/paintello?retryWrites=true&w=majority', {
   useNewUrlParser: true,
   useUnifiedTopology: true,
 });
 
-const sampleProducts = [
+const sampleProducthomes = [
   {
     title: 'Elegant Matte Finish',
     price: 2500,
@@ -27,7 +27,7 @@ const sampleProducts = [
   }
 ];
 
-Product.insertMany(sampleProducts)
+Producthome.insertMany(sampleProducthomes)
   .then(() => {
     console.log('✅ Sample products inserted');
     mongoose.connection.close();
