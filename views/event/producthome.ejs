@@ -278,7 +278,7 @@ footer {
     
 
     <!-- Navbar links -->
-    <div class="collapse navbar-collapse" id="navbarContent">
+  
       <ul class="navbar-nav ml-auto align-items-center">
 
         <!-- PROFILE -->
@@ -304,7 +304,7 @@ footer {
 
       </ul>
     </div>
-  </div>
+  
 </nav>
   </header>
 
@@ -342,7 +342,7 @@ footer {
       <h1 class="product-title"><%= producthome.title %></h1>
       <p class="product-price"><%= producthome.price.toFixed(2) %> DA</p>
 
-      <form action="/add-to-cart-<%= producthome.type %>/<%= producthome._id %>" method="GET">
+      <form action="/add-to-cart-producthome/<%= producthome._id %>" method="GET">
         <button type="submit" class="btn btn-primary btn-lg mb-4">
           <i class="fas fa-cart-plus mr-2"></i>Add to Cart
         </button>
