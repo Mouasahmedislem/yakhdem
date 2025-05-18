@@ -179,14 +179,13 @@ src="https://www.facebook.com/tr?id=549728007869525&ev=PageView&noscript=1"
             
               <% products.forEach(function(product){ %>
             <div class="row mb-4">
-              <div class="col-md-5 col-lg-3 col-xl-3">
-
+              
  <div class="carousel-inner">
-          <% product.item.image.forEach((img, i) => { %>
-            <div class="carousel-item <%= i===0?'active':'' %>">
-              <img src="<%= img %>" class="d-block w-100 zoomable" alt="Slide <%= i+1 %>">
+          
+            <div class="carousel-item ">
+              <img src=" <% product.item.image%>" class="d-block w-100 zoomable" alt="Slide">
             </div>
-          <% }) %>
+        
         </div>
                 
               </div>
