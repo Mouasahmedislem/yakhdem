@@ -11,7 +11,7 @@ const sampleProducthomes = [
   {
     title: 'Elegant Matte Finish',
     price: 2500,
-    images: [
+    image: [
       'https://live.staticflickr.com/65535/54483309257_4452b0ab9d.jpg/600x400?text=Slide+1',
       'https://live.staticflickr.com/65535/54483309257_4452b0ab9d.jpg/600x400?text=Slide+2',
       'https://live.staticflickr.com/65535/54483309257_4452b0ab9d.jpg/600x400?text=Slide+3'
