@@ -12,7 +12,8 @@
   <link rel="stylesheet" href="/assets/vendor/font-awesome/css/fontawesome-all.min.css">
   <link rel="stylesheet" href="/assets/vendor/animate.css/animate.min.css">
   <link rel="stylesheet" href="/assets/vendor/hs-megamenu/src/hs.megamenu.css">
-  
+
+
   <!-- Font Awesome -->
   <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.11.2/css/all.css">
   <!-- Bootstrap core CSS -->
@@ -117,7 +118,23 @@ footer {
   top: 0;
   z-index: 1000;
 }
+.logo-img {
+  height: 45px;
+  width: auto;
+}
 
+.navbar-nav .nav-link {
+  color: #333;
+  font-size: 1.2rem;
+  position: relative;
+}
+
+.badge-danger {
+  position: absolute;
+  top: -5px;
+  right: -10px;
+  font-size: 0.75rem;
+}
 .logo {
   font-size: 1.6rem;
   font-weight: 600;
@@ -206,10 +223,7 @@ footer {
 }
 
 /* Zoom-on-hover for carousel images */
-.zoomable {
-  transition: transform .3s ease;
-  cursor: zoom-in;
-}
+
 .zoomable:hover {
   transform: scale(1.1);
 }
@@ -221,6 +235,28 @@ footer {
 #infoTab .nav-link.active {
   color: #f4791f;
   border-color: #f4791f #f4791f #fff;
+}
+.zoomable {
+  transition: transform .2s ease;
+  cursor: zoom-in;
+}
+.zoomable:hover {
+  transform: scale(1.1);
+}
+.product-title { font-size: 2rem; margin-bottom: .5rem; }
+.product-price { font-size: 1.5rem; color: #f4791f; }
+.logo-img {
+  height: 45px;
+  width: auto;
+}
+
+.cart-badge {
+  position: absolute;
+  top: 0px;
+  right: 0px;
+  font-size: 0.7rem;
+  padding: 2px 6px;
+  border-radius: 50%;
 }
 </style>
 
