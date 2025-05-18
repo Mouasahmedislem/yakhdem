@@ -1,6 +1,6 @@
 // seeds/productSeed.js
 const mongoose = require('mongoose');
-const Product = require('../models/producthome');
+const Producthome = require('../models/producthome');
 
 mongoose.connect('mongodb+srv://Islem:cmygNChSy2L9Q4xt@paintello.cu30n.mongodb.net/paintello?retryWrites=true&w=majority', {
   useNewUrlParser: true,
