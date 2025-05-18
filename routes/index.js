@@ -2103,17 +2103,7 @@ router.get('/add-to-cart-producthome/:id', async (req, res) => {
     res.redirect('/shop');
   }
 });
-router.get("/producthome", function(req, res){
-    
-    header.find({}, function(err, headers){
-        if(err){
-            console.log(err);
-        }
-        else{
-        res.render("event/producthome",{headers:headers});
-   }
-    });
-});
+
    
      
 module.exports = router
