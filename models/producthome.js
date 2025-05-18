@@ -4,7 +4,7 @@ const mongoose = require('mongoose');
 const producthomeSchema = new mongoose.Schema({
   title: String,
   price: Number,
-  images: [String],         // For image slider
+  image: [String],         // For image slider
   description: String,      // Description tab
   details: Object,          // Info tab
   type: String              // Optional: used for add-to-cart route logic
