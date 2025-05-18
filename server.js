@@ -21,7 +21,7 @@ var User = require("./models/user");
 var Cart = require("./models/cart");
 require('dotenv').config();
 const nodemailer = require('nodemailer');
-var seedproducthome = require('./seed/producthome');
+
 
 var seedwow = require('./seed/wow');
 var seedfurniteur = require('./seed/furniteur');
@@ -80,7 +80,7 @@ var seedbeiget = require('./seed/beiget');
 var seedbeigej = require('./seed/beigea');
 
 
-var producthome = require('./models/producthome');
+
 
 var newsletter = require('./models/newsletter');
 var wow = require('./models/wow');
