@@ -3,6 +3,7 @@ var router = express.Router()
 const nodemailer = require('nodemailer');
 require('dotenv').config();
 const twilio = require('twilio');
+var Product = require('./models/product');
 const client = twilio(process.env.TWILIO_ACCOUNT_SID, process.env.TWILIO_AUTH_TOKEN);
 const Order = require('../models/order');
 const Powers = require('../models/powers');
@@ -2077,5 +2078,42 @@ router.get('/track-order', async (req, res) => {
   const orders = await Order.find({ numero: req.session.trackingUser }).sort({ createdAt: -1 });
   res.render('event/track-order', { orders });
 });
-            
+
+ router.get('/producthome/:id', async (req, res) => {
+  try {
+    const producthome = await Producthome.findById(req.params.id);
+    res.render('event/producthome', { producthome });
+  } catch (err) {
+    console.error(err);
+    res.redirect('/');
+  }
+});      
+
+router.get('/add-to-cart-producthome/:id', async (req, res) => {
+  const producthomeId = req.params.id;
+  const cart = new Cart(req.session.cart ? req.session.cart : {});
+  
+  try {
+    const producthome = await Producthome.findById(producthomeId);
+    cart.add(producthome, producthome.id);
+    req.session.cart = cart;
+    res.redirect('/shop');
+  } catch (err) {
+    console.log(err);
+    res.redirect('/shop');
+  }
+});
+router.get("/producthome", function(req, res){
+    
+    header.find({}, function(err, headers){
+        if(err){
+            console.log(err);
+        }
+        else{
+        res.render("event/producthome",{headers:headers});
+   }
+    });
+});
+   
+     
 module.exports = router
