@@ -3,7 +3,7 @@ var router = express.Router()
 const nodemailer = require('nodemailer');
 require('dotenv').config();
 const twilio = require('twilio');
-var Product = require('./models/product');
+var Producthome = require('./models/producthome');
 const client = twilio(process.env.TWILIO_ACCOUNT_SID, process.env.TWILIO_AUTH_TOKEN);
 const Order = require('../models/order');
 const Powers = require('../models/powers');
