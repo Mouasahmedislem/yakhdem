@@ -4,6 +4,7 @@ const nodemailer = require('nodemailer');
 require('dotenv').config();
 const twilio = require('twilio');
 var Producthome = require('../models/producthome');
+var Paintello = require('../models/paintello');
 const client = twilio(process.env.TWILIO_ACCOUNT_SID, process.env.TWILIO_AUTH_TOKEN);
 const Order = require('../models/order');
 const Powers = require('../models/powers');
@@ -2104,6 +2105,14 @@ router.get('/add-to-cart-producthome/:id', async (req, res) => {
   }
 });
 
-   
+    router.get('/paintello/:id', async (req, res) => {
+  try {
+    const paintello = await Paintello.findById(req.params.id);
+    res.render('event/paintellohome', { paintello });
+  } catch (err) {
+    console.error(err);
+    res.redirect('/');
+  }
+});
      
 module.exports = router
