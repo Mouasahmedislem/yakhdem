@@ -220,18 +220,31 @@ padding-top: 10px;
   </div>
 
 
-  <div class="section">
-    <div class="section-title">New Arrivals</div>
-    <div class="products">
-      <% paintellos.forEach(paintello=> { %>
-        <div class="product">
-          <img src="<%= paintello.image %>" alt="<%= paintello.title %>">
-          <h3><%= paintello.title %></h3>
-          <p><%= paintello.price %> DA</p>
-        </div>
-  <% }); %>
-    </div>
+<!-- Navigation & Intro -->
+  <!-- sale content -->
+      <hr class="mt-4">
+       <div class="bm-page">
+          <div class="container">
+              <div class="row">
+              <div class="order-lg-last">
+              <div class="mb-4 mb-lg-5 bm-content">
+
+  <h2 class="text-center text-uppercase">New Arrivals</h2>
+  <ul class="row justify-content-center list-unstyled mb-4">
+  <% paintellos.forEach(paintello=> { %>
+  <li class="col-6 col-sm-4 col-md-3">
+  <a class="d-block mt-4 text-center text-dark" href="/coulors/yellowv2">
+  <div class="mb-1 px-2">
+  <img  class="border img-fluid rounded bm-lazyload lazyloaded" src="<%= paintello.image %>" alt="<%= paintello.title %>">
   </div>
+  <h2 class="h6 mb-0"><%= paintello.title %></h2>
+   <p><%= paintello.price %> DA</p>
+  </a>
+  </li>
+  <% }); %>
+</ul></div></div></div></div></div>
+
+  
 
 
   <%- include ("../partials/footer") %>.
