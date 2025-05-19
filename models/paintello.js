@@ -3,7 +3,7 @@ const mongoose = require('mongoose');
 const paintelloSchema = new mongoose.Schema({
   title: String,
   price: Number,
-  image: [String]         // For image slider
+  image: String
 });
 
-module.exports = mongoose.model('paintello', paintelloSchema);
+module.exports = mongoose.model('Paintello', paintelloSchema);
