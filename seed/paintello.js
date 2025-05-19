@@ -9,20 +9,15 @@ mongoose.connect('mongodb+srv://Islem:cmygNChSy2L9Q4xt@paintello.cu30n.mongodb.n
 
 
 const paintellos = [
-  {
-    title: "Scented Candle",
-    price: 1200,
-    image: "https://live.staticflickr.com/65535/54483309257_4452b0ab9d.jpg"
-  },
+
   {
     title: "Decorative Vase",
     price: 2500,
-    image: "https://live.staticflickr.com/65535/54483309257_4452b0ab9d.jpg"
-  },
-  {
-    title: "Woven Basket",
-    price: 1800,
-    image: "https://live.staticflickr.com/65535/54483309257_4452b0ab9d.jpg"
+    image:  [
+      'https://live.staticflickr.com/65535/54483309257_4452b0ab9d.jpg/600x400?text=Slide+1',
+      'https://live.staticflickr.com/65535/54483309257_4452b0ab9d.jpg/600x400?text=Slide+2',
+      'https://live.staticflickr.com/65535/54483309257_4452b0ab9d.jpg/600x400?text=Slide+3'
+    ],
   }
 ];
 
