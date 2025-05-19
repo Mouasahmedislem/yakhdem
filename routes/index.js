@@ -2105,13 +2105,12 @@ router.get('/add-to-cart-producthome/:id', async (req, res) => {
   }
 });
 
-    router.get('/paintello/:id', async (req, res) => {
+  router.get('/paintello', async (req, res) => {
   try {
-    const paintello = await Paintello.findById(req.params.id);
-    res.render('event/paintellohome', { paintello });
+    const paintellos = await Paintello.find({});
+    res.render('event/paintellohome', { paintellos });
   } catch (err) {
-    console.error(err);
-    res.redirect('/');
+    res.status(500).send('Error loading home products');
   }
 });
      
