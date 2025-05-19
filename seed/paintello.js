@@ -6,7 +6,7 @@ mongoose.connect('mongodb+srv://Islem:cmygNChSy2L9Q4xt@paintello.cu30n.mongodb.n
   useUnifiedTopology: true,
 });
 
-const samplepaintellos = [
+const samplePaintellos = [
   {
     title: 'Elegant Matte Finish',
     price: 2500,
