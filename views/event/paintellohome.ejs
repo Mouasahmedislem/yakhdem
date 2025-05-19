@@ -110,20 +110,7 @@ footer {
   margin-top: 60px;
   font-size: 0.9rem;
 }
-.navbar {
-  background-color: #ffffff;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 16px 40px;
-  font-family: 'Segoe UI', sans-serif;
-  border-bottom: 1px solid #e6e6e6;
-  position: sticky;
-  top: 0;
-  z-index: 1000;
-padding-top: 10px;
-  padding-bottom: 10px;
-}
+
 
 
 
@@ -196,6 +183,9 @@ padding-top: 10px;
     <% paintellos.forEach((paintello, index) => { %>
       <div class="col-md-4 mb-4">
         <div class="card">
+ <ul class="row justify-content-center list-unstyled mb-4">
+
+  <li class="col-6 col-sm-4 col-md-3">
           <!-- Bootstrap Carousel for each product -->
           <div id="carousel-<%= index %>" class="carousel slide" data-ride="carousel">
             <div class="carousel-inner">
@@ -217,6 +207,7 @@ padding-top: 10px;
             <h5 class="card-title"><%= paintello.title %></h5>
             <p class="card-text"><%= paintello.price %> DA</p>
           </div>
+ </li></ul>
         </div>
       </div>
     <% }) %>
