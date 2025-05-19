@@ -6,22 +6,35 @@ mongoose.connect('mongodb+srv://Islem:cmygNChSy2L9Q4xt@paintello.cu30n.mongodb.n
   useUnifiedTopology: true,
 });
 
-const samplePaintellos = [
+
+
+const paintellos = [
   {
-    title: 'Elegant Matte Finish',
+    title: "Scented Candle",
+    price: 1200,
+    image: "https://live.staticflickr.com/65535/54483309257_4452b0ab9d.jpg"
+  },
+  {
+    title: "Decorative Vase",
     price: 2500,
-    image: [
-      'https://live.staticflickr.com/65535/54483309257_4452b0ab9d.jpg/600x400?text=Slide+1',
-      'https://live.staticflickr.com/65535/54483309257_4452b0ab9d.jpg/600x400?text=Slide+2',
-      'https://live.staticflickr.com/65535/54483309257_4452b0ab9d.jpg/600x400?text=Slide+3'
-    ]
-   
+    image: "https://live.staticflickr.com/65535/54483309257_4452b0ab9d.jpg"
+  },
+  {
+    title: "Woven Basket",
+    price: 1800,
+    image: "https://live.staticflickr.com/65535/54483309257_4452b0ab9d.jpg"
   }
 ];
 
-Paintello.insertMany(samplePaintellos)
-  .then(() => {
-    console.log('✅ Sample paintellos inserted');
+async function seedPaintellos() {
+  try {
+    await Paintello.deleteMany({});
+    await Paintello.insertMany(paintellos);
+    console.log("Home products seeded!");
     mongoose.connection.close();
-  })
-  .catch(err => console.log('❌ Seeding error', err));
+  } catch (err) {
+    console.error(err);
+  }
+}
+
+seedPaintellos();
