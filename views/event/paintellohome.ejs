@@ -126,11 +126,7 @@ padding-top: 10px;
 }
 
 
-.navbar-nav .nav-link {
-  color: #333;
-  font-size: 1.2rem;
-  position: relative;
-}
+
 
 
 .logo {
@@ -139,33 +135,9 @@ padding-top: 10px;
   color: #222;
 }
 
-.nav-links {
-  list-style: none;
-  display: flex;
-  gap: 25px;
-  margin: 0;
-  padding: 0;
-}
 
-.nav-links li a {
-  text-decoration: none;
-  color: #333;
-  font-size: 1rem;
-  position: relative;
-}
 
-.nav-links li a::after {
-  content: '';
-  display: block;
-  width: 0;
-  height: 1px;
-  background: #333;
-  transition: width 0.3s;
-}
 
-.nav-links li a:hover::after {
-  width: 100%;
-}
 
 
 </style>
@@ -174,7 +146,7 @@ padding-top: 10px;
 <body>
 
   <header>
-    <nav class="navbar navbar-expand-lg navbar-light bg-white fixed-top shadow-sm">
+    <nav class="navbar navbar-expand-lg navbar-light bg-white fixed-top scrolling-navbar">
   <div class="container">
 
     <!-- LOGO -->
@@ -218,31 +190,40 @@ padding-top: 10px;
   <div class="banner" style="background-image: url('https://live.staticflickr.com/65535/54424056395_fe456898d8_k.jpg');">
     <div class="banner-text">Elevate Your Home</div>
   </div>
+<div class="section">
+  <div class="section-title">New Arrivals</div>
+  <div class="row">
+    <% paintellos.forEach((paintello, index) => { %>
+      <div class="col-md-4 mb-4">
+        <div class="card">
+          <!-- Bootstrap Carousel for each product -->
+          <div id="carousel-<%= index %>" class="carousel slide" data-ride="carousel">
+            <div class="carousel-inner">
+              <% paintello.image.forEach((img, i) => { %>
+                <div class="carousel-item <%= i === 0 ? 'active' : '' %>">
+                  <img class="d-block w-100" src="<%= img %>" alt="Image <%= i + 1 %>">
+                </div>
+              <% }) %>
+            </div>
+            <a class="carousel-control-prev" href="#carousel-<%= index %>" role="button" data-slide="prev">
+              <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+            </a>
+            <a class="carousel-control-next" href="#carousel-<%= index %>" role="button" data-slide="next">
+              <span class="carousel-control-next-icon" aria-hidden="true"></span>
+            </a>
+          </div>
 
-
-<!-- Navigation & Intro -->
-  <!-- sale content -->
-      <hr class="mt-4">
-       <div class="bm-page">
-          <div class="container">
-              <div class="row">
-              <div class="order-lg-last">
-              <div class="section">
-
-  <h2 class="text-center text-uppercase">New Arrivals</h2>
-  <ul class="row justify-content-center list-unstyled mb-4">
-  <% paintellos.forEach(paintello=> { %>
-  <li class="col-6 col-sm-4 col-md-3">
-  <a class="d-block mt-4 text-center text-dark" href="/coulors/yellowv2">
-  <div class="products">
-  <img  class="border img-fluid rounded bm-lazyload lazyloaded" src="<%= paintello.image %>" alt="<%= paintello.title %>">
+          <div class="card-body text-center">
+            <h5 class="card-title"><%= paintello.title %></h5>
+            <p class="card-text"><%= paintello.price %> DA</p>
+          </div>
+        </div>
+      </div>
+    <% }) %>
   </div>
-  <h2 class="h6 mb-0"><%= paintello.title %></h2>
-   <p><%= paintello.price %> DA</p>
-  </a>
-  </li>
-  <% }); %>
-</ul></div></div></div></div></div>
+</div>
+
+
 
   
 
