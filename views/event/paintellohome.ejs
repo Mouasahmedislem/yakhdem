@@ -183,7 +183,7 @@ footer {
     <% paintellos.forEach((paintello, index) => { %>
       <div class="col-md-4 mb-4">
         <div class="card">
- <ul class="row justify-content-center list-unstyled mb-4">
+ <a class="d-block mt-4 text-center text-dark" href="/coulors/grey">
 
  
           <!-- Bootstrap Carousel for each product -->
@@ -207,7 +207,7 @@ footer {
             <h5 class="card-title"><%= paintello.title %></h5>
             <p class="card-text"><%= paintello.price %> DA</p>
           </div>
-</ul>
+ </a>
         </div>
       </div>
     <% }) %>
