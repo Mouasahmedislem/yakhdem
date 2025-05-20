@@ -38,8 +38,11 @@ passport.use('local-signup', new LocalStrategy({
     }
     var newUser = new User();
     newUser.email = email;
-    newUser.password = newUser.encryptPassword(password);
-    newUser.isAdmin = true;
+   newUser.firstName = req.body.firstName;
+   newUser.lastName = req.body.lastName;
+   newUser.numero = req.body.numero;
+   newUser.password = newUser.encryptPassword(password);
+   newUser.isAdmin = true;
     newUser.save(function(err, result) {
       if (err) {
         return done(err);
