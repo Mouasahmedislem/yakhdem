@@ -205,8 +205,14 @@ html,
                       </a>
                       <div class="dropdown-menu dropdown-menu-right bootstrap-menu  white scrollbar-default" aria-labelledby="menu1">
                        
-                          <a class="dropdown-item" href="/track-login">Track Your Order</a>
-                           
+                         
+                            <% if (login){ %>
+                          <a class="dropdown-item" href="/user/profile">profile</a>
+                           <a class="dropdown-item" href="/user/logout">Logout</a>
+                           <% } else{ %>
+                           <a class="dropdown-item" href="/user/signup">Register</a>
+                           <a class="dropdown-item" href="/user/signin">Sing up</a>
+                           <% } %>
                            
                  </div> 
           </li>
