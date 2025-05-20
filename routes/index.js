@@ -881,7 +881,7 @@ router.get("/onecoat/BEIGE09", function(req, res){
 });
 });
 
-router.get("/add-to-cart-beigea/:id", function(req, res){
+router.post("/add-to-cart-beigea/:id", function(req, res){
     var beigeaId = req.params.id;
     var cart = new Cart(req.session.cart ? req.session.cart : {});
     
