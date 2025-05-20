@@ -94,12 +94,23 @@
           
 
             </h3>
-<form action="/add-to-cart-beigea/<%= beigea._id %>" method="GET"
-      onsubmit="return handleFormAddToCart(event, '<%= beigea.title %>', <%= beigea.price %>, '<%= beigea._id %>')">
+<form action="/add-to-cart-beigea/<%= beigea._id %>" method="POST" onsubmit="fbq('track', 'AddToCart', {
+  content_name: '<%= beigea.title %>',
+  content_ids: ['<%= beigea._id %>'],
+  content_type: 'product',
+  value: <%= beigea.price %>,
+  currency: 'DZD',
+    em: '<%= user ? user.email : "" %>',
+    fn: '<%= user ? user.firstName : "" %>',
+    ln: '<%= user ? user.lastName : "" %>',
+    ph: '<%= user ? user.numero : "" %>'
+})">
   <button type="submit" class="btn btn-pink btn-rounded">
-    <i class="fas fa-cart-plus mr-2" aria-hidden="true"></i>ajouter au panier
+    <i class="fas fa-cart-plus mr-2" aria-hidden="true"></i>Ajouter au panier
   </button>
 </form>
+
+
 
 
 
@@ -249,19 +260,5 @@ Eau à base d'eau ou de solvant
 
   </div>
   <!-- Main Container -->
-<script>
-function handlePixelAndSubmit(title, price, id) {
-    fbq('track', 'AddToCart', {
-      content_name: title,
-      content_ids: [id],
-      content_type: 'product',
-      value: price,
-      currency: 'DZD'
-    });
 
-    // Delay form submission slightly to ensure FB Pixel is triggered
-    setTimeout(() => {
-      document.getElementById('cart-form-' + id).submit();
-    }, 300);
-</script>
   <%- include ("../partials/footer") %>.
