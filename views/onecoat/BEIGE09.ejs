@@ -100,10 +100,10 @@
   content_type: 'product',
   value: <%= beigea.price %>,
   currency: 'DZD',
-    em: '<%= user ? user.email : "" %>',
-    fn: '<%= user ? user.firstName : "" %>',
-    ln: '<%= user ? user.lastName : "" %>',
-    ph: '<%= user ? user.numero : "" %>'
+    em: User.email,
+    fn: User.firstName,
+    ln: User.lastName,
+    ph:User.numero 
 })">
   <button type="submit" class="btn btn-pink btn-rounded">
     <i class="fas fa-cart-plus mr-2" aria-hidden="true"></i>Ajouter au panier
