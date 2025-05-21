@@ -4,6 +4,17 @@
 <head>
 <!-- Meta Pixel Code -->
 <script>
+function sha256(str) {
+  const encoder = new TextEncoder();
+  const data = encoder.encode(str.trim().toLowerCase());
+  return crypto.subtle.digest("SHA-256", data).then(buf => {
+    return Array.from(new Uint8Array(buf))
+      .map(b => b.toString(16).padStart(2, '0'))
+      .join('');
+  });
+}
+</script>
+<script>
 !function(f,b,e,v,n,t,s)
 {if(f.fbq)return;n=f.fbq=function(){n.callMethod?
 n.callMethod.apply(n,arguments):n.queue.push(arguments)};
@@ -12,12 +23,18 @@ n.queue=[];t=b.createElement(e);t.async=!0;
 t.src=v;s=b.getElementsByTagName(e)[0];
 s.parentNode.insertBefore(t,s)}(window, document,'script',
 'https://connect.facebook.net/en_US/fbevents.js');
-fbq('init', '549728007869525', {
-    em: '<%= user ? user.email : "" %>',
-    fn: '<%= user ? user.firstName : "" %>',
-    ln: '<%= user ? user.lastName : "" %>',
-    ph: '<%= user ? user.numero : "" %>'
- });
+(async () => {
+  const em = await sha256("<%= user ? user.email : '' %>");
+  const ph = await sha256("<%= user ? user.numero : '' %>");
+  const fn = await sha256("<%= user ? user.firstName : '' %>");
+  const ln = await sha256("<%= user ? user.lastName : '' %>");
+
+  fbq('init', '549728007869525', {
+    em, ph, fn, ln
+  });
+  fbq('track', 'PageView');
+})();
+
 </script>
 <noscript><img height="1" width="1" style="display:none"
 src="https://www.facebook.com/tr?id=549728007869525&ev=PageView&noscript=1"
