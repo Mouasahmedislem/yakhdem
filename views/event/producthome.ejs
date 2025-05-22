@@ -362,8 +362,6 @@ function handleAddToCart(event, title, price, id) {
       value: price,
       currency: 'DZD',
        em: '<%= user ? user.email : "" %>',
-       fn: '<%= user ? user.firstName : "" %>',
-       ln: '<%= user ? user.lastName : "" %>',
        ph: '<%= user ? user.numero : "" %>'
     });
 
