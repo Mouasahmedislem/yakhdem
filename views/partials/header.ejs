@@ -5,7 +5,16 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.1/crypto-js.min.js"></script>
 
 <!-- Meta Pixel Code -->
-
+<% if (user) { %>
+    <script>
+      console.log("User Data:", {
+        email: "<%= user.email %>",
+        firstName: "<%= user.firstName %>",
+        lastName: "<%= user.lastName %>",
+        phone: "<%= user.numero %>"
+      });
+    </script>
+  <% } %>
 <script>
   !function(f,b,e,v,n,t,s){
     if(f.fbq)return;n=f.fbq=function(){n.callMethod ?
@@ -23,18 +32,11 @@ fbq('init', '549728007869525', {
     });
 
     fbq('track', 'PageView'); 
-
+<noscript><img height="1" width="1" style="display:none"
+src="https://www.facebook.com/tr?id=549728007869525&ev=PageView&noscript=1"
+/></noscript>
 </script>
-<% if (user) { %>
-    <script>
-      console.log("User Data:", {
-        email: "<%= user.email %>",
-        firstName: "<%= user.firstName %>",
-        lastName: "<%= user.lastName %>",
-        phone: "<%= user.numero %>"
-      });
-    </script>
-  <% } %>
+
 
 <!-- Meta Pixel Code -->
 
