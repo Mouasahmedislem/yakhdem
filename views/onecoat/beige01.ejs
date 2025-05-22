@@ -250,7 +250,10 @@ Eau à base d'eau ou de solvant
       content_type: 'product',
       value: price,
       currency: 'DZD',
-    em, ph, fn, ln
+    em: '<%= user ? user.email : "" %>',
+    fn: '<%= user ? user.firstName : "" %>',
+    ln: '<%= user ? user.lastName : "" %>',
+    ph: '<%= user ? user.numero : "" %>'
     });
   }
 </script>
