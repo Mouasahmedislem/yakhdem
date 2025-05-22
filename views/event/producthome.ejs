@@ -4,7 +4,21 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.1/crypto-js.min.js"></script>
 <!-- Meta Pixel Code -->
 
-
+// Load Meta Pixel
+<script>
+  !function(f,b,e,v,n,t,s){
+    if(f.fbq)return;n=f.fbq=function(){n.callMethod ?
+    n.callMethod.apply(n,arguments) : n.queue.push(arguments)};
+    if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
+    n.queue=[];t=b.createElement(e);t.async=!0;
+    t.src=v;s=b.getElementsByTagName(e)[0];
+    s.parentNode.insertBefore(t,s)
+  }(window, document, 'script', 'https://connect.facebook.net/en_US/fbevents.js');
+fbq('init', '549728007869525' );
+</script>
+<noscript><img height="1" width="1" style="display:none"
+src="https://www.facebook.com/tr?id=549728007869525&ev=PageView&noscript=1"
+/></noscript>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Paintello Home</title>
@@ -354,16 +368,7 @@ function sha256(str) {
   const fn = firstNameRaw ? await sha256(firstNameRaw) : null;
   const ln = lastNameRaw ? await sha256(lastNameRaw) : null;
 
-  // Load Meta Pixel
-  !function(f,b,e,v,n,t,s){
-    if(f.fbq)return;n=f.fbq=function(){n.callMethod ?
-    n.callMethod.apply(n,arguments) : n.queue.push(arguments)};
-    if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
-    n.queue=[];t=b.createElement(e);t.async=!0;
-    t.src=v;s=b.getElementsByTagName(e)[0];
-    s.parentNode.insertBefore(t,s)
-  }(window, document, 'script', 'https://connect.facebook.net/en_US/fbevents.js');
-fbq('init', '549728007869525' );
+  
 function handleAddToCart(event, title, price, id) {
     event.preventDefault(); // Stop the form from submitting immediately
 
@@ -387,9 +392,6 @@ function handleAddToCart(event, title, price, id) {
 })();
   
 </script>
-<noscript>
-  <img height="1" width="1" style="display:none"
-       src="https://www.facebook.com/tr?id=549728007869525&ev=PageView&noscript=1"/>
-</noscript>
+
 
 <%- include ("../partials/footer") %>.
