@@ -1,6 +1,24 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+<!-- Meta Pixel Code -->
+<script>
+!function(f,b,e,v,n,t,s)
+{if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+n.callMethod.apply(n,arguments):n.queue.push(arguments)};
+if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
+n.queue=[];t=b.createElement(e);t.async=!0;
+t.src=v;s=b.getElementsByTagName(e)[0];
+s.parentNode.insertBefore(t,s)}(window, document,'script',
+'https://connect.facebook.net/en_US/fbevents.js');
+fbq('init', '549728007869525');
+  
+
+</script>
+<noscript><img height="1" width="1" style="display:none"
+src="https://www.facebook.com/tr?id=549728007869525&ev=PageView&noscript=1"
+/></noscript>
+<!-- End Meta Pixel Code -->
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Paintello Home</title>
@@ -293,13 +311,14 @@ footer {
     <div class="col-md-6">
       <h1 class="product-title"><%= producthome.title %></h1>
       <p class="product-price"><%= producthome.price.toFixed(2) %> DA</p>
+<form action="/add-to-cart-producthome/<%= producthome._id %>" method="GET" 
+      onsubmit="return handleAddToCart(event, '<%= producthome.title %>', <%= producthome.price %>, '<%= producthome._id %>')">
+  <button type="submit" class="btn btn-primary btn-lg mb-4">
+    <i class="fas fa-cart-plus mr-2"></i>Add to Cart
+  </button>
+</form>
 
-      <form action="/add-to-cart-producthome/<%= producthome._id %>" method="GET">
-        <button type="submit" class="btn btn-primary btn-lg mb-4">
-          <i class="fas fa-cart-plus mr-2"></i>Add to Cart
-        </button>
-      </form>
-
+ 
       <ul class="nav nav-tabs" id="infoTab" role="tablist">
         <li class="nav-item">
           <a class="nav-link active" id="desc-tab" data-toggle="tab" href="#desc" role="tab">Description</a>
@@ -329,6 +348,29 @@ footer {
       document.getElementById("accordionContent").classList.toggle("open");
     }
   </script>
+<script>
+  function handleAddToCart(event, title, price, id) {
+    event.preventDefault(); // Stop the form from submitting immediately
 
+    fbq('track', 'AddToCart', {
+      content_name: title,
+      content_ids: [id],
+      content_type: 'product',
+      value: price,
+      currency: 'DZD',
+      em: '<%= user ? user.email : "" %>',
+      fn: '<%= user ? user.firstName : "" %>',
+      ln: '<%= user ? user.lastName : "" %>',
+      ph: '<%= user ? user.numero : "" %>'
+    });
+
+    // Wait 300ms and submit the form after event is fired
+    setTimeout(() => {
+      event.target.submit();
+    }, 300);
+
+    return false; // Prevent immediate form submission
+  }
+</script>
 
 <%- include ("../partials/footer") %>.
