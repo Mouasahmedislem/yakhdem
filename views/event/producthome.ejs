@@ -368,7 +368,8 @@ function sha256(str) {
   const fn = firstNameRaw ? await sha256(firstNameRaw) : null;
   const ln = lastNameRaw ? await sha256(lastNameRaw) : null;
 
-  
+  })();
+
 function handleAddToCart(event, title, price, id) {
     event.preventDefault(); // Stop the form from submitting immediately
 
@@ -389,7 +390,7 @@ function handleAddToCart(event, title, price, id) {
     return false; // Prevent immediate form submission
   }
   
-})();
+
   
 </script>
 
