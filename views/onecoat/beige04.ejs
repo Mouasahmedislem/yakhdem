@@ -267,7 +267,9 @@ Eau à base d'eau ou de solvant
     s.parentNode.insertBefore(t,s)}(window, document,'script',
     'https://connect.facebook.net/en_US/fbevents.js');
 
-  fbq('init', '549728007869525', hashedUser);
+  fbq('init', '549728007869525',{
+user_data: hashedUser
+});
   fbq('track', 'PageView');
 </script>
 
