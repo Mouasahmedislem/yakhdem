@@ -2083,7 +2083,8 @@ router.get('/track-order', async (req, res) => {
  router.get('/producthome/:id', async (req, res) => {
   try {
     const producthome = await Producthome.findById(req.params.id);
-    res.render('event/producthome', { producthome });
+    res.render('event/producthome', { producthome: product,  // or products list
+  user: req.user || null });
   } catch (err) {
     console.error(err);
     res.redirect('/');
