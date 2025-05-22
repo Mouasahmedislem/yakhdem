@@ -349,26 +349,7 @@ footer {
     }
   </script>
 <script>
-function sha256(str) {
-  const encoder = new TextEncoder();
-  const data = encoder.encode(str.trim().toLowerCase());
-  return crypto.subtle.digest("SHA-256", data).then(buf =>
-    Array.from(new Uint8Array(buf)).map(b => b.toString(16).padStart(2, '0')).join('')
-  );
-}
 
-(async () => {
-  const emailRaw = "<%= user ? user.email : '' %>";
-  const phoneRaw = "<%= user ? user.numero : '' %>";
-  const firstNameRaw = "<%= user ? user.firstName : '' %>";
-  const lastNameRaw = "<%= user ? user.lastName : '' %>";
-
-  const em = emailRaw ? await sha256(emailRaw) : null;
-  const ph = phoneRaw ? await sha256(phoneRaw) : null;
-  const fn = firstNameRaw ? await sha256(firstNameRaw) : null;
-  const ln = lastNameRaw ? await sha256(lastNameRaw) : null;
-
-  })();
 
 function handleAddToCart(event, title, price, id) {
     event.preventDefault(); // Stop the form from submitting immediately
@@ -379,7 +360,10 @@ function handleAddToCart(event, title, price, id) {
       content_type: 'product',
       value: price,
       currency: 'DZD',
-      em, ph, fn, ln
+       em: '<%= user ? user.email : "" %>',
+       fn: '<%= user ? user.firstName : "" %>',
+       ln: '<%= user ? user.lastName : "" %>',
+       ph: '<%= user ? user.numero : "" %>'
     });
 
     // Wait 300ms and submit the form after event is fired
