@@ -239,44 +239,6 @@ Eau à base d'eau ou de solvant
       </div>
 
     </section>
-<script>
-  function sha256(value) {
-    return CryptoJS.SHA256(value.trim().toLowerCase()).toString();
-  }
-
-  const user = {
-    email: '<%= user ? user.email : "" %>',
-    firstName: '<%= user ? user.firstName : "" %>',
-    lastName: '<%= user ? user.lastName : "" %>',
-    phone: '<%= user ? user.numero : "" %>'
-  };
-
-  const hashedUser = {
-    em: user.email ? sha256(user.email) : undefined,
-    fn: user.firstName ? sha256(user.firstName) : undefined,
-    ln: user.lastName ? sha256(user.lastName) : undefined,
-    ph: user.phone ? sha256(user.phone) : undefined
-  };
-
-  !function(f,b,e,v,n,t,s){
-    if(f.fbq)return;n=f.fbq=function(){n.callMethod ?
-    n.callMethod.apply(n,arguments):n.queue.push(arguments)};
-    if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
-    n.queue=[];t=b.createElement(e);t.async=!0;
-    t.src=v;s=b.getElementsByTagName(e)[0];
-    s.parentNode.insertBefore(t,s)}(window, document,'script',
-    'https://connect.facebook.net/en_US/fbevents.js');
-
-  fbq('init', '549728007869525',{
-user_data: hashedUser
-});
-  fbq('track', 'PageView');
-</script>
-
-<noscript>
-  <img height="1" width="1" style="display:none"
-  src="https://www.facebook.com/tr?id=549728007869525&ev=PageView&noscript=1"/>
-</noscript>
 
 <script>
   function trackAddToCart(title, price, id) {
