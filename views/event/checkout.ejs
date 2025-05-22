@@ -2,7 +2,27 @@
 <html lang="en">
 
 <head>
+<!-- Meta Pixel Code -->
+<script>
+!function(f,b,e,v,n,t,s)
+{if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+n.callMethod.apply(n,arguments):n.queue.push(arguments)};
+if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
+n.queue=[];t=b.createElement(e);t.async=!0;
+t.src=v;s=b.getElementsByTagName(e)[0];
+s.parentNode.insertBefore(t,s)}(window, document,'script',
+'https://connect.facebook.net/en_US/fbevents.js');
+fbq('init', '549728007869525');
+fbq('track', 'PageView', {
+      
+    em: '<%= user ? user.email : "" %>',
+    fn: '<%= user ? user.firstName : "" %>',
+    ln: '<%= user ? user.lastName : "" %>',
+    ph: '<%= user ? user.numero : "" %>'
+    });
+  
 
+</script>
 
 <!-- Google Tag Manager -->
 <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
@@ -138,56 +158,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
       border-radius: 6px;
     }
   </style>
-<script>
-  async function sha256(value) {
-    const encoder = new TextEncoder();
-    const data = encoder.encode(value.trim().toLowerCase());
-    const hashBuffer = await crypto.subtle.digest('SHA-256', data);
-    return Array.from(new Uint8Array(hashBuffer))
-      .map(b => b.toString(16).padStart(2, '0'))
-      .join('');
-  }
 
-  async function initFbqWithHashedData() {
-    const email = '<%= user && user.email ? user.email : "" %>';
-    const firstName = '<%= user && user.firstName ? user.firstName : "" %>';
-    const lastName = '<%= user && user.lastName ? user.lastName : "" %>';
-    const phone = '<%= user && user.numero ? user.numero : "" %>';
-
-    const [em, fn, ln, ph] = await Promise.all([
-      sha256(email),
-      sha256(firstName),
-      sha256(lastName),
-      sha256(phone)
-    ]);
-
-    fbq('init', '549728007869525', {
-      em: em,
-      fn: fn,
-      ln: ln,
-      ph: ph
-    });
-
-    fbq('track', 'PageView');
-  }
-
-  // Meta Pixel base script
-    !function(f,b,e,v,n,t,s){
-    if(f.fbq)return;n=f.fbq=function(){
-      n.callMethod ? n.callMethod.apply(n,arguments) : n.queue.push(arguments)
-    };
-    if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
-    n.queue=[];t=b.createElement(e);t.async=!0;
-    t.src=v;s=b.getElementsByTagName(e)[0];
-    s.parentNode.insertBefore(t,s)
-  }(window, document,'script','https://connect.facebook.net/en_US/fbevents.js');
-
-  initFbqWithHashedData();
-</script>
-
-<!-- Meta Pixel Code -->
-
-<!-- End Meta Pixel Code -->
 </head>
 
 
