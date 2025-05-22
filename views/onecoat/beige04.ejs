@@ -96,7 +96,7 @@
             </h3>
 <a href="/add-to-cart-beiged/<%= beiged._id %>" 
    class="btn btn-pink btn-rounded"
-   onclick="trackAddToCart('<%= beiged.title %>', <%= beiged.price %>, '<%= beiged._id %>')"><i class="fas fa-cart-plus mr-2" aria-hidden="true"></i>ajouter au panier</a>
+   onclick="trackAddToCart('<%= beiged.title %>', <%= beiged.price %>, '<%= beiged._id %>','<%= user.email =%>','<%= user.numero =%>' ><i class="fas fa-cart-plus mr-2" aria-hidden="true"></i>ajouter au panier</a>
   
 <% }); %>
             <!-- Accordion wrapper -->
@@ -240,17 +240,15 @@ Eau à base d'eau ou de solvant
 
     </section>
 <script>
-  function trackAddToCart(title, price, id) {
+  function trackAddToCart(title, price, id, email, numero) {
     fbq('track', 'AddToCart', {
       content_name: title,
       content_ids: [id],
       content_type: 'product',
       value: price,
       currency: 'DZD',
-    em: '<%= user ? user.email : "" %>',
-    fn: '<%= user ? user.firstName : "" %>',
-    ln: '<%= user ? user.lastName : "" %>',
-    ph: '<%= user ? user.numero : "" %>'
+    em: 'email',
+    ph: numero
     });
   }
 </script>
