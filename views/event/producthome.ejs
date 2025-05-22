@@ -21,14 +21,14 @@
       sha256(em), sha256(fn), sha256(ln), sha256(ph)
     ]);
 
-    fbq('init', '549728007869525', {
+    fbq('init', '549728007869525' );
+
+    fbq('track', 'PageView',{
       em: em_hashed,
       fn: fn_hashed,
       ln: ln_hashed,
       ph: ph_hashed
     });
-
-    fbq('track', 'PageView');
   }
 
   !function(f,b,e,v,n,t,s){
