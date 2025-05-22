@@ -20,7 +20,7 @@
  <% beigebs.forEach(function(beigeb){ %>
               <!-- Slides -->
               <div class="carousel-inner text-center text-md-left" role="listbox">
-<h2 class="text-center text-uppercase">'<%= user ? user.email : "" %>'</h2>
+
                 <div class="carousel-item active">
 
                  <img src="<%= beigeb.image %>" alt="First slide"
@@ -88,7 +88,7 @@
               <span class="red-text font-weight-bold">
 
                 <strong> Prix :<%= beigeb.price %> Da</strong>
-
+<strong> Prix :'<%= user ? user.email : "" %>' Da</strong>
               </span>
 
           
