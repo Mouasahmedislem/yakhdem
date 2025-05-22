@@ -5,56 +5,40 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.1/crypto-js.min.js"></script>
 
 <!-- Meta Pixel Code -->
-<!-- Meta Pixel with Advanced Matching & Hashing -->
+<!-- Meta Pixel Code -->
 <script>
-  // SHA-256 hashing function (browser-safe)
-  async function sha256(text) {
-    const encoder = new TextEncoder();
-    const data = encoder.encode(text.trim().toLowerCase());
-    const hashBuffer = await crypto.subtle.digest('SHA-256', data);
-    return Array.from(new Uint8Array(hashBuffer))
-                .map(b => b.toString(16).padStart(2, '0'))
-                .join('');
-  }
+!function(f,b,e,v,n,t,s)
+{if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+n.callMethod.apply(n,arguments):n.queue.push(arguments)};
+if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
+n.queue=[];t=b.createElement(e);t.async=!0;
+t.src=v;s=b.getElementsByTagName(e)[0];
+s.parentNode.insertBefore(t,s)}(window, document,'script',
+'https://connect.facebook.net/en_US/fbevents.js');
+fbq('init', '549728007869525');
+fbq('track', 'PageView', {
 
-  async function sendHashedMetaData() {
-    const user = {
-      email: "<%= user ? user.email : '' %>",
-      fn: "<%= user ? user.firstName : '' %>",
-      ln: "<%= user ? user.lastName : '' %>",
-      ph: "<%= user ? user.numero : '' %>"
-    };
 
-    const hashedData = {};
+    em: '<%= user ? user.email : "" %>',
 
-    for (const [key, value] of Object.entries(user)) {
-      if (value) {
-        hashedData[key] = await sha256(value);
-      }
-    }
+    fn: '<%= user ? user.firstName : "" %>',
 
-    fbq('init', '549728007869525',hashedData);
-    fbq('track', 'PageView');
-  }
+    ln: '<%= user ? user.lastName : "" %>',
 
-  !function(f,b,e,v,n,t,s){
-    if(f.fbq)return;n=f.fbq=function(){
-      n.callMethod ? n.callMethod.apply(n,arguments) : n.queue.push(arguments)
-    };
-    if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
-    n.queue=[];t=b.createElement(e);t.async=!0;
-    t.src=v;s=b.getElementsByTagName(e)[0];
-    s.parentNode.insertBefore(t,s)
-  }(window, document,'script','https://connect.facebook.net/en_US/fbevents.js');
+    ph: '<%= user ? user.numero : "" %>'
 
-  // Run after page load
-  window.addEventListener('DOMContentLoaded', sendHashedMetaData);
+
+
+
+
+ });
+
+
 </script>
-
-<noscript>
-  <img height="1" width="1" style="display:none"
-       src="https://www.facebook.com/tr?id=549728007869525&ev=PageView&noscript=1"/>
-</noscript>
+<noscript><img height="1" width="1" style="display:none"
+src="https://www.facebook.com/tr?id=549728007869525&ev=PageView&noscript=1"
+/></noscript>
+<!-- End Meta Pixel Code -->
 
 <!-- End Meta Pixel Code -->
 
