@@ -386,10 +386,12 @@ footer {
       content_type: 'product',
       value: price,
       currency: 'DZD',
-      em: '<%= user ? user.email : "" %>',
-      fn: '<%= user ? user.firstName : "" %>',
-      ln: '<%= user ? user.lastName : "" %>',
-      ph: '<%= user ? user.numero : "" %>'
+    
+      em: em_hashed,
+      fn: fn_hashed,
+      ln: ln_hashed,
+      ph: ph_hashed
+  
     });
 
     // Wait 300ms and submit the form after event is fired
