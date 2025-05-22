@@ -1,6 +1,14 @@
 <%- include ("../partials/header") %>
 
-
+<!-- Meta Pixel Code -->
+<% if (user) { %>
+    <script>
+      console.log("User Data:", {
+        email: "<%= user.email %>",
+        phone: "<%= user.numero %>"
+      });
+    </script>
+  <% } %>
 
         <!-- Main Container -->
   <div class="container mt-5 pt-3">
@@ -253,8 +261,6 @@ Eau à base d'eau ou de solvant
       value: price,
       currency: 'DZD',
     em: '<%= user ? user.email : "" %>',
-    fn: '<%= user ? user.firstName : "" %>',
-    ln: '<%= user ? user.lastName : "" %>',
     ph: '<%= user ? user.numero : "" %>'
     });
   }
