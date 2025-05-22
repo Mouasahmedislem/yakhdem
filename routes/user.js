@@ -31,9 +31,12 @@ router.get('/profile', middleware.isLoggedIn, function(req, res, next) {
 });
 
 router.get('/logout', middleware.isLoggedIn, function(req, res, next) {
-  req.logout();
-  res.redirect('/');
+  req.logout(function(err) {
+    if (err) { return next(err); }
+    res.redirect('/');
+  });
 });
+
 
 router.use('/', middleware.isNotLoggedIn, function(req, res, next) {
   next();
