@@ -919,7 +919,7 @@ router.get("/add-to-cart-beigeb/:id", function(req, res){
         cart.add(beigeb, beigeb.id);
         req.session.cart = cart;
         console.log(req.session.cart);
-        res.redirect("/onecoat/beig02");
+        res.redirect("/shop");
     });
 });
 router.get("/onecoat/beige03", function(req, res){
