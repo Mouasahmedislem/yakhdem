@@ -57,7 +57,7 @@ router.post('/signup', passport.authenticate('local-signup', {
     req.session.oldUrl = null;
     res.redirect(oldUrl);
   } else {
-    res.redirect('/user/profile');
+    res.redirect('/onecoat/beig02');
   }
 });
 
@@ -76,7 +76,7 @@ router.post('/signin', passport.authenticate('local-signin', {
     req.session.oldUrl = null;
     res.redirect(oldUrl);
   } else {
-    res.redirect('/onecoat/beig02');
+    res.redirect('/user/profile');
   }
 });
 
