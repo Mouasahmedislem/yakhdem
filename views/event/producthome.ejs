@@ -263,12 +263,22 @@ footer {
       <ul class="navbar-nav nav-flex-icons ml-auto ">
 
         <!-- PROFILE -->
-        <li class="nav-item mx-2">
+        <li class="nav-item dropdown">
         
-            <a class="nav-link" href="/track-login" title="My Account">
+             <a class="nav-link dropdown" id="menu1" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
               <i class="fas fa-user"></i>
             </a>
-          
+          <div class="dropdown-menu dropdown-menu-right bootstrap-menu  white scrollbar-default" aria-labelledby="menu1">
+                        <% if (login){ %>
+                          <a class="dropdown-item" href="/user/profile">profile</a>
+                           <a class="dropdown-item" href="/user/logout">Logout</a>
+                           <% } else{ %>
+                           <a class="dropdown-item" href="/user/signup">Register</a>
+                           <a class="dropdown-item" href="/user/signin">Sing up</a>
+                           <a class="dropdown-item" href="/track-login>Track Order</a>
+                           
+                           <% } %>
+                 </div> 
            
           
         </li>
