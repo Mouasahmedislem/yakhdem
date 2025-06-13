@@ -43,7 +43,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 <span class="d-block h5 mb-0 mt-1 text-body"><%= tool.price %>DA</span>
 <a href="#" 
    class="btn btn-pink btn-rounded"
-   onclick="handleAddToCart(event, '<%= tool.title %>', <%= tool.price %>, '<%= tool._id %>', '/add-to-cart-tool/<%= tool._id %>')">
+   onclick="trackAddToCart( '<%= tool.title %>', <%= tool.price %>, '<%= tool._id %>)">
    <i class="fas fa-cart-plus mr-2" aria-hidden="true"></i>buy</a>
 
 
@@ -65,22 +65,21 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 </div>
 
 <script>
-  function handleAddToCart(event, title, price, id, redirectUrl) {
-    event.preventDefault(); // Stop the link from navigating
+  function trackAddToCart( title, price, id) {
 
     fbq('track', 'AddToCart', {
       content_name: title,
       content_ids: [id],
       content_type: 'product',
       value: price,
-      currency: 'DZD'
+      currency: 'DZD',
+    em: '<%= user ? user.email : "" %>',
+    fn: '<%= user ? user.firstName : "" %>',
+    ln: '<%= user ? user.lastName : "" %>',
+    ph: '<%= user ? user.numero : "" %>'
     });
 
-    // Delay navigation slightly to let Meta Pixel send event
-    setTimeout(function () {
-      window.location.href = redirectUrl;
-    }, 300); // 300ms should be enough
-  }
+    }
 </script>
 
 

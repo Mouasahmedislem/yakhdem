@@ -31,9 +31,12 @@ router.get('/profile', middleware.isLoggedIn, function(req, res, next) {
 });
 
 router.get('/logout', middleware.isLoggedIn, function(req, res, next) {
-  req.logout();
-  res.redirect('/');
+  req.logout(function(err) {
+    if (err) { return next(err); }
+    res.redirect('/user/signup');
+  });
 });
+
 
 router.use('/', middleware.isNotLoggedIn, function(req, res, next) {
   next();
@@ -54,7 +57,7 @@ router.post('/signup', passport.authenticate('local-signup', {
     req.session.oldUrl = null;
     res.redirect(oldUrl);
   } else {
-    res.redirect('/user/profile');
+    res.redirect('/producthome/6829d6636e8e33e1018e8743');
   }
 });
 

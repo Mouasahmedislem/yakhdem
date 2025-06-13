@@ -2,23 +2,37 @@
 <html lang="en">
 
 <head>
-<!-- Meta Pixel Code -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.1/crypto-js.min.js"></script>
+
+
 <script>
-!function(f,b,e,v,n,t,s)
-{if(f.fbq)return;n=f.fbq=function(){n.callMethod?
-n.callMethod.apply(n,arguments):n.queue.push(arguments)};
-if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
-n.queue=[];t=b.createElement(e);t.async=!0;
-t.src=v;s=b.getElementsByTagName(e)[0];
-s.parentNode.insertBefore(t,s)}(window, document,'script',
-'https://connect.facebook.net/en_US/fbevents.js');
-fbq('init', '549728007869525');
-
-
+  !function(f,b,e,v,n,t,s){
+    if(f.fbq)return;n=f.fbq=function(){n.callMethod ?
+    n.callMethod.apply(n,arguments) : n.queue.push(arguments)};
+    if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
+    n.queue=[];t=b.createElement(e);t.async=!0;
+    t.src=v;s=b.getElementsByTagName(e)[0];
+    s.parentNode.insertBefore(t,s)
+  }(window, document, 'script', 'https://connect.facebook.net/en_US/fbevents.js');
+  
+ fbq('init', '549728007869525', {
+    em: '<%= user ? user.email : "" %>',
+    fn: '<%= user ? user.firstName : "" %>',
+    ln: '<%= user ? user.lastName : "" %>',
+    ph: '<%= user ? user.numero : "" %>'
+  });
+fbq('track', 'PageView');
 </script>
 <noscript><img height="1" width="1" style="display:none"
 src="https://www.facebook.com/tr?id=549728007869525&ev=PageView&noscript=1"
 /></noscript>
+
+
+
+<!-- Meta Pixel Code -->
+
+<!-- End Meta Pixel Code -->
+
 <!-- End Meta Pixel Code -->
 
 <!-- Google Tag Manager -->
@@ -61,15 +75,21 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
   <link href="/css/zoomm.css" rel="stylesheet">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
 
-
+<!-- Bootstrap core CSS -->
+  <link href="../../css/bootstrap.min.css" rel="stylesheet">
+  <!-- Material Design Bootstrap -->
+  <link href="../../css/mdb.min.css" rel="stylesheet">
 
  
 
 
   <style>
-  .body{
-    font-family: 'Roboto', sans-serif;
+.logo {
+  font-size: 2.5rem;
+  font-weight: bold;
+  letter-spacing: 2px;
 }
+  
     .zoom {
  
   transition: transform .2s; /* Animation */
@@ -100,22 +120,22 @@ right: 12px;
     padding-left: 0;
     list-style: none;
 }
-html,
+    html,
     body,
     header,
     
-    }
+    
     .view {
-      height: auto;
+      height: 100%;
     }
-    @media (max-width: 740px) {
+    @media (min-width: 851px) and (max-width: 1440px) {
       html,
       body,
       header,
      
-      }
+     
       .view {
-        height: auto;
+        height: 850px;
       }
     }
     @media (min-width: 800px) and (max-width: 850px) {
@@ -123,13 +143,28 @@ html,
       body,
       header,
       
-      }
+      
       .view {
-        height: auto;
+        height: 1000px;
       }
 
     }
- 
+@media (min-width: 451px) and (max-width: 740px) {
+      html,
+      body,
+      header,
+      .view {
+        height: 1200px;
+      }
+    }
+    @media (max-width: 450px) {
+      html,
+      body,
+      header,
+      .view {
+        height: 1400px;
+      }
+  }
     .categories, .deals {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
@@ -148,42 +183,10 @@ html,
       margin: 10px 0;
     }
 
-   .gift-banner {
-  background: #fff4e6;
-  border: 1px solid #ffcc99;
-  color: #663300;
-  font-size: 1.1rem;
-  padding: 12px 20px;
-  border-radius: 8px;
-  margin: 20px auto;
-  max-width: 800px;
-}
-.gift-banner .btn-warning {
-  background: #ff9933;
-  border-color: #ff9933;
-}
-.gift-popup {
-  display: none;
-  position: fixed;
-  bottom: 40px;
-  right: 40px;
-  background-color: #fff8f1;
-  border: 1px solid #ffb87a;
-  box-shadow: 0 2px 12px rgba(0,0,0,0.2);
-  padding: 20px;
-  z-index: 9999;
-  width: 260px;
-  border-radius: 10px;
-}
-.popup-content .close-btn {
-  float: right;
-  font-size: 20px;
-  cursor: pointer;
-  color: #663300;
-}
+  
 </style>
 
-
+<script id='pixel-script-poptin' src='https://cdn.popt.in/pixel.js?id=1f8ed2afe3695' async='true'></script>
 
 </head>
 
@@ -193,10 +196,9 @@ html,
   <header>
 
     <!-- Navbar -->
-    
     <nav class="navbar navbar-expand-lg navbar-light fixed-top scrolling-navbar white">
       <div class="container">
-        <a class="navbar-brand font-weight-bold title"href="/">Paintello</a>
+        <a class="navbar-brand font-weight-bold title" href="/">Paintello</a>
         <!--Navigation icons-->
         <ul class="nav navbar-nav nav-flex-icons ml-auto">
           <li class="nav-item dropdown">
@@ -204,10 +206,13 @@ html,
                         <i class="fas fa-user  black-text"></i>
                       </a>
                       <div class="dropdown-menu dropdown-menu-right bootstrap-menu  white scrollbar-default" aria-labelledby="menu1">
-                       
-                          <a class="dropdown-item" href="/track-login">Track Your Order</a>
-                           
-                           
+                        <% if (login){ %>
+                          <a class="dropdown-item" href="/user/profile">profile</a>
+                           <a class="dropdown-item" href="/user/logout">Logout</a>
+                           <% } else{ %>
+                           <a class="dropdown-item" href="/user/signup">Register</a>
+                           <a class="dropdown-item" href="/user/signin">Sing up</a>
+                           <% } %>
                  </div> 
           </li>
           <li class="nav-item ">
@@ -231,7 +236,7 @@ html,
         <div class="collapse navbar-collapse" id="navbarTogglerDemo02">
           <ul class="list-unstyled navbar-nav mr-auto">
          
-            </li>
+            
             <li class="nav-item ml-4">
               <a class="nav-link title" href="/sale/wow" data-offset="90">Nos Services</a>
             </li>
@@ -261,39 +266,32 @@ html,
     </nav>
  
 <section class="view intro-2" style="background-image: url(https://live.staticflickr.com/65535/54424056395_fe456898d8_k.jpg); background-repeat: no-repeat; background-size: cover; background-position: center center;">
-      <div class="mask rgba-gradient-1">
+      
+
         <div class="container h-100 d-flex justify-content-center align-items-center">
           <div class="row h-100 d-flex justify-content-center align-items-center">
 
-            <div class="col-md-10 col-lg-6 text-center text-md-left mt-5 pt-4 pt-md-0 mt-lg-0 mb-5 mb-md-0">
-              <div class="white-text">
-                <h1 class="h1-responsive font-weight-bold mt-sm-5 mb-4 wow fadeInLeft" data-wow-delay="0.3s">Clean Modern Layout For Your Web</h1>
+            <div class="col-md-10 col-lg-6 text-center text-md-center mt-5 pt-4 pt-md-0 mt-lg-0 mb-5 mb-md-0">
+             <div class="white-text">
+                <h1 class="h1-responsive font-weight-bold mt-sm-5 mb-4 wow fadeInLeft" data-wow-delay="0.3s">Transform Your Home with Color & Comfort</h1>
                 <hr class="hr-light wow fadeInLeft" data-wow-delay="0.3s">
-                <h6 class="wow fadeInLeft" data-wow-delay="0.3s">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Rem repellendus quasi fuga nesciunt dolorum nulla magnam veniam sapiente, fugiat! Commodi sequi non animi ea dolor molestiae iste.</h6>
-                <a class="btn pink-gradient btn-rounded btn-lg font-weight-bold wow fadeInLeft" data-wow-delay="0.4s">Get started</a>
-                <a class="btn btn-white btn-rounded btn-lg orange-text font-weight-bold ml-lg-0 wow fadeInLeft" data-wow-delay="0.4s"><i class="fas fa-play-circle orange-text mr-2" aria-hidden="true"></i> Watch demo</a>
+ <a class="btn btn-white btn-rounded btn-lg orange-text font-weight-bold ml-lg-0 wow fadeInLeft" data-wow-delay="0.4s" href="/"><img src="/favicon/android-chrome-192x192.png" alt="Paintello Logo" style="max-height: 80px;"></a>
+ <a class="btn btn-white btn-rounded btn-lg orange-text font-weight-bold ml-lg-0 wow fadeInLeft" data-wow-delay="0.4s" href="/paintello"><img src="/img/logo.png" alt="Paintello Logo" style="max-height: 80px;"></a>
               </div>
+
             </div>
 
-            <div class="col-md-10 col-lg-6 mt-5 mt-lg-0 wow fadeInRight" data-wow-delay="0.3s">
-              <img src="https://live.staticflickr.com/65535/54424056395_fe456898d8_k.jpg" alt="Sample Image" class="img-fluid">
-            </div>
+            
 
           </div>
         </div>
-      </div>
+      
     </section>
     
 <div class="mb-4"> 
  <div class="mb-4"> 
      
-      <div class="container bm-container-md">	
-      <a class="d-block h-100 overflow-hidden bm-img-link" href="/wow" target="_self">
-        <picture>
-            <img alt="New Wallpaper now in store at B&amp;M." class="w-100 bm-lazyload ls-is-cached lazyloaded"  src="https://live.staticflickr.com/65535/54422847107_a168fe0938_k.jpg">
-          </picture>
-      </a>
-      </div>	
       
-      </div>
+      
+      
   </header>

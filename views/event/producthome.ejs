@@ -1,6 +1,12 @@
+ 
 <!DOCTYPE html>
 <html lang="en">
 <head>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.1/crypto-js.min.js"></script>
+<!-- Meta Pixel Code -->
+ <%- include('partials/facebook-pixel') %>
+
+
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Paintello Home</title>
@@ -20,8 +26,10 @@
   <!-- Font Awesome -->
   <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.11.2/css/all.css">
   <!-- Bootstrap core CSS -->
-  <link href="/css/bootstrap.min.css" rel="stylesheet">
-  <link href="/css/bmo.min.css" rel="stylesheet">
+   <!-- Bootstrap core CSS -->
+  <link href="../../css/bootstrap.min.css" rel="stylesheet">
+  <!-- Material Design Bootstrap -->
+  <link href="../../css/mdb.min.css" rel="stylesheet">
 <!-- Add the slick-theme.css if you want default styling -->
 <link rel="stylesheet" type="text/css" href="//cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.css"/>
 <!-- Add the slick-theme.css if you want default styling -->
@@ -110,30 +118,13 @@ footer {
   margin-top: 60px;
   font-size: 0.9rem;
 }
-.navbar {
-  background-color: #ffffff;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 16px 40px;
-  font-family: 'Segoe UI', sans-serif;
-  border-bottom: 1px solid #e6e6e6;
-  position: sticky;
-  top: 0;
-  z-index: 1000;
-padding-top: 10px;
-  padding-bottom: 10px;
-}
+
 .logo-img {
   height: 60px;
 
 }
 
-.navbar-nav .nav-link {
-  color: #333;
-  font-size: 1.2rem;
-  position: relative;
-}
+
 
 .badge-danger {
   position: absolute;
@@ -147,33 +138,9 @@ padding-top: 10px;
   color: #222;
 }
 
-.nav-links {
-  list-style: none;
-  display: flex;
-  gap: 25px;
-  margin: 0;
-  padding: 0;
-}
 
-.nav-links li a {
-  text-decoration: none;
-  color: #333;
-  font-size: 1rem;
-  position: relative;
-}
 
-.nav-links li a::after {
-  content: '';
-  display: block;
-  width: 0;
-  height: 1px;
-  background: #333;
-  transition: width 0.3s;
-}
 
-.nav-links li a:hover::after {
-  width: 100%;
-}
 
 .cart-btn {
   padding: 8px 16px;
@@ -202,21 +169,11 @@ padding-top: 10px;
 .add-to-cart-button:hover {
   background-color: #e0e0e0;
 }
-.logo-link {
-  display: flex;
-  align-items: center;
-}
 
-.logo-img {
-  height: 80px; /* Adjust based on your navbar height */
-  max-height: 100px;
-  width: auto;
-  transition: opacity 0.3s ease;
-}
 
-.logo-img:hover {
-  opacity: 0.8;
-}
+
+
+
 .product-title {
   font-size: 2rem;
   margin-bottom: .5rem;
@@ -269,13 +226,14 @@ padding-top: 10px;
 </head>
 <body>
 
+
   <header>
-    <nav class="navbar navbar-expand-lg navbar-light bg-white fixed-top shadow-sm">
+    <nav class="navbar navbar-expand-lg navbar-light bg-white fixed-top scrolling-navbar">
   <div class="container">
 
     <!-- LOGO -->
     <a class="logo" href="/">
-      <img src="/img/logo.png" alt="Paintello Home Logo" style="height: 70px;">
+      <img src="/img/logo.png" alt="Paintello Home Logo" style="max-height: 120px;">
     </a>
 
     
@@ -285,12 +243,22 @@ padding-top: 10px;
       <ul class="navbar-nav nav-flex-icons ml-auto ">
 
         <!-- PROFILE -->
-        <li class="nav-item mx-2">
+        <li class="nav-item dropdown">
         
-            <a class="nav-link" href="/track-login" title="My Account">
+             <a class="nav-link dropdown" id="menu1" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
               <i class="fas fa-user"></i>
             </a>
-          
+          <div class="dropdown-menu dropdown-menu-right bootstrap-menu  white scrollbar-default" aria-labelledby="menu1">
+                        <% if (login){ %>
+                          <a class="dropdown-item" href="/user/profile">profile</a>
+                           <a class="dropdown-item" href="/user/logout">Logout</a>
+                           <% } else{ %>
+                           <a class="dropdown-item" href="/user/signup">Register</a>
+                           <a class="dropdown-item" href="/user/signin">Sing up</a>
+                           <a class="dropdown-item" href="/track-login">Track Order</a>
+                           
+                           <% } %>
+                 </div> 
            
           
         </li>
@@ -311,8 +279,8 @@ padding-top: 10px;
 </nav>
   </header>
 
-  <div class="banner" style="background-image: url('https://live.staticflickr.com/65535/54424056395_fe456898d8_k.jpg');">
-    <div class="banner-text">Elevate Your Home</div>
+  <div class="banner" style="background-image: url('https://live.staticflickr.com/65535/54530748939_dda2a74c86.jpg');">
+    <div class="banner-text">Transform Your Home with Color & Comfort</div>
   </div>
   <div class="container my-5">
   <div class="row">
@@ -344,13 +312,14 @@ padding-top: 10px;
     <div class="col-md-6">
       <h1 class="product-title"><%= producthome.title %></h1>
       <p class="product-price"><%= producthome.price.toFixed(2) %> DA</p>
+<form action="/add-to-cart-producthome/<%= producthome._id %>" method="GET" 
+      onsubmit="return handleAddToCart(event, '<%= producthome.title %>', <%= producthome.price %>, '<%= producthome._id %>')">
+  <button type="submit" class="btn btn-primary btn-lg mb-4">
+    <i class="fas fa-cart-plus mr-2"></i>Add to Cart
+  </button>
+</form>
 
-      <form action="/add-to-cart-producthome/<%= producthome._id %>" method="GET">
-        <button type="submit" class="btn btn-primary btn-lg mb-4">
-          <i class="fas fa-cart-plus mr-2"></i>Add to Cart
-        </button>
-      </form>
-
+ 
       <ul class="nav nav-tabs" id="infoTab" role="tablist">
         <li class="nav-item">
           <a class="nav-link active" id="desc-tab" data-toggle="tab" href="#desc" role="tab">Description</a>
@@ -380,6 +349,33 @@ padding-top: 10px;
       document.getElementById("accordionContent").classList.toggle("open");
     }
   </script>
+<script>
+
+
+function handleAddToCart(event, title, price, id) {
+    event.preventDefault(); // Stop the form from submitting immediately
+
+    fbq('track', 'AddToCart', {
+      content_name: title,
+      content_ids: [id],
+      content_type: 'product',
+      value: price,
+      currency: 'DZD',
+       em: '<%= user ? user.email : "" %>',
+       ph: '<%= user ? user.numero : "" %>'
+    });
+
+    // Wait 300ms and submit the form after event is fired
+    setTimeout(() => {
+      event.target.submit();
+    }, 300);
+
+    return false; // Prevent immediate form submission
+  }
+  
+
+  
+</script>
 
 
 <%- include ("../partials/footer") %>.
