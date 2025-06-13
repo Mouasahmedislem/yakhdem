@@ -2,11 +2,12 @@ const bizSdk = require('facebook-nodejs-business-sdk');
 const crypto = require('crypto');
 const ServerEvent = bizSdk.ServerEvent;
 const UserData = bizSdk.UserData;
+require('dotenv').config();
 
 class FacebookService  {
   constructor() {
-    this.accessToken = 'EAAJAPHZC8ZBlYBO41qd9CCxc2OJ4nzBMvwEu51I6ZA86AjVD1VZByrUk3H7EGIUQksQp0grg9EnWtyzU3EeGxGsvou2DOqm3OKsJ9aXHI7XigLZBubsKUSNXdCogaYEiajYztZBoE4ZANTqJ2IirZCYW3bFR4zC3fmjDPrnM0dzalb2XKFNM2HpBvjzXY3EeqhEPPgZDZD';
-    this.pixelId = '633564199312760';
+    this.accessToken = process.env.FB_ACCESS_TOKEN;
+    this.pixelId = process.env.FB_PIXEL_ID;
   }
 
   // Hash data according to Meta's requirements
