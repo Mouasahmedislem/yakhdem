@@ -21,6 +21,7 @@
     "express-parser": "*",
     "express-session": "*",
     "express-validator": "^5.3.1",
+    "facebook-nodejs-business-sdk": "^22.0.3",
     "http-errors": "*",
     "mongoose": "*",
     "morgan": "*",
