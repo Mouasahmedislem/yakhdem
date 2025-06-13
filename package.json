@@ -5,6 +5,7 @@
   "main": ".eslintrc.js",
   "dependencies": {
     "all": "*",
+    "axios": "^1.9.0",
     "bcrypt": "*",
     "bcrypt-nodejs": "*",
     "bcryptjs": "*",
