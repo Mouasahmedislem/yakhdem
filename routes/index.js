@@ -1,5 +1,6 @@
 var express = require('express')
 var router = express.Router()
+const facebookService = require('../services/facebookService');
 const nodemailer = require('nodemailer');
 require('dotenv').config();
 const twilio = require('twilio');
@@ -17,7 +18,17 @@ if (process.env.NODE_ENV !== 'production') {
     }
 
 
-
+// Helper function to get user data
+function getUserData(req) {
+  return {
+    email: req.user?.email,
+    phone: req.user?.phone,
+    ip: req.ip,
+    userAgent: req.headers['user-agent'],
+    fbp: req.cookies._fbp,
+    fbc: req.cookies._fbc
+  };
+}
 
 
 var furniteur = require('../models/furniteur');
@@ -2079,32 +2090,54 @@ router.get('/track-order', async (req, res) => {
   const orders = await Order.find({ numero: req.session.trackingUser }).sort({ createdAt: -1 });
   res.render('event/track-order', { orders });
 });
-
- router.get('/producthome/:id', async (req, res) => {
+  
+router.get('/producthome/:id', async (req, res) => {
   try {
     const producthome = await Producthome.findById(req.params.id);
-    res.render('event/producthome', { producthome,  // or products list
-  user: req.user || null });
+    
+    // Send ViewContent event for product page
+    await facebookService.sendEvent('ViewContent', {
+        value: producthome.price,
+        content_ids: [producthome.id],
+        content_name: producthome.name,
+        content_type: 'product',
+        eventSourceUrl: req.originalUrl
+    }, getUserData(req));
+
+    res.render('event/producthome', { 
+      producthome,
+      user: req.user || null 
+    });
   } catch (err) {
     console.error(err);
     res.redirect('/');
   }
-});      
-
-router.get('/add-to-cart-producthome/:id', async (req, res) => {
-  const producthomeId = req.params.id;
-  const cart = new Cart(req.session.cart ? req.session.cart : {});
-  
-  try {
-    const producthome = await Producthome.findById(producthomeId);
-    cart.add(producthome, producthome.id);
-    req.session.cart = cart;
-    res.redirect('/shop');
-  } catch (err) {
-    console.log(err);
-    res.redirect('/shop');
-  }
 });
+router.get("/add-to-cart-producthome/:id", async function(req, res){
+    try {
+        var producthomeId = req.params.id;
+        var cart = new Cart(req.session.cart ? req.session.cart : {});
+        
+        const producthome = await Producthome.findById(producthomeId);
+        cart.add(producthome, producthome.id);
+        req.session.cart = cart;
+
+        // Send Facebook AddToCart event
+        await facebookService.sendEvent('AddToCart', {
+            value: producthome.price,
+            content_ids: [producthome.id],
+            content_name: producthome.name,
+            content_type: 'product',
+            eventSourceUrl: req.headers.referer || req.originalUrl
+        }, getUserData(req));
+
+        res.redirect("/shop");
+    } catch(err) {
+        console.error(err);
+        res.redirect("event/producthome");
+    }
+});
+
 
   router.get('/paintello', async (req, res) => {
   try {
