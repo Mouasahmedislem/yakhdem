@@ -2096,8 +2096,8 @@ router.get('/producthome/:id', async (req, res) => {
   try {
     const producthome = await Producthome.findById(req.params.id);
     
-    // Send ViewContent event for product page
-    await sendMetaEvent.sendEvent('ViewContent', {
+   // Send Facebook AddToCart event
+      await facebookService.sendEvent('ViewContent', {
         value: producthome.price,
         content_ids: [producthome.id],
         content_name: producthome.name,
