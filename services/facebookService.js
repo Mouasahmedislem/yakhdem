@@ -6,7 +6,7 @@ const EventRequest = bizSdk.EventRequest;
 
 require('dotenv').config();
 
-class CAPIService {
+class FacebookService {
   constructor() {
     this.accessToken = process.env.FB_ACCESS_TOKEN; // Renamed for clarity
     this.pixelId = process.env.FB_PIXEL_ID || '633564199312760';
