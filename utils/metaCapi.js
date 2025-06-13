@@ -5,10 +5,17 @@ const crypto = require('crypto');
 const accessToken = 'EAAJAPHZC8ZBlYBO41qd9CCxc2OJ4nzBMvwEu51I6ZA86AjVD1VZByrUk3H7EGIUQksQp0grg9EnWtyzU3EeGxGsvou2DOqm3OKsJ9aXHI7XigLZBubsKUSNXdCogaYEiajYztZBoE4ZANTqJ2IirZCYW3bFR4zC3fmjDPrnM0dzalb2XKFNM2HpBvjzXY3EeqhEPPgZDZD';
 const pixelId = '633564199312760';
 
+// Hashing function
 function hash(data) {
   return crypto.createHash('sha256').update(data, 'utf8').digest('hex');
 }
 
+// Normalize phone number (Algerian)
+function normalizePhone(phone) {
+ phone.replace(/[^0-9]/g, '').replace(/^0+/, '');
+}
+
+// Main function
 async function sendMetaEvent({ eventName, userData, customData }) {
   try {
     const payload = {
@@ -17,8 +24,10 @@ async function sendMetaEvent({ eventName, userData, customData }) {
       action_source: 'website',
       event_source_url: userData.eventSourceUrl || '',
       user_data: {
-        em: userData.email ? hash(userData.email) : undefined,
-        ph: userData.phone ? hash(userData.phone) : undefined,
+        em: userData.email ? hash(userData.email.trim().toLowerCase()) : undefined,
+        ph: userData.phone ? hash(normalizePhone(userData.phone)) : undefined,
+        fn: userData.firstName ? hash(userData.firstName.trim().toLowerCase()) : undefined,
+        ln: userData.lastName ? hash(userData.lastName.trim().toLowerCase()) : undefined,
         client_user_agent: userData.userAgent,
         client_ip_address: userData.ip
       },
