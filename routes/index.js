@@ -1,5 +1,6 @@
 var express = require('express')
 var router = express.Router()
+const sendMetaEvent = require('../utils/metaCapi');
 const facebookService = require('../services/facebookService');
 const nodemailer = require('nodemailer');
 require('dotenv').config();
