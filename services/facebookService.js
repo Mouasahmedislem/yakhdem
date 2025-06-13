@@ -3,7 +3,7 @@ const crypto = require('crypto');
 const ServerEvent = bizSdk.ServerEvent;
 const UserData = bizSdk.UserData;
 
-class FacebookCAPI {
+class FacebookService  {
   constructor() {
     this.accessToken = 'EAAJAPHZC8ZBlYBO41qd9CCxc2OJ4nzBMvwEu51I6ZA86AjVD1VZByrUk3H7EGIUQksQp0grg9EnWtyzU3EeGxGsvou2DOqm3OKsJ9aXHI7XigLZBubsKUSNXdCogaYEiajYztZBoE4ZANTqJ2IirZCYW3bFR4zC3fmjDPrnM0dzalb2XKFNM2HpBvjzXY3EeqhEPPgZDZD';
     this.pixelId = '633564199312760';
