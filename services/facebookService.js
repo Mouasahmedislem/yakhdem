@@ -1,52 +1,56 @@
 const bizSdk = require('facebook-nodejs-business-sdk');
+const crypto = require('crypto');
 const ServerEvent = bizSdk.ServerEvent;
-const EventRequest = bizSdk.EventRequest;
 const UserData = bizSdk.UserData;
-const CustomData = bizSdk.CustomData;
 
-require('dotenv').config();
-
-class FacebookService {
+class FacebookService  {
   constructor() {
-    this.accessToken = process.env.FB_ACCESS_TOKEN;
-    this.pixelId = process.env.FB_PIXEL_ID;
+    this.accessToken = 'EAAJAPHZC8ZBlYBO41qd9CCxc2OJ4nzBMvwEu51I6ZA86AjVD1VZByrUk3H7EGIUQksQp0grg9EnWtyzU3EeGxGsvou2DOqm3OKsJ9aXHI7XigLZBubsKUSNXdCogaYEiajYztZBoE4ZANTqJ2IirZCYW3bFR4zC3fmjDPrnM0dzalb2XKFNM2HpBvjzXY3EeqhEPPgZDZD';
+    this.pixelId = '633564199312760';
   }
 
-  async sendEvent(eventName, eventData, userData) {
+  // Hash data according to Meta's requirements
+  _hashData(value) {
+    if (!value) return null;
+    return crypto.createHash('sha256')
+      .update(value.toString().trim().toLowerCase())
+      .digest('hex');
+  }
+
+  async sendEvent(eventName, eventData, req) {
     try {
-      const userDataObj = new UserData()
-        .setClientIpAddress(userData.ip)
-        .setClientUserAgent(userData.userAgent)
-        .setFbp(userData.fbp)
-        .setFbc(userData.fbc);
+      const userData = new UserData()
+        .setClientIpAddress(req.ip)
+        .setClientUserAgent(req.headers['user-agent'])
+        .setFbp(req.cookies._fbp)
+        .setFbc(req.cookies._fbc);
 
-      if (userData.email) userDataObj.setEmail(userData.email);
-      if (userData.phone) userDataObj.setPhone(userData.phone);
+      // Add hashed user data
+      if (req.user?.email) {
+        userData.setEmail(this._hashData(req.user.email));
+      }
+      if (req.user?.phone) {
+        userData.setPhone(this._hashData(req.user.phone.replace(/^0+/, '')));
+      }
 
-      const customData = new CustomData()
-        .setCurrency('DZD')
-        .setValue(eventData.value || 0);
-
-      if (eventData.content_ids) customData.setContentIds(eventData.content_ids);
-      if (eventData.content_name) customData.setContentName(eventData.content_name);
-      if (eventData.content_type) customData.setContentType(eventData.content_type);
-
-      const serverEvent = new ServerEvent()
+      const event = new ServerEvent()
         .setEventName(eventName)
         .setEventTime(Math.floor(Date.now() / 1000))
-        .setUserData(userDataObj)
-        .setCustomData(customData)
-        .setEventSourceUrl(eventData.eventSourceUrl || 'https://yourdomain.com')
-        .setActionSource('website');
+        .setUserData(userData)
+        .setCustomData({
+          currency: eventData.currency || 'DZD',
+          value: eventData.value,
+          content_ids: eventData.contentIds,
+          content_name: eventData.contentName
+        })
+        .setEventSourceUrl(req.headers.referer || req.originalUrl);
 
-      const eventsData = [serverEvent];
-      const eventRequest = new EventRequest(this.accessToken, this.pixelId)
-        .setEvents(eventsData);
+      await new bizSdk.EventRequest(this.accessToken, this.pixelId)
+        .setEvents([event])
+        .execute();
 
-      return await eventRequest.execute();
     } catch (error) {
-      console.error('Facebook CAPI Error:', error);
-      throw error;
+      console.error(`CAPI Error (${eventName}):`, error.message);
     }
   }
 }

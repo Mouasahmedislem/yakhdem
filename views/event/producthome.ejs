@@ -4,7 +4,7 @@
 <head>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.1/crypto-js.min.js"></script>
 <!-- Meta Pixel Code -->
- <%- include('partials/facebook-pixel') %>
+ <%- include('../partials/facebook-pixel') %>.
 
 
   <meta charset="UTF-8">
@@ -352,26 +352,7 @@ footer {
 <script>
 
 
-function handleAddToCart(event, title, price, id) {
-    event.preventDefault(); // Stop the form from submitting immediately
 
-    fbq('track', 'AddToCart', {
-      content_name: title,
-      content_ids: [id],
-      content_type: 'product',
-      value: price,
-      currency: 'DZD',
-       em: '<%= user ? user.email : "" %>',
-       ph: '<%= user ? user.numero : "" %>'
-    });
-
-    // Wait 300ms and submit the form after event is fired
-    setTimeout(() => {
-      event.target.submit();
-    }, 300);
-
-    return false; // Prevent immediate form submission
-  }
   
 
   
