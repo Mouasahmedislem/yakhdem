@@ -2092,12 +2092,12 @@ router.get('/track-order', async (req, res) => {
   const orders = await Order.find({ numero: req.session.trackingUser }).sort({ createdAt: -1 });
   res.render('event/track-order', { orders });
 });
-const userData = getMetaUserData(req.session.user, req);
 
 router.get("/producthome/:id", async (req, res) => {
   const producthome = await Producthome.findById(req.params.id);
   const eventId = `view_${producthome.id}_${Date.now()}`;
- const userData = getMetaUserData(req.session.user, req);
+   const userData = getMetaUserData(req.session.user, req);
+
 await sendMetaCAPIEvent({
   eventName: "ViewContent",
   eventId,
