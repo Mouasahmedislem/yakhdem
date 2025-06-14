@@ -5,7 +5,10 @@ var express = require('express');
 var session = require('express-session');
 var passport = require('passport');
 var flash = require('connect-flash');
+var LocalStrategy = require("passport-local");
 
+
+var validator = require('express-validator');
 
 var MongoDBStore = require('connect-mongodb-session')(session);
 
