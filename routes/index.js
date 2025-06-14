@@ -1,7 +1,7 @@
 var express = require('express')
 var router = express.Router()
-const sendMetaCAPIEvent = require('../utils/metaCapi');
-const facebookService = require('../services/facebookService');
+const getMetaUserData = require('../utils/metaUserData');
+const sendMetaCAPIEvent = require('../services/metaCapi');
 const nodemailer = require('nodemailer');
 require('dotenv').config();
 const twilio = require('twilio');
@@ -2093,37 +2093,30 @@ router.get('/track-order', async (req, res) => {
   res.render('event/track-order', { orders });
 });
 
-  
 router.get("/producthome/:id", async (req, res) => {
   const producthome = await Producthome.findById(req.params.id);
   const eventId = `view_${producthome.id}_${Date.now()}`;
+  
+  const userData = getMetaUserData(req.session.user, req); // ✅ Step 1
 
-  const ip = req.headers["x-forwarded-for"] || req.socket.remoteAddress;
-  const userAgent = req.get("User-Agent");
-
-  await sendMetaCAPIEvent({
+  await sendMetaCAPIEvent({ // ✅ Step 2
     eventName: "ViewContent",
     eventId,
-    userData: {
-      email: req.session.user?.email,
-      numero: req.session.user?.numero,
-      firstName: req.session.user?.firstName,
-      lastName: req.session.user?.lastName,
-      ip,
-      userAgent,
-    },
+    userData,
     customData: {
       content_name: producthome.title,
       content_ids: [producthome.id],
       content_type: "product",
       value: producthome.price,
-      currency: "DZD",
+      currency: "DZD"
     },
-     testEventCode: "TEST49466"
+    testEventCode: "TEST49466"
   });
 
   res.render("event/producthome", { producthome, eventId });
 });
+  
+
 
 
 router.get("/add-to-cart-producthome/:id", async function(req, res){
