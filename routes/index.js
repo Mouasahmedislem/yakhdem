@@ -14,21 +14,6 @@ const Powers = require('../models/powers');
 const middleware = require('../middleware');
 const stripe = require("stripe")(process.env.STRIPE_API_KEY);
 
-if (process.env.NODE_ENV !== 'production') {More actions
-    /* setting up enviroment variables */
-    require('dotenv').config({path: '.env'});
-    }
-
-
-// Helper function to get user data
-mongoose.connect('mongodb+srv://Islem:cmygNChSy2L9Q4xt@paintello.cu30n.mongodb.net/paintello?retryWrites=true&w=majority' , (err)=> {
-    if (err) {
-        console.log(err)
-    } else{
-        console.log('connected to db succesfuly...')
-    }
-
-    })
 
 
 
