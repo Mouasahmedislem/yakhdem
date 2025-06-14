@@ -2092,26 +2092,27 @@ router.get('/track-order', async (req, res) => {
   const orders = await Order.find({ numero: req.session.trackingUser }).sort({ createdAt: -1 });
   res.render('event/track-order', { orders });
 });
+const userData = getMetaUserData(req.session.user, req);
 
 router.get("/producthome/:id", async (req, res) => {
   const producthome = await Producthome.findById(req.params.id);
   const eventId = `view_${producthome.id}_${Date.now()}`;
   
   const userData = getMetaUserData(req.session.user, req); // ✅ Step 1
-
-  await sendMetaCAPIEvent({ // ✅ Step 2
-    eventName: "ViewContent",
-    eventId,
-    userData,
-    customData: {
-      content_name: producthome.title,
-      content_ids: [producthome.id],
-      content_type: "product",
-      value: producthome.price,
-      currency: "DZD"
-    },
-    testEventCode: "TEST49466"
-  });
+await sendMetaCAPIEvent({
+  eventName: "ViewContent",
+  eventId,
+  userData,
+  customData: {
+    content_name: producthome.title,
+    content_ids: [producthome.id],
+    content_type: "product",
+    value: producthome.price,
+    currency: "DZD"
+  },
+  testEventCode: "TEST49466"
+});
+ 
 
   res.render("event/producthome", { producthome, eventId });
 });
