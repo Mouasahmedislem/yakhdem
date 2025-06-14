@@ -2086,7 +2086,7 @@ router.get("/producthome/:id", async (req, res) => {
  const user = req.user || req.session.user || {};
 
 
- onsole.log("✅ req.user", req.user);
+ console.log("✅ req.user", req.user);
   // ✅ use real session user data (unhashed)
   const userData = {
     email: req.session.user?.email,
