@@ -1,17 +1,14 @@
-// utils/metaUserData.js
-
 const crypto = require("crypto");
 
-// Hash using SHA256
-function hash(data) {
-  return data
-    ? crypto.createHash("sha256").update(data.trim().toLowerCase()).digest("hex")
-    : undefined;
+// SHA256 hashing with safety
+function hash(value) {
+  if (!value || typeof value !== "string" || !value.trim()) return undefined;
+  return crypto.createHash("sha256").update(value.trim().toLowerCase()).digest("hex");
 }
 
-// Remove all non-digit characters from phone number
-function cleanPhone(phone) {
-  return phone ? phone.replace(/\D/g, "") : undefined;
+// Clean phone number: remove all non-digit characters
+function cleanPhone(numero) {
+  return numero ? numero.replace(/\D/g, "") : undefined;
 }
 
 // Get a valid IPv4 address from request
@@ -20,24 +17,32 @@ function getClientIp(req) {
   if (!rawIp) return null;
 
   const ip = rawIp.includes(":") ? rawIp.split(":").pop() : rawIp;
-
-  // Check if it's a valid IPv4 (like 105.102.43.15)
   return /^\d{1,3}(\.\d{1,3}){3}$/.test(ip) ? ip : null;
 }
 
-// Build Meta user_data object
-function getMetaUserData(userSession, req) {
+// Final export: user_data object (safely constructed)
+function getMetaUserData(userSession = {}, req) {
+  const user_data = {};
+
+  // Hashed user fields only if present
+  const email = userSession.email;
+  const numero = userSession.numero;
+  const fn = userSession.firstName;
+  const ln = userSession.lastName;
+
   const ip = getClientIp(req);
   const userAgent = req.get("User-Agent");
 
-  return {
-    em: hash(userSession?.email),
-    ph: hash(cleanPhone(userSession?.numero)),
-    fn: hash(userSession?.firstName),
-    ln: hash(userSession?.lastName),
-    client_ip_address: ip,
-    client_user_agent: userAgent,
-  };
+  if (email) user_data.em = hash(email);
+  if (numero) user_data.ph = hash(cleanPhone(numero));
+  if (fn) user_data.fn = hash(fn);
+  if (ln) user_data.ln = hash(ln);
+  if (ip) user_data.client_ip_address = ip;
+  if (userAgent) user_data.client_user_agent = userAgent;
+
+  console.log("✅ Final Meta user_data:", user_data);
+
+  return user_data;
 }
 
 module.exports = getMetaUserData;
