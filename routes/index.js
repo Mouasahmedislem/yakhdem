@@ -1,6 +1,6 @@
 var express = require('express')
 var router = express.Router()
-const sendMetaEvent = require('../utils/metaCapi');
+const sendMetaCAPIEvent = require('../utils/metaCapi');
 const facebookService = require('../services/facebookService');
 const nodemailer = require('nodemailer');
 require('dotenv').config();
@@ -24,7 +24,7 @@ if (process.env.NODE_ENV !== 'production') {
 function getUserData(req) {
   return {
     email: req.user?.email,
-    phone: req.user?.phone,
+    numero: req.user?.numero,
     ip: req.ip,
     userAgent: req.headers['user-agent'],
     fbp: req.cookies._fbp,
@@ -2094,27 +2094,38 @@ router.get('/track-order', async (req, res) => {
 });
 
   
-router.get('/producthome/:id', async (req, res) => {
-  try {
-    const producthome = await Producthome.findById(req.params.id);
-    
-   // Send Facebook AddToCart event
-      await facebookService.sendEvent('ViewContent', {
-        value: producthome.price,
-        content_ids: [producthome.id.toString()],
-        content_name: producthome.title,
-        content_type: 'product',
-      } , req);
+router.get("/producthome/:id", async (req, res) => {
+  const producthome = await Producthome.findById(req.params.id);
+  const eventId = `view_${producthome.id}_${Date.now()}`;
 
-    res.render('event/producthome', { 
-      producthome,
-      user: req.user || null 
-    });
-  } catch (err) {
-    console.error(err);
-    res.redirect('/');
-  }
+  const ip = req.headers["x-forwarded-for"] || req.socket.remoteAddress;
+  const userAgent = req.get("User-Agent");
+
+  await sendMetaCAPIEvent({
+    eventName: "ViewContent",
+    eventId,
+    userData: {
+      email: req.session.user?.email,
+      numero: req.session.user?.numero,
+      firstName: req.session.user?.firstName,
+      lastName: req.session.user?.lastName,
+      ip,
+      userAgent,
+    },
+    customData: {
+      content_name: producthome.title,
+      content_ids: [producthome.id],
+      content_type: "product",
+      value: producthome.price,
+      currency: "DZD",
+    },
+    // testEventCode: "TEST12345" // optional for Events Manager testing
+  });
+
+  res.render("event/producthome", { producthome, eventId });
 });
+
+
 router.get("/add-to-cart-producthome/:id", async function(req, res){
     try {
         var producthomeId = req.params.id;
