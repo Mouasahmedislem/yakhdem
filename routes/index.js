@@ -2091,7 +2091,7 @@ router.get('/track-order', async (req, res) => {
 router.get("/producthome/:id", async (req, res) => {
   const producthome = await Producthome.findById(req.params.id);
   const eventId = `view_${producthome.id}_${Date.now()}`;
-
+  console.log("🧠 SESSION USER:", req.session.user);
   // ✅ use real session user data (unhashed)
   const userData = {
     email: req.session.user?.email,
