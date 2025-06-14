@@ -1,6 +1,6 @@
 var express = require('express')
 var router = express.Router()
-
+var mongoose = require('mongoose');
 var express = require('express');
 var session = require('express-session');
 var passport = require('passport');
