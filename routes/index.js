@@ -2119,7 +2119,7 @@ router.get("/producthome/:id", async (req, res) => {
       value: producthome.price,
       currency: "DZD",
     },
-    // testEventCode: "TEST12345" // optional for Events Manager testing
+     testEventCode: "TEST49466"
   });
 
   res.render("event/producthome", { producthome, eventId });
