@@ -1,5 +1,5 @@
   
-
+var Cart = require("../models/cart");
 const getMetaUserData = require('../utils/metaUserData');
 const sendMetaCAPIEvent = require('../services/metaCapi');
 const nodemailer = require('nodemailer');
