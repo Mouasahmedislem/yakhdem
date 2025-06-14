@@ -28,6 +28,12 @@ passport.use('local-signup', new LocalStrategy({
       messages.push(error.msg);
     });
     return done(null, false, req.flash('error', messages))
+    req.session.user = {
+  email: newUser.email,
+  numero: newUser.numero,
+  firstName: newUser.firstName,
+  lastName: newUser.lastName
+};
   }
   User.findOne({ 'email': email }, function(err, user) {
     if (err) {
