@@ -1887,17 +1887,17 @@ const shipping = wilayaShippingInfo[selectedWilaya] || { fee: 1000, delay: "3-5 
   // Determine fee
 const shippingFee = cart.totalPrice >= freeShippingThreshold ? 0 : shipping.fee;
  const finalTotalPrice = cart.totalPrice + shippingFee;
-
+  const rawNumero = req.body.numero || (req.user ? req.user.numero : undefined);
   let order = new Order({
     user: req.user,
     cart: cart,
     address: req.body.address,
     name: req.body.name,
     wilaya: selectedWilaya,
-    numero: req.body.numero,
+    numero: rawNumero,
     shippingFee: shippingFee,
     deliveryDelay: shipping.delay,
-     totalWithShipping: finalTotalPrice
+    totalWithShipping: finalTotalPrice
   });
 
 order.save(async function(err, result) {
@@ -1910,7 +1910,7 @@ order.save(async function(err, result) {
     const user = req.user || {};
     const userData = {
       email: user.email,
-      numero: user.numero,
+      numero: rawNumero,
       firstName: user.firstName,
       lastName: user.lastName,
       ip: req.headers["x-forwarded-for"]?.split(",")[0] || req.socket.remoteAddress,
@@ -1955,7 +1955,7 @@ order.save(async function(err, result) {
 
     res.render('event/confirmation', {
       name: req.body.name,
-      numero: req.body.numero,
+      numero: rawNumero,
       wilaya: selectedWilaya,
       address: req.body.address,
       cartTotal: cart.totalPrice,
