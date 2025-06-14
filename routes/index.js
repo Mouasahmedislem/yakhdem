@@ -1,6 +1,6 @@
 var express = require('express')
 var router = express.Router()
-const crypto = require("crypto");
+
 const getMetaUserData = require('../utils/metaUserData');
 const sendMetaCAPIEvent = require('../services/metaCapi');
 const nodemailer = require('nodemailer');
