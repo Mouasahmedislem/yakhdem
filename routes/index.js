@@ -2276,7 +2276,7 @@ router.get("/add-to-cart-producthome/:id", async function(req, res) {
 });
 
 
- const sendMetaCAPIEvent = require('../services/metaCapi');
+ 
 
 router.get('/paintello', async (req, res) => {
   try {
