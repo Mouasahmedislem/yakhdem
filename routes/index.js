@@ -1,6 +1,6 @@
 var createError = require('http-errors');
 
-var app = express();
+
 var path = require('path');
 
 var bodyParser = require('body-parser')
