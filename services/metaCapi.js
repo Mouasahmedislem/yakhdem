@@ -1,5 +1,6 @@
 require("dotenv").config();
 const axios = require("axios");
+
 const crypto = require("crypto");
 
 // Clean phone: remove all non-digit characters
@@ -52,6 +53,7 @@ const sendMetaCAPIEvent = async ({
 
   try {
     const response = await axios.post(url, payload);
+    console.log("🚀 Final payload sent to Meta:", JSON.stringify(payload, null, 2));
     console.log("✅ Meta CAPI Event Sent:", response.data);
   } catch (error) {
     console.error("❌ Meta CAPI Error:", error.response?.data || error.message);
