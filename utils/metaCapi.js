@@ -3,12 +3,18 @@ require("dotenv").config();
 const axios = require("axios");
 const crypto = require("crypto");
 
-// Hash helper (SHA-256)
-function hash(data) {
-  return data ? crypto.createHash("sha256").update(data.trim().toLowerCase()).digest("hex") : undefined;
+// Clean phone: remove all non-digit characters
+function cleanPhone(phone) {
+  return phone ? phone.replace(/\D/g, "") : undefined;
 }
 
-// Main function to send events
+// SHA-256 hash
+function hash(data) {
+  return data
+    ? crypto.createHash("sha256").update(data.trim().toLowerCase()).digest("hex")
+    : undefined;
+}
+
 const sendMetaCAPIEvent = async ({
   eventName,
   eventId,
@@ -28,7 +34,9 @@ const sendMetaCAPIEvent = async ({
         action_source: "website",
         user_data: {
           em: hash(userData.email),
-          ph: hash(userData.numero),
+          ph: hash(cleanPhone(userData.numero)),
+           fn: hash(userData.firstName),
+           ln: hash(userData.lastName),
           client_ip_address: userData.ip,
           client_user_agent: userData.userAgent,
         },
@@ -45,9 +53,9 @@ const sendMetaCAPIEvent = async ({
 
   try {
     const response = await axios.post(url, payload);
-    console.log("✅ Meta CAPI event sent:", response.data);
+    console.log("✅ Meta CAPI Event Sent:", response.data);
   } catch (error) {
-    console.error("❌ Error sending Meta CAPI event:", error.response?.data || error.message);
+    console.error("❌ Meta CAPI Error:", error.response?.data || error.message);
   }
 };
 
