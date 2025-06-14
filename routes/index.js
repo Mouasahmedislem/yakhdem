@@ -1,5 +1,14 @@
-var express = require('express')
-var router = express.Router()
+var createError = require('http-errors');
+
+var app = express();
+var path = require('path');
+
+var bodyParser = require('body-parser')
+var bcrypt = require('bcrypt-nodejs');
+var cookieParser = require('cookie-parser');
+var logger = require('morgan');
+
+
 var mongoose = require('mongoose');
 var express = require('express');
 var session = require('express-session');
@@ -88,7 +97,15 @@ app.use(function(req, res, next) {
     res.locals.user = req.user || null;
     next();
   });
-
+app.use(function(req, res, next) {
+    res.locals.login = req.isAuthenticated();
+    res.locals.session = req.session;
+    res.locals.user = req.user || null;
+    next();
+  });
+app.use(logger('dev'));
+app.use(bodyParser.urlencoded({extended: false}))
+app.use(bodyParser.json())
 
 var furniteur = require('../models/furniteur');
 var rug = require('../models/rug');
