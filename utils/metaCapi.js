@@ -1,47 +1,54 @@
-// utils/metaCapi.js
-const axios = require('axios');
-const crypto = require('crypto');
+// metaCapi.js
+require("dotenv").config();
+const axios = require("axios");
+const crypto = require("crypto");
 
-const accessToken = 'EAAJAPHZC8ZBlYBO41qd9CCxc2OJ4nzBMvwEu51I6ZA86AjVD1VZByrUk3H7EGIUQksQp0grg9EnWtyzU3EeGxGsvou2DOqm3OKsJ9aXHI7XigLZBubsKUSNXdCogaYEiajYztZBoE4ZANTqJ2IirZCYW3bFR4zC3fmjDPrnM0dzalb2XKFNM2HpBvjzXY3EeqhEPPgZDZD';
-const pixelId = '633564199312760';
-
-// Hashing function
+// Hash helper (SHA-256)
 function hash(data) {
-  return crypto.createHash('sha256').update(data, 'utf8').digest('hex');
+  return data ? crypto.createHash("sha256").update(data.trim().toLowerCase()).digest("hex") : undefined;
 }
 
-// Normalize phone number (Algerian)
-function normalizePhone(phone) {
- phone.replace(/[^0-9]/g, '').replace(/^0+/, '');
-}
+// Main function to send events
+const sendMetaCAPIEvent = async ({
+  eventName,
+  eventId,
+  userData,
+  customData = {},
+  testEventCode = null,
+}) => {
+  const PIXEL_ID = process.env.FB_PIXEL_ID;
+  const ACCESS_TOKEN = process.env.FB_ACCESS_TOKEN;
 
-// Main function
-async function sendMetaEvent({ eventName, userData, customData }) {
-  try {
-    const payload = {
-      event_name: eventName,
-      event_time: Math.floor(Date.now() / 1000),
-      action_source: 'website',
-      event_source_url: userData.eventSourceUrl || '',
-      user_data: {
-        em: userData.email ? hash(userData.email.trim().toLowerCase()) : undefined,
-        ph: userData.phone ? hash(normalizePhone(userData.phone)) : undefined,
-        fn: userData.firstName ? hash(userData.firstName.trim().toLowerCase()) : undefined,
-        ln: userData.lastName ? hash(userData.lastName.trim().toLowerCase()) : undefined,
-        client_user_agent: userData.userAgent,
-        client_ip_address: userData.ip
+  const payload = {
+    data: [
+      {
+        event_name: eventName,
+        event_time: Math.floor(Date.now() / 1000),
+        event_id: eventId,
+        action_source: "website",
+        user_data: {
+          em: hash(userData.email),
+          ph: hash(userData.phone),
+          client_ip_address: userData.ip,
+          client_user_agent: userData.userAgent,
+        },
+        custom_data: customData,
       },
-      custom_data: customData || {}
-    };
+    ],
+  };
 
-    await axios.post(`https://graph.facebook.com/v19.0/${pixelId}/events?access_token=${accessToken}`, {
-      data: [payload]
-    });
-
-    console.log(`✅ ${eventName} sent to Meta CAPI`);
-  } catch (err) {
-    console.error('❌ Error sending event to Meta CAPI:', err.response?.data || err.message);
+  if (testEventCode) {
+    payload.test_event_code = testEventCode;
   }
-}
 
-module.exports = sendMetaEvent;
+  const url = `https://graph.facebook.com/v18.0/${PIXEL_ID}/events?access_token=${ACCESS_TOKEN}`;
+
+  try {
+    const response = await axios.post(url, payload);
+    console.log("✅ Meta CAPI event sent:", response.data);
+  } catch (error) {
+    console.error("❌ Error sending Meta CAPI event:", error.response?.data || error.message);
+  }
+};
+
+module.exports = sendMetaCAPIEvent;
