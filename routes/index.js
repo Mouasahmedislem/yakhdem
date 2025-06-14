@@ -22,14 +22,7 @@ if (process.env.NODE_ENV !== 'production') {
 
 
 // Helper function to get user data
-const userData = {
-  em: hash("test@example.com"),
-  ph: hash("213555123456"),
-  fn: hash("Test"),
-  ln: hash("User"),
-  client_ip_address: "105.102.40.22",
-  client_user_agent: req.get("User-Agent")
-};
+
 
 
 var furniteur = require('../models/furniteur');
