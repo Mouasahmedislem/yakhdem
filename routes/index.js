@@ -1,5 +1,4 @@
-  const user = res.locals.user || {};
-
+  
 
 const getMetaUserData = require('../utils/metaUserData');
 const sendMetaCAPIEvent = require('../services/metaCapi');
@@ -2084,6 +2083,8 @@ router.get('/track-order', async (req, res) => {
 router.get("/producthome/:id", async (req, res) => {
   const producthome = await Producthome.findById(req.params.id);
   const eventId = `view_${producthome.id}_${Date.now()}`;
+  const user = res.locals.user || {};
+
   console.log("🧠 SESSION USER:", req.session.user);
   // ✅ use real session user data (unhashed)
   const userData = {
