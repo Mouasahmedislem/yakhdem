@@ -62,29 +62,13 @@ mongoose.connect('mongodb+srv://Islem:cmygNChSy2L9Q4xt@paintello.cu30n.mongodb.n
     require('../config/passport');
 
   
-    app.use(cookieParser());
+    
     var store = new MongoDBStore({
       uri: 'mongodb+srv://Islem:cmygNChSy2L9Q4xt@paintello.cu30n.mongodb.net/paintello?retryWrites=true&w=majority',
       collection: 'mySessions'
     });
     
-    // Catch errors
-    store.on('error', function(error) {
-      console.log(error);
-    });
     
-    app.use(require('express-session')({
-      secret: 'This is a secret',
-      cookie: {
-        maxAge: 1000 * 60 * 60 * 24 * 7 // 1 week
-      },
-      store: store,
-      // Boilerplate options, see:
-      // * https://www.npmjs.com/package/express-session#resave
-      // * https://www.npmjs.com/package/express-session#saveuninitialized
-      resave: true,
-      saveUninitialized: true
-    }));
     
     app.use(flash());
     app.use(passport.initialize());
