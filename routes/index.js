@@ -2085,34 +2085,40 @@ router.get('/track-order', async (req, res) => {
   res.render('event/track-order', { orders });
 });
 
+const crypto = require("crypto");
+const sendMetaCAPIEvent = require("../metaCapi");
+
 router.get("/producthome/:id", async (req, res) => {
   const producthome = await Producthome.findById(req.params.id);
   const eventId = `view_${producthome.id}_${Date.now()}`;
-   const userData = {
-  em: crypto.createHash("sha256").update("test@example.com").digest("hex"),
-  ph: crypto.createHash("sha256").update("213555123456").digest("hex"),
-  fn: crypto.createHash("sha256").update("Islem").digest("hex"),
-  ln: crypto.createHash("sha256").update("Ahmed").digest("hex"),
-  client_ip_address: "105.102.40.22",
-  client_user_agent: req.get("User-Agent")
-};
-await sendMetaCAPIEvent({
-  eventName: "ViewContent",
-  eventId,
-  userData,
-  customData: {
-    content_name: producthome.title,
-    content_ids: [producthome.id],
-    content_type: "product",
-    value: producthome.price,
-    currency: "DZD"
-  },
-  testEventCode: "TEST49466"
-});
- 
+
+  // ✅ use real session user data (unhashed)
+  const userData = {
+    email: req.session.user?.email,
+    numero: req.session.user?.numero,
+    firstName: req.session.user?.firstName,
+    lastName: req.session.user?.lastName,
+    ip: req.headers["x-forwarded-for"] || req.socket.remoteAddress,
+    userAgent: req.get("User-Agent")
+  };
+
+  await sendMetaCAPIEvent({
+    eventName: "ViewContent",
+    eventId,
+    userData,
+    customData: {
+      content_name: producthome.title,
+      content_ids: [producthome.id],
+      content_type: "product",
+      value: producthome.price,
+      currency: "DZD"
+    },
+    testEventCode: "TEST49466" // Only during testing
+  });
 
   res.render("event/producthome", { producthome, eventId });
 });
+
   
 
 
