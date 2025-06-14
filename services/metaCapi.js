@@ -40,7 +40,7 @@ const sendMetaCAPIEvent = async ({
   client_ip_address: userData.ip,
   client_user_agent: userData.userAgent,
 }
-        custom_data: customData,
+        "custom_data": customData,
       },
     ],
   };
