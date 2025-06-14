@@ -10,7 +10,7 @@ var flash = require('connect-flash');
 var MongoDBStore = require('connect-mongodb-session')(session);
 
 
-var User = require("./models/user");
+var User = require("../models/user");
 require('dotenv').config();
 
 require('./config/passport'); // Your strategies
