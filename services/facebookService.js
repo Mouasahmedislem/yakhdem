@@ -1,27 +1,27 @@
-const bizSdk = require('facebook-nodejs-business-sdk'); // Correct package name
-const ServerEvent = bizSdk.ServerEvent;
-const UserData = bizSdk.UserData;
-const CustomData = bizSdk.CustomData;
-const EventRequest = bizSdk.EventRequest;
-
-require('dotenv').config();
+const bizSdk = require('facebook-nodejs-business-sdk');
+const crypto = require('crypto');
 
 class FacebookService {
   constructor() {
-    this.accessToken = process.env.FB_ACCESS_TOKEN; // Renamed for clarity
+    this.accessToken = process.env.FB_CAPI_ACCESS_TOKEN;
     this.pixelId = process.env.FB_PIXEL_ID || '633564199312760';
   }
 
-  async sendEvent(eventName, eventData, req) {
+  async sendEvent(eventName, eventData, req = {}) {
     try {
-      // 1. Prepare hashed user data
-      const userData = new UserData()
-        .setClientIpAddress(req.ip)
-        .setClientUserAgent(req.headers['user-agent'])
-        .setFbp(req.cookies._fbp) // From Facebook Pixel cookie
-        .setFbc(req.cookies._fbc); // From click ID
+      // 1. Safely extract request data with defaults
+      const userAgent = req.headers?.['user-agent'] || 'unknown';
+      const ip = req.ip || '127.0.0.1';
+      const cookies = req.cookies || {};
 
-      // 2. Add hashed identifiers if available
+      // 2. Prepare user data with fallbacks
+      const userData = new bizSdk.UserData()
+        .setClientIpAddress(ip)
+        .setClientUserAgent(userAgent)
+        .setFbp(cookies._fbp || null)
+        .setFbc(cookies._fbc || null);
+
+      // 3. Add hashed identifiers if available
       if (req.user?.email) {
         userData.setEmail(this.#hashData(req.user.email));
       }
@@ -29,42 +29,37 @@ class FacebookService {
         userData.setPhone(this.#hashData(req.user.phone.replace(/^0+/, '')));
       }
 
-      // 3. Prepare event data
-      const customData = new CustomData()
-        .setCurrency(eventData.currency || 'DZD')
-        .setValue(eventData.value);
-
-      if (eventData.contentIds) customData.setContentIds(eventData.contentIds);
-      if (eventData.contentName) customData.setContentName(eventData.contentName);
-
-      // 4. Create and send event
-      const event = new ServerEvent()
+      // 4. Create event
+      const event = new bizSdk.ServerEvent()
         .setEventName(eventName)
         .setEventTime(Math.floor(Date.now() / 1000))
         .setUserData(userData)
-        .setCustomData(customData)
-        .setEventSourceUrl(eventData.eventSourceUrl || 'https://paintello.uk');
+        .setCustomData(new bizSdk.CustomData()
+          .setCurrency(eventData.currency || 'DZD')
+          .setValue(eventData.value)
+          .setContentIds(eventData.contentIds?.map(String))
+          .setContentName(eventData.contentName)
+        )
+        .setEventSourceUrl(req.originalUrl || req.headers?.referer || 'https://yourdomain.com');
 
-      const response = await new EventRequest(
+      // 5. Send event
+      return await new bizSdk.EventRequest(
         this.accessToken,
         this.pixelId
       ).setEvents([event]).execute();
 
-      return response;
     } catch (error) {
       console.error(`CAPI Error (${eventName}):`, {
         message: error.message,
-        body: error.response?.body,
+        inputData: { eventName, eventData, req: !!req },
         stack: error.stack
       });
       throw error;
     }
   }
 
-  // Private hashing method
   #hashData(value) {
     if (!value) return null;
-    const crypto = require('crypto');
     return crypto.createHash('sha256')
       .update(String(value).trim().toLowerCase())
       .digest('hex');
@@ -72,4 +67,3 @@ class FacebookService {
 }
 
 module.exports = new FacebookService();
-
