@@ -2097,8 +2097,7 @@ const userData = getMetaUserData(req.session.user, req);
 router.get("/producthome/:id", async (req, res) => {
   const producthome = await Producthome.findById(req.params.id);
   const eventId = `view_${producthome.id}_${Date.now()}`;
-  
-  const userData = getMetaUserData(req.session.user, req); // ✅ Step 1
+ const userData = getMetaUserData(req.session.user, req);
 await sendMetaCAPIEvent({
   eventName: "ViewContent",
   eventId,
