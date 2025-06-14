@@ -3,7 +3,7 @@ const crypto = require('crypto');
 
 class FacebookService {
   constructor() {
-    this.accessToken = process.env.FB_CAPI_ACCESS_TOKEN;
+    this.accessToken = process.env.FB_ACCESS_TOKEN;
     this.pixelId = process.env.FB_PIXEL_ID || '633564199312760';
   }
 
