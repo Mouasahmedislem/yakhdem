@@ -13,8 +13,8 @@ var MongoDBStore = require('connect-mongodb-session')(session);
 var User = require("../models/user");
 require('dotenv').config();
 
-require('./config/passport'); // Your strategies
-var Cart = require("./models/cart");
+require('../config/passport'); // Your strategies
+var Cart = require("../models/cart");
 
 
 const getMetaUserData = require('../utils/metaUserData');
@@ -47,7 +47,7 @@ mongoose.connect('mongodb+srv://Islem:cmygNChSy2L9Q4xt@paintello.cu30n.mongodb.n
     
     })
     
-    require('./config/passport');
+    require('../config/passport');
 
     app.use(validator());
     app.use(cookieParser());
