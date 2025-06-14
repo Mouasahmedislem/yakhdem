@@ -2083,7 +2083,7 @@ router.get('/track-order', async (req, res) => {
 router.get("/producthome/:id", async (req, res) => {
   const producthome = await Producthome.findById(req.params.id);
   const eventId = `view_${producthome.id}_${Date.now()}`;
- const user = req.user || req.session.user || {};
+   const user = req.user || {};
 
 
  console.log("✅ req.user", req.user);
