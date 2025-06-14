@@ -2102,7 +2102,7 @@ router.get('/producthome/:id', async (req, res) => {
         content_ids: [producthome.id],
         content_name: producthome.name,
         content_type: 'product',
-        eventSourceUrl: req.originalUrl
+        eventSourceUrl: req.headers.referer || req.originalUrl
     }, getUserData(req));
 
     res.render('event/producthome', { 
