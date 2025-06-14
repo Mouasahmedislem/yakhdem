@@ -1,32 +1,4 @@
-var createError = require('http-errors');
-
-
-var path = require('path');
-
-var bodyParser = require('body-parser')
-var bcrypt = require('bcrypt-nodejs');
-var cookieParser = require('cookie-parser');
-var logger = require('morgan');
-
-
-var mongoose = require('mongoose');
-var express = require('express');
-var session = require('express-session');
-var passport = require('passport');
-var flash = require('connect-flash');
-var LocalStrategy = require("passport-local");
-
-
-var validator = require('express-validator');
-
-var MongoDBStore = require('connect-mongodb-session')(session);
-
-
-var User = require("../models/user");
-require('dotenv').config();
-
-require('../config/passport'); // Your strategies
-var Cart = require("../models/cart");
+  const user = res.locals.user || {};
 
 
 const getMetaUserData = require('../utils/metaUserData');
@@ -43,46 +15,8 @@ const middleware = require('../middleware');
 const stripe = require("stripe")(process.env.STRIPE_API_KEY);
 
 
-if (process.env.NODE_ENV !== 'production') {
-    /* setting up enviroment variables */
-    require('dotenv').config({path: '.env'});
-    }
 
 
-// Helper function to get user data
-mongoose.connect('mongodb+srv://Islem:cmygNChSy2L9Q4xt@paintello.cu30n.mongodb.net/paintello?retryWrites=true&w=majority' , (err)=> {
-    if (err) {
-        console.log(err)
-    } else{
-        console.log('connected to db succesfuly...')
-    }
-    
-    })
-    
-    require('../config/passport');
-
-  
-    
-    var store = new MongoDBStore({
-      uri: 'mongodb+srv://Islem:cmygNChSy2L9Q4xt@paintello.cu30n.mongodb.net/paintello?retryWrites=true&w=majority',
-      collection: 'mySessions'
-    });
-    
-    
-
-//Takes user info and pass it to all templates rather than addind it to all tamplates one by one.
-app.use(function(req, res, next) {
-    res.locals.login = req.isAuthenticated();
-    res.locals.session = req.session;
-    res.locals.user = req.user || null;
-    next();
-  });
-app.use(function(req, res, next) {
-    res.locals.login = req.isAuthenticated();
-    res.locals.session = req.session;
-    res.locals.user = req.user || null;
-    next();
-  });
 
 
 var furniteur = require('../models/furniteur');
