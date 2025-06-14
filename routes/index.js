@@ -1713,14 +1713,46 @@ router.get('/shop', (req, res)=> {
             res.redirect('/shop');
         });
         
-        router.get('/checkout', function(req, res, next) {
-            if (!req.session.cart) {
-              return res.redirect('event/shop', {products: null});
-            }
-            var cart = new Cart(req.session.cart);
-            var errMsg = req.flash('error')[0];
-            res.render('event/checkout', { totalPrice: cart.totalPrice, errMsg: errMsg, noError: !errMsg });
-          });
+      router.get('/checkout', function(req, res, next) {
+  if (!req.session.cart) {
+    return res.redirect('event/shop', { products: null });
+  }
+  var cart = new Cart(req.session.cart);
+  var errMsg = req.flash('error')[0];
+
+  // ✅ Add Meta CAPI InitiateCheckout tracking here
+  const user = req.user || {};
+  const userData = {
+    email: user.email,
+    numero: user.numero,
+    firstName: user.firstName,
+    lastName: user.lastName,
+    ip: req.headers["x-forwarded-for"]?.split(",")[0] || req.socket.remoteAddress,
+    userAgent: req.get("User-Agent")
+  };
+
+  const eventId = `checkout_${Date.now()}`;
+
+  // ✅ Fire InitiateCheckout
+  sendMetaCAPIEvent({
+    eventName: "InitiateCheckout",
+    eventId,
+    userData,
+    customData: {
+      content_type: "product",
+      value: cart.totalPrice,
+      currency: "DZD"
+    },
+    testEventCode: "TEST47263" // Optional: replace with your real test code
+  });
+
+  res.render('event/checkout', {
+    totalPrice: cart.totalPrice,
+    errMsg: errMsg,
+    noError: !errMsg
+  });
+});
+
           
       router.post('/checkout', function(req, res, next) {
   if (!req.session.cart) {
@@ -1872,7 +1904,32 @@ order.save(function(err, result) {
   if (err) {
     req.flash('error', err.message);
     return res.redirect('/checkout');
+     
   } else {
+    const user = req.user || {};
+    const userData = {
+      email: user.email,
+      numero: user.numero,
+      firstName: user.firstName,
+      lastName: user.lastName,
+      ip: req.headers["x-forwarded-for"]?.split(",")[0] || req.socket.remoteAddress,
+      userAgent: req.get("User-Agent")
+    };
+
+    const eventId = `purchase_${result._id}_${Date.now()}`;
+
+    await sendMetaCAPIEvent({
+      eventName: "Purchase",
+      eventId,
+      userData,
+      customData: {
+        value: finalTotalPrice,
+        currency: "DZD",
+        content_type: "product",
+        order_id: result._id.toString()
+      },
+      testEventCode: "TEST47263"
+    });
     req.session.cart = null;
 
     // ✅ Send WhatsApp to client (if phone is provided)
@@ -2117,11 +2174,6 @@ router.get("/producthome/:id", async (req, res) => {
 });
 
 
-  
-
-
-
-const sendMetaCAPIEvent = require("../services/metaCapi");
 
 router.get("/add-to-cart-producthome/:id", async function(req, res) {
   const producthomeId = req.params.id;
