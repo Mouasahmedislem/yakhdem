@@ -12,6 +12,8 @@ const Order = require('../models/order');
 const Powers = require('../models/powers');
 const middleware = require('../middleware');
 const stripe = require("stripe")(process.env.STRIPE_API_KEY);
+const cookieParser = require('cookie-parser');
+app.use(cookieParser());
 
 if (process.env.NODE_ENV !== 'production') {
     /* setting up enviroment variables */
@@ -2091,6 +2093,7 @@ router.get('/track-order', async (req, res) => {
   const orders = await Order.find({ numero: req.session.trackingUser }).sort({ createdAt: -1 });
   res.render('event/track-order', { orders });
 });
+
   
 router.get('/producthome/:id', async (req, res) => {
   try {
@@ -2099,11 +2102,10 @@ router.get('/producthome/:id', async (req, res) => {
    // Send Facebook AddToCart event
       await facebookService.sendEvent('ViewContent', {
         value: producthome.price,
-        content_ids: [producthome.id],
-        content_name: producthome.name,
+        content_ids: [producthome.id.toString()],
+        content_name: producthome.title,
         content_type: 'product',
-        eventSourceUrl: req.headers.referer || req.originalUrl
-    }, getUserData(req));
+      } , req);
 
     res.render('event/producthome', { 
       producthome,
