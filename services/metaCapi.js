@@ -67,6 +67,8 @@ const sendMetaCAPIEvent = async ({
 
     if (testEventCode) {
       payload.test_event_code = testEventCode;
+      console.log("📤 Sending CAPI with test code:", testEventCode); // ✅ Here
+
     }
 
     // ✅ Step 5: Log full payload
