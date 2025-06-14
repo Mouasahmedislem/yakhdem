@@ -1,5 +1,6 @@
 var express = require('express')
 var router = express.Router()
+const crypto = require("crypto");
 
 const getMetaUserData = require('../utils/metaUserData');
 const sendMetaCAPIEvent = require('../services/metaCapi');
@@ -2085,8 +2086,7 @@ router.get('/track-order', async (req, res) => {
   res.render('event/track-order', { orders });
 });
 
-const crypto = require("crypto");
-const sendMetaCAPIEvent = require("../metaCapi");
+
 
 router.get("/producthome/:id", async (req, res) => {
   const producthome = await Producthome.findById(req.params.id);
