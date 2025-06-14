@@ -27,32 +27,91 @@ var sample = require('../models/sample');
 var tool = require('../models/tool');
 
 
-router.get("/sale/furniteur", function(req, res){
-    furniteur.find({}, function(err, furniteurs){
-    header.find({}, function(err, headers){
-        if(err){
-            console.log(err);
-        }
-        else{
-            res.render("sale/furniteur", {furniteurs: furniteurs,headers:headers});
-        }
+router.get("/sale/furniteur", async function(req, res) {
+  try {
+    const furniteurs = await furniteur.find({});
+    const headers = await header.find({});
+
+    // ✅ Collect user or anonymous data
+    const user = req.user || {};
+    const userData = {
+      email: user.email,
+      numero: user.numero,
+      firstName: user.firstName,
+      lastName: user.lastName,
+      ip: req.headers["x-forwarded-for"]?.split(",")[0] || req.socket.remoteAddress,
+      userAgent: req.get("User-Agent")
+    };
+
+    const eventId = `view_furniteur_${Date.now()}`;
+
+    // ✅ Send ViewContent event to Meta
+    await sendMetaCAPIEvent({
+      eventName: "ViewContent",
+      eventId,
+      userData,
+      customData: {
+        content_name: "Sale Furniteur Page",
+        content_type: "product_group",
+        anonymous_id: req.sessionID // optional for retargeting
+      },
+      testEventCode: "TEST12345"
     });
-});
+
+    res.render("sale/furniteur", { furniteurs, headers });
+
+  } catch (err) {
+    console.error("❌ Error loading sale/furniteur:", err);
+    res.status(500).send("Error loading page");
+  }
 });
 
-router.get("/add-to-cart-furniteur/:id", function(req, res){
-    var furniteurId = req.params.id;
-    var cart = new Cart(req.session.cart ? req.session.cart : {});
-    
-    furniteur.findById(furniteurId, function(err, furniteur){
-        if(err){
-            return res.redirect("/sale/furniteur");
-        }
-        cart.add(furniteur, furniteur.id);
-        req.session.cart = cart;
-        console.log(req.session.cart);
-        res.redirect("/sale/furniteur");
+router.get("/add-to-cart-furniteur/:id", async function(req, res) {
+  const furniteurId = req.params.id;
+  const cart = new Cart(req.session.cart || {});
+
+  try {
+    const item = await furniteur.findById(furniteurId);
+    if (!item) return res.redirect("/sale/furniteur");
+
+    cart.add(item, item.id);
+    req.session.cart = cart;
+    console.log("🛒 Item added to cart:", item.title);
+
+    // ✅ Prepare Meta CAPI AddToCart
+    const user = req.user || {};
+    const userData = {
+      email: user.email,
+      numero: user.numero,
+      firstName: user.firstName,
+      lastName: user.lastName,
+      ip: req.headers["x-forwarded-for"]?.split(",")[0] || req.socket.remoteAddress,
+      userAgent: req.get("User-Agent")
+    };
+
+    const eventId = `addtocart_furniteur_${item.id}_${Date.now()}`;
+
+    await sendMetaCAPIEvent({
+      eventName: "AddToCart",
+      eventId,
+      userData,
+      customData: {
+        content_name: item.title,
+        content_ids: [item.id],
+        content_type: "product",
+        value: item.price,
+        currency: "DZD",
+        anonymous_id: req.sessionID
+      },
+      testEventCode: "TEST12345" // Optional for Meta test events
     });
+
+    res.redirect("/sale/furniteur");
+
+  } catch (err) {
+    console.error("❌ AddToCart Error:", err);
+    res.redirect("/sale/furniteur");
+  }
 });
 
 
@@ -2217,13 +2276,42 @@ router.get("/add-to-cart-producthome/:id", async function(req, res) {
 });
 
 
-  router.get('/paintello', async (req, res) => {
+ const sendMetaCAPIEvent = require('../services/metaCapi');
+
+router.get('/paintello', async (req, res) => {
   try {
     const paintellos = await Paintello.find({});
+
+    const isLoggedIn = !!req.user;
+
+    const userData = {
+      email: isLoggedIn ? req.user.email : undefined,
+      numero: isLoggedIn ? req.user.numero : undefined,
+      firstName: isLoggedIn ? req.user.firstName : undefined,
+      lastName: isLoggedIn ? req.user.lastName : undefined,
+      ip: req.headers["x-forwarded-for"]?.split(",")[0] || req.socket.remoteAddress,
+      userAgent: req.get("User-Agent")
+    };
+
+    const eventId = `view_paintello_${Date.now()}`;
+
+    await sendMetaCAPIEvent({
+      eventName: "ViewContent",
+      eventId,
+      userData,
+      customData: {
+        content_name: "Paintello Home Page",
+        content_type: "product_group",
+        anonymous_id: req.sessionID // optional for retargeting
+      },
+      testEventCode: "TEST12345"
+    });
+
     res.render('event/paintellohome', { paintellos });
   } catch (err) {
     res.status(500).send('Error loading home products');
   }
 });
+
      
 module.exports = router
