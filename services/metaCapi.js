@@ -1,6 +1,5 @@
 require("dotenv").config();
 const axios = require("axios");
-
 const crypto = require("crypto");
 
 // Clean phone: remove all non-digit characters
@@ -25,35 +24,59 @@ const sendMetaCAPIEvent = async ({
   const PIXEL_ID = process.env.FB_PIXEL_ID;
   const ACCESS_TOKEN = process.env.FB_ACCESS_TOKEN;
 
-  const payload = {
-    data: [
-      {
-        event_name: eventName,
-        event_time: Math.floor(Date.now() / 1000),
-        event_id: eventId,
-        action_source: "website",
-        user_data: {
-          em: hash(userData.email),
-          ph: hash(cleannumero(userData.numero)),
-          fn: hash(userData.firstName),
-          ln: hash(userData.lastName),
-          client_ip_address: userData.ip,
-          client_user_agent: userData.userAgent,
-        },
-        custom_data: customData,
-      },
-    ],
-  };
-
-  if (testEventCode) {
-    payload.test_event_code = testEventCode;
-  }
-
-  const url = `https://graph.facebook.com/v18.0/${PIXEL_ID}/events?access_token=${ACCESS_TOKEN}`;
-
   try {
+    // ✅ Step 1: Log raw input before hashing
+    console.log("🔍 Raw userData before hashing:", userData);
+
+    // ✅ Step 2: Build the hashed user_data object
+    const hashedUserData = {
+      em: hash(userData.email),
+      ph: hash(cleannumero(userData.numero)),
+      fn: hash(userData.firstName),
+      ln: hash(userData.lastName),
+      client_ip_address: userData.ip,
+      client_user_agent: userData.userAgent,
+    };
+
+    // ✅ Step 3: Skip if not enough identifiers
+    if (
+      !hashedUserData.em &&
+      !hashedUserData.ph &&
+      (!hashedUserData.fn ||
+        !hashedUserData.ln ||
+        !hashedUserData.client_ip_address ||
+        !hashedUserData.client_user_agent)
+    ) {
+      console.warn("❌ Not enough identifiers — skipping Meta CAPI event.");
+      return;
+    }
+
+    // ✅ Step 4: Build final payload
+    const payload = {
+      data: [
+        {
+          event_name: eventName,
+          event_time: Math.floor(Date.now() / 1000),
+          event_id: eventId,
+          action_source: "website",
+          user_data: hashedUserData,
+          custom_data: customData,
+        },
+      ],
+    };
+
+    if (testEventCode) {
+      payload.test_event_code = testEventCode;
+    }
+
+    // ✅ Step 5: Log full payload
+    console.log("✅ Final user_data:", JSON.stringify(hashedUserData, null, 2));
+    console.log("📦 Full payload to Meta:", JSON.stringify(payload, null, 2));
+
+    // ✅ Step 6: Send to Meta
+    const url = `https://graph.facebook.com/v18.0/${PIXEL_ID}/events?access_token=${ACCESS_TOKEN}`;
     const response = await axios.post(url, payload);
-    console.log("🚀 Final payload sent to Meta:", JSON.stringify(payload, null, 2));
+
     console.log("✅ Meta CAPI Event Sent:", response.data);
   } catch (error) {
     console.error("❌ Meta CAPI Error:", error.response?.data || error.message);
@@ -61,6 +84,5 @@ const sendMetaCAPIEvent = async ({
 };
 
 module.exports = sendMetaCAPIEvent;
-
 
 
