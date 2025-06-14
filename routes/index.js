@@ -1,10 +1,10 @@
 var express = require('express')
 var router = express.Router()
 
-const express = require('express');
-const session = require('express-session');
-const passport = require('passport');
-const flash = require('connect-flash');
+var express = require('express');
+var session = require('express-session');
+var passport = require('passport');
+var flash = require('connect-flash');
 
 
 var MongoDBStore = require('connect-mongodb-session')(session);
