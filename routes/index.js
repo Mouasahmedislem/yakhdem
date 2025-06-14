@@ -2121,29 +2121,46 @@ router.get("/producthome/:id", async (req, res) => {
 
 
 
-router.get("/add-to-cart-producthome/:id", async function(req, res){
-    try {
-        var producthomeId = req.params.id;
-        var cart = new Cart(req.session.cart ? req.session.cart : {});
-        
-        const producthome = await Producthome.findById(producthomeId);
-        cart.add(producthome, producthome.id);
-        req.session.cart = cart;
+const sendMetaCAPIEvent = require("../services/metaCapi");
 
-        // Send Facebook AddToCart event
-        await facebookService.sendEvent('AddToCart', {
-            value: producthome.price,
-            content_ids: [producthome.id],
-            content_name: producthome.name,
-            content_type: 'product',
-            eventSourceUrl: req.headers.referer || req.originalUrl
-        }, getUserData(req));
+router.get("/add-to-cart-producthome/:id", async function(req, res) {
+  const producthomeId = req.params.id;
+  const cart = new Cart(req.session.cart ? req.session.cart : {});
+  const producthome = await Producthome.findById(producthomeId);
 
-        res.redirect("/shop");
-    } catch(err) {
-        console.error(err);
-        res.redirect("event/producthome");
-    }
+  cart.add(producthome, producthome.id);
+  req.session.cart = cart;
+
+  // ✅ User data from req.user
+  const user = req.user || {};
+  const userData = {
+    email: user.email,
+    numero: user.numero,
+    firstName: user.firstName,
+    lastName: user.lastName,
+    ip: req.headers["x-forwarded-for"]?.split(",")[0] || req.socket.remoteAddress,
+    userAgent: req.get("User-Agent")
+  };
+
+  // ✅ Unique event ID
+  const eventId = `addtocart_${producthome.id}_${Date.now()}`;
+
+  // ✅ Send CAPI event
+  await sendMetaCAPIEvent({
+    eventName: "AddToCart",
+    eventId,
+    userData,
+    customData: {
+      content_name: producthome.title,
+      content_ids: [producthome.id],
+      content_type: "product",
+      value: producthome.price,
+      currency: "DZD"
+    },
+    testEventCode: "TEST47263" // Change to real test code if needed
+  });
+
+  res.redirect("/shop");
 });
 
 
