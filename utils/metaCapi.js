@@ -28,7 +28,7 @@ const sendMetaCAPIEvent = async ({
         action_source: "website",
         user_data: {
           em: hash(userData.email),
-          ph: hash(userData.phone),
+          ph: hash(userData.numero),
           client_ip_address: userData.ip,
           client_user_agent: userData.userAgent,
         },
