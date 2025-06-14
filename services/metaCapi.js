@@ -4,9 +4,12 @@ const crypto = require("crypto");
 
 // Clean phone: remove all non-digit characters
 function cleannumero(numero) {
-  return numero ? numero.replace(/\D/g, "") : undefined;
+  if (!numero) return undefined;
+  const cleaned = numero.replace(/\D/g, "");
+  if (cleaned.startsWith("0")) return "213" + cleaned.slice(1);
+  if (cleaned.startsWith("213")) return cleaned;
+  return "213" + cleaned;
 }
-
 // SHA-256 hash
 function hash(data) {
   return data
