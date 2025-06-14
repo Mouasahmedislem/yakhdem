@@ -1,4 +1,3 @@
-// metaCapi.js
 require("dotenv").config();
 const axios = require("axios");
 const crypto = require("crypto");
@@ -33,14 +32,14 @@ const sendMetaCAPIEvent = async ({
         event_id: eventId,
         action_source: "website",
         user_data: {
-  em: hash(userData.email),
-  ph: hash(cleannumero(userData.numero)),
-  fn: hash(userData.firstName),
-  ln: hash(userData.lastName),
-  client_ip_address: userData.ip,
-  client_user_agent: userData.userAgent,
-}
-        "custom_data": customData,
+          em: hash(userData.email),
+          ph: hash(cleannumero(userData.numero)),
+          fn: hash(userData.firstName),
+          ln: hash(userData.lastName),
+          client_ip_address: userData.ip,
+          client_user_agent: userData.userAgent,
+        },
+        custom_data: customData,
       },
     ],
   };
@@ -60,5 +59,6 @@ const sendMetaCAPIEvent = async ({
 };
 
 module.exports = sendMetaCAPIEvent;
+
 
 
