@@ -1,6 +1,6 @@
 var express = require('express')
 var router = express.Router()
-console.log("Sending user_data to Meta:", userData);
+
 const getMetaUserData = require('../utils/metaUserData');
 const sendMetaCAPIEvent = require('../services/metaCapi');
 const nodemailer = require('nodemailer');
@@ -2096,7 +2096,7 @@ router.get("/producthome/:id", async (req, res) => {
   const producthome = await Producthome.findById(req.params.id);
   const eventId = `view_${producthome.id}_${Date.now()}`;
    const userData = getMetaUserData(req.session.user, req);
-
+console.log("Sending user_data to Meta:", userData);
 await sendMetaCAPIEvent({
   eventName: "ViewContent",
   eventId,
