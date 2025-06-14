@@ -27,35 +27,41 @@ passport.use('local-signup', new LocalStrategy({
     errors.forEach(function(error) {
       messages.push(error.msg);
     });
-    return done(null, false, req.flash('error', messages))
-    req.session.user = {
-  email: newUser.email,
-  numero: newUser.numero,
-  firstName: newUser.firstName,
-  lastName: newUser.lastName
-};
+    return done(null, false, req.flash('error', messages));
   }
+
   User.findOne({ 'email': email }, function(err, user) {
     if (err) {
       return done(err);
     }
     if (user) {
-      return done(null, false, { message: 'This email is already used'})
+      return done(null, false, { message: 'This email is already used' });
     }
+
     var newUser = new User();
     newUser.email = email;
-   newUser.firstName = req.body.firstName;
-   newUser.lastName = req.body.lastName;
-   newUser.numero = req.body.numero;
-   newUser.password = newUser.encryptPassword(password);
-   newUser.isAdmin = true;
+    newUser.firstName = req.body.firstName;
+    newUser.lastName = req.body.lastName;
+    newUser.numero = req.body.numero;
+    newUser.password = newUser.encryptPassword(password);
+    newUser.isAdmin = true;
+
     newUser.save(function(err, result) {
       if (err) {
         return done(err);
       }
+
+      // ✅ Set session after successful signup
+      req.session.user = {
+        email: newUser.email,
+        numero: newUser.numero,
+        firstName: newUser.firstName,
+        lastName: newUser.lastName
+      };
+
       return done(null, newUser);
-    })
-  })
+    });
+  });
 }));
 
 // sign in logic
@@ -73,26 +79,29 @@ passport.use('local-signin', new LocalStrategy({
     errors.forEach(function(error) {
       messages.push(error.msg);
     });
-    return done(null, false, req.flash('error', messages))
+    return done(null, false, req.flash('error', messages));
   }
+
   User.findOne({ 'email': email }, function(err, user) {
     if (err) {
       return done(err);
     }
     if (!user) {
-      return done(null, false, { message: 'No user found.'})
+      return done(null, false, { message: 'No user found.' });
     }
-    // valid password comes from user model
-    if(!user.validPassword(password)) {
-      return done(null, false, { message: 'Wrong password.'})
-    // ✅ Set session here:
- req.session.user = {
-  email: user.email,
-  numero: user.numero,
-  firstName: user.firstName,
-  lastName: user.lastName
-};
+
+    if (!user.validPassword(password)) {
+      return done(null, false, { message: 'Wrong password.' });
+    }
+
+    // ✅ Set session after successful login
+    req.session.user = {
+      email: user.email,
+      numero: user.numero,
+      firstName: user.firstName,
+      lastName: user.lastName
+    };
 
     return done(null, user);
-  })
-}))
+  });
+}));
