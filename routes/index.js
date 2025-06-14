@@ -69,11 +69,7 @@ mongoose.connect('mongodb+srv://Islem:cmygNChSy2L9Q4xt@paintello.cu30n.mongodb.n
     });
     
     
-    
-    app.use(flash());
-    app.use(passport.initialize());
-    app.use(passport.session());
-    
+
 //Takes user info and pass it to all templates rather than addind it to all tamplates one by one.
 app.use(function(req, res, next) {
     res.locals.login = req.isAuthenticated();
@@ -87,9 +83,7 @@ app.use(function(req, res, next) {
     res.locals.user = req.user || null;
     next();
   });
-app.use(logger('dev'));
-app.use(bodyParser.urlencoded({extended: false}))
-app.use(bodyParser.json())
+
 
 var furniteur = require('../models/furniteur');
 var rug = require('../models/rug');
