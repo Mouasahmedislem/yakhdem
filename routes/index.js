@@ -1900,12 +1900,13 @@ const shippingFee = cart.totalPrice >= freeShippingThreshold ? 0 : shipping.fee;
      totalWithShipping: finalTotalPrice
   });
 
-order.save(function(err, result) {
+order.save(async function(err, result) {
   if (err) {
     req.flash('error', err.message);
     return res.redirect('/checkout');
      
   } else {
+    
     const user = req.user || {};
     const userData = {
       email: user.email,
