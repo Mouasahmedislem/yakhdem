@@ -2110,7 +2110,7 @@ router.get("/producthome/:id", async (req, res) => {
       value: producthome.price,
       currency: "DZD"
     },
-    testEventCode: "TEST49466"
+    testEventCode: "TEST47263"
   });
 
   res.render("event/producthome", { producthome, eventId });
