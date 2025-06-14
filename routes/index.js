@@ -1,5 +1,6 @@
 var express = require('express')
 var router = express.Router()
+console.log("Sending user_data to Meta:", userData);
 const getMetaUserData = require('../utils/metaUserData');
 const sendMetaCAPIEvent = require('../services/metaCapi');
 const nodemailer = require('nodemailer');
@@ -21,16 +22,14 @@ if (process.env.NODE_ENV !== 'production') {
 
 
 // Helper function to get user data
-function getUserData(req) {
-  return {
-    email: req.user?.email,
-    numero: req.user?.numero,
-    ip: req.ip,
-    userAgent: req.headers['user-agent'],
-    fbp: req.cookies._fbp,
-    fbc: req.cookies._fbc
-  };
-}
+const userData = {
+  em: hash("test@example.com"),
+  ph: hash("213555123456"),
+  fn: hash("Test"),
+  ln: hash("User"),
+  client_ip_address: "105.102.40.22",
+  client_user_agent: req.get("User-Agent")
+};
 
 
 var furniteur = require('../models/furniteur');
