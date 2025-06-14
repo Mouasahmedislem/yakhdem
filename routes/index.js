@@ -2097,6 +2097,7 @@ router.get("/producthome/:id", async (req, res) => {
   };
 
   console.log("🔍 Raw userData before hashing:", userData);
+console.log("📤 Sending CAPI with test code:", testEventCode);
 
   await sendMetaCAPIEvent({
     eventName: "ViewContent",
@@ -2109,7 +2110,7 @@ router.get("/producthome/:id", async (req, res) => {
       value: producthome.price,
       currency: "DZD"
     },
-    testEventCode: "TEST12345"
+    testEventCode: "TEST49466"
   });
 
   res.render("event/producthome", { producthome, eventId });
