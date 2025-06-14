@@ -79,7 +79,14 @@ passport.use('local-signin', new LocalStrategy({
     // valid password comes from user model
     if(!user.validPassword(password)) {
       return done(null, false, { message: 'Wrong password.'})
-    }
+    // ✅ Set session here:
+ req.session.user = {
+  email: user.email,
+  numero: user.numero,
+  firstName: user.firstName,
+  lastName: user.lastName
+};
+
     return done(null, user);
   })
 }))
