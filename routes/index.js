@@ -2083,19 +2083,20 @@ router.get('/track-order', async (req, res) => {
 router.get("/producthome/:id", async (req, res) => {
   const producthome = await Producthome.findById(req.params.id);
   const eventId = `view_${producthome.id}_${Date.now()}`;
-   const user = req.user || {};
 
+  // ✅ Use req.user directly — no fallback needed
+  console.log("✅ req.user", req.user); // debug
 
- console.log("✅ req.user", req.user);
-  // ✅ use real session user data (unhashed)
   const userData = {
-    email: req.session.user?.email,
-    numero: req.session.user?.numero,
-    firstName: req.session.user?.firstName,
-    lastName: req.session.user?.lastName,
-    ip: req.headers["x-forwarded-for"] || req.socket.remoteAddress,
+    email: req.user?.email || undefined,
+    numero: req.user?.numero || undefined,
+    firstName: req.user?.firstName || undefined,
+    lastName: req.user?.lastName || undefined,
+    ip: req.headers["x-forwarded-for"]?.split(",")[0] || req.socket.remoteAddress,
     userAgent: req.get("User-Agent")
   };
+
+  console.log("🔍 Raw userData before hashing:", userData);
 
   await sendMetaCAPIEvent({
     eventName: "ViewContent",
@@ -2108,11 +2109,12 @@ router.get("/producthome/:id", async (req, res) => {
       value: producthome.price,
       currency: "DZD"
     },
-    testEventCode: "TEST49466" // Only during testing
+    testEventCode: "TEST12345"
   });
 
   res.render("event/producthome", { producthome, eventId });
 });
+
 
   
 
