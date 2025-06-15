@@ -289,93 +289,267 @@ router.get("/add-to-cart-clean/:id", async function(req, res) {
   }
 });
 
+router.get("/sale/coat", async function(req, res) {
+  try {
+    const coats = await coat.find({});
+    const headers = await header.find({});
 
-router.get("/sale/coat", function(req, res){
-    coat.find({}, function(err, coats){
-    header.find({}, function(err, headers){
-        if(err){
-            console.log(err);
-        }
-        else{
-            res.render("sale/coat", {coats: coats,headers:headers});
-        }
+    // ✅ Collect user or anonymous data
+    const user = req.user || {};
+    const userData = {
+      email: user.email,
+      numero: user.numero,
+      firstName: user.firstName,
+      lastName: user.lastName,
+      ip: req.headers["x-forwarded-for"]?.split(",")[0] || req.socket.remoteAddress,
+      userAgent: req.get("User-Agent")
+    };
+
+    const eventId = `view_coat_${Date.now()}`;
+
+    // ✅ Send ViewContent event to Meta
+    await sendMetaCAPIEvent({
+      eventName: "ViewContent",
+      eventId,
+      userData,
+      customData: {
+        content_name: "Sale coat Page",
+        content_type: "product_group",
+        anonymous_id: req.sessionID // optional for retargeting
+      },
+      testEventCode: "TEST12345"
     });
-});
+
+    res.render("sale/coat", { coats, headers });
+
+  } catch (err) {
+    console.error("❌ Error loading sale/furniteur:", err);
+    res.status(500).send("Error loading page");
+  }
 });
 
-router.get("/add-to-cart-coat/:id", function(req, res){
-    var coatId = req.params.id;
-    var cart = new Cart(req.session.cart ? req.session.cart : {});
-    
-    coat.findById(coatId, function(err, coat){
-        if(err){
-            return res.redirect("/sale/coat");
-        }
-        cart.add(coat, coat.id);
-        req.session.cart = cart;
-        console.log(req.session.cart);
-        res.redirect("/sale/coat");
+router.get("/add-to-cart-coat/:id", async function(req, res) {
+  const coatId = req.params.id;
+  const cart = new Cart(req.session.cart || {});
+
+  try {
+    const item = await coat.findById(coatId);
+    if (!item) return res.redirect("/sale/coat");
+
+    cart.add(item, item.id);
+    req.session.cart = cart;
+    console.log("🛒 Item added to cart:", item.title);
+
+    // ✅ Prepare Meta CAPI AddToCart
+    const user = req.user || {};
+    const userData = {
+      email: user.email,
+      numero: user.numero,
+      firstName: user.firstName,
+      lastName: user.lastName,
+      ip: req.headers["x-forwarded-for"]?.split(",")[0] || req.socket.remoteAddress,
+      userAgent: req.get("User-Agent")
+    };
+
+    const eventId = `addtocart_coat_${item.id}_${Date.now()}`;
+
+    await sendMetaCAPIEvent({
+      eventName: "AddToCart",
+      eventId,
+      userData,
+      customData: {
+        content_name: item.title,
+        content_ids: [item.id],
+        content_type: "product",
+        value: item.price,
+        currency: "DZD",
+        anonymous_id: req.sessionID
+      },
+      testEventCode: "TEST12345" // Optional for Meta test events
     });
+
+    res.redirect("/sale/coat");
+
+  } catch (err) {
+    console.error("❌ AddToCart Error:", err);
+    res.redirect("/sale/coat");
+  }
 });
 
-router.get("/sale/sample", function(req, res){
-    sample.find({}, function(err, samples){
-    header.find({}, function(err, headers){
-        if(err){
-            console.log(err);
-        }
-        else{
-            res.render("sale/sample", {samples: samples,headers:headers});
-        }
+router.get("/sale/sample", async function(req, res) {
+  try {
+    const samples = await sample.find({});
+    const headers = await header.find({});
+
+    // ✅ Collect user or anonymous data
+    const user = req.user || {};
+    const userData = {
+      email: user.email,
+      numero: user.numero,
+      firstName: user.firstName,
+      lastName: user.lastName,
+      ip: req.headers["x-forwarded-for"]?.split(",")[0] || req.socket.remoteAddress,
+      userAgent: req.get("User-Agent")
+    };
+
+    const eventId = `view_coat_${Date.now()}`;
+
+    // ✅ Send ViewContent event to Meta
+    await sendMetaCAPIEvent({
+      eventName: "ViewContent",
+      eventId,
+      userData,
+      customData: {
+        content_name: "Sale Furniteur Page",
+        content_type: "product_group",
+        anonymous_id: req.sessionID // optional for retargeting
+      },
+      testEventCode: "TEST12345"
     });
-});
+
+    res.render("sale/sample", { samples, headers });
+
+  } catch (err) {
+    console.error("❌ Error loading sale/furniteur:", err);
+    res.status(500).send("Error loading page");
+  }
 });
 
-router.get("/add-to-cart-sample/:id", function(req, res){
-    var sampleId = req.params.id;
-    var cart = new Cart(req.session.cart ? req.session.cart : {});
-    
-    sample.findById(sampleId, function(err, sample){
-        if(err){
-            return res.redirect("/sale/sample");
-        }
-        cart.add(sample, sample.id);
-        req.session.cart = cart;
-        console.log(req.session.cart);
-        res.redirect("/sale/sample");
+router.get("/add-to-cart-sample/:id", async function(req, res) {
+  const sampleId = req.params.id;
+  const cart = new Cart(req.session.cart || {});
+
+  try {
+    const item = await sample.findById(sampleId);
+    if (!item) return res.redirect("/sale/sample");
+
+    cart.add(item, item.id);
+    req.session.cart = cart;
+    console.log("🛒 Item added to cart:", item.title);
+
+    // ✅ Prepare Meta CAPI AddToCart
+    const user = req.user || {};
+    const userData = {
+      email: user.email,
+      numero: user.numero,
+      firstName: user.firstName,
+      lastName: user.lastName,
+      ip: req.headers["x-forwarded-for"]?.split(",")[0] || req.socket.remoteAddress,
+      userAgent: req.get("User-Agent")
+    };
+
+    const eventId = `addtocart_sample_${item.id}_${Date.now()}`;
+
+    await sendMetaCAPIEvent({
+      eventName: "AddToCart",
+      eventId,
+      userData,
+      customData: {
+        content_name: item.title,
+        content_ids: [item.id],
+        content_type: "product",
+        value: item.price,
+        currency: "DZD",
+        anonymous_id: req.sessionID
+      },
+      testEventCode: "TEST12345" // Optional for Meta test events
     });
+
+    res.redirect("/sale/sample");
+
+  } catch (err) {
+    console.error("❌ AddToCart Error:", err);
+    res.redirect("/sale/sample");
+  }
 });
 
-router.get("/sale/tool", function(req, res){
-    tool.find({}, function(err, tools){
-    header.find({}, function(err, headers){
-        if(err){
-            console.log(err);
-        }
-        else{
-            res.render("sale/tool", {tools: tools,headers:headers});
-        }
+
+router.get("/sale/tool", async function(req, res) {
+  try {
+    const tools = await tool.find({});
+    const headers = await header.find({});
+
+    // ✅ Collect user or anonymous data
+    const user = req.user || {};
+    const userData = {
+      email: user.email,
+      numero: user.numero,
+      firstName: user.firstName,
+      lastName: user.lastName,
+      ip: req.headers["x-forwarded-for"]?.split(",")[0] || req.socket.remoteAddress,
+      userAgent: req.get("User-Agent")
+    };
+
+    const eventId = `view_tool_${Date.now()}`;
+
+    // ✅ Send ViewContent event to Meta
+    await sendMetaCAPIEvent({
+      eventName: "ViewContent",
+      eventId,
+      userData,
+      customData: {
+        content_name: "Sale coat Page",
+        content_type: "product_group",
+        anonymous_id: req.sessionID // optional for retargeting
+      },
+      testEventCode: "TEST12345"
     });
-});
+
+    res.render("sale/tool", { tools, headers });
+
+  } catch (err) {
+    console.error("❌ Error loading sale/furniteur:", err);
+    res.status(500).send("Error loading page");
+  }
 });
 
-router.get("/add-to-cart-tool/:id", function(req, res){
-    var toolId = req.params.id;
-    var cart = new Cart(req.session.cart ? req.session.cart : {});
-    
-    tool.findById(toolId, function(err, tool){
-        if(err){
-            return res.redirect("/sale/tool");
-        }
-        cart.add(tool, tool.id);
-        req.session.cart = cart;
-        console.log(req.session.cart);
-        res.redirect("/sale/tool");
+router.get("/add-to-cart-tool/:id", async function(req, res) {
+  const toolId = req.params.id;
+  const cart = new Cart(req.session.cart || {});
+
+  try {
+    const item = await tool.findById(toolId);
+    if (!item) return res.redirect("/sale/tool");
+
+    cart.add(item, item.id);
+    req.session.cart = cart;
+    console.log("🛒 Item added to cart:", item.title);
+
+    // ✅ Prepare Meta CAPI AddToCart
+    const user = req.user || {};
+    const userData = {
+      email: user.email,
+      numero: user.numero,
+      firstName: user.firstName,
+      lastName: user.lastName,
+      ip: req.headers["x-forwarded-for"]?.split(",")[0] || req.socket.remoteAddress,
+      userAgent: req.get("User-Agent")
+    };
+
+    const eventId = `addtocart_tool_${item.id}_${Date.now()}`;
+
+    await sendMetaCAPIEvent({
+      eventName: "AddToCart",
+      eventId,
+      userData,
+      customData: {
+        content_name: item.title,
+        content_ids: [item.id],
+        content_type: "product",
+        value: item.price,
+        currency: "DZD",
+        anonymous_id: req.sessionID
+      },
+      testEventCode: "TEST12345" // Optional for Meta test events
     });
+
+    res.redirect("/sale/tool");
+
+  } catch (err) {
+    console.error("❌ AddToCart Error:", err);
+    res.redirect("/sale/tool");
+  }
 });
-
-
-
 
 var Cart = require("../models/cart");
 var wow = require('../models/wow');
@@ -1579,24 +1753,50 @@ router.get("/add-to-cart-beiget/:id", function(req, res){
     });
 });
 
-
-
-
-
-
-
-
-router.get("/myfixateur/fixateur", function(req, res){
+router.get("/myfixateur/fixateur", async function(req, res) {
+  try {
     
-        header.find({}, function(err, headers){
-        if(err){
-            console.log(err);
-        }
-        else{
-            res.render("myfixateur/fixateur", {headers:headers});
-        }
+    const headers = await header.find({});
+
+    // ✅ Collect user or anonymous data
+    const user = req.user || {};
+    const userData = {
+      email: user.email,
+      numero: user.numero,
+      firstName: user.firstName,
+      lastName: user.lastName,
+      ip: req.headers["x-forwarded-for"]?.split(",")[0] || req.socket.remoteAddress,
+      userAgent: req.get("User-Agent")
+    };
+
+    const eventId = `view_fixateur_${Date.now()}`;
+
+    // ✅ Send ViewContent event to Meta
+    await sendMetaCAPIEvent({
+      eventName: "ViewContent",
+      eventId,
+      userData,
+      customData: {
+        content_name: "Sale fixateur Page",
+        content_type: "product_group",
+        anonymous_id: req.sessionID // optional for retargeting
+      },
+      testEventCode: "TEST12345"
     });
+
+    res.render("/myfixateur/fixateur", { headers, headers });
+
+  } catch (err) {
+    console.error("❌ Error loading sale/furniteur:", err);
+    res.status(500).send("Error loading page");
+  }
 });
+
+
+
+
+
+
 
 router.get("/paintellomac/paintellomac", function(req, res){
     
