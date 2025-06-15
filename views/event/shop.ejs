@@ -377,11 +377,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
   function trackCheckout(totalPrice) {
     fbq('track', 'InitiateCheckout', {
       value: totalPrice,
-      currency: 'DZD',
-    em: '<%= user ? user.email : "" %>',
-    fn: '<%= user ? user.firstName : "" %>',
-    ln: '<%= user ? user.lastName : "" %>',
-    ph: '<%= user ? user.numero : "" %>'
+      currency: 'DZD'
     });
   }
 
