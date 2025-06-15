@@ -115,6 +115,7 @@ router.get("/add-to-cart-furniteur/:id", async function(req, res) {
   }
 });
 
+
 router.get("/sale/cuisin", async function(req, res) {
   try {
     const cuisins = await cuisin.find({});
@@ -146,7 +147,7 @@ router.get("/sale/cuisin", async function(req, res) {
       testEventCode: "TEST12345"
     });
 
-    res.render("/sale/cuisin", { cuisins, headers });
+    res.render("sale/cuisin", { cuisins, headers });
 
   } catch (err) {
     console.error("❌ Error loading /sale/cuisin:", err);
@@ -233,7 +234,7 @@ router.get("/sale/clean", async function(req, res) {
       testEventCode: "TEST12345"
     });
 
-    res.render("/sale/clean", { cleans, headers });
+    res.render("sale/clean", { cleans, headers });
 
   } catch (err) {
     console.error("❌ Error loading /sale/cuisin:", err);
