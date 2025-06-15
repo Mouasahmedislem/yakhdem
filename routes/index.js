@@ -1785,7 +1785,7 @@ router.get("/myfixateur/fixateur", async function(req, res) {
       testEventCode: "TEST12345"
     });
 
-    res.render("/myfixateur/fixateur", { headers, headers });
+    res.render("myfixateur/fixateur", { headers, headers });
 
   } catch (err) {
     console.error("❌ Error loading sale/furniteur:", err);
@@ -1794,22 +1794,46 @@ router.get("/myfixateur/fixateur", async function(req, res) {
 });
 
 
-
-
-
-
-
-router.get("/paintellomac/paintellomac", function(req, res){
+router.get("/paintellomac/paintellomac", async function(req, res) {
+  try {
     
-        header.find({}, function(err, headers){
-        if(err){
-            console.log(err);
-        }
-        else{
-            res.render("paintellomac/paintellomac", {headers:headers});
-        }
+    const headers = await header.find({});
+
+    // ✅ Collect user or anonymous data
+    const user = req.user || {};
+    const userData = {
+      email: user.email,
+      numero: user.numero,
+      firstName: user.firstName,
+      lastName: user.lastName,
+      ip: req.headers["x-forwarded-for"]?.split(",")[0] || req.socket.remoteAddress,
+      userAgent: req.get("User-Agent")
+    };
+
+    const eventId = `view_paintellomac_${Date.now()}`;
+
+    // ✅ Send ViewContent event to Meta
+    await sendMetaCAPIEvent({
+      eventName: "ViewContent",
+      eventId,
+      userData,
+      customData: {
+        content_name: "Sale fixateur Page",
+        content_type: "product_group",
+        anonymous_id: req.sessionID // optional for retargeting
+      },
+      testEventCode: "TEST12345"
     });
+
+    res.render("paintellomac/paintellomac", { headers, headers });
+
+  } catch (err) {
+    console.error("❌ Error loading sale/furniteur:", err);
+    res.status(500).send("Error loading page");
+  }
 });
+
+
 router.get("/onecoat/pink02", function(req, res){
     pinksap.find({}, function(err, pinksaps){
     header.find({}, function(err, headers){
@@ -1922,94 +1946,280 @@ router.get("/add-to-cart-pinkcool/:id", function(req, res){
 });
 
 
-
-
-
-
-
-
-
-router.get("/coulors/blue", function(req, res){
+router.get("/coulors/blue", async function(req, res) {
+  try {
     
-        header.find({}, function(err, headers){
-        if(err){
-            console.log(err);
-        }
-        else{
-            res.render("coulors/blue", {headers:headers});
-        }
+    const headers = await header.find({});
+
+    // ✅ Collect user or anonymous data
+    const user = req.user || {};
+    const userData = {
+      email: user.email,
+      numero: user.numero,
+      firstName: user.firstName,
+      lastName: user.lastName,
+      ip: req.headers["x-forwarded-for"]?.split(",")[0] || req.socket.remoteAddress,
+      userAgent: req.get("User-Agent")
+    };
+
+    const eventId = `view_paintellblue_${Date.now()}`;
+
+    // ✅ Send ViewContent event to Meta
+    await sendMetaCAPIEvent({
+      eventName: "ViewContent",
+      eventId,
+      userData,
+      customData: {
+        content_name: "Sale fixateur Page",
+        content_type: "product_group",
+        anonymous_id: req.sessionID // optional for retargeting
+      },
+      testEventCode: "TEST12345"
     });
+
+    res.render("coulors/blue", { headers, headers });
+
+  } catch (err) {
+    console.error("❌ Error loading sale/furniteur:", err);
+    res.status(500).send("Error loading page");
+  }
 });
 
-router.get("/coulors/greens", function(req, res){
+
+
+router.get("/coulors/greens", async function(req, res) {
+  try {
     
-        header.find({}, function(err, headers){
-        if(err){
-            console.log(err);
-        }
-        else{
-            res.render("coulors/greens", {headers:headers});
-        }
+    const headers = await header.find({});
+
+    // ✅ Collect user or anonymous data
+    const user = req.user || {};
+    const userData = {
+      email: user.email,
+      numero: user.numero,
+      firstName: user.firstName,
+      lastName: user.lastName,
+      ip: req.headers["x-forwarded-for"]?.split(",")[0] || req.socket.remoteAddress,
+      userAgent: req.get("User-Agent")
+    };
+
+    const eventId = `view_paintellgreens_${Date.now()}`;
+
+    // ✅ Send ViewContent event to Meta
+    await sendMetaCAPIEvent({
+      eventName: "ViewContent",
+      eventId,
+      userData,
+      customData: {
+        content_name: "Sale fixateur Page",
+        content_type: "product_group",
+        anonymous_id: req.sessionID // optional for retargeting
+      },
+      testEventCode: "TEST12345"
     });
+
+    res.render("coulors/greens", { headers, headers });
+
+  } catch (err) {
+    console.error("❌ Error loading sale/furniteur:", err);
+    res.status(500).send("Error loading page");
+  }
 });
-      router.get("/coulors/grey", function(req, res){
+router.get("/coulors/grey", async function(req, res) {
+  try {
     
-        header.find({}, function(err, headers){
-        if(err){
-            console.log(err);
-        }
-        else{
-            res.render("coulors/grey", {headers:headers});
-        }
+    const headers = await header.find({});
+
+    // ✅ Collect user or anonymous data
+    const user = req.user || {};
+    const userData = {
+      email: user.email,
+      numero: user.numero,
+      firstName: user.firstName,
+      lastName: user.lastName,
+      ip: req.headers["x-forwarded-for"]?.split(",")[0] || req.socket.remoteAddress,
+      userAgent: req.get("User-Agent")
+    };
+
+    const eventId = `view_paintellgrey_${Date.now()}`;
+
+    // ✅ Send ViewContent event to Meta
+    await sendMetaCAPIEvent({
+      eventName: "ViewContent",
+      eventId,
+      userData,
+      customData: {
+        content_name: "Sale fixateur Page",
+        content_type: "product_group",
+        anonymous_id: req.sessionID // optional for retargeting
+      },
+      testEventCode: "TEST12345"
     });
+
+    res.render("coulors/grey", { headers, headers });
+
+  } catch (err) {
+    console.error("❌ Error loading sale/furniteur:", err);
+    res.status(500).send("Error loading page");
+  }
 });
 
- router.get("/coulors/yellowv2", function(req, res){
+    router.get("/coulors/yellowv2", async function(req, res) {
+  try {
     
-        header.find({}, function(err, headers){
-        if(err){
-            console.log(err);
-        }
-        else{
-            res.render("coulors/yellowv2", {headers:headers});
-        }
+    const headers = await header.find({});
+
+    // ✅ Collect user or anonymous data
+    const user = req.user || {};
+    const userData = {
+      email: user.email,
+      numero: user.numero,
+      firstName: user.firstName,
+      lastName: user.lastName,
+      ip: req.headers["x-forwarded-for"]?.split(",")[0] || req.socket.remoteAddress,
+      userAgent: req.get("User-Agent")
+    };
+
+    const eventId = `view_paintellyellowv2_${Date.now()}`;
+
+    // ✅ Send ViewContent event to Meta
+    await sendMetaCAPIEvent({
+      eventName: "ViewContent",
+      eventId,
+      userData,
+      customData: {
+        content_name: "Sale yellowv2 Page",
+        content_type: "product_group",
+        anonymous_id: req.sessionID // optional for retargeting
+      },
+      testEventCode: "TEST12345"
     });
+
+    res.render("coulors/yellowv2", { headers, headers });
+
+  } catch (err) {
+    console.error("❌ Error loading sale/furniteur:", err);
+    res.status(500).send("Error loading page");
+  }
 });
 
- router.get("/coulors/pink", function(req, res){
+ router.get("/coulors/pink", async function(req, res) {
+  try {
     
-        header.find({}, function(err, headers){
-        if(err){
-            console.log(err);
-        }
-        else{
-            res.render("coulors/pink", {headers:headers});
-        }
+    const headers = await header.find({});
+
+    // ✅ Collect user or anonymous data
+    const user = req.user || {};
+    const userData = {
+      email: user.email,
+      numero: user.numero,
+      firstName: user.firstName,
+      lastName: user.lastName,
+      ip: req.headers["x-forwarded-for"]?.split(",")[0] || req.socket.remoteAddress,
+      userAgent: req.get("User-Agent")
+    };
+
+    const eventId = `view_paintellpink_${Date.now()}`;
+
+    // ✅ Send ViewContent event to Meta
+    await sendMetaCAPIEvent({
+      eventName: "ViewContent",
+      eventId,
+      userData,
+      customData: {
+        content_name: "Sale pink Page",
+        content_type: "product_group",
+        anonymous_id: req.sessionID // optional for retargeting
+      },
+      testEventCode: "TEST12345"
     });
+
+    res.render("coulors/pink", { headers, headers });
+
+  } catch (err) {
+    console.error("❌ Error loading sale/furniteur:", err);
+    res.status(500).send("Error loading page");
+  }
 });
- router.get("/coulors/neutral", function(req, res){
+
+ router.get("/coulors/neutral", async function(req, res) {
+  try {
     
-        header.find({}, function(err, headers){
-        if(err){
-            console.log(err);
-        }
-        else{
-            res.render("coulors/neutral", {headers:headers});
-        }
+    const headers = await header.find({});
+
+    // ✅ Collect user or anonymous data
+    const user = req.user || {};
+    const userData = {
+      email: user.email,
+      numero: user.numero,
+      firstName: user.firstName,
+      lastName: user.lastName,
+      ip: req.headers["x-forwarded-for"]?.split(",")[0] || req.socket.remoteAddress,
+      userAgent: req.get("User-Agent")
+    };
+
+    const eventId = `view_paintellneutral_${Date.now()}`;
+
+    // ✅ Send ViewContent event to Meta
+    await sendMetaCAPIEvent({
+      eventName: "ViewContent",
+      eventId,
+      userData,
+      customData: {
+        content_name: "Sale neutral Page",
+        content_type: "product_group",
+        anonymous_id: req.sessionID // optional for retargeting
+      },
+      testEventCode: "TEST12345"
     });
+
+    res.render("coulors/neutral", { headers, headers });
+
+  } catch (err) {
+    console.error("❌ Error loading sale/furniteur:", err);
+    res.status(500).send("Error loading page");
+  }
 });
 
 router.get("/favicon.ico", function(req, res){
-    
-    
-        res.render("views/favicon");
-    
-});
-router.get("/power", function(req, res, next){
-    
-     var errMsg = req.flash('error')[0];
-        res.render("event/power", { errMsg: errMsg, noError: !errMsg });
-    
+     res.render("views/favicon");
+    });
+
+router.get("/power", async function(req, res) {
+  try {
+    var errMsg = req.flash('error')[0];
+    // ✅ Collect user or anonymous data
+    const user = req.user || {};
+    const userData = {
+      email: user.email,
+      numero: user.numero,
+      firstName: user.firstName,
+      lastName: user.lastName,
+      ip: req.headers["x-forwarded-for"]?.split(",")[0] || req.socket.remoteAddress,
+      userAgent: req.get("User-Agent")
+    };
+
+    const eventId = `view_power_${Date.now()}`;
+
+    // ✅ Send ViewContent event to Meta
+    await sendMetaCAPIEvent({
+      eventName: "ViewContent",
+      eventId,
+      userData,
+      customData: {
+        content_name: "power Page",
+        content_type: "product_group",
+        anonymous_id: req.sessionID // optional for retargeting
+      },
+      testEventCode: "TEST12345"
+    });
+
+    res.render("event/power", { errMsg: errMsg, noError: !errMsg });
+
+  } catch (err) {
+    console.error("❌ Error loading sale/furniteur:", err);
+    res.status(500).send("Error loading page");
+  }
 });
 
 router.get('/shop', (req, res)=> {
@@ -2023,9 +2233,44 @@ router.get('/shop', (req, res)=> {
         });
  });
 
-               
+router.get("/", async function(req, res) {
+  try {
+    var successMsg = req.flash('success')[0];
+    const headers = await header.find({});
 
+    // ✅ Collect user or anonymous data
+    const user = req.user || {};
+    const userData = {
+      email: user.email,
+      numero: user.numero,
+      firstName: user.firstName,
+      lastName: user.lastName,
+      ip: req.headers["x-forwarded-for"]?.split(",")[0] || req.socket.remoteAddress,
+      userAgent: req.get("User-Agent")
+    };
 
+    const eventId = `view_paintellneutral_${Date.now()}`;
+
+    // ✅ Send ViewContent event to Meta
+    await sendMetaCAPIEvent({
+      eventName: "ViewContent",
+      eventId,
+      userData,
+      customData: {
+        content_name: "Sale neutral Page",
+        content_type: "product_group",
+        anonymous_id: req.sessionID // optional for retargeting
+      },
+      testEventCode: "TEST12345"
+    });
+
+    res.render("event/home", { headers, headers , successMsg: successMsg });
+
+  } catch (err) {
+    console.error("❌ Error loading sale/furniteur:", err);
+    res.status(500).send("Error loading page");
+  }
+});
     
   router.get('/', function(req, res, next) {
   var successMsg = req.flash('success')[0];
