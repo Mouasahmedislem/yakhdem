@@ -2003,8 +2003,8 @@ order.save(async function(err, result) {
     to: cleanNumero,
     type: "template",
     template: {
-      name: "order_confirmation", // your template name
-      language: { code: "en_US" },
+      name: "commande_confirmee", // your template name
+      language: { code: "fr" },
       components: [
         {
           type: "body",
