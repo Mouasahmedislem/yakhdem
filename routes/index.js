@@ -32,7 +32,7 @@ router.get("/sale/furniteur", async function(req, res) {
   try {
     const furniteurs = await furniteur.find({});
     const headers = await header.find({});
-    const fbc = req.cookies._fbc || undefined;
+    
     // ✅ Collect user or anonymous data
     const user = req.user || {};
     const userData = {
@@ -42,7 +42,8 @@ router.get("/sale/furniteur", async function(req, res) {
       lastName: user.lastName,
       ip: req.headers["x-forwarded-for"]?.split(",")[0] || req.socket.remoteAddress,
       userAgent: req.get("User-Agent"),
-      fbc: fbc
+         fbc: req.cookies._fbc || undefined,
+         fbp: req.cookies._fbp || undefined  
     };
 
     const eventId = `view_furniteur_${Date.now()}`;
@@ -88,7 +89,9 @@ router.get("/add-to-cart-furniteur/:id", async function(req, res) {
       firstName: user.firstName,
       lastName: user.lastName,
       ip: req.headers["x-forwarded-for"]?.split(",")[0] || req.socket.remoteAddress,
-      userAgent: req.get("User-Agent")
+      userAgent: req.get("User-Agent"),
+         fbc: req.cookies._fbc || undefined,
+         fbp: req.cookies._fbp || undefined  
     };
 
     const eventId = `addtocart_furniteur_${item.id}_${Date.now()}`;
@@ -130,7 +133,9 @@ router.get("/sale/cuisin", async function(req, res) {
       firstName: user.firstName,
       lastName: user.lastName,
       ip: req.headers["x-forwarded-for"]?.split(",")[0] || req.socket.remoteAddress,
-      userAgent: req.get("User-Agent")
+      userAgent: req.get("User-Agent"),
+        fbc: req.cookies._fbc || undefined,
+        fbp: req.cookies._fbp || undefined  
     };
 
     const eventId = `view_cuisin_${Date.now()}`;
@@ -176,7 +181,9 @@ router.get("/add-to-cart-cuisin/:id", async function(req, res) {
       firstName: user.firstName,
       lastName: user.lastName,
       ip: req.headers["x-forwarded-for"]?.split(",")[0] || req.socket.remoteAddress,
-      userAgent: req.get("User-Agent")
+      userAgent: req.get("User-Agent"),
+        fbc: req.cookies._fbc || undefined,
+        fbp: req.cookies._fbp || undefined  
     };
 
     const eventId = `addtocart_cuisin_${item.id}_${Date.now()}`;
@@ -217,7 +224,9 @@ router.get("/sale/clean", async function(req, res) {
       firstName: user.firstName,
       lastName: user.lastName,
       ip: req.headers["x-forwarded-for"]?.split(",")[0] || req.socket.remoteAddress,
-      userAgent: req.get("User-Agent")
+      userAgent: req.get("User-Agent"),
+        fbc: req.cookies._fbc || undefined,
+        fbp: req.cookies._fbp || undefined  
     };
 
     const eventId = `view_clean_${Date.now()}`;
@@ -263,7 +272,9 @@ router.get("/add-to-cart-clean/:id", async function(req, res) {
       firstName: user.firstName,
       lastName: user.lastName,
       ip: req.headers["x-forwarded-for"]?.split(",")[0] || req.socket.remoteAddress,
-      userAgent: req.get("User-Agent")
+      userAgent: req.get("User-Agent"),
+        fbc: req.cookies._fbc || undefined,
+        fbp: req.cookies._fbp || undefined  
     };
 
     const eventId = `addtocart_clean_${item.id}_${Date.now()}`;
@@ -304,7 +315,9 @@ router.get("/sale/coat", async function(req, res) {
       firstName: user.firstName,
       lastName: user.lastName,
       ip: req.headers["x-forwarded-for"]?.split(",")[0] || req.socket.remoteAddress,
-      userAgent: req.get("User-Agent")
+      userAgent: req.get("User-Agent"),
+        fbc: req.cookies._fbc || undefined,
+        fbp: req.cookies._fbp || undefined  
     };
 
     const eventId = `view_coat_${Date.now()}`;
@@ -350,7 +363,9 @@ router.get("/add-to-cart-coat/:id", async function(req, res) {
       firstName: user.firstName,
       lastName: user.lastName,
       ip: req.headers["x-forwarded-for"]?.split(",")[0] || req.socket.remoteAddress,
-      userAgent: req.get("User-Agent")
+      userAgent: req.get("User-Agent"),
+        fbc: req.cookies._fbc || undefined,
+        fbp: req.cookies._fbp || undefined  
     };
 
     const eventId = `addtocart_coat_${item.id}_${Date.now()}`;
@@ -391,7 +406,9 @@ router.get("/sale/sample", async function(req, res) {
       firstName: user.firstName,
       lastName: user.lastName,
       ip: req.headers["x-forwarded-for"]?.split(",")[0] || req.socket.remoteAddress,
-      userAgent: req.get("User-Agent")
+      userAgent: req.get("User-Agent"),
+        fbc: req.cookies._fbc || undefined,
+        fbp: req.cookies._fbp || undefined  
     };
 
     const eventId = `view_coat_${Date.now()}`;
@@ -437,7 +454,9 @@ router.get("/add-to-cart-sample/:id", async function(req, res) {
       firstName: user.firstName,
       lastName: user.lastName,
       ip: req.headers["x-forwarded-for"]?.split(",")[0] || req.socket.remoteAddress,
-      userAgent: req.get("User-Agent")
+      userAgent: req.get("User-Agent"),
+        fbc: req.cookies._fbc || undefined,
+        fbp: req.cookies._fbp || undefined  
     };
 
     const eventId = `addtocart_sample_${item.id}_${Date.now()}`;
@@ -479,7 +498,9 @@ router.get("/sale/tool", async function(req, res) {
       firstName: user.firstName,
       lastName: user.lastName,
       ip: req.headers["x-forwarded-for"]?.split(",")[0] || req.socket.remoteAddress,
-      userAgent: req.get("User-Agent")
+      userAgent: req.get("User-Agent"),
+        fbc: req.cookies._fbc || undefined,
+        fbp: req.cookies._fbp || undefined  
     };
 
     const eventId = `view_tool_${Date.now()}`;
@@ -525,7 +546,9 @@ router.get("/add-to-cart-tool/:id", async function(req, res) {
       firstName: user.firstName,
       lastName: user.lastName,
       ip: req.headers["x-forwarded-for"]?.split(",")[0] || req.socket.remoteAddress,
-      userAgent: req.get("User-Agent")
+      userAgent: req.get("User-Agent"),
+        fbc: req.cookies._fbc || undefined,
+        fbp: req.cookies._fbp || undefined  
     };
 
     const eventId = `addtocart_tool_${item.id}_${Date.now()}`;
@@ -1768,7 +1791,9 @@ router.get("/myfixateur/fixateur", async function(req, res) {
       firstName: user.firstName,
       lastName: user.lastName,
       ip: req.headers["x-forwarded-for"]?.split(",")[0] || req.socket.remoteAddress,
-      userAgent: req.get("User-Agent")
+      userAgent: req.get("User-Agent"),
+        fbc: req.cookies._fbc || undefined,
+        fbp: req.cookies._fbp || undefined  
     };
 
     const eventId = `view_fixateur_${Date.now()}`;
@@ -1808,7 +1833,9 @@ router.get("/paintellomac/paintellomac", async function(req, res) {
       firstName: user.firstName,
       lastName: user.lastName,
       ip: req.headers["x-forwarded-for"]?.split(",")[0] || req.socket.remoteAddress,
-      userAgent: req.get("User-Agent")
+      userAgent: req.get("User-Agent"),
+        fbc: req.cookies._fbc || undefined,
+        fbp: req.cookies._fbp || undefined  
     };
 
     const eventId = `view_paintellomac_${Date.now()}`;
@@ -1960,7 +1987,9 @@ router.get("/coulors/blue", async function(req, res) {
       firstName: user.firstName,
       lastName: user.lastName,
       ip: req.headers["x-forwarded-for"]?.split(",")[0] || req.socket.remoteAddress,
-      userAgent: req.get("User-Agent")
+      userAgent: req.get("User-Agent"),
+        fbc: req.cookies._fbc || undefined,
+        fbp: req.cookies._fbp || undefined  
     };
 
     const eventId = `view_paintellblue_${Date.now()}`;
@@ -2001,7 +2030,9 @@ router.get("/coulors/greens", async function(req, res) {
       firstName: user.firstName,
       lastName: user.lastName,
       ip: req.headers["x-forwarded-for"]?.split(",")[0] || req.socket.remoteAddress,
-      userAgent: req.get("User-Agent")
+      userAgent: req.get("User-Agent"),
+        fbc: req.cookies._fbc || undefined,
+        fbp: req.cookies._fbp || undefined  
     };
 
     const eventId = `view_paintellgreens_${Date.now()}`;
@@ -2039,7 +2070,9 @@ router.get("/coulors/grey", async function(req, res) {
       firstName: user.firstName,
       lastName: user.lastName,
       ip: req.headers["x-forwarded-for"]?.split(",")[0] || req.socket.remoteAddress,
-      userAgent: req.get("User-Agent")
+      userAgent: req.get("User-Agent"),
+        fbc: req.cookies._fbc || undefined,
+        fbp: req.cookies._fbp || undefined  
     };
 
     const eventId = `view_paintellgrey_${Date.now()}`;
@@ -2078,7 +2111,9 @@ router.get("/coulors/grey", async function(req, res) {
       firstName: user.firstName,
       lastName: user.lastName,
       ip: req.headers["x-forwarded-for"]?.split(",")[0] || req.socket.remoteAddress,
-      userAgent: req.get("User-Agent")
+      userAgent: req.get("User-Agent"),
+        fbc: req.cookies._fbc || undefined,
+        fbp: req.cookies._fbp || undefined  
     };
 
     const eventId = `view_paintellyellowv2_${Date.now()}`;
@@ -2117,7 +2152,9 @@ router.get("/coulors/grey", async function(req, res) {
       firstName: user.firstName,
       lastName: user.lastName,
       ip: req.headers["x-forwarded-for"]?.split(",")[0] || req.socket.remoteAddress,
-      userAgent: req.get("User-Agent")
+      userAgent: req.get("User-Agent"),
+        fbc: req.cookies._fbc || undefined,
+        fbp: req.cookies._fbp || undefined  
     };
 
     const eventId = `view_paintellpink_${Date.now()}`;
@@ -2156,7 +2193,9 @@ router.get("/coulors/grey", async function(req, res) {
       firstName: user.firstName,
       lastName: user.lastName,
       ip: req.headers["x-forwarded-for"]?.split(",")[0] || req.socket.remoteAddress,
-      userAgent: req.get("User-Agent")
+      userAgent: req.get("User-Agent"),
+        fbc: req.cookies._fbc || undefined,
+        fbp: req.cookies._fbp || undefined  
     };
 
     const eventId = `view_paintellneutral_${Date.now()}`;
@@ -2197,7 +2236,9 @@ router.get("/power", async function(req, res) {
       firstName: user.firstName,
       lastName: user.lastName,
       ip: req.headers["x-forwarded-for"]?.split(",")[0] || req.socket.remoteAddress,
-      userAgent: req.get("User-Agent")
+      userAgent: req.get("User-Agent"),
+        fbc: req.cookies._fbc || undefined,
+        fbp: req.cookies._fbp || undefined  
     };
 
     const eventId = `view_power_${Date.now()}`;
@@ -2247,7 +2288,9 @@ router.get("/", async function(req, res) {
       firstName: user.firstName,
       lastName: user.lastName,
       ip: req.headers["x-forwarded-for"]?.split(",")[0] || req.socket.remoteAddress,
-      userAgent: req.get("User-Agent")
+      userAgent: req.get("User-Agent"),
+        fbc: req.cookies._fbc || undefined,
+        fbp: req.cookies._fbp || undefined  
     };
 
     const eventId = `view_homepage_${Date.now()}`;
@@ -2286,7 +2329,9 @@ router.get("/wow", async function(req, res) {
       firstName: user.firstName,
       lastName: user.lastName,
       ip: req.headers["x-forwarded-for"]?.split(",")[0] || req.socket.remoteAddress,
-      userAgent: req.get("User-Agent")
+      userAgent: req.get("User-Agent"),
+        fbc: req.cookies._fbc || undefined,
+        fbp: req.cookies._fbp || undefined  
     };
 
     const eventId = `view_wow_${Date.now()}`;
@@ -2332,7 +2377,9 @@ router.get("/add-to-cart-wow/:id", async function(req, res) {
       firstName: user.firstName,
       lastName: user.lastName,
       ip: req.headers["x-forwarded-for"]?.split(",")[0] || req.socket.remoteAddress,
-      userAgent: req.get("User-Agent")
+      userAgent: req.get("User-Agent"),
+        fbc: req.cookies._fbc || undefined,
+        fbp: req.cookies._fbp || undefined  
     };
 
     const eventId = `addtocart_wow_${item.id}_${Date.now()}`;
@@ -2391,7 +2438,9 @@ router.get("/add-to-cart-wow/:id", async function(req, res) {
     firstName: user.firstName,
     lastName: user.lastName,
     ip: req.headers["x-forwarded-for"]?.split(",")[0] || req.socket.remoteAddress,
-    userAgent: req.get("User-Agent")
+    userAgent: req.get("User-Agent"),
+        fbc: req.cookies._fbc || undefined,
+        fbp: req.cookies._fbp || undefined  
   };
 
   const eventId = `checkout_${Date.now()}`;
@@ -2577,7 +2626,9 @@ order.save(async function(err, result) {
       firstName: user.firstName,
       lastName: user.lastName,
       ip: req.headers["x-forwarded-for"]?.split(",")[0] || req.socket.remoteAddress,
-      userAgent: req.get("User-Agent")
+      userAgent: req.get("User-Agent"),
+        fbc: req.cookies._fbc || undefined,
+        fbp: req.cookies._fbp || undefined  
     };
 
     const eventId = `purchase_${result._id}_${Date.now()}`;
@@ -2849,7 +2900,9 @@ router.get("/producthome/:id", async (req, res) => {
     firstName: req.user?.firstName || undefined,
     lastName: req.user?.lastName || undefined,
     ip: req.headers["x-forwarded-for"]?.split(",")[0] || req.socket.remoteAddress,
-    userAgent: req.get("User-Agent")
+    userAgent: req.get("User-Agent"),
+        fbc: req.cookies._fbc || undefined,
+        fbp: req.cookies._fbp || undefined  
   };
 
   console.log("🔍 Raw userData before hashing:", userData);
@@ -2890,7 +2943,9 @@ router.get("/add-to-cart-producthome/:id", async function(req, res) {
     firstName: user.firstName,
     lastName: user.lastName,
     ip: req.headers["x-forwarded-for"]?.split(",")[0] || req.socket.remoteAddress,
-    userAgent: req.get("User-Agent")
+    userAgent: req.get("User-Agent"),
+        fbc: req.cookies._fbc || undefined,
+        fbp: req.cookies._fbp || undefined  
   };
 
   // ✅ Unique event ID
@@ -2929,7 +2984,9 @@ router.get('/paintello', async (req, res) => {
       firstName: isLoggedIn ? req.user.firstName : undefined,
       lastName: isLoggedIn ? req.user.lastName : undefined,
       ip: req.headers["x-forwarded-for"]?.split(",")[0] || req.socket.remoteAddress,
-      userAgent: req.get("User-Agent")
+      userAgent: req.get("User-Agent"),
+        fbc: req.cookies._fbc || undefined,
+        fbp: req.cookies._fbp || undefined  
     };
 
     const eventId = `view_paintello_${Date.now()}`;
