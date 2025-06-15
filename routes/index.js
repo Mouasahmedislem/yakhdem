@@ -2012,7 +2012,7 @@ order.save(async function(err, result) {
             { type: "text", text: req.body.name || "Client" },
             { type: "text", text: cart.totalPrice.toString() },
             { type: "text", text: `${req.body.address}, ${selectedWilaya}` }
-            { type: "text", text: shipping.delay }
+           
           ]
         }
       ]
