@@ -2004,7 +2004,7 @@ order.save(async function(err, result) {
     type: "template",
     template: {
       name: "order_confirmation", // your template name
-      language: { code: "fr" },
+      language: { code: "en_US" },
       components: [
         {
           type: "body",
