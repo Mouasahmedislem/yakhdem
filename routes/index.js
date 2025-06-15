@@ -14,7 +14,8 @@ const Order = require('../models/order');
 const Powers = require('../models/powers');
 const middleware = require('../middleware');
 const stripe = require("stripe")(process.env.STRIPE_API_KEY);
-
+const cookieParser = require('cookie-parser');
+app.use(cookieParser());
 
 
 
@@ -32,7 +33,7 @@ router.get("/sale/furniteur", async function(req, res) {
   try {
     const furniteurs = await furniteur.find({});
     const headers = await header.find({});
-
+    const fbc = req.cookies._fbc || undefined;
     // ✅ Collect user or anonymous data
     const user = req.user || {};
     const userData = {
@@ -42,6 +43,7 @@ router.get("/sale/furniteur", async function(req, res) {
       lastName: user.lastName,
       ip: req.headers["x-forwarded-for"]?.split(",")[0] || req.socket.remoteAddress,
       userAgent: req.get("User-Agent")
+      fbc: fbc
     };
 
     const eventId = `view_furniteur_${Date.now()}`;
