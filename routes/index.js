@@ -14,8 +14,7 @@ const Order = require('../models/order');
 const Powers = require('../models/powers');
 const middleware = require('../middleware');
 const stripe = require("stripe")(process.env.STRIPE_API_KEY);
-const cookieParser = require('cookie-parser');
-app.use(cookieParser());
+
 
 
 
