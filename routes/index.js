@@ -1998,26 +1998,38 @@ order.save(async function(err, result) {
   const cleanNumero = '213' + numeroRaw.replace(/^0+/, '').replace(/\D/g, '');
 
   // ✅ Prepare WhatsApp message payload
-  const payload = {
-    messaging_product: "whatsapp",
-    to: cleanNumero,
-    type: "template",
-    template: {
-      name: "commande_confirmee", // your template name
-      language: { code: "fr" },
-      components: [
-        {
-          type: "body",
-          parameters: [
-            { type: "text", text: req.body.name || "Client" },
-            { type: "text", text: cart.totalPrice.toString() },
-            { type: "text", text: `${req.body.address}, ${selectedWilaya}` }
-           
-          ]
-        }
-      ]
-    }
-  };
+
+    const waPayload = {
+  messaging_product: "whatsapp",
+  to: cleanNumero,
+  type: "template",
+  template: {
+    name: "commande_confirmee", // your actual template name
+    language: { code: "fr" },
+    components: [
+      {
+        type: "header", // ✅ Add this block for the image header
+        parameters: [
+          {
+            type: "image",
+            image: {
+              link: "https://www.paintello.uk/img/logo.png" // ✅ your logo URL
+            }
+          }
+        ]
+      },
+      {
+        type: "body",
+        parameters: [
+          { type: "text", text: req.body.name || "Client" },
+          { type: "text", text: cart.totalPrice.toString() },
+          { type: "text", text: `${req.body.address}, ${selectedWilaya}` },
+          
+        ]
+      }
+    ]
+  }
+};
 
   try {
     // ✅ Send WhatsApp message
