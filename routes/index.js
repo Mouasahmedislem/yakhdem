@@ -1999,7 +1999,7 @@ order.save(async function(err, result) {
 
   // ✅ Prepare WhatsApp message payload
 
-    const waPayload = {
+    const payload = {
   messaging_product: "whatsapp",
   to: cleanNumero,
   type: "template",
