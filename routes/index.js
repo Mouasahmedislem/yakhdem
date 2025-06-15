@@ -1970,7 +1970,7 @@ router.get("/coulors/blue", async function(req, res) {
       eventId,
       userData,
       customData: {
-        content_name: "Sale fixateur Page",
+        content_name: "Sale blue Page",
         content_type: "product_group",
         anonymous_id: req.sessionID // optional for retargeting
       },
@@ -2011,7 +2011,7 @@ router.get("/coulors/greens", async function(req, res) {
       eventId,
       userData,
       customData: {
-        content_name: "Sale fixateur Page",
+        content_name: "Sale green Page",
         content_type: "product_group",
         anonymous_id: req.sessionID // optional for retargeting
       },
@@ -2049,7 +2049,7 @@ router.get("/coulors/grey", async function(req, res) {
       eventId,
       userData,
       customData: {
-        content_name: "Sale fixateur Page",
+        content_name: "Sale grey Page",
         content_type: "product_group",
         anonymous_id: req.sessionID // optional for retargeting
       },
@@ -2249,7 +2249,7 @@ router.get("/", async function(req, res) {
       userAgent: req.get("User-Agent")
     };
 
-    const eventId = `view_paintellneutral_${Date.now()}`;
+    const eventId = `view_homepage_${Date.now()}`;
 
     // ✅ Send ViewContent event to Meta
     await sendMetaCAPIEvent({
@@ -2257,7 +2257,7 @@ router.get("/", async function(req, res) {
       eventId,
       userData,
       customData: {
-        content_name: "Sale neutral Page",
+        content_name: "Sale home Page",
         content_type: "product_group",
         anonymous_id: req.sessionID // optional for retargeting
       },
@@ -2272,48 +2272,92 @@ router.get("/", async function(req, res) {
   }
 });
     
-  router.get('/', function(req, res, next) {
-  var successMsg = req.flash('success')[0];
-  header.find({}, function(err, headers){
-  
-    if(err){
-        console.log(err);
-    }
-    else{
-    res.render('event/home', { headers:headers , successMsg: successMsg });
-}
- });
+router.get("/wow", async function(req, res) {
+  try {
+    const wows = await wow.find({});
+    const headers = await header.find({});
+
+    // ✅ Collect user or anonymous data
+    const user = req.user || {};
+    const userData = {
+      email: user.email,
+      numero: user.numero,
+      firstName: user.firstName,
+      lastName: user.lastName,
+      ip: req.headers["x-forwarded-for"]?.split(",")[0] || req.socket.remoteAddress,
+      userAgent: req.get("User-Agent")
+    };
+
+    const eventId = `view_wow_${Date.now()}`;
+
+    // ✅ Send ViewContent event to Meta
+    await sendMetaCAPIEvent({
+      eventName: "ViewContent",
+      eventId,
+      userData,
+      customData: {
+        content_name: "Sale wow Page",
+        content_type: "product_group",
+        anonymous_id: req.sessionID // optional for retargeting
+      },
+      testEventCode: "TEST12345"
+    });
+
+    res.render("wow/wowdeal", { wows, headers });
+
+  } catch (err) {
+    console.error("❌ Error loading sale/furniteur:", err);
+    res.status(500).send("Error loading page");
+  }
 });
 
+router.get("/add-to-cart-wow/:id", async function(req, res) {
+  const wowId = req.params.id;
+  const cart = new Cart(req.session.cart || {});
 
-        router.get("/wow", function(req, res){
-            wow.find({}, function(err, wows){
-            header.find({}, function(err, headers){
+  try {
+    const item = await wow.findById(wowId);
+    if (!item) return res.redirect("/wow");
 
-                if(err){
-                    console.log(err);
-                }
-                else{
-                    res.render("wow/wowdeal", {wows: wows, headers:headers});
-                }
-            });
-            });
-        });
-       
-        router.get("/add-to-cart-wow/:id", function(req, res){
-            var wowId = req.params.id;
-            var cart = new Cart(req.session.cart ? req.session.cart : {});
-            
-            wow.findById(wowId, function(err, wow){
-                if(err){
-                    return res.redirect("/wow");
-                }
-                cart.add(wow, wow.id);
-                req.session.cart = cart;
-                console.log(req.session.cart);
-                res.redirect("/wow");
-            });
-        });
+    cart.add(item, item.id);
+    req.session.cart = cart;
+    console.log("🛒 Item added to cart:", item.title);
+
+    // ✅ Prepare Meta CAPI AddToCart
+    const user = req.user || {};
+    const userData = {
+      email: user.email,
+      numero: user.numero,
+      firstName: user.firstName,
+      lastName: user.lastName,
+      ip: req.headers["x-forwarded-for"]?.split(",")[0] || req.socket.remoteAddress,
+      userAgent: req.get("User-Agent")
+    };
+
+    const eventId = `addtocart_wow_${item.id}_${Date.now()}`;
+
+    await sendMetaCAPIEvent({
+      eventName: "AddToCart",
+      eventId,
+      userData,
+      customData: {
+        content_name: item.title,
+        content_ids: [item.id],
+        content_type: "product",
+        value: item.price,
+        currency: "DZD",
+        anonymous_id: req.sessionID
+      },
+      testEventCode: "TEST12345" // Optional for Meta test events
+    });
+
+    res.redirect("/wow");
+
+  } catch (err) {
+    console.error("❌ AddToCart Error:", err);
+    res.redirect("/wow");
+  }
+});
 
         router.get('/reduce/:id', function (req, res, next) {
             const productId = req.params.id;
