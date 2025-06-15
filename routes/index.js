@@ -42,7 +42,7 @@ router.get("/sale/furniteur", async function(req, res) {
       firstName: user.firstName,
       lastName: user.lastName,
       ip: req.headers["x-forwarded-for"]?.split(",")[0] || req.socket.remoteAddress,
-      userAgent: req.get("User-Agent")
+      userAgent: req.get("User-Agent"),
       fbc: fbc
     };
 
