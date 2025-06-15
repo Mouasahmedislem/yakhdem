@@ -4,6 +4,7 @@ var Cart = require("../models/cart");
 const getMetaUserData = require('../utils/metaUserData');
 const sendMetaCAPIEvent = require('../services/metaCapi');
 const nodemailer = require('nodemailer');
+const axios = require('axios');
 require('dotenv').config();
 const twilio = require('twilio');
 var Producthome = require('../models/producthome');
@@ -1992,25 +1993,48 @@ order.save(async function(err, result) {
     });
     req.session.cart = null;
 
-    // ✅ Send WhatsApp to client (if phone is provided)
-    const customerPhone = req.body.numero;
-    if (customerPhone) {
-      const whatsappTo = 'whatsapp:+213' + customerPhone.replace(/^0+/, ''); // Clean leading zeros
-      const message = `✅ Bonjour ${req.body.name}, votre commande Paintello est confirmée !
-🛒 Total : ${cart.totalPrice} DA
-🚚 Livraison à : ${req.body.address}, ${selectedWilaya}
-⏱ Délai : ${shipping.delay}
-📞 Nous vous contacterons pour la livraison. Merci !`;
+   // ✅ Clean the phone number
+  const numeroRaw = req.body.numero;
+  const cleanNumero = '213' + numeroRaw.replace(/^0+/, '').replace(/\D/g, '');
 
-      client.messages
-        .create({
-          from: process.env.TWILIO_WHATSAPP_NUMBER,
-          to: whatsappTo,
-          body: message
-        })
-        .then(msg => console.log("WhatsApp sent:", msg.sid))
-        .catch(err => console.error("WhatsApp error:", err));
+  // ✅ Prepare WhatsApp message payload
+  const payload = {
+    messaging_product: "whatsapp",
+    to: cleanNumero,
+    type: "template",
+    template: {
+      name: "order_confirmation", // your template name
+      language: { code: "fr" },
+      components: [
+        {
+          type: "body",
+          parameters: [
+            { type: "text", text: req.body.name || "Client" },
+            { type: "text", text: cart.totalPrice.toString() },
+            { type: "text", text: `${req.body.address}, ${selectedWilaya}` }
+            { type: "text", text: shipping.delay }
+          ]
+        }
+      ]
     }
+  };
+
+  try {
+    // ✅ Send WhatsApp message
+    const response = await axios.post(
+      `https://graph.facebook.com/v19.0/${process.env.META_PHONE_ID}/messages`,
+      payload,
+      {
+        headers: {
+          Authorization: `Bearer ${process.env.META_WA_TOKEN}`,
+          'Content-Type': 'application/json'
+        }
+      }
+    );
+    console.log("✅ WhatsApp message sent:", response.data);
+  } catch (err) {
+    console.error("❌ WhatsApp error:", err.response?.data || err.message);
+  }
 
     res.render('event/confirmation', {
       name: req.body.name,
