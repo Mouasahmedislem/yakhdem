@@ -2531,7 +2531,7 @@ router.get("/add-to-cart-wow/:id", async function(req, res) {
   // Add all wilayas with their respective info...
 };
       
-  const selectedWilaya = req.body.city;
+  const selectedcity = req.body.city;
   const shippingFees = {
   "ADRAR": 800,
   "CHLEF": 500,
@@ -2595,7 +2595,7 @@ router.get("/add-to-cart-wow/:id", async function(req, res) {
   "Default": 700
 };
 
-const shipping = wilayaShippingInfo[selectedWilaya] || { fee: 1000, delay: "3-5 days" };
+const shipping = wilayaShippingInfo[selectedcity] || { fee: 1000, delay: "3-5 days" };
   // Determine fee
 const shippingFee = cart.totalPrice >= freeShippingThreshold ? 0 : shipping.fee;
  const finalTotalPrice = cart.totalPrice + shippingFee;
