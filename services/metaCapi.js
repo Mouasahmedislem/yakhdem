@@ -40,6 +40,8 @@ const sendMetaCAPIEvent = async ({
       fbc: userData.fbc,
       client_ip_address: userData.ip,
       client_user_agent: userData.userAgent,
+      country: hash(userData.country), // ✅ new
+      ct: hash(userData.city)          // ✅ ct = city
     };
 
     // ✅ Step 3: Skip if not enough identifiers
