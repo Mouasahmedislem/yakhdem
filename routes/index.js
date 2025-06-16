@@ -1272,7 +1272,7 @@ router.get("/onecoat/beig02", function(req, res){
         }
         else{
             res.render("onecoat/beig02", {beigebs: beigebs,headers:headers,eventId });
-           
+           console.log("🔁 Sending eventId to EJS:", eventId);
         }
     });
 });
