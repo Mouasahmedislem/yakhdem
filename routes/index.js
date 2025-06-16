@@ -2605,7 +2605,8 @@ const shippingFee = cart.totalPrice >= freeShippingThreshold ? 0 : shipping.fee;
     cart: cart,
     address: req.body.address,
     name: req.body.name,
-    wilaya: selectedWilaya,
+    country: req.body.country,
+    city: selectedcity,
     numero: rawNumero,
     shippingFee: shippingFee,
     deliveryDelay: shipping.delay,
@@ -2625,10 +2626,13 @@ order.save(async function(err, result) {
       numero: rawNumero,
       firstName: user.firstName,
       lastName: user.lastName,
+      fbp: userData.fbp,
       ip: req.headers["x-forwarded-for"]?.split(",")[0] || req.socket.remoteAddress,
       userAgent: req.get("User-Agent"),
         fbc: req.cookies._fbc || undefined,
-        fbp: req.cookies._fbp || undefined  
+        fbp: req.cookies._fbp || undefined,
+       country: req.body.country,
+       city: req.body.city
     };
 
     const eventId = `purchase_${result._id}_${Date.now()}`;
