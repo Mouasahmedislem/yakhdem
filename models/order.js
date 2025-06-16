@@ -6,8 +6,8 @@ const orderSchema = new Schema({
   cart: {type: Object, required: true},
   address: {type: String, required: true},
   name: {type: String, required: true},
-  wilaya: {type: String, required: true},
-
+  city: {type: String, required: true},
+  country: {type: String, required: true},
   
   numero : {type: Number, required: true}
 
