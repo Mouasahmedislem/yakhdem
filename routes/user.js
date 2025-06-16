@@ -33,7 +33,7 @@ router.get('/profile', middleware.isLoggedIn, function(req, res, next) {
 router.get('/logout', middleware.isLoggedIn, function(req, res, next) {
   req.logout(function(err) {
     if (err) { return next(err); }
-    res.redirect('/user/signup');
+    res.redirect('/user/signin');
   });
 });
 
