@@ -61,7 +61,7 @@ router.get("/sale/furniteur", async function(req, res) {
       testEventCode: "TEST12345"
     });
 
-    res.render("sale/furniteur", { furniteurs, headers });
+    res.render("sale/furniteur", { furniteurs, headers,eventId });
 
   } catch (err) {
     console.error("❌ Error loading sale/furniteur:", err);
@@ -153,7 +153,7 @@ router.get("/sale/cuisin", async function(req, res) {
       testEventCode: "TEST12345"
     });
 
-    res.render("sale/cuisin", { cuisins, headers });
+    res.render("sale/cuisin", { cuisins, headers,eventId });
 
   } catch (err) {
     console.error("❌ Error loading /sale/cuisin:", err);
@@ -244,7 +244,7 @@ router.get("/sale/clean", async function(req, res) {
       testEventCode: "TEST12345"
     });
 
-    res.render("sale/clean", { cleans, headers });
+    res.render("sale/clean", { cleans, headers,eventId });
 
   } catch (err) {
     console.error("❌ Error loading /sale/cuisin:", err);
@@ -335,7 +335,7 @@ router.get("/sale/coat", async function(req, res) {
       testEventCode: "TEST12345"
     });
 
-    res.render("sale/coat", { coats, headers });
+    res.render("sale/coat", { coats, headers,eventId });
 
   } catch (err) {
     console.error("❌ Error loading sale/furniteur:", err);
@@ -426,7 +426,7 @@ router.get("/sale/sample", async function(req, res) {
       testEventCode: "TEST12345"
     });
 
-    res.render("sale/sample", { samples, headers });
+    res.render("sale/sample", { samples, headers,eventId });
 
   } catch (err) {
     console.error("❌ Error loading sale/furniteur:", err);
@@ -518,7 +518,7 @@ router.get("/sale/tool", async function(req, res) {
       testEventCode: "TEST12345"
     });
 
-    res.render("sale/tool", { tools, headers });
+    res.render("sale/tool", { tools, headers,eventId });
 
   } catch (err) {
     console.error("❌ Error loading sale/furniteur:", err);
@@ -1812,7 +1812,7 @@ router.get("/myfixateur/fixateur", async function(req, res) {
       testEventCode: "TEST12345"
     });
 
-    res.render("myfixateur/fixateur", { headers, headers });
+    res.render("myfixateur/fixateur", { headers, headers,eventId });
 
   } catch (err) {
     console.error("❌ Error loading sale/furniteur:", err);
@@ -1854,7 +1854,7 @@ router.get("/paintellomac/paintellomac", async function(req, res) {
       testEventCode: "TEST12345"
     });
 
-    res.render("paintellomac/paintellomac", { headers, headers });
+    res.render("paintellomac/paintellomac", { headers, headers,eventId });
 
   } catch (err) {
     console.error("❌ Error loading sale/furniteur:", err);
@@ -2008,7 +2008,7 @@ router.get("/coulors/blue", async function(req, res) {
       testEventCode: "TEST12345"
     });
 
-    res.render("coulors/blue", { headers, headers });
+    res.render("coulors/blue", { headers, headers,eventId });
 
   } catch (err) {
     console.error("❌ Error loading sale/furniteur:", err);
@@ -2051,7 +2051,7 @@ router.get("/coulors/greens", async function(req, res) {
       testEventCode: "TEST12345"
     });
 
-    res.render("coulors/greens", { headers, headers });
+    res.render("coulors/greens", { headers, headers,eventId });
 
   } catch (err) {
     console.error("❌ Error loading sale/furniteur:", err);
@@ -2091,7 +2091,7 @@ router.get("/coulors/grey", async function(req, res) {
       testEventCode: "TEST12345"
     });
 
-    res.render("coulors/grey", { headers, headers });
+    res.render("coulors/grey", { headers, headers ,eventId});
 
   } catch (err) {
     console.error("❌ Error loading sale/furniteur:", err);
@@ -2132,7 +2132,7 @@ router.get("/coulors/grey", async function(req, res) {
       testEventCode: "TEST12345"
     });
 
-    res.render("coulors/yellowv2", { headers, headers });
+    res.render("coulors/yellowv2", { headers, headers,eventId });
 
   } catch (err) {
     console.error("❌ Error loading sale/furniteur:", err);
@@ -2173,7 +2173,7 @@ router.get("/coulors/grey", async function(req, res) {
       testEventCode: "TEST12345"
     });
 
-    res.render("coulors/pink", { headers, headers });
+    res.render("coulors/pink", { headers, headers,eventId });
 
   } catch (err) {
     console.error("❌ Error loading sale/furniteur:", err);
@@ -2214,7 +2214,7 @@ router.get("/coulors/grey", async function(req, res) {
       testEventCode: "TEST12345"
     });
 
-    res.render("coulors/neutral", { headers, headers });
+    res.render("coulors/neutral", { headers, headers,eventId });
 
   } catch (err) {
     console.error("❌ Error loading sale/furniteur:", err);
@@ -2350,7 +2350,7 @@ router.get("/wow", async function(req, res) {
       testEventCode: "TEST12345"
     });
 
-    res.render("wow/wowdeal", { wows, headers });
+    res.render("wow/wowdeal", { wows, headers,eventId });
 
   } catch (err) {
     console.error("❌ Error loading sale/furniteur:", err);
