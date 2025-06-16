@@ -340,7 +340,7 @@ fbq('track', 'PageView');
     const infoBox = document.createElement('div');
     infoBox.style.marginTop = '15px';
     infoBox.style.fontWeight = 'bold';
-    wilayaSelect.parentNode.insertBefore(infoBox, citySelect.nextSibling);
+    citySelect.parentNode.insertBefore(infoBox, citySelect.nextSibling);
 
     citySelect.addEventListener('change', () => {
       const selected = citySelect.value.toUpperCase();
