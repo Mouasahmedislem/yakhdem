@@ -2626,7 +2626,6 @@ order.save(async function(err, result) {
       numero: rawNumero,
       firstName: user.firstName,
       lastName: user.lastName,
-      fbp: userData.fbp,
       ip: req.headers["x-forwarded-for"]?.split(",")[0] || req.socket.remoteAddress,
       userAgent: req.get("User-Agent"),
         fbc: req.cookies._fbc || undefined,
