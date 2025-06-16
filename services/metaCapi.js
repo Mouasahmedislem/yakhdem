@@ -38,6 +38,7 @@ const sendMetaCAPIEvent = async ({
       fn: hash(userData.firstName),
       ln: hash(userData.lastName),
       fbc: userData.fbc,
+      fbp: userData.fbp,
       client_ip_address: userData.ip,
       client_user_agent: userData.userAgent,
       country: hash(userData.country), // ✅ new
