@@ -336,14 +336,14 @@ fbq('track', 'PageView');
   };
 
   document.addEventListener('DOMContentLoaded', () => {
-    const wilayaSelect = document.getElementById('wilaya');
+    const citySelect = document.getElementById('city');
     const infoBox = document.createElement('div');
     infoBox.style.marginTop = '15px';
     infoBox.style.fontWeight = 'bold';
-    wilayaSelect.parentNode.insertBefore(infoBox, wilayaSelect.nextSibling);
+    wilayaSelect.parentNode.insertBefore(infoBox, citySelect.nextSibling);
 
-    wilayaSelect.addEventListener('change', () => {
-      const selected = wilayaSelect.value.toUpperCase();
+    citySelect.addEventListener('change', () => {
+      const selected = citySelect.value.toUpperCase();
       const data = shippingData[selected] || { fee: 700, delay: "3–5 days" };
       let shippingFee = data.fee;
       const deliveryTime = data.delay;
