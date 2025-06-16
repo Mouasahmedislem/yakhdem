@@ -2680,7 +2680,7 @@ order.save(async function(err, result) {
         parameters: [
           { type: "text", text: req.body.name || "Client" },
           { type: "text", text: cart.totalPrice.toString() },
-          { type: "text", text: `${req.body.address}, ${selectedWilaya}` },
+          { type: "text", text: `${req.body.address}, ${selectedcity}` },
           
         ]
       }
@@ -2708,7 +2708,7 @@ order.save(async function(err, result) {
     res.render('event/confirmation', {
       name: req.body.name,
       numero: rawNumero,
-      wilaya: selectedWilaya,
+      city: selectedcity,
       address: req.body.address,
       cartTotal: cart.totalPrice,
       deliveryDelay: shipping.delay,
