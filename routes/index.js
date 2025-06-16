@@ -2531,7 +2531,7 @@ router.get("/add-to-cart-wow/:id", async function(req, res) {
   // Add all wilayas with their respective info...
 };
       
-  const selectedWilaya = req.body.wilaya;
+  const selectedWilaya = req.body.city;
   const shippingFees = {
   "ADRAR": 800,
   "CHLEF": 500,
