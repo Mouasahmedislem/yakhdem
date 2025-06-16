@@ -1271,8 +1271,8 @@ router.get("/onecoat/beig02", function(req, res){
             console.log(err);
         }
         else{
-            res.render("onecoat/beig02", {beigebs: beigebs,headers:headers,eventId });
-           console.log("🔁 Sending eventId to EJS:", eventId);
+            res.render("onecoat/beig02", {beigebs: beigebs,headers:headers });
+        
         }
     });
 });
@@ -2257,7 +2257,7 @@ router.get("/power", async function(req, res) {
       testEventCode: "TEST12345"
     });
 
-    res.render("event/power", { errMsg: errMsg, noError: !errMsg, eventId  });
+    res.render("event/power", { errMsg: errMsg, noError: !errMsg ,eventId });
 
   } catch (err) {
     console.error("❌ Error loading sale/furniteur:", err);
@@ -3007,7 +3007,7 @@ router.get('/paintello', async (req, res) => {
       testEventCode: "TEST12345"
     });
 
-    res.render('event/paintellohome', { paintellos });
+    res.render('event/paintellohome', { paintellos,eventId });
   } catch (err) {
     res.status(500).send('Error loading home products');
   }
