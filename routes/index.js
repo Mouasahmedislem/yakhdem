@@ -1271,7 +1271,8 @@ router.get("/onecoat/beig02", function(req, res){
             console.log(err);
         }
         else{
-            res.render("onecoat/beig02", {beigebs: beigebs,headers:headers});
+            res.render("onecoat/beig02", {beigebs: beigebs,headers:headers,eventId });
+           
         }
     });
 });
@@ -2256,7 +2257,7 @@ router.get("/power", async function(req, res) {
       testEventCode: "TEST12345"
     });
 
-    res.render("event/power", { errMsg: errMsg, noError: !errMsg });
+    res.render("event/power", { errMsg: errMsg, noError: !errMsg, eventId  });
 
   } catch (err) {
     console.error("❌ Error loading sale/furniteur:", err);
@@ -2308,7 +2309,7 @@ router.get("/", async function(req, res) {
       testEventCode: "TEST12345"
     });
 
-    res.render("event/home", { headers, headers , successMsg: successMsg });
+    res.render("event/home", { headers, headers , successMsg: successMsg ,eventId  });
 
   } catch (err) {
     console.error("❌ Error loading sale/furniteur:", err);
