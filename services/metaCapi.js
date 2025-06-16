@@ -30,6 +30,7 @@ const sendMetaCAPIEvent = async ({
   try {
     // ✅ Step 1: Log raw input before hashing
     console.log("🔍 Raw userData before hashing:", userData);
+    console.log("📞 Clean phone for hash:", cleannumero(userData.numero));
 
     // ✅ Step 2: Build the hashed user_data object
     const hashedUserData = {
