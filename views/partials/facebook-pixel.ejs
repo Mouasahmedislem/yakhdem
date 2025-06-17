@@ -17,11 +17,13 @@
     
   });
  fbq('track', 'ViewContent', {
-eventId: '<%= eventId %>',
+
 content_type: "product",
 currency: "DZD"
-  }
-);
+  }, {
+    eventId: '<%= eventId %>' // same ID used in CAPI
+  });
+
 </script>
 <noscript>
   <img height="1" width="1" style="display:none" 
