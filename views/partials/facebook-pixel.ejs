@@ -16,13 +16,7 @@
     ph: '<%= user ? user.numero : "" %>'
     
   });
- fbq('track', 'ViewContent', {
-
-content_type: "product",
-currency: "DZD"
-  }, {
-    eventId: '<%= eventId %>' // same ID used in CAPI
-  });
+ fbq('track', 'PageView');
 
 </script>
 <noscript>
