@@ -24,7 +24,10 @@
     ln: '<%= user ? user.lastName : "" %>',
     ph: '<%= user ? user.numero : "" %>'
   });
-fbq('track', 'PageView');
+fbq('track', 'PageView', {
+eventID: '<%= eventId %>'
+  }
+);
 </script>
 <noscript>
   <img height="1" width="1" style="display:none"
@@ -377,7 +380,8 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
   function trackCheckout(totalPrice) {
     fbq('track', 'InitiateCheckout', {
       value: totalPrice,
-      currency: 'DZD'
+      currency: 'DZD',
+      eventID: '<%= eventId %>'
     });
   }
 
