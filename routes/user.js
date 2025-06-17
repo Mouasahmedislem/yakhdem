@@ -57,7 +57,7 @@ router.post('/signup', passport.authenticate('local-signup', {
     req.session.oldUrl = null;
     res.redirect(oldUrl);
   } else {
-    res.redirect('/producthome/6829d6636e8e33e1018e8743'); //home
+    res.redirect('/producthome/6829bff300275640946ba0bd'); //home
   }
 });
 
@@ -76,7 +76,7 @@ router.post('/signin', passport.authenticate('local-signin', {
     req.session.oldUrl = null;
     res.redirect(oldUrl);
   } else {
-    res.redirect('/producthome/6829d6636e8e33e1018e8743'); //user/profil
+    res.redirect('/producthome/6829bff300275640946ba0bd'); //user/profil
   }
 });
 
