@@ -2285,7 +2285,7 @@ router.get('/shop', async (req, res) => {
       fbp: req.cookies._fbp
     };
 
-    const eventId = `view_shop_${Date.now()}`;
+    const eventId = `view_${Date.now()}`;
 
     // ✅ Send ViewContent to Meta
     await sendMetaCAPIEvent({
@@ -2298,7 +2298,7 @@ router.get('/shop', async (req, res) => {
         value: cart.totalPrice || 0,
         currency: "DZD"
       },
-      testEventCode: "TEST12345" // Replace with real test code or remove in production
+      // Replace with real test code or remove in production
     });
 
     // ✅ Render page
@@ -2335,7 +2335,7 @@ router.get("/", async function(req, res) {
         fbp: req.cookies._fbp || undefined  
     };
 
-    const eventId = `view_homepage_${Date.now()}`;
+    const eventId = `view_${Date.now()}`;
 
     // ✅ Send ViewContent event to Meta
     await sendMetaCAPIEvent({
@@ -2347,7 +2347,7 @@ router.get("/", async function(req, res) {
         content_type: "product_group",
         anonymous_id: req.sessionID // optional for retargeting
       },
-      testEventCode: "TEST12345"
+   
     });
 
     res.render("event/home", { headers, headers , successMsg: successMsg ,eventId  });
@@ -2389,7 +2389,7 @@ router.get("/wow", async function(req, res) {
         content_type: "product_group",
         anonymous_id: req.sessionID // optional for retargeting
       },
-      testEventCode: "TEST12345"
+    
     });
 
     res.render("wow/wowdeal", { wows, headers,eventId });
@@ -2440,7 +2440,7 @@ router.get("/add-to-cart-wow/:id", async function(req, res) {
         currency: "DZD",
         anonymous_id: req.sessionID
       },
-      testEventCode: "TEST12345" // Optional for Meta test events
+       // Optional for Meta test events
     });
 
     res.redirect("/wow");
@@ -2692,7 +2692,7 @@ order.save(async function(err, result) {
         content_type: "product",
         order_id: result._id.toString()
       },
-      testEventCode: "TEST47263"
+      
     });
     req.session.cart = null;
 
@@ -2969,7 +2969,7 @@ router.get("/producthome/:id", async (req, res) => {
       value: producthome.price,
       currency: "DZD"
     },
-    testEventCode: "TEST47263"
+    
   });
 
   res.render("event/producthome", { producthome, eventId });
@@ -3014,7 +3014,7 @@ router.get("/add-to-cart-producthome/:id", async function(req, res) {
       value: producthome.price,
       currency: "DZD"
     },
-    testEventCode: "TEST47263" // Change to real test code if needed
+    // Change to real test code if needed
   });
 
   res.redirect("/shop");
@@ -3052,7 +3052,7 @@ router.get('/paintello', async (req, res) => {
         content_type: "product_group",
         anonymous_id: req.sessionID // optional for retargeting
       },
-      testEventCode: "TEST12345"
+     
     });
 
     res.render('event/paintellohome', { paintellos,eventId });
