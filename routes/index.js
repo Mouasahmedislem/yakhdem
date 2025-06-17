@@ -2267,16 +2267,54 @@ router.get("/power", async function(req, res) {
   }
 });
 
-router.get('/shop', (req, res)=> {
-            if(!req.session.cart) {
-                 res.render('event/shop', {products: null});
-            }
-            var cart = new Cart(req.session.cart);
-             
-            shipping.find(function(err, shippings) {
-             res.render('event/shop', {products: cart.generateArray(),shippings:shippings, totalPrice: cart.totalPrice, price: shippings.price});
-        });
- });
+router.get('/shop', async (req, res) => {
+  try {
+    const cart = new Cart(req.session.cart || {});
+    const shippings = await shipping.find({});
+
+    const user = req.user || {};
+    const userData = {
+      email: user.email,
+      numero: user.numero,
+      firstName: user.firstName,
+      lastName: user.lastName,
+      country: "algeria",
+      ip: req.headers["x-forwarded-for"]?.split(",")[0] || req.socket.remoteAddress,
+      userAgent: req.get("User-Agent"),
+      fbc: req.cookies._fbc,
+      fbp: req.cookies._fbp
+    };
+
+    const eventId = `view_shop_${Date.now()}`;
+
+    // ✅ Send ViewContent to Meta
+    await sendMetaCAPIEvent({
+      eventName: "ViewContent",
+      eventId,
+      userData,
+      customData: {
+        content_name: "Shop Page",
+        content_type: "product_group",
+        value: cart.totalPrice || 0,
+        currency: "DZD"
+      },
+      testEventCode: "TEST12345" // Replace with real test code or remove in production
+    });
+
+    // ✅ Render page
+    res.render('event/shop', {
+      products: cart.generateArray(),
+      shippings: shippings,
+      totalPrice: cart.totalPrice,
+      price: shippings.price ,eventId
+    });
+
+  } catch (err) {
+    console.error("❌ Error in /shop route:", err);
+    res.status(500).send("Error loading shop");
+  }
+});
+
 
 router.get("/", async function(req, res) {
   try {
