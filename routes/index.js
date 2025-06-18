@@ -2364,35 +2364,7 @@ router.get("/wow", async function(req, res) {
     const headers = await header.find({});
 
     // ✅ Collect user or anonymous data
-    const user = req.user || {};
-    const userData = {
-      email: user.email,
-      numero: user.numero,
-      firstName: user.firstName,
-      lastName: user.lastName,
-      country: "algeria",
-      ip: req.headers["x-forwarded-for"]?.split(",")[0] || req.socket.remoteAddress,
-      userAgent: req.get("User-Agent"),
-        fbc: req.cookies._fbc || undefined,
-        fbp: req.cookies._fbp || undefined  
-    };
-
-    const eventId = `view_wow_${Date.now()}`;
-
-    // ✅ Send ViewContent event to Meta
-    await sendMetaCAPIEvent({
-      eventName: "ViewContent",
-      eventId,
-      userData,
-      customData: {
-        content_name: "Sale wow Page",
-        content_type: "product_group",
-        anonymous_id: req.sessionID // optional for retargeting
-      },
-    
-    });
-
-    res.render("wow/wowdeal", { wows, headers,eventId });
+   
 
   } catch (err) {
     console.error("❌ Error loading sale/furniteur:", err);
