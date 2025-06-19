@@ -1962,14 +1962,15 @@ router.post('/admin/unmark-handled', isLoggedIn, async (req, res) => {
 });
 
 router.get('/media/:id', async (req, res) => {
-  const { gfs } = require('../utils/gridfs');
+  const { getGFS } = require('../utils/gridfs');
   const { ObjectId } = require('mongodb');
 
   try {
     const fileId = new ObjectId(req.params.id);
-    const stream = gfs.openDownloadStream(fileId);
+    const stream = getGFS().openDownloadStream(fileId);
     stream.pipe(res);
   } catch (err) {
+    console.error("❌ Media error:", err);
     res.status(404).send("Media not found");
   }
 });
