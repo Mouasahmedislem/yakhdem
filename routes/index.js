@@ -3200,5 +3200,22 @@ router.post('/admin/reply', isLoggedIn, async (req, res) => {
     res.status(500).send("Failed to send message");
   }
 });
+router.get('/admin/messages/partial', isLoggedIn, async (req, res) => {
+  const messages = await Incoming.find().sort({ createdAt: 1 });
+  const grouped = {};
+
+  messages.forEach(msg => {
+    if (!grouped[msg.from]) {
+      grouped[msg.from] = {
+        name: msg.name || 'N/A',
+        messages: []
+      };
+    }
+    grouped[msg.from].messages.push(msg);
+  });
+
+  res.render('admin/messages_partial', { grouped });
+});
+
      
 module.exports = router
