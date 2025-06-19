@@ -3089,7 +3089,11 @@ router.post('/webhook', async (req, res) => {
         );
 
         const tempUrl = mediaMeta.data.url;
-
+// ✅ Ensure /public/media exists
+    const mediaDir = path.join(__dirname, '..', 'public', 'media');
+    if (!fs.existsSync(mediaDir)) {
+      fs.mkdirSync(mediaDir, { recursive: true });
+    }
         // Step 2: Download media to local folder
         const extension = msgType === 'image' ? 'jpg' : msgType;
         const filename = `${Date.now()}_${mediaId}.${extension}`;
