@@ -3051,10 +3051,11 @@ router.get('/webhook', (req, res) => {
 });
 
 
-const Incoming = require('../models/Incoming'); // For saving messages
+const Incoming = require('../models/Incoming');
+const axios = require('axios');
 
 router.post('/webhook', async (req, res) => {
-  res.sendStatus(200); // Always respond fast
+  res.sendStatus(200); // Respond immediately to WhatsApp
 
   try {
     const entry = req.body.entry?.[0];
@@ -3069,55 +3070,50 @@ router.post('/webhook', async (req, res) => {
     const name = contact?.profile?.name || 'Client';
     const msgType = message.type;
 
-    // Save incoming message to DB
-   let mediaUrl = null;
+    // 🟡 Media support
+    let mediaUrl = null;
+    if (['image', 'audio', 'video', 'document'].includes(msgType)) {
+      try {
+        const mediaId = message[msgType]?.id;
+        if (mediaId) {
+          // Step 1: Get temporary URL
+          const mediaMeta = await axios.get(`https://graph.facebook.com/v19.0/${mediaId}`, {
+            headers: {
+              Authorization: `Bearer ${process.env.META_WA_TOKEN}`
+            }
+          });
 
-if (['image', 'audio', 'video', 'document'].includes(msgType)) {
-  try {
-    const mediaId = message[msgType]?.id;
-
-    if (mediaId) {
-      // Step 1: Get media URL
-      const mediaMeta = await axios.get(`https://graph.facebook.com/v19.0/${mediaId}`, {
-        headers: {
-          Authorization: `Bearer ${process.env.META_WA_TOKEN}`
+          // Step 2: Get the URL from response
+          mediaUrl = mediaMeta.data.url;
         }
-      });
-
-      mediaUrl = mediaMeta.data.url;
-
-      // Step 2: (Optional) You can now use this mediaUrl to download it locally
-      // Or just save the URL in DB to display it later
+      } catch (e) {
+        console.error("⚠️ Media fetch failed:", e.response?.data || e.message);
+      }
     }
-  } catch (e) {
-    console.error("⚠️ Failed to get media URL:", e.response?.data || e.message);
-  }
-}
 
-// ✅ Save incoming message to MongoDB
-const newMsg = new Incoming({
-  from: wa_id,
-  name: name,
-  type: msgType,
-  text: message.text?.body || null,
-  payload: message.button?.payload || null,
-  media: mediaUrl,
-  timestamp: message.timestamp,
-  raw: req.body
-});
-await newMsg.save();
+    // ✅ Save message to DB
+    const newMsg = new Incoming({
+      from: wa_id,
+      name: name,
+      type: msgType,
+      text: message.text?.body || null,
+      payload: message.button?.payload || null,
+      media: mediaUrl,
+      timestamp: message.timestamp,
+      raw: req.body
+    });
 
+    await newMsg.save();
 
-    // --- Custom Reply Logic ---
+    // 🔁 Auto-reply logic
     let reply = null;
 
     if (msgType === 'button') {
       const payload = message.button.payload;
-
       if (payload === 'ANNULER_LA_COMMANDE') {
-        reply = `❌ Votre commande a été annulée. Contactez-nous si vous avez des questions.`;
+        reply = `❌ Votre commande a été annulée.`;
       } else if (payload === 'DISCUTER_AVEC_AGENT') {
-        reply = `💬 Un conseiller va vous répondre sous peu. Merci de patienter.`;
+        reply = `💬 Un conseiller va vous répondre.`;
       } else {
         reply = `Merci pour votre réponse : "${payload}".`;
       }
@@ -3125,7 +3121,6 @@ await newMsg.save();
 
     if (msgType === 'text') {
       const userText = message.text.body.trim().toLowerCase();
-
       if (["bonjour", "salut", "slt"].includes(userText)) {
         reply = `👋 Bonjour ${name} ! Comment pouvons-nous vous aider ?`;
       } else if (userText.includes("commande")) {
@@ -3151,12 +3146,14 @@ await newMsg.save();
           }
         }
       );
-      console.log("✅ Custom reply sent:", reply);
+      console.log("✅ Reply sent:", reply);
     }
+
   } catch (err) {
     console.error("❌ Webhook error:", err.response?.data || err.message);
   }
 });
+
 
 
 
