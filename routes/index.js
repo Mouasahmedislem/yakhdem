@@ -3070,16 +3070,43 @@ router.post('/webhook', async (req, res) => {
     const msgType = message.type;
 
     // Save incoming message to DB
-    const newMsg = new Incoming({
-      from: wa_id,
-      name: name,
-      type: msgType,
-      text: message.text?.body || null,
-      payload: message.button?.payload || null,
-      timestamp: message.timestamp,
-      raw: req.body
-    });
-    await newMsg.save();
+   let mediaUrl = null;
+
+if (['image', 'audio', 'video', 'document'].includes(msgType)) {
+  try {
+    const mediaId = message[msgType]?.id;
+
+    if (mediaId) {
+      // Step 1: Get media URL
+      const mediaMeta = await axios.get(`https://graph.facebook.com/v19.0/${mediaId}`, {
+        headers: {
+          Authorization: `Bearer ${process.env.META_WA_TOKEN}`
+        }
+      });
+
+      mediaUrl = mediaMeta.data.url;
+
+      // Step 2: (Optional) You can now use this mediaUrl to download it locally
+      // Or just save the URL in DB to display it later
+    }
+  } catch (e) {
+    console.error("⚠️ Failed to get media URL:", e.response?.data || e.message);
+  }
+}
+
+// ✅ Save incoming message to MongoDB
+const newMsg = new Incoming({
+  from: wa_id,
+  name: name,
+  type: msgType,
+  text: message.text?.body || null,
+  payload: message.button?.payload || null,
+  media: mediaUrl,
+  timestamp: message.timestamp,
+  raw: req.body
+});
+await newMsg.save();
+
 
     // --- Custom Reply Logic ---
     let reply = null;
@@ -3179,6 +3206,7 @@ router.post('/admin/reply', isLoggedIn, async (req, res) => {
   if (!to || !text) return res.status(400).send("Missing parameters");
 
   try {
+    // 1. Send message to WhatsApp API
     await axios.post(
       `https://graph.facebook.com/v19.0/${process.env.META_PHONE_ID}/messages`,
       {
@@ -3194,12 +3222,27 @@ router.post('/admin/reply', isLoggedIn, async (req, res) => {
         }
       }
     );
+
+    // 2. Save the reply in MongoDB immediately
+    const reply = new Incoming({
+      from: to,
+      name: "ADMIN",
+      type: "text",
+      text: text,
+      timestamp: Math.floor(Date.now() / 1000),
+      raw: { sent_by_admin: true }
+    });
+    await reply.save();
+
+    // 3. Redirect back
     res.redirect('/admin/messages');
+
   } catch (err) {
     console.error("❌ Reply error:", err.response?.data || err.message);
     res.status(500).send("Failed to send message");
   }
 });
+
 router.get('/admin/messages/partial', isLoggedIn, async (req, res) => {
   const messages = await Incoming.find().sort({ createdAt: 1 });
   const grouped = {};
