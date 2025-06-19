@@ -92,7 +92,11 @@
   <% if (msg.media) { %>
     <% if (msg.type === 'image') { %>
       <div>
-        <img src="<%= msg.media %>" alt="Image" style="max-width: 220px; border-radius: 8px; box-shadow: 0 2px 6px rgba(0,0,0,0.1);" />
+        <img src="<%= msg.media %>" 
+     alt="Image" 
+     onerror="this.src='/images/placeholder.jpg'; this.title='Expired or blocked by Meta';"
+     style="max-width: 220px; border-radius: 8px; box-shadow: 0 2px 6px rgba(0,0,0,0.1);" />
+
       </div>
     <% } else if (msg.type === 'audio') { %>
       <div style="margin-top: 6px;">
