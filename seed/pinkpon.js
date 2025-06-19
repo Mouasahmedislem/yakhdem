@@ -24,7 +24,7 @@ var pinkpons = [
 ];
 
 function seedpinkpon(){
-    pinkpon.remove({}, err => {
+    pinkpon.deleteMany({}, err => {
         if(err) console.log(err);
         pinkpons.forEach(seed => {
             pinkpon.create(seed, (err, pinkpon) => {
