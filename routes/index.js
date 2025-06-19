@@ -1969,21 +1969,31 @@ router.post('/admin/unmark-handled', isLoggedIn, async (req, res) => {
   res.redirect('/admin/messages?show=all');
 });
 
-const { gfs } = require('../utils/gridfs');
-const { ObjectId } = require('mongodb');
 
 router.get('/media/:id', async (req, res) => {
+  const { getGFS } = require('../utils/gridfs');
+  const { ObjectId, isValidObjectId } = require('mongoose'); // or use bson
+
+  const id = req.params.id;
+
+  if (!ObjectId.isValid(id)) {
+    console.warn("⚠️ Invalid media ID:", id);
+    return res.status(400).send("Invalid media ID");
+  }
+
   try {
-    const fileId = new ObjectId(req.params.id);
-    const stream = gfs.openDownloadStream(fileId);
-    stream.on('error', err => {
-      console.error("❌ Stream error:", err);
+    const gfs = getGFS();
+    const stream = gfs.openDownloadStream(new ObjectId(id));
+
+    stream.on('error', (err) => {
+      console.error("❌ Stream error:", err.message);
       res.status(404).send("Media not found");
     });
+
     stream.pipe(res);
   } catch (err) {
-    console.error("❌ GridFS fetch error:", err);
-    res.status(404).send("Media not found");
+    console.error("❌ /media error:", err.message);
+    res.status(500).send("Error retrieving media");
   }
 });
 
