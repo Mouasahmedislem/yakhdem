@@ -1752,10 +1752,12 @@ router.post('/webhook', async (req, res) => {
 
     let mediaGridFsId = null;
 
-    // ✅ Save media to GridFS
+    // ✅ MEDIA HANDLING
     if (['image', 'audio', 'video', 'document'].includes(msgType)) {
       const mediaId = message[msgType]?.id;
       if (mediaId) {
+        console.log("🔍 Fetching media meta for ID:", mediaId);
+
         const mediaMeta = await axios.get(
           `https://graph.facebook.com/v19.0/${mediaId}`,
           {
@@ -1764,9 +1766,9 @@ router.post('/webhook', async (req, res) => {
             }
           }
         );
-console.log("🔗 Meta response URL:", mediaMeta.data.url);
 
         const tempUrl = mediaMeta.data.url;
+        console.log("🔗 Meta response URL:", tempUrl);
 
         const mediaStream = await axios.get(tempUrl, {
           headers: {
@@ -1774,37 +1776,33 @@ console.log("🔗 Meta response URL:", mediaMeta.data.url);
           },
           responseType: 'stream'
         });
-console.log("🛰️ Fetched media stream from URL:", tempUrl);
-console.log("📎 Content-Type:", mediaStream.headers['content-type']);
+
+        const contentType = mediaStream.headers['content-type'];
+        console.log("📎 Content-Type:", contentType);
 
         const extension = msgType === 'image' ? 'jpg' : msgType;
         const filename = `${Date.now()}_${mediaId}.${extension}`;
-        const contentType = mediaStream.headers['content-type'];
 
-     try {
-  mediaGridFsId = await saveToGridFS(mediaStream.data, filename, contentType);
-  console.log("✅ Media saved to GridFS:", mediaGridFsId.toString());
-} catch (err) {
-  console.error("❌ Failed saving to GridFS:", err.message);
-}
-
+        console.log("📥 Saving to GridFS...");
+        mediaGridFsId = await saveToGridFS(mediaStream.data, filename, contentType);
+        console.log("✅ Saved to GridFS with ID:", mediaGridFsId.toString());
       }
     }
 
-    // ✅ Save message to DB
+    // ✅ SAVE INCOMING MESSAGE
     await new Incoming({
       from: wa_id,
       name,
       type: msgType,
       text: message.text?.body || null,
       payload: message.button?.payload || null,
-      media: mediaGridFsId ? mediaGridFsId.toString() : null, // save ID
+      media: mediaGridFsId ? mediaGridFsId.toString() : null,
       timestamp: message.timestamp,
       raw: req.body
     }).save();
-    
+    console.log("📝 Message saved to DB:", msgType);
 
-    // ✅ Auto-reply logic
+    // ✅ AUTO-REPLY
     let reply = null;
 
     if (msgType === 'text') {
@@ -1845,13 +1843,14 @@ console.log("📎 Content-Type:", mediaStream.headers['content-type']);
           }
         }
       );
-      console.log("✅ Auto-reply sent:", reply);
+      console.log("📤 Auto-reply sent:", reply);
     }
 
   } catch (err) {
     console.error("❌ Webhook error:", err.response?.data || err.message);
   }
 });
+
 
 
 
