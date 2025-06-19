@@ -3032,6 +3032,8 @@ router.get('/paintello', async (req, res) => {
     res.status(500).send('Error loading home products');
   }
 });
+
+
 // ✅ Must be included and correctly mounted
 router.get('/webhook', (req, res) => {
   const VERIFY_TOKEN = "paintello_webhook_token"; // same token you entered
@@ -3091,9 +3093,9 @@ router.post('/webhook', async (req, res) => {
     if (msgType === 'button') {
       const payload = message.button.payload;
 
-      if (payload === 'CANCEL_ORDER') {
+      if (payload === 'ANNULER_LA_COMMANDE') {
         reply = `❌ Votre commande a été annulée. Contactez-nous si vous avez des questions.`;
-      } else if (payload === 'CHAT_WITH_PERSON') {
+      } else if (payload === 'DISCUTER_AVEC_AGENT') {
         reply = `💬 Un conseiller va vous répondre sous peu. Merci de patienter.`;
       } else {
         reply = `Merci pour votre réponse : "${payload}".`;
@@ -3134,6 +3136,75 @@ router.post('/webhook', async (req, res) => {
     console.error("❌ Webhook error:", err.response?.data || err.message);
   }
 });
+const Incoming = require('../models/Incoming');
 
+
+});
+router.get('/admin/messages', isLoggedIn, async (req, res) => {
+  const messages = await Incoming.find().sort({ createdAt: 1 });
+  const grouped = {};
+
+  messages.forEach(msg => {
+    if (!grouped[msg.from]) {
+      grouped[msg.from] = {
+        name: msg.name || 'N/A',
+        messages: []
+      };
+    }
+    grouped[msg.from].messages.push(msg);
+  });
+
+  res.render('admin/messages', { grouped });
+});
+
+const ADMIN_USERNAME = process.env.ADMIN_USERNAME || 'admin';
+const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD || '123456';
+
+router.get('/admin/login', (req, res) => {
+  res.render('admin/login', { error: null });
+});
+
+router.post('/admin/login', (req, res) => {
+  const { username, password } = req.body;
+
+  if (username === ADMIN_USERNAME && password === ADMIN_PASSWORD) {
+    req.session.isAdmin = true;
+    res.redirect('/admin/messages');
+  } else {
+    res.render('admin/login', { error: '❌ Invalid login credentials' });
+  }
+});
+
+router.get('/admin/logout', (req, res) => {
+  req.session.destroy();
+  res.redirect('/admin/login');
+});
+
+router.post('/admin/reply', isLoggedIn, async (req, res) => {
+  const { to, text } = req.body;
+  if (!to || !text) return res.status(400).send("Missing parameters");
+
+  try {
+    await axios.post(
+      `https://graph.facebook.com/v19.0/${process.env.META_PHONE_ID}/messages`,
+      {
+        messaging_product: "whatsapp",
+        to,
+        type: "text",
+        text: { body: text }
+      },
+      {
+        headers: {
+          Authorization: `Bearer ${process.env.META_WA_TOKEN}`,
+          'Content-Type': 'application/json'
+        }
+      }
+    );
+    res.redirect('/admin/messages');
+  } catch (err) {
+    console.error("❌ Reply error:", err.response?.data || err.message);
+    res.status(500).send("Failed to send message");
+  }
+});
      
 module.exports = router
