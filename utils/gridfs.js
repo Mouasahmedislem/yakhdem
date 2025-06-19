@@ -10,31 +10,18 @@ const conn = mongoose.createConnection(mongoURI, {
 });
 
 let gfs;
-const initGridFS = new Promise((resolve, reject) => {
-  conn.once('open', () => {
-    gfs = new GridFSBucket(conn.db, { bucketName: 'mediaFiles' });
-    console.log('✅ GridFS initialized');
-    resolve();
-  });
-  conn.on('error', (err) => {
-    console.error("❌ MongoDB connection error:", err.message);
-    reject(err);
-  });
+conn.once('open', () => {
+  gfs = new GridFSBucket(conn.db, { bucketName: 'mediaFiles' });
+  console.log('✅ GridFS initialized');
 });
 
 async function saveToGridFS(stream, filename, contentType) {
-  await initGridFS;
-
-  if (!gfs) {
-    throw new Error("❌ GridFSBucket is not initialized");
-  }
-
   return new Promise((resolve, reject) => {
     const uploadStream = gfs.openUploadStream(filename, { contentType });
 
     stream.pipe(uploadStream)
       .on('error', (err) => {
-        console.error("❌ GridFS stream error:", err.message);
+        console.error("❌ GridFS error:", err);
         reject(err);
       })
       .on('finish', () => {
@@ -44,9 +31,6 @@ async function saveToGridFS(stream, filename, contentType) {
   });
 }
 
-function getGFS() {
-  return gfs;
-}
+module.exports = { gfs, saveToGridFS };
 
-module.exports = { saveToGridFS, getGFS, initGridFS };
 
