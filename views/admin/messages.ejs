@@ -100,12 +100,18 @@
    <h2>
       📞 <%= from %> (<%= grouped[from].name %>)
 
-      <!-- Hidden Button -->
-      <form method="POST" action="/admin/mark-handled" class="hidden-button-form">
-        <input type="hidden" name="client" value="<%= from %>">
-        <button type="submit" class="hidden-button">✅ Marquer comme traité</button>
-      </form>
-    </h2>
+   <% if (!grouped[from].handled) { %>
+    <form method="POST" action="/admin/mark-handled" class="hidden-button-form">
+      <input type="hidden" name="client" value="<%= from %>">
+      <button type="submit" class="hidden-button">✅ Marquer comme traité</button>
+    </form>
+  <% } else { %>
+    <form method="POST" action="/admin/unmark-handled" class="hidden-button-form">
+      <input type="hidden" name="client" value="<%= from %>">
+      <button type="submit" class="hidden-button">♻️ Restaurer</button>
+    </form>
+  <% } %>
+</h2>
 
     <% grouped[from].messages.forEach(msg => { %>
       <div class="msg <%= msg.name === 'ADMIN' ? 'admin-msg' : '' %>">
