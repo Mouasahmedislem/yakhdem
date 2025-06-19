@@ -22,7 +22,7 @@ var yellows = [
 ];
 
 function seedyellow(){
-    yellow.remove({}, err => {
+    yellow.deleteMany({}, err => {
         if(err) console.log(err);
         yellows.forEach(seed => {
           yellow.create(seed, (err, yellow) => {
