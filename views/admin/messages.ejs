@@ -72,25 +72,41 @@
 <body>
   <h1>📩 Paintello Admin — WhatsApp Messages</h1>
 
-  <% Object.keys(grouped).forEach(from => { %>
-    <div class="user-block">
-      <h2>📞 <%= from %> (<%= grouped[from].name %>)</h2>
+  <div id="messages-container">
+    <% Object.keys(grouped).forEach(from => { %>
+      <div class="user-block">
+        <h2>📞 <%= from %> (<%= grouped[from].name %>)</h2>
 
-      <% grouped[from].messages.forEach(msg => { %>
-        <div class="msg">
-          <span class="meta">[<%= new Date(msg.createdAt).toLocaleString() %>]</span>
-          <strong><%= msg.type %>:</strong>
-          <%= msg.text || msg.payload || "..." %>
-        </div>
-      <% }) %>
+        <% grouped[from].messages.forEach(msg => { %>
+          <div class="msg">
+            <span class="meta">[<%= new Date(msg.createdAt).toLocaleString() %>]</span>
+            <strong><%= msg.type %>:</strong>
+            <%= msg.text || msg.payload || "..." %>
+          </div>
+        <% }) %>
 
-      <form class="reply-form" method="POST" action="/admin/reply">
-        <input type="hidden" name="to" value="<%= from %>">
-        <textarea name="text" placeholder="Votre réponse..."></textarea>
-        <button type="submit">Envoyer</button>
-      </form>
-    </div>
-  <% }) %>
+        <form class="reply-form" method="POST" action="/admin/reply">
+          <input type="hidden" name="to" value="<%= from %>">
+          <textarea name="text" placeholder="Votre réponse..."></textarea>
+          <button type="submit">Envoyer</button>
+        </form>
+      </div>
+    <% }) %>
+  </div>
+
+  <script>
+    setInterval(async () => {
+      try {
+        const res = await fetch('/admin/messages/partial');
+        const html = await res.text();
+        document.getElementById('messages-container').innerHTML = html;
+      } catch (err) {
+        console.error("🔁 Refresh error:", err);
+      }
+    }, 5000); // every 5 seconds
+  </script>
+</body>
+
 </body>
 </html>
 
