@@ -15,9 +15,8 @@ const Powers = require('../models/powers');
 const middleware = require('../middleware');
 const stripe = require("stripe")(process.env.STRIPE_API_KEY);
 const { isLoggedIn } = require('../middleware/index');
-const { getGFS, initGridFS } = require('../utils/gridfs');
 const mongoose = require('mongoose');
-const { saveToGridFS } = require('../utils/gridfs');
+
 
 
 
@@ -1734,8 +1733,13 @@ router.get('/webhook', (req, res) => {
 const Incoming = require('../models/Incoming');
 
 
+const fs = require('fs');
+const path = require('path');
+
+
+// Webhook endpoint
 router.post('/webhook', async (req, res) => {
-  res.sendStatus(200); // Respond quickly to Meta
+  res.sendStatus(200); // Respond immediately
 
   try {
     const entry = req.body.entry?.[0];
@@ -1750,15 +1754,16 @@ router.post('/webhook', async (req, res) => {
     const name = contact?.profile?.name || 'Client';
     const msgType = message.type;
 
-    let mediaGridFsId = null;
+    console.log(`📥 Message from ${wa_id} (${name}) — Type: ${msgType}`);
 
-    // ✅ MEDIA HANDLING
+    // ✅ Handle media (save locally to public/media/)
+    let savedMediaFilename = null;
     if (['image', 'audio', 'video', 'document'].includes(msgType)) {
       const mediaId = message[msgType]?.id;
       if (mediaId) {
-        console.log("🔍 Fetching media meta for ID:", mediaId);
+        console.log('🔍 Downloading media:', mediaId);
 
-        const mediaMeta = await axios.get(
+        const meta = await axios.get(
           `https://graph.facebook.com/v19.0/${mediaId}`,
           {
             headers: {
@@ -1767,74 +1772,58 @@ router.post('/webhook', async (req, res) => {
           }
         );
 
-        const tempUrl = mediaMeta.data.url;
-        console.log("🔗 Meta response URL:", tempUrl);
+        const tempUrl = meta.data.url;
 
-        const mediaStream = await axios.get(tempUrl, {
+        const mediaStream = await axios({
+          method: 'GET',
+          url: tempUrl,
+          responseType: 'stream',
           headers: {
             Authorization: `Bearer ${process.env.META_WA_TOKEN}`
-          },
-          responseType: 'stream'
+          }
         });
 
-        const contentType = mediaStream.headers['content-type'];
-        console.log("📎 Content-Type:", contentType);
+        const extMap = { image: 'jpg', audio: 'ogg', video: 'mp4', document: 'pdf' };
+        const ext = extMap[msgType] || 'bin';
+        savedMediaFilename = `${Date.now()}_${mediaId}.${ext}`;
+        const filePath = path.join(__dirname, '..', 'public', 'media', savedMediaFilename);
 
-        const extension = msgType === 'image' ? 'jpg' : msgType;
-        const filename = `${Date.now()}_${mediaId}.${extension}`;
+        const writeStream = fs.createWriteStream(filePath);
+        mediaStream.data.pipe(writeStream);
 
-        console.log("📥 Saving to GridFS...");
-        mediaGridFsId = await saveToGridFS(mediaStream.data, filename, contentType);
-        console.log("✅ Saved to GridFS with ID:", mediaGridFsId.toString());
+        console.log(`✅ Media saved to /public/media/${savedMediaFilename}`);
       }
     }
 
-    // ✅ SAVE INCOMING MESSAGE
-    await new Incoming({
-      from: wa_id,
-      name,
-      type: msgType,
-      text: message.text?.body || null,
-      payload: message.button?.payload || null,
-      media: mediaGridFsId ? mediaGridFsId.toString() : null,
-      timestamp: message.timestamp,
-      raw: req.body
-    }).save();
-    console.log("📝 Message saved to DB:", msgType);
-
-    // ✅ AUTO-REPLY
-    let reply = null;
+    // ✅ Auto-reply
+    let replyText = null;
 
     if (msgType === 'text') {
-      const text = message.text.body.trim().toLowerCase();
-      if (["bonjour", "salut", "slt"].includes(text)) {
-        reply = `👋 Bonjour ${name} ! Comment pouvons-nous vous aider ?`;
-      } else if (text.includes('commande')) {
-        reply = `🛒 Pour suivre ou annuler une commande, veuillez utiliser les boutons ou donner plus de détails.`;
+      const text = message.text.body.toLowerCase().trim();
+      if (['salut', 'bonjour', 'slt'].includes(text)) {
+        replyText = `👋 Bonjour ${name} ! Comment pouvons-nous vous aider ?`;
       } else {
-        reply = `🤖 Merci pour votre message. Nous reviendrons vers vous très vite !`;
+        replyText = `🤖 Merci pour votre message. Nous reviendrons vers vous rapidement.`;
       }
     }
 
     if (msgType === 'button') {
       const payload = message.button.payload;
-      if (payload === 'ANNULER_LA_COMMANDE') {
-        reply = `❌ Votre commande a été annulée.`;
-      } else if (payload === 'DISCUTER_AVEC_AGENT') {
-        reply = `💬 Un conseiller va vous répondre.`;
+      if (payload === 'DISCUTER_AVEC_AGENT') {
+        replyText = `🧑‍💼 Un agent va vous répondre bientôt.`;
       } else {
-        reply = `Merci pour votre réponse : "${payload}"`;
+        replyText = `Merci pour votre réponse : "${payload}"`;
       }
     }
 
-    if (reply) {
+    if (replyText) {
       await axios.post(
         `https://graph.facebook.com/v19.0/${process.env.META_PHONE_ID}/messages`,
         {
           messaging_product: "whatsapp",
           to: wa_id,
           type: "text",
-          text: { body: reply }
+          text: { body: replyText }
         },
         {
           headers: {
@@ -1843,13 +1832,17 @@ router.post('/webhook', async (req, res) => {
           }
         }
       );
-      console.log("📤 Auto-reply sent:", reply);
+
+      console.log("✅ Auto-reply sent:", replyText);
     }
 
   } catch (err) {
     console.error("❌ Webhook error:", err.response?.data || err.message);
   }
 });
+
+
+
 
 
 
@@ -1970,33 +1963,7 @@ router.post('/admin/unmark-handled', isLoggedIn, async (req, res) => {
 });
 
 
-const { ObjectId } = require('mongodb');
-const { gfs } = require('../utils/gridfs'); // adjust path if needed
 
-router.get('/media/:id', async (req, res) => {
-  const id = req.params.id;
-
-  // ✅ Validate ObjectId properly
-  if (!ObjectId.isValid(id)) {
-    console.warn("⚠️ Invalid ObjectId:", id);
-    return res.status(400).send("Invalid media ID");
-  }
-
-  try {
-    const fileId = new ObjectId(id);
-    const stream = gfs.openDownloadStream(fileId);
-
-    stream.on('error', (err) => {
-      console.error("❌ GridFS stream error:", err.message);
-      res.status(404).send("Media not found");
-    });
-
-    stream.pipe(res);
-  } catch (err) {
-    console.error("❌ GridFS fetch error:", err.message);
-    res.status(500).send("Internal server error");
-  }
-});
 
 
      
