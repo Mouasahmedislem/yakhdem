@@ -1763,6 +1763,7 @@ router.post('/webhook', async (req, res) => {
             }
           }
         );
+console.log("🔗 Meta response URL:", mediaMeta.data.url);
 
         const tempUrl = mediaMeta.data.url;
 
@@ -1772,6 +1773,8 @@ router.post('/webhook', async (req, res) => {
           },
           responseType: 'stream'
         });
+console.log("🛰️ Fetched media stream from URL:", tempUrl);
+console.log("📎 Content-Type:", mediaStream.headers['content-type']);
 
         const extension = msgType === 'image' ? 'jpg' : msgType;
         const filename = `${Date.now()}_${mediaId}.${extension}`;
@@ -1779,6 +1782,9 @@ router.post('/webhook', async (req, res) => {
 
         mediaGridFsId = await saveToGridFS(mediaStream.data, filename, contentType);
         console.log("✅ Media saved to GridFS:", mediaGridFsId.toString());
+} catch (err) {
+  console.error("❌ Failed saving to GridFS:", err.message);
+}
       }
     }
 
@@ -1793,7 +1799,7 @@ router.post('/webhook', async (req, res) => {
       timestamp: message.timestamp,
       raw: req.body
     }).save();
-    console.log("📦 Saved media ID:", mediaGridFsId?.toString());
+    
 
     // ✅ Auto-reply logic
     let reply = null;
