@@ -12,9 +12,9 @@ var Paintello = require('../models/paintello');
 const client = twilio(process.env.TWILIO_ACCOUNT_SID, process.env.TWILIO_AUTH_TOKEN);
 const Order = require('../models/order');
 const Powers = require('../models/powers');
-const middleware = require('../middleware/index');
+const middleware = require('../middleware');
 const stripe = require("stripe")(process.env.STRIPE_API_KEY);
-
+const { isLoggedIn } = require('../middleware/index');
 
 
 
