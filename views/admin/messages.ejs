@@ -138,34 +138,6 @@
 
   </div>
 
-<script>
-  setInterval(async () => {
-    const inputs = {};
-    document.querySelectorAll('.reply-form').forEach(form => {
-      const id = form.querySelector('input[name="to"]').value;
-      const text = form.querySelector('textarea').value;
-      inputs[id] = text;
-    });
-
-    try {
-      const res = await fetch('/admin/messages/partial');
-      const html = await res.text();
-      document.getElementById('messages-container').innerHTML = html;
-
-      // Delay restore until DOM is fully updated
-      setTimeout(() => {
-        document.querySelectorAll('.reply-form').forEach(form => {
-          const id = form.querySelector('input[name="to"]').value;
-          if (inputs[id]) {
-            form.querySelector('textarea').value = inputs[id];
-          }
-        });
-      }, 100);
-    } catch (err) {
-      console.error("🔁 Refresh error:", err);
-    }
-  }, 5000);
-</script>
 
 
 
