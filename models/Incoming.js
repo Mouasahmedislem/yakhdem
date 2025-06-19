@@ -7,7 +7,9 @@ const incomingSchema = new mongoose.Schema({
   text: String,
   payload: String,
   timestamp: String,
-  raw: Object
+  raw: Object,
+  media: { type: String, default: null }
+
 }, { timestamps: true });
 
 module.exports = mongoose.model('Incoming', incomingSchema);
