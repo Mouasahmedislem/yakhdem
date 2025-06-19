@@ -578,7 +578,7 @@ router.get("/add-to-cart-tool/:id", async function(req, res) {
 });
 
 var Cart = require("../models/cart");
-var wow = require('../models/wow');
+
 var sale = require('../models/saleH');
 var header = require('../models/header');
 var shipping = require('../models/shipping');
