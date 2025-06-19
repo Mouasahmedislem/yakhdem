@@ -17,6 +17,7 @@ const stripe = require("stripe")(process.env.STRIPE_API_KEY);
 const { isLoggedIn } = require('../middleware/index');
 const { getGFS, initGridFS } = require('../utils/gridfs');
 const mongoose = require('mongoose');
+const { saveToGridFS } = require('../utils/gridfs');
 
 
 
