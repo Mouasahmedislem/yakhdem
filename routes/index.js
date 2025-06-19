@@ -3051,11 +3051,13 @@ router.get('/webhook', (req, res) => {
 });
 
 
+const fs = require('fs');
+const path = require('path');
+
 const Incoming = require('../models/Incoming');
 
-
 router.post('/webhook', async (req, res) => {
-  res.sendStatus(200); // Respond immediately to WhatsApp
+  res.sendStatus(200); // Respond quickly to Meta
 
   try {
     const entry = req.body.entry?.[0];
@@ -3070,43 +3072,73 @@ router.post('/webhook', async (req, res) => {
     const name = contact?.profile?.name || 'Client';
     const msgType = message.type;
 
-    // 🟡 Media support
     let mediaUrl = null;
+
+    // ✅ Handle media download
     if (['image', 'audio', 'video', 'document'].includes(msgType)) {
-      try {
-        const mediaId = message[msgType]?.id;
-        if (mediaId) {
-          // Step 1: Get temporary URL
-          const mediaMeta = await axios.get(`https://graph.facebook.com/v19.0/${mediaId}`, {
+      const mediaId = message[msgType]?.id;
+      if (mediaId) {
+        // Step 1: Get media temporary URL
+        const mediaMeta = await axios.get(
+          `https://graph.facebook.com/v19.0/${mediaId}`,
+          {
             headers: {
               Authorization: `Bearer ${process.env.META_WA_TOKEN}`
             }
-          });
+          }
+        );
 
-          // Step 2: Get the URL from response
-          mediaUrl = mediaMeta.data.url;
-        }
-      } catch (e) {
-        console.error("⚠️ Media fetch failed:", e.response?.data || e.message);
+        const tempUrl = mediaMeta.data.url;
+
+        // Step 2: Download media to local folder
+        const extension = msgType === 'image' ? 'jpg' : msgType;
+        const filename = `${Date.now()}_${mediaId}.${extension}`;
+        const localPath = path.join(__dirname, '..', 'public', 'media', filename);
+
+        const mediaStream = await axios.get(tempUrl, {
+          headers: {
+            Authorization: `Bearer ${process.env.META_WA_TOKEN}`
+          },
+          responseType: 'stream'
+        });
+
+        const writer = fs.createWriteStream(localPath);
+        mediaStream.data.pipe(writer);
+
+        await new Promise((resolve, reject) => {
+          writer.on('finish', resolve);
+          writer.on('error', reject);
+        });
+
+        mediaUrl = `/media/${filename}`;
       }
     }
 
     // ✅ Save message to DB
-    const newMsg = new Incoming({
+    await new Incoming({
       from: wa_id,
-      name: name,
+      name,
       type: msgType,
       text: message.text?.body || null,
       payload: message.button?.payload || null,
       media: mediaUrl,
       timestamp: message.timestamp,
       raw: req.body
-    });
+    }).save();
 
-    await newMsg.save();
-
-    // 🔁 Auto-reply logic
+    // ✅ Auto-reply logic (optional)
     let reply = null;
+
+    if (msgType === 'text') {
+      const text = message.text.body.trim().toLowerCase();
+      if (["bonjour", "salut", "slt"].includes(text)) {
+        reply = `👋 Bonjour ${name} ! Comment pouvons-nous vous aider ?`;
+      } else if (text.includes('commande')) {
+        reply = `🛒 Pour suivre ou annuler une commande, veuillez utiliser les boutons ou donner plus de détails.`;
+      } else {
+        reply = `🤖 Merci pour votre message. Nous reviendrons vers vous très vite !`;
+      }
+    }
 
     if (msgType === 'button') {
       const payload = message.button.payload;
@@ -3115,18 +3147,7 @@ router.post('/webhook', async (req, res) => {
       } else if (payload === 'DISCUTER_AVEC_AGENT') {
         reply = `💬 Un conseiller va vous répondre.`;
       } else {
-        reply = `Merci pour votre réponse : "${payload}".`;
-      }
-    }
-
-    if (msgType === 'text') {
-      const userText = message.text.body.trim().toLowerCase();
-      if (["bonjour", "salut", "slt"].includes(userText)) {
-        reply = `👋 Bonjour ${name} ! Comment pouvons-nous vous aider ?`;
-      } else if (userText.includes("commande")) {
-        reply = `🛒 Pour suivre ou annuler une commande, veuillez utiliser les boutons ou donner plus de détails.`;
-      } else {
-        reply = `🤖 Merci pour votre message. Nous reviendrons vers vous très vite !`;
+        reply = `Merci pour votre réponse : "${payload}"`;
       }
     }
 
@@ -3146,13 +3167,14 @@ router.post('/webhook', async (req, res) => {
           }
         }
       );
-      console.log("✅ Reply sent:", reply);
+      console.log("✅ Auto-reply sent:", reply);
     }
 
   } catch (err) {
     console.error("❌ Webhook error:", err.response?.data || err.message);
   }
 });
+
 
 
 
