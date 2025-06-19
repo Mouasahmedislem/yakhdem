@@ -2359,70 +2359,7 @@ router.get("/", async function(req, res) {
   }
 });
     
-router.get("/wow", async function(req, res) {
-  try {
-    const wows = await wow.find({});
-    const headers = await header.find({});
 
-    // ✅ Collect user or anonymous data
-   
-
-  } catch (err) {
-    console.error("❌ Error loading sale/furniteur:", err);
-    res.status(500).send("Error loading page");
-  }
-});
-
-router.get("/add-to-cart-wow/:id", async function(req, res) {
-  const wowId = req.params.id;
-  const cart = new Cart(req.session.cart || {});
-
-  try {
-    const item = await wow.findById(wowId);
-    if (!item) return res.redirect("/wow");
-
-    cart.add(item, item.id);
-    req.session.cart = cart;
-    console.log("🛒 Item added to cart:", item.title);
-
-    // ✅ Prepare Meta CAPI AddToCart
-    const user = req.user || {};
-    const userData = {
-      email: user.email,
-      numero: user.numero,
-      firstName: user.firstName,
-      lastName: user.lastName,
-      country: "algeria",
-      ip: req.headers["x-forwarded-for"]?.split(",")[0] || req.socket.remoteAddress,
-      userAgent: req.get("User-Agent"),
-        fbc: req.cookies._fbc || undefined,
-        fbp: req.cookies._fbp || undefined  
-    };
-
-    const eventId = `addtocart_wow_${item.id}_${Date.now()}`;
-
-    await sendMetaCAPIEvent({
-      eventName: "AddToCart",
-      eventId,
-      userData,
-      customData: {
-        content_name: item.title,
-        content_ids: [item.id],
-        content_type: "product",
-        value: item.price,
-        currency: "DZD",
-        anonymous_id: req.sessionID
-      },
-       // Optional for Meta test events
-    });
-
-    res.redirect("/wow");
-
-  } catch (err) {
-    console.error("❌ AddToCart Error:", err);
-    res.redirect("/wow");
-  }
-});
 
         router.get('/reduce/:id', function (req, res, next) {
             const productId = req.params.id;
