@@ -1780,11 +1780,13 @@ console.log("📎 Content-Type:", mediaStream.headers['content-type']);
         const filename = `${Date.now()}_${mediaId}.${extension}`;
         const contentType = mediaStream.headers['content-type'];
 
-        mediaGridFsId = await saveToGridFS(mediaStream.data, filename, contentType);
-        console.log("✅ Media saved to GridFS:", mediaGridFsId.toString());
+     try {
+  mediaGridFsId = await saveToGridFS(mediaStream.data, filename, contentType);
+  console.log("✅ Media saved to GridFS:", mediaGridFsId.toString());
 } catch (err) {
   console.error("❌ Failed saving to GridFS:", err.message);
 }
+
       }
     }
 
