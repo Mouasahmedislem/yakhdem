@@ -3183,21 +3183,24 @@ console.log("📂 Local media path:", localPath);
 
 
 router.get('/admin/messages', isLoggedIn, async (req, res) => {
-  const messages = await Incoming.find().sort({ createdAt: 1 });
-  const grouped = {};
+  const showHandled = req.query.show === 'all';
+  const messages = await Incoming.find(showHandled ? {} : { handled: false }).sort({ createdAt: 1 });
 
+  const grouped = {};
   messages.forEach(msg => {
     if (!grouped[msg.from]) {
       grouped[msg.from] = {
         name: msg.name || 'N/A',
-        messages: []
+        messages: [],
+        handled: msg.handled || false
       };
     }
     grouped[msg.from].messages.push(msg);
   });
 
-  res.render('admin/messages', { grouped });
+  res.render('admin/messages', { grouped, showHandled });
 });
+
 
 const ADMIN_USERNAME = process.env.ADMIN_USERNAME || 'admin';
 const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD || '123456';
@@ -3279,6 +3282,17 @@ router.get('/admin/messages/partial', isLoggedIn, async (req, res) => {
   });
 
   res.render('admin/messages_partial', { grouped });
+});
+router.post('/admin/mark-handled', isLoggedIn, async (req, res) => {
+  const { client } = req.body;
+  await Incoming.updateMany({ from: client }, { $set: { handled: true } });
+  res.redirect('/admin/messages');
+});
+
+router.post('/admin/unmark-handled', isLoggedIn, async (req, res) => {
+  const { client } = req.body;
+  await Incoming.updateMany({ from: client }, { $set: { handled: false } });
+  res.redirect('/admin/messages?show=all');
 });
 
      
