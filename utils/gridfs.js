@@ -15,9 +15,16 @@ conn.once('open', () => {
   console.log('✅ GridFS initialized');
 });
 
+function getGFS() {
+  if (!gfs) {
+    throw new Error('GridFS not initialized yet');
+  }
+  return gfs;
+}
+
 async function saveToGridFS(stream, filename, contentType) {
   return new Promise((resolve, reject) => {
-    const uploadStream = gfs.openUploadStream(filename, { contentType });
+    const uploadStream = getGFS().openUploadStream(filename, { contentType });
 
     stream.pipe(uploadStream)
       .on('error', reject)
@@ -28,4 +35,5 @@ async function saveToGridFS(stream, filename, contentType) {
   });
 }
 
-module.exports = { gfs, saveToGridFS };
+module.exports = { getGFS, saveToGridFS };
+
