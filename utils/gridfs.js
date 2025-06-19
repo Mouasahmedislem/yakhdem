@@ -17,11 +17,22 @@ conn.once('open', () => {
 
 async function saveToGridFS(stream, filename, contentType) {
   return new Promise((resolve, reject) => {
+    if (!gfs) {
+      return reject(new Error('GridFS is not initialized'));
+    }
+
     const uploadStream = gfs.openUploadStream(filename, { contentType });
 
-    stream.pipe(uploadStream)
+    // Attach error on original stream
+    stream.on('error', (err) => {
+      console.error("❌ Incoming stream error:", err);
+      reject(err);
+    });
+
+    stream
+      .pipe(uploadStream)
       .on('error', (err) => {
-        console.error("❌ GridFS error:", err);
+        console.error("❌ GridFS upload error:", err);
         reject(err);
       })
       .on('finish', () => {
