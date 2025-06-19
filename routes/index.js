@@ -15,6 +15,7 @@ const Powers = require('../models/powers');
 const middleware = require('../middleware');
 const stripe = require("stripe")(process.env.STRIPE_API_KEY);
 const { isLoggedIn } = require('../middleware/index');
+const { saveToGridFS } = require('../utils/gridfs');
 
 
 
@@ -3051,10 +3052,8 @@ router.get('/webhook', (req, res) => {
 });
 
 
-const fs = require('fs');
-const path = require('path');
-
 const Incoming = require('../models/Incoming');
+
 
 router.post('/webhook', async (req, res) => {
   res.sendStatus(200); // Respond quickly to Meta
@@ -3072,13 +3071,12 @@ router.post('/webhook', async (req, res) => {
     const name = contact?.profile?.name || 'Client';
     const msgType = message.type;
 
-    let mediaUrl = null;
+    let mediaGridFsId = null;
 
-    // ✅ Handle media download
+    // ✅ Save media to GridFS
     if (['image', 'audio', 'video', 'document'].includes(msgType)) {
       const mediaId = message[msgType]?.id;
       if (mediaId) {
-        // Step 1: Get media temporary URL
         const mediaMeta = await axios.get(
           `https://graph.facebook.com/v19.0/${mediaId}`,
           {
@@ -3089,15 +3087,6 @@ router.post('/webhook', async (req, res) => {
         );
 
         const tempUrl = mediaMeta.data.url;
-// ✅ Ensure /public/media exists
-    const mediaDir = path.join(__dirname, '..', 'public', 'media');
-    if (!fs.existsSync(mediaDir)) {
-      fs.mkdirSync(mediaDir, { recursive: true });
-    }
-        // Step 2: Download media to local folder
-        const extension = msgType === 'image' ? 'jpg' : msgType;
-        const filename = `${Date.now()}_${mediaId}.${extension}`;
-        const localPath = path.join(__dirname, '..', 'public', 'media', filename);
 
         const mediaStream = await axios.get(tempUrl, {
           headers: {
@@ -3106,17 +3095,12 @@ router.post('/webhook', async (req, res) => {
           responseType: 'stream'
         });
 
-        const writer = fs.createWriteStream(localPath);
-        mediaStream.data.pipe(writer);
+        const extension = msgType === 'image' ? 'jpg' : msgType;
+        const filename = `${Date.now()}_${mediaId}.${extension}`;
+        const contentType = mediaStream.headers['content-type'];
 
-        await new Promise((resolve, reject) => {
-          writer.on('finish', resolve);
-          writer.on('error', reject);
-        });
-
-        mediaUrl = `/media/${filename}`;
-        console.log("✅ Media URL saved to DB:", mediaUrl);
-console.log("📂 Local media path:", localPath);
+        mediaGridFsId = await saveToGridFS(mediaStream.data, filename, contentType);
+        console.log("✅ Media saved to GridFS:", mediaGridFsId.toString());
       }
     }
 
@@ -3127,12 +3111,12 @@ console.log("📂 Local media path:", localPath);
       type: msgType,
       text: message.text?.body || null,
       payload: message.button?.payload || null,
-      media: mediaUrl,
+      media: mediaGridFsId ? mediaGridFsId.toString() : null, // save ID
       timestamp: message.timestamp,
       raw: req.body
     }).save();
 
-    // ✅ Auto-reply logic (optional)
+    // ✅ Auto-reply logic
     let reply = null;
 
     if (msgType === 'text') {
@@ -3180,7 +3164,6 @@ console.log("📂 Local media path:", localPath);
     console.error("❌ Webhook error:", err.response?.data || err.message);
   }
 });
-
 
 
 
@@ -3297,6 +3280,19 @@ router.post('/admin/unmark-handled', isLoggedIn, async (req, res) => {
   const { client } = req.body;
   await Incoming.updateMany({ from: client }, { $set: { handled: false } });
   res.redirect('/admin/messages?show=all');
+});
+
+router.get('/media/:id', async (req, res) => {
+  const { gfs } = require('../utils/gridfs');
+  const { ObjectId } = require('mongodb');
+
+  try {
+    const fileId = new ObjectId(req.params.id);
+    const stream = gfs.openDownloadStream(fileId);
+    stream.pipe(res);
+  } catch (err) {
+    res.status(404).send("Media not found");
+  }
 });
 
      
