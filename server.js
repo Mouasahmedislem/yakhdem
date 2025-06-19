@@ -87,14 +87,17 @@ var beiget = require('./models/beiget');
 
 
 
-mongoose.connect('mongodb+srv://Islem:cmygNChSy2L9Q4xt@paintello.cu30n.mongodb.net/paintello?retryWrites=true&w=majority' , (err)=> {
-    if (err) {
-        console.log(err)
-    } else{
-        console.log('connected to db succesfuly...')
-    }
-    
-    })
+mongoose.connect('mongodb+srv://Islem:cmygNChSy2L9Q4xt@paintello.cu30n.mongodb.net/paintello?retryWrites=true&w=majority', {
+    useNewUrlParser: true,
+    useUnifiedTopology: true
+})
+.then(() => {
+    console.log('✅ Connected to MongoDB successfully...');
+})
+.catch(err => {
+    console.error('❌ MongoDB connection error:', err);
+});
+
     
     require('./config/passport');
 
