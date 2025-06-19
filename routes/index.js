@@ -3055,5 +3055,85 @@ router.post('/webhook', (req, res) => {
   res.sendStatus(200);
 });
 
+const Incoming = require('../models/Incoming'); // For saving messages
+
+router.post('/webhook', async (req, res) => {
+  res.sendStatus(200); // Always respond fast
+
+  try {
+    const entry = req.body.entry?.[0];
+    const change = entry?.changes?.[0];
+    const value = change?.value;
+    const message = value?.messages?.[0];
+    const contact = value?.contacts?.[0];
+
+    if (!message || !message.from) return;
+
+    const wa_id = message.from;
+    const name = contact?.profile?.name || 'Client';
+    const msgType = message.type;
+
+    // Save incoming message to DB
+    const newMsg = new Incoming({
+      from: wa_id,
+      name: name,
+      type: msgType,
+      text: message.text?.body || null,
+      payload: message.button?.payload || null,
+      timestamp: message.timestamp,
+      raw: req.body
+    });
+    await newMsg.save();
+
+    // --- Custom Reply Logic ---
+    let reply = null;
+
+    if (msgType === 'button') {
+      const payload = message.button.payload;
+
+      if (payload === 'CANCEL_ORDER') {
+        reply = `❌ Votre commande a été annulée. Contactez-nous si vous avez des questions.`;
+      } else if (payload === 'CHAT_WITH_PERSON') {
+        reply = `💬 Un conseiller va vous répondre sous peu. Merci de patienter.`;
+      } else {
+        reply = `Merci pour votre réponse : "${payload}".`;
+      }
+    }
+
+    if (msgType === 'text') {
+      const userText = message.text.body.trim().toLowerCase();
+
+      if (["bonjour", "salut", "slt"].includes(userText)) {
+        reply = `👋 Bonjour ${name} ! Comment pouvons-nous vous aider ?`;
+      } else if (userText.includes("commande")) {
+        reply = `🛒 Pour suivre ou annuler une commande, veuillez utiliser les boutons ou donner plus de détails.`;
+      } else {
+        reply = `🤖 Merci pour votre message. Nous reviendrons vers vous très vite !`;
+      }
+    }
+
+    if (reply) {
+      await axios.post(
+        `https://graph.facebook.com/v19.0/${process.env.META_PHONE_ID}/messages`,
+        {
+          messaging_product: "whatsapp",
+          to: wa_id,
+          type: "text",
+          text: { body: reply }
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${process.env.META_WA_TOKEN}`,
+            'Content-Type': 'application/json'
+          }
+        }
+      );
+      console.log("✅ Custom reply sent:", reply);
+    }
+  } catch (err) {
+    console.error("❌ Webhook error:", err.response?.data || err.message);
+  }
+});
+
      
 module.exports = router
