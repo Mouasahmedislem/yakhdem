@@ -15,8 +15,8 @@ const Powers = require('../models/powers');
 const middleware = require('../middleware');
 const stripe = require("stripe")(process.env.STRIPE_API_KEY);
 const { isLoggedIn } = require('../middleware/index');
-const { saveToGridFS } = require('../utils/gridfs');
-
+const { getGFS, initGridFS } = require('../utils/gridfs');
+const mongoose = require('mongoose');
 
 
 
@@ -1970,16 +1970,26 @@ router.post('/admin/unmark-handled', isLoggedIn, async (req, res) => {
 });
 
 router.get('/media/:id', async (req, res) => {
-  const { getGFS } = require('../utils/gridfs');
-  const { ObjectId } = require('mongodb');
-
   try {
-    const fileId = new ObjectId(req.params.id);
-    const stream = getGFS().openDownloadStream(fileId);
+    await initGridFS; // Ensure GridFS is ready
+    const gfs = getGFS();
+
+    if (!gfs) {
+      return res.status(500).send("❌ GridFS not available");
+    }
+
+    const fileId = new mongoose.Types.ObjectId(req.params.id);
+    const stream = gfs.openDownloadStream(fileId);
+
+    stream.on('error', (err) => {
+      console.error("❌ GridFS download error:", err.message);
+      res.status(404).send("Media not found");
+    });
+
     stream.pipe(res);
   } catch (err) {
-    console.error("❌ Media error:", err);
-    res.status(404).send("Media not found");
+    console.error("❌ Invalid media request:", err.message);
+    res.status(400).send("Invalid media ID");
   }
 });
 
