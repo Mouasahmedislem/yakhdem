@@ -9,7 +9,24 @@
       color: #333;
       padding: 2rem;
     }
+    .hidden-button-form {
+    display: inline-block;
+    margin-left: 10px;
+  }
 
+  .hidden-button {
+    display: none; /* Make it hidden by default */
+    background: #28a745;
+    color: white;
+    border: none;
+    padding: 4px 8px;
+    border-radius: 3px;
+    cursor: pointer;
+  }
+
+  .user-block:hover .hidden-button {
+    display: inline-block;
+} 
     .user-block {
       background: #fff;
       border: 1px solid #eee;
@@ -80,7 +97,15 @@
   <div id="messages-container">
     <% Object.keys(grouped).forEach(from => { %>
   <div class="user-block">
-    <h2>📞 <%= from %> (<%= grouped[from].name %>)</h2>
+   <h2>
+      📞 <%= from %> (<%= grouped[from].name %>)
+
+      <!-- Hidden Button -->
+      <form method="POST" action="/admin/mark-handled" class="hidden-button-form">
+        <input type="hidden" name="client" value="<%= from %>">
+        <button type="submit" class="hidden-button">✅ Marquer comme traité</button>
+      </form>
+    </h2>
 
     <% grouped[from].messages.forEach(msg => { %>
       <div class="msg <%= msg.name === 'ADMIN' ? 'admin-msg' : '' %>">
