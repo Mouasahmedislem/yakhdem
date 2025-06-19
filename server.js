@@ -23,61 +23,7 @@ require('dotenv').config();
 const nodemailer = require('nodemailer');
 
 
-var seedwow = require('./seed/wow');
-var seedfurniteur = require('./seed/furniteur');
-var seedrug = require('./seed/rug');
-var seedcuisin = require('./seed/cuisin');
-var seedclean = require('./seed/clean');
-var seedsale = require('./seed/saleH');
-var seedheader = require('./seed/header');
-var seedshipping = require('./seed/shipping');
-var seedcoat = require('./seed/coat');
-var seedsample = require('./seed/sample');
-var seedtool = require('./seed/tool');
-var seedpinksap = require('./seed/pinksap');
-var seedpinkpon = require('./seed/pinkpon');
-var seedpinklit = require('./seed/pinklit');
-var seedpinkcool = require('./seed/pinkcool');
-var seedyallaw = require('./seed/yallaw');
-var seedyellow = require('./seed/yellow');
-var seedgreya = require('./seed/greya');
-var seedgreyb = require('./seed/greyb');
-var seedgreyc = require('./seed/greyc');
-var seedgreyd = require('./seed/greyd');
-var seedgreye = require('./seed/greye');
-var seedgreyf = require('./seed/greyf');
-var seedgreena = require('./seed/greena');
-var seedgreenb = require('./seed/greenb');
-var seedgreenc = require('./seed/greenc');
-var seedgreend = require('./seed/greend');
-var seedgreene = require('./seed/greene');
-var seedgreenf = require('./seed/greenf');
-var seedgreeng = require('./seed/greeng');
-var seedgreenh = require('./seed/greenh');
-var seedbluea = require('./seed/bluea');
-var seedblueb = require('./seed/blueb');
-var seedbluec = require('./seed/bluec');
-var seedblued = require('./seed/blued');
-var seedbeigea = require('./seed/beigea');
-var seedbeigeb = require('./seed/beigeb');
-var seedbeigec = require('./seed/beigec');
-var seedbeiged = require('./seed/beiged');
-var seedbeigee = require('./seed/beigee');
-var seedbeigef = require('./seed/beigef');
-var seedbeigeg = require('./seed/beigeg');
-var seedbeigeh = require('./seed/beigeh');
-var seedbeigei = require('./seed/beigei');
-var seedbeigek = require('./seed/beigek');
-var seedbeigel = require('./seed/beigel');
-var seedbeigem = require('./seed/beigem');
-var seedbeigen = require('./seed/beigen');
-var seedbeigeo = require('./seed/beigeo');
-var seedbeigep = require('./seed/beigep');
-var seedbeigeq = require('./seed/beigeq');
-var seedbeiger = require('./seed/beiger');
-var seedbeiges = require('./seed/beiges');
-var seedbeiget = require('./seed/beiget');
-var seedbeigej = require('./seed/beigea');
+
 
 
 
