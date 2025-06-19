@@ -91,18 +91,33 @@
   <strong><%= msg.type %>:</strong>
   <% if (msg.media) { %>
     <% if (msg.type === 'image') { %>
-      <div><img src="<%= msg.media %>" style="max-width: 200px; border-radius: 6px;" /></div>
+      <div>
+        <img src="<%= msg.media %>" alt="Image" style="max-width: 220px; border-radius: 8px; box-shadow: 0 2px 6px rgba(0,0,0,0.1);" />
+      </div>
     <% } else if (msg.type === 'audio') { %>
-      <div><audio controls src="<%= msg.media %>"></audio></div>
+      <div style="margin-top: 6px;">
+        🎵 <audio controls style="width: 100%; max-width: 300px;">
+          <source src="<%= msg.media %>" />
+          Votre navigateur ne supporte pas l'audio.
+        </audio>
+      </div>
     <% } else if (msg.type === 'video') { %>
-      <div><video controls style="max-width: 300px;"><source src="<%= msg.media %>"></video></div>
+      <div style="margin-top: 6px;">
+        🎥 <video controls style="width: 100%; max-width: 300px; border-radius: 6px;">
+          <source src="<%= msg.media %>" />
+          Votre navigateur ne supporte pas la vidéo.
+        </video>
+      </div>
     <% } else { %>
-      <div><a href="<%= msg.media %>" target="_blank">📎 View document</a></div>
+      <div style="margin-top: 6px;">
+        📎 <a href="<%= msg.media %>" target="_blank" style="color: #b08d57;">Voir le document</a>
+      </div>
     <% } %>
   <% } else { %>
     <%= msg.text || msg.payload || "..." %>
   <% } %>
 <% } %>
+
 
   </div>
 <% }) %>
@@ -117,15 +132,13 @@
     <% }) %>
   </div>
 
- <script>
+<script>
   setInterval(async () => {
-    const textareas = document.querySelectorAll('.reply-form textarea');
-    const savedInputs = {};
-
-    // Save textarea values by user ID
-    textareas.forEach(textarea => {
-      const userId = textarea.closest('.reply-form').querySelector('input[name="to"]').value;
-      savedInputs[userId] = textarea.value;
+    const inputs = {};
+    document.querySelectorAll('.reply-form').forEach(form => {
+      const id = form.querySelector('input[name="to"]').value;
+      const text = form.querySelector('textarea').value;
+      inputs[id] = text;
     });
 
     try {
@@ -133,16 +146,19 @@
       const html = await res.text();
       document.getElementById('messages-container').innerHTML = html;
 
-      // Restore textarea values
-      Object.entries(savedInputs).forEach(([userId, value]) => {
-        const textarea = document.querySelector(`.reply-form input[value="${userId}"]`)?.closest('.reply-form')?.querySelector('textarea');
-        if (textarea) textarea.value = value;
+      // Restore text inputs
+      document.querySelectorAll('.reply-form').forEach(form => {
+        const id = form.querySelector('input[name="to"]').value;
+        if (inputs[id]) {
+          form.querySelector('textarea').value = inputs[id];
+        }
       });
     } catch (err) {
       console.error("🔁 Refresh error:", err);
     }
   }, 5000);
 </script>
+
 
 
 </body>
