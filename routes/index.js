@@ -1793,6 +1793,7 @@ router.post('/webhook', async (req, res) => {
       timestamp: message.timestamp,
       raw: req.body
     }).save();
+    console.log("📦 Saved media ID:", mediaGridFsId?.toString());
 
     // ✅ Auto-reply logic
     let reply = null;
