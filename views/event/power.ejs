@@ -3,33 +3,9 @@
 
 <head>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.1/crypto-js.min.js"></script>
+<!-- Meta Pixel Code -->
 <script>
-  function sha256(str) {
-    const buffer = new TextEncoder('utf-8').encode(str.trim().toLowerCase());
-    return crypto.subtle.digest('SHA-256', buffer).then(hash =>
-      Array.from(new Uint8Array(hash)).map(b => b.toString(16).padStart(2, '0')).join('')
-    );
-  }
-
-  async function initFbq() {
-    const em = '<%= user ? user.email : "" %>';
-    const fn = '<%= user ? user.firstName : "" %>';
-    const ln = '<%= user ? user.lastName : "" %>';
-    const ph = '<%= user ? user.numero : "" %>';
-
-    const [em_hashed, fn_hashed, ln_hashed, ph_hashed] = await Promise.all([
-      sha256(em), sha256(fn), sha256(ln), sha256(ph)
-    ]);
-
-    fbq('init', '549728007869525', {
-      em: em_hashed,
-      fn: fn_hashed,
-      ln: ln_hashed,
-      ph: ph_hashed
-    });
-
-    fbq('track', 'PageView');
-  }
+  
 
   !function(f,b,e,v,n,t,s){
     if(f.fbq)return;n=f.fbq=function(){n.callMethod ?
@@ -40,12 +16,19 @@
     s.parentNode.insertBefore(t,s);
   }(window, document, 'script', 'https://connect.facebook.net/en_US/fbevents.js');
 
-  initFbq();
+   fbq('init', '633564199312760', {
+    em: '<%= user ? user.email : "" %>',
+    fn: '<%= user ? user.firstName : "" %>',
+    ln: '<%= user ? user.lastName : "" %>',
+    ph: '<%= user ? user.numero : "" %>'
+  });
+fbq('track', 'PageView');
 </script>
 <noscript>
   <img height="1" width="1" style="display:none"
-       src="https://www.facebook.com/tr?id=549728007869525&ev=PageView&noscript=1"/>
+       src="https://www.facebook.com/tr?id=633564199312760&ev=PageView&noscript=1"/>
 </noscript>
+<!-- End Meta Pixel Code -->
 
 <!-- Google Tag Manager -->
 <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':

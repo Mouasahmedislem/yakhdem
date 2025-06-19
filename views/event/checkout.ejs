@@ -4,7 +4,10 @@
 <head>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.1/crypto-js.min.js"></script>
 <!-- Meta Pixel with Advanced Matching and SHA-256 hashing -->
+<!-- Meta Pixel Code -->
 <script>
+  
+
   !function(f,b,e,v,n,t,s){
     if(f.fbq)return;n=f.fbq=function(){n.callMethod ?
     n.callMethod.apply(n,arguments) : n.queue.push(arguments)};
@@ -14,7 +17,7 @@
     s.parentNode.insertBefore(t,s);
   }(window, document, 'script', 'https://connect.facebook.net/en_US/fbevents.js');
 
-  fbq('init', '549728007869525', {
+   fbq('init', '633564199312760', {
     em: '<%= user ? user.email : "" %>',
     fn: '<%= user ? user.firstName : "" %>',
     ln: '<%= user ? user.lastName : "" %>',
@@ -24,8 +27,9 @@ fbq('track', 'PageView');
 </script>
 <noscript>
   <img height="1" width="1" style="display:none"
-       src="https://www.facebook.com/tr?id=549728007869525&ev=PageView&noscript=1"/>
+       src="https://www.facebook.com/tr?id=633564199312760&ev=PageView&noscript=1"/>
 </noscript>
+<!-- End Meta Pixel Code -->
 
 
   <meta name="facebook-domain-verification" content="plfly5a8dktgdy17nvv2h8zsrpc9g5" />
@@ -189,9 +193,10 @@ fbq('track', 'PageView');
 
         <label for="phone">Phone Number</label>
         <input type="tel" name="numero" id="numero" pattern="0[5-7][0-9]{8}" placeholder="e.g. 0551234567" required>
-
-        <label for="wilaya">Wilaya</label>
-        <select id="wilaya" name="wilaya" required>
+        <label for="country">Country</label>
+        <input type="text" id="country" name="country" value="Algeria" readonly>
+        <label for="city">Wilaya</label>
+        <select id="city" name="city" required>
           <option value="">Select your wilaya</option>
           <option value="Algiers">Algiers</option>
           <option value="Oran">Oran</option>
@@ -331,14 +336,14 @@ fbq('track', 'PageView');
   };
 
   document.addEventListener('DOMContentLoaded', () => {
-    const wilayaSelect = document.getElementById('wilaya');
+    const citySelect = document.getElementById('city');
     const infoBox = document.createElement('div');
     infoBox.style.marginTop = '15px';
     infoBox.style.fontWeight = 'bold';
-    wilayaSelect.parentNode.insertBefore(infoBox, wilayaSelect.nextSibling);
+    citySelect.parentNode.insertBefore(infoBox, citySelect.nextSibling);
 
-    wilayaSelect.addEventListener('change', () => {
-      const selected = wilayaSelect.value.toUpperCase();
+    citySelect.addEventListener('change', () => {
+      const selected = citySelect.value.toUpperCase();
       const data = shippingData[selected] || { fee: 700, delay: "3–5 days" };
       let shippingFee = data.fee;
       const deliveryTime = data.delay;

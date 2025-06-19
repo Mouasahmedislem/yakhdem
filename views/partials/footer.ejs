@@ -8,6 +8,21 @@
   <!-- MDB core JavaScript -->
   <script type="text/javascript" src="../../js/mdb.min.js"></script>
 
+<script>
+(function() {
+  function getParam(p) {
+    var match = window.location.search.match(new RegExp('[?&]' + p + '=([^&]+)'));
+    return match ? match[1] : null;
+  }
+
+  var fbclid = getParam('fbclid');
+  if (fbclid) {
+    var fbc = `fb.1.${Date.now()}.${fbclid}`;
+    document.cookie = `_fbc=${fbc}; path=/; max-age=31536000`; // Store for 1 year
+  }
+})();
+</script>
+
 </body>
 <!-- Footer -->
  <footer class="page-footer text-center text-md-left unique-color-dark pt-0">

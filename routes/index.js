@@ -1,7 +1,10 @@
 var express = require('express')
 var router = express.Router()
-const facebookService = require('../services/facebookService');
+var Cart = require("../models/cart");
+const getMetaUserData = require('../utils/metaUserData');
+const sendMetaCAPIEvent = require('../services/metaCapi');
 const nodemailer = require('nodemailer');
+const axios = require('axios');
 require('dotenv').config();
 const twilio = require('twilio');
 var Producthome = require('../models/producthome');
@@ -11,24 +14,9 @@ const Order = require('../models/order');
 const Powers = require('../models/powers');
 const middleware = require('../middleware');
 const stripe = require("stripe")(process.env.STRIPE_API_KEY);
-
-if (process.env.NODE_ENV !== 'production') {
-    /* setting up enviroment variables */
-    require('dotenv').config({path: '.env'});
-    }
+const { isLoggedIn } = require('../middleware/index');
 
 
-// Helper function to get user data
-function getUserData(req) {
-  return {
-    email: req.user?.email,
-    phone: req.user?.phone,
-    ip: req.ip,
-    userAgent: req.headers['user-agent'],
-    fbp: req.cookies._fbp,
-    fbc: req.cookies._fbc
-  };
-}
 
 
 var furniteur = require('../models/furniteur');
@@ -40,183 +28,553 @@ var sample = require('../models/sample');
 var tool = require('../models/tool');
 
 
-router.get("/sale/furniteur", function(req, res){
-    furniteur.find({}, function(err, furniteurs){
-    header.find({}, function(err, headers){
-        if(err){
-            console.log(err);
-        }
-        else{
-            res.render("sale/furniteur", {furniteurs: furniteurs,headers:headers});
-        }
-    });
-});
-});
-
-router.get("/add-to-cart-furniteur/:id", function(req, res){
-    var furniteurId = req.params.id;
-    var cart = new Cart(req.session.cart ? req.session.cart : {});
+router.get("/sale/furniteur", async function(req, res) {
+  try {
+    const furniteurs = await furniteur.find({});
+    const headers = await header.find({});
     
-    furniteur.findById(furniteurId, function(err, furniteur){
-        if(err){
-            return res.redirect("/sale/furniteur");
-        }
-        cart.add(furniteur, furniteur.id);
-        req.session.cart = cart;
-        console.log(req.session.cart);
-        res.redirect("/sale/furniteur");
+    // ✅ Collect user or anonymous data
+    const user = req.user || {};
+    const userData = {
+      email: user.email,
+      numero: user.numero,
+      firstName: user.firstName,
+      lastName: user.lastName,
+      ip: req.headers["x-forwarded-for"]?.split(",")[0] || req.socket.remoteAddress,
+      userAgent: req.get("User-Agent"),
+         fbc: req.cookies._fbc || undefined,
+         fbp: req.cookies._fbp || undefined  
+    };
+
+    const eventId = `view_furniteur_${Date.now()}`;
+
+    // ✅ Send ViewContent event to Meta
+    await sendMetaCAPIEvent({
+      eventName: "ViewContent",
+      eventId,
+      userData,
+      customData: {
+        content_name: "Sale Furniteur Page",
+        content_type: "product_group",
+        anonymous_id: req.sessionID // optional for retargeting
+      },
+      testEventCode: "TEST12345"
     });
+
+    res.render("sale/furniteur", { furniteurs, headers,eventId });
+
+  } catch (err) {
+    console.error("❌ Error loading sale/furniteur:", err);
+    res.status(500).send("Error loading page");
+  }
 });
 
+router.get("/add-to-cart-furniteur/:id", async function(req, res) {
+  const furniteurId = req.params.id;
+  const cart = new Cart(req.session.cart || {});
 
+  try {
+    const item = await furniteur.findById(furniteurId);
+    if (!item) return res.redirect("/sale/furniteur");
 
+    cart.add(item, item.id);
+    req.session.cart = cart;
+    console.log("🛒 Item added to cart:", item.title);
 
+    // ✅ Prepare Meta CAPI AddToCart
+    const user = req.user || {};
+    const userData = {
+      email: user.email,
+      numero: user.numero,
+      firstName: user.firstName,
+      lastName: user.lastName,
+      ip: req.headers["x-forwarded-for"]?.split(",")[0] || req.socket.remoteAddress,
+      userAgent: req.get("User-Agent"),
+         fbc: req.cookies._fbc || undefined,
+         fbp: req.cookies._fbp || undefined  
+    };
 
+    const eventId = `addtocart_furniteur_${item.id}_${Date.now()}`;
 
-
-router.get("/sale/cuisin", function(req, res){
-    cuisin.find({}, function(err, cuisins){
-    header.find({}, function(err, headers){
-        if(err){
-            console.log(err);
-        }
-        else{
-            res.render("sale/cuisin", {cuisins: cuisins,headers:headers});
-        }
+    await sendMetaCAPIEvent({
+      eventName: "AddToCart",
+      eventId,
+      userData,
+      customData: {
+        content_name: item.title,
+        content_ids: [item.id],
+        content_type: "product",
+        value: item.price,
+        currency: "DZD",
+        anonymous_id: req.sessionID
+      },
+      testEventCode: "TEST12345" // Optional for Meta test events
     });
-});
+
+    res.redirect("/sale/furniteur");
+
+  } catch (err) {
+    console.error("❌ AddToCart Error:", err);
+    res.redirect("/sale/furniteur");
+  }
 });
 
-router.get("/add-to-cart-cuisin/:id", function(req, res){
-    var cuisinId = req.params.id;
-    var cart = new Cart(req.session.cart ? req.session.cart : {});
-    
-    cuisin.findById(cuisinId, function(err, cuisin){
-        if(err){
-            return res.redirect("/sale/cuisin");
-        }
-        cart.add(cuisin, cuisin.id);
-        req.session.cart = cart;
-        console.log(req.session.cart);
-        res.redirect("/sale/cuisin");
+
+router.get("/sale/cuisin", async function(req, res) {
+  try {
+    const cuisins = await cuisin.find({});
+    const headers = await header.find({});
+
+    // ✅ Collect user or anonymous data
+    const user = req.user || {};
+    const userData = {
+      email: user.email,
+      numero: user.numero,
+      firstName: user.firstName,
+      lastName: user.lastName,
+      ip: req.headers["x-forwarded-for"]?.split(",")[0] || req.socket.remoteAddress,
+      userAgent: req.get("User-Agent"),
+        fbc: req.cookies._fbc || undefined,
+        fbp: req.cookies._fbp || undefined  
+    };
+
+    const eventId = `view_cuisin_${Date.now()}`;
+
+    // ✅ Send ViewContent event to Meta
+    await sendMetaCAPIEvent({
+      eventName: "ViewContent",
+      eventId,
+      userData,
+      customData: {
+        content_name: "sale cuisin Page",
+        content_type: "product_group",
+        anonymous_id: req.sessionID // optional for retargeting
+      },
+      testEventCode: "TEST12345"
     });
+
+    res.render("sale/cuisin", { cuisins, headers,eventId });
+
+  } catch (err) {
+    console.error("❌ Error loading /sale/cuisin:", err);
+    res.status(500).send("Error loading page");
+  }
 });
 
+router.get("/add-to-cart-cuisin/:id", async function(req, res) {
+  const cuisinId = req.params.id;
+  const cart = new Cart(req.session.cart || {});
 
-router.get("/sale/clean", function(req, res){
-    clean.find({}, function(err, cleans){
-    header.find({}, function(err, headers){
-        if(err){
-            console.log(err);
-        }
-        else{
-            res.render("sale/clean", {cleans: cleans,headers:headers});
-        }
+  try {
+    const item = await cuisin.findById(cuisinId);
+    if (!item) return res.redirect("/sale/cuisin");
+
+    cart.add(item, item.id);
+    req.session.cart = cart;
+    console.log("🛒 Item added to cart:", item.title);
+
+    // ✅ Prepare Meta CAPI AddToCart
+    const user = req.user || {};
+    const userData = {
+      email: user.email,
+      numero: user.numero,
+      firstName: user.firstName,
+      lastName: user.lastName,
+      ip: req.headers["x-forwarded-for"]?.split(",")[0] || req.socket.remoteAddress,
+      userAgent: req.get("User-Agent"),
+        fbc: req.cookies._fbc || undefined,
+        fbp: req.cookies._fbp || undefined  
+    };
+
+    const eventId = `addtocart_cuisin_${item.id}_${Date.now()}`;
+
+    await sendMetaCAPIEvent({
+      eventName: "AddToCart",
+      eventId,
+      userData,
+      customData: {
+        content_name: item.title,
+        content_ids: [item.id],
+        content_type: "product",
+        value: item.price,
+        currency: "DZD",
+        anonymous_id: req.sessionID
+      },
+      testEventCode: "TEST12345" // Optional for Meta test events
     });
-});
+
+    res.redirect("/sale/cuisin");
+
+  } catch (err) {
+    console.error("❌ AddToCart Error:", err);
+    res.redirect("/sale/cuisin");
+  }
 });
 
-router.get("/add-to-cart-clean/:id", function(req, res){
-    var cleanId = req.params.id;
-    var cart = new Cart(req.session.cart ? req.session.cart : {});
-    
-    clean.findById(cleanId, function(err, clean){
-        if(err){
-            return res.redirect("/sale/clean");
-        }
-        cart.add(clean, clean.id);
-        req.session.cart = cart;
-        console.log(req.session.cart);
-        res.redirect("/sale/clean");
+router.get("/sale/clean", async function(req, res) {
+  try {
+    const cleans = await clean.find({});
+    const headers = await header.find({});
+
+    // ✅ Collect user or anonymous data
+    const user = req.user || {};
+    const userData = {
+      email: user.email,
+      numero: user.numero,
+      firstName: user.firstName,
+      lastName: user.lastName,
+      ip: req.headers["x-forwarded-for"]?.split(",")[0] || req.socket.remoteAddress,
+      userAgent: req.get("User-Agent"),
+        fbc: req.cookies._fbc || undefined,
+        fbp: req.cookies._fbp || undefined  
+    };
+
+    const eventId = `view_clean_${Date.now()}`;
+
+    // ✅ Send ViewContent event to Meta
+    await sendMetaCAPIEvent({
+      eventName: "ViewContent",
+      eventId,
+      userData,
+      customData: {
+        content_name: "sale clean Page",
+        content_type: "product_group",
+        anonymous_id: req.sessionID // optional for retargeting
+      },
+      testEventCode: "TEST12345"
     });
+
+    res.render("sale/clean", { cleans, headers,eventId });
+
+  } catch (err) {
+    console.error("❌ Error loading /sale/cuisin:", err);
+    res.status(500).send("Error loading page");
+  }
 });
 
-router.get("/sale/coat", function(req, res){
-    coat.find({}, function(err, coats){
-    header.find({}, function(err, headers){
-        if(err){
-            console.log(err);
-        }
-        else{
-            res.render("sale/coat", {coats: coats,headers:headers});
-        }
+router.get("/add-to-cart-clean/:id", async function(req, res) {
+  const cleanId = req.params.id;
+  const cart = new Cart(req.session.cart || {});
+
+  try {
+    const item = await clean.findById(cleanId);
+    if (!item) return res.redirect("/sale/clean");
+
+    cart.add(item, item.id);
+    req.session.cart = cart;
+    console.log("🛒 Item added to cart:", item.title);
+
+    // ✅ Prepare Meta CAPI AddToCart
+    const user = req.user || {};
+    const userData = {
+      email: user.email,
+      numero: user.numero,
+      firstName: user.firstName,
+      lastName: user.lastName,
+      ip: req.headers["x-forwarded-for"]?.split(",")[0] || req.socket.remoteAddress,
+      userAgent: req.get("User-Agent"),
+        fbc: req.cookies._fbc || undefined,
+        fbp: req.cookies._fbp || undefined  
+    };
+
+    const eventId = `addtocart_clean_${item.id}_${Date.now()}`;
+
+    await sendMetaCAPIEvent({
+      eventName: "AddToCart",
+      eventId,
+      userData,
+      customData: {
+        content_name: item.title,
+        content_ids: [item.id],
+        content_type: "product",
+        value: item.price,
+        currency: "DZD",
+        anonymous_id: req.sessionID
+      },
+      testEventCode: "TEST12345" // Optional for Meta test events
     });
-});
+
+    res.redirect("/sale/clean");
+
+  } catch (err) {
+    console.error("❌ AddToCart Error:", err);
+    res.redirect("/sale/clean");
+  }
 });
 
-router.get("/add-to-cart-coat/:id", function(req, res){
-    var coatId = req.params.id;
-    var cart = new Cart(req.session.cart ? req.session.cart : {});
-    
-    coat.findById(coatId, function(err, coat){
-        if(err){
-            return res.redirect("/sale/coat");
-        }
-        cart.add(coat, coat.id);
-        req.session.cart = cart;
-        console.log(req.session.cart);
-        res.redirect("/sale/coat");
+router.get("/sale/coat", async function(req, res) {
+  try {
+    const coats = await coat.find({});
+    const headers = await header.find({});
+
+    // ✅ Collect user or anonymous data
+    const user = req.user || {};
+    const userData = {
+      email: user.email,
+      numero: user.numero,
+      firstName: user.firstName,
+      lastName: user.lastName,
+      ip: req.headers["x-forwarded-for"]?.split(",")[0] || req.socket.remoteAddress,
+      userAgent: req.get("User-Agent"),
+        fbc: req.cookies._fbc || undefined,
+        fbp: req.cookies._fbp || undefined  
+    };
+
+    const eventId = `view_coat_${Date.now()}`;
+
+    // ✅ Send ViewContent event to Meta
+    await sendMetaCAPIEvent({
+      eventName: "ViewContent",
+      eventId,
+      userData,
+      customData: {
+        content_name: "Sale coat Page",
+        content_type: "product_group",
+        anonymous_id: req.sessionID // optional for retargeting
+      },
+      testEventCode: "TEST12345"
     });
+
+    res.render("sale/coat", { coats, headers,eventId });
+
+  } catch (err) {
+    console.error("❌ Error loading sale/furniteur:", err);
+    res.status(500).send("Error loading page");
+  }
 });
 
-router.get("/sale/sample", function(req, res){
-    sample.find({}, function(err, samples){
-    header.find({}, function(err, headers){
-        if(err){
-            console.log(err);
-        }
-        else{
-            res.render("sale/sample", {samples: samples,headers:headers});
-        }
+router.get("/add-to-cart-coat/:id", async function(req, res) {
+  const coatId = req.params.id;
+  const cart = new Cart(req.session.cart || {});
+
+  try {
+    const item = await coat.findById(coatId);
+    if (!item) return res.redirect("/sale/coat");
+
+    cart.add(item, item.id);
+    req.session.cart = cart;
+    console.log("🛒 Item added to cart:", item.title);
+
+    // ✅ Prepare Meta CAPI AddToCart
+    const user = req.user || {};
+    const userData = {
+      email: user.email,
+      numero: user.numero,
+      firstName: user.firstName,
+      lastName: user.lastName,
+      ip: req.headers["x-forwarded-for"]?.split(",")[0] || req.socket.remoteAddress,
+      userAgent: req.get("User-Agent"),
+        fbc: req.cookies._fbc || undefined,
+        fbp: req.cookies._fbp || undefined  
+    };
+
+    const eventId = `addtocart_coat_${item.id}_${Date.now()}`;
+
+    await sendMetaCAPIEvent({
+      eventName: "AddToCart",
+      eventId,
+      userData,
+      customData: {
+        content_name: item.title,
+        content_ids: [item.id],
+        content_type: "product",
+        value: item.price,
+        currency: "DZD",
+        anonymous_id: req.sessionID
+      },
+      testEventCode: "TEST12345" // Optional for Meta test events
     });
-});
+
+    res.redirect("/sale/coat");
+
+  } catch (err) {
+    console.error("❌ AddToCart Error:", err);
+    res.redirect("/sale/coat");
+  }
 });
 
-router.get("/add-to-cart-sample/:id", function(req, res){
-    var sampleId = req.params.id;
-    var cart = new Cart(req.session.cart ? req.session.cart : {});
-    
-    sample.findById(sampleId, function(err, sample){
-        if(err){
-            return res.redirect("/sale/sample");
-        }
-        cart.add(sample, sample.id);
-        req.session.cart = cart;
-        console.log(req.session.cart);
-        res.redirect("/sale/sample");
+router.get("/sale/sample", async function(req, res) {
+  try {
+    const samples = await sample.find({});
+    const headers = await header.find({});
+
+    // ✅ Collect user or anonymous data
+    const user = req.user || {};
+    const userData = {
+      email: user.email,
+      numero: user.numero,
+      firstName: user.firstName,
+      lastName: user.lastName,
+      ip: req.headers["x-forwarded-for"]?.split(",")[0] || req.socket.remoteAddress,
+      userAgent: req.get("User-Agent"),
+        fbc: req.cookies._fbc || undefined,
+        fbp: req.cookies._fbp || undefined  
+    };
+
+    const eventId = `view_coat_${Date.now()}`;
+
+    // ✅ Send ViewContent event to Meta
+    await sendMetaCAPIEvent({
+      eventName: "ViewContent",
+      eventId,
+      userData,
+      customData: {
+        content_name: "Sale Furniteur Page",
+        content_type: "product_group",
+        anonymous_id: req.sessionID // optional for retargeting
+      },
+      testEventCode: "TEST12345"
     });
+
+    res.render("sale/sample", { samples, headers,eventId });
+
+  } catch (err) {
+    console.error("❌ Error loading sale/furniteur:", err);
+    res.status(500).send("Error loading page");
+  }
 });
 
-router.get("/sale/tool", function(req, res){
-    tool.find({}, function(err, tools){
-    header.find({}, function(err, headers){
-        if(err){
-            console.log(err);
-        }
-        else{
-            res.render("sale/tool", {tools: tools,headers:headers});
-        }
+router.get("/add-to-cart-sample/:id", async function(req, res) {
+  const sampleId = req.params.id;
+  const cart = new Cart(req.session.cart || {});
+
+  try {
+    const item = await sample.findById(sampleId);
+    if (!item) return res.redirect("/sale/sample");
+
+    cart.add(item, item.id);
+    req.session.cart = cart;
+    console.log("🛒 Item added to cart:", item.title);
+
+    // ✅ Prepare Meta CAPI AddToCart
+    const user = req.user || {};
+    const userData = {
+      email: user.email,
+      numero: user.numero,
+      firstName: user.firstName,
+      lastName: user.lastName,
+      ip: req.headers["x-forwarded-for"]?.split(",")[0] || req.socket.remoteAddress,
+      userAgent: req.get("User-Agent"),
+        fbc: req.cookies._fbc || undefined,
+        fbp: req.cookies._fbp || undefined  
+    };
+
+    const eventId = `addtocart_sample_${item.id}_${Date.now()}`;
+
+    await sendMetaCAPIEvent({
+      eventName: "AddToCart",
+      eventId,
+      userData,
+      customData: {
+        content_name: item.title,
+        content_ids: [item.id],
+        content_type: "product",
+        value: item.price,
+        currency: "DZD",
+        anonymous_id: req.sessionID
+      },
+      testEventCode: "TEST12345" // Optional for Meta test events
     });
-});
+
+    res.redirect("/sale/sample");
+
+  } catch (err) {
+    console.error("❌ AddToCart Error:", err);
+    res.redirect("/sale/sample");
+  }
 });
 
-router.get("/add-to-cart-tool/:id", function(req, res){
-    var toolId = req.params.id;
-    var cart = new Cart(req.session.cart ? req.session.cart : {});
-    
-    tool.findById(toolId, function(err, tool){
-        if(err){
-            return res.redirect("/sale/tool");
-        }
-        cart.add(tool, tool.id);
-        req.session.cart = cart;
-        console.log(req.session.cart);
-        res.redirect("/sale/tool");
+
+router.get("/sale/tool", async function(req, res) {
+  try {
+    const tools = await tool.find({});
+    const headers = await header.find({});
+
+    // ✅ Collect user or anonymous data
+    const user = req.user || {};
+    const userData = {
+      email: user.email,
+      numero: user.numero,
+      firstName: user.firstName,
+      lastName: user.lastName,
+      ip: req.headers["x-forwarded-for"]?.split(",")[0] || req.socket.remoteAddress,
+      userAgent: req.get("User-Agent"),
+        fbc: req.cookies._fbc || undefined,
+        fbp: req.cookies._fbp || undefined  
+    };
+
+    const eventId = `view_tool_${Date.now()}`;
+
+    // ✅ Send ViewContent event to Meta
+    await sendMetaCAPIEvent({
+      eventName: "ViewContent",
+      eventId,
+      userData,
+      customData: {
+        content_name: "Sale coat Page",
+        content_type: "product_group",
+        anonymous_id: req.sessionID // optional for retargeting
+      },
+      testEventCode: "TEST12345"
     });
+
+    res.render("sale/tool", { tools, headers,eventId });
+
+  } catch (err) {
+    console.error("❌ Error loading sale/furniteur:", err);
+    res.status(500).send("Error loading page");
+  }
 });
 
+router.get("/add-to-cart-tool/:id", async function(req, res) {
+  const toolId = req.params.id;
+  const cart = new Cart(req.session.cart || {});
 
+  try {
+    const item = await tool.findById(toolId);
+    if (!item) return res.redirect("/sale/tool");
 
+    cart.add(item, item.id);
+    req.session.cart = cart;
+    console.log("🛒 Item added to cart:", item.title);
+
+    // ✅ Prepare Meta CAPI AddToCart
+    const user = req.user || {};
+    const userData = {
+      email: user.email,
+      numero: user.numero,
+      firstName: user.firstName,
+      lastName: user.lastName,
+      ip: req.headers["x-forwarded-for"]?.split(",")[0] || req.socket.remoteAddress,
+      userAgent: req.get("User-Agent"),
+        fbc: req.cookies._fbc || undefined,
+        fbp: req.cookies._fbp || undefined  
+    };
+
+    const eventId = `addtocart_tool_${item.id}_${Date.now()}`;
+
+    await sendMetaCAPIEvent({
+      eventName: "AddToCart",
+      eventId,
+      userData,
+      customData: {
+        content_name: item.title,
+        content_ids: [item.id],
+        content_type: "product",
+        value: item.price,
+        currency: "DZD",
+        anonymous_id: req.sessionID
+      },
+      testEventCode: "TEST12345" // Optional for Meta test events
+    });
+
+    res.redirect("/sale/tool");
+
+  } catch (err) {
+    console.error("❌ AddToCart Error:", err);
+    res.redirect("/sale/tool");
+  }
+});
 
 var Cart = require("../models/cart");
 var wow = require('../models/wow');
@@ -913,7 +1271,8 @@ router.get("/onecoat/beig02", function(req, res){
             console.log(err);
         }
         else{
-            res.render("onecoat/beig02", {beigebs: beigebs,headers:headers});
+            res.render("onecoat/beig02", {beigebs: beigebs,headers:headers });
+        
         }
     });
 });
@@ -1420,36 +1779,90 @@ router.get("/add-to-cart-beiget/:id", function(req, res){
     });
 });
 
-
-
-
-
-
-
-
-router.get("/myfixateur/fixateur", function(req, res){
+router.get("/myfixateur/fixateur", async function(req, res) {
+  try {
     
-        header.find({}, function(err, headers){
-        if(err){
-            console.log(err);
-        }
-        else{
-            res.render("myfixateur/fixateur", {headers:headers});
-        }
+    const headers = await header.find({});
+
+    // ✅ Collect user or anonymous data
+    const user = req.user || {};
+    const userData = {
+      email: user.email,
+      numero: user.numero,
+      firstName: user.firstName,
+      lastName: user.lastName,
+      ip: req.headers["x-forwarded-for"]?.split(",")[0] || req.socket.remoteAddress,
+      userAgent: req.get("User-Agent"),
+        fbc: req.cookies._fbc || undefined,
+        fbp: req.cookies._fbp || undefined  
+    };
+
+    const eventId = `view_fixateur_${Date.now()}`;
+
+    // ✅ Send ViewContent event to Meta
+    await sendMetaCAPIEvent({
+      eventName: "ViewContent",
+      eventId,
+      userData,
+      customData: {
+        content_name: "Sale fixateur Page",
+        content_type: "product_group",
+        anonymous_id: req.sessionID // optional for retargeting
+      },
+      testEventCode: "TEST12345"
     });
+
+    res.render("myfixateur/fixateur", { headers, headers,eventId });
+
+  } catch (err) {
+    console.error("❌ Error loading sale/furniteur:", err);
+    res.status(500).send("Error loading page");
+  }
 });
 
-router.get("/paintellomac/paintellomac", function(req, res){
+
+router.get("/paintellomac/paintellomac", async function(req, res) {
+  try {
     
-        header.find({}, function(err, headers){
-        if(err){
-            console.log(err);
-        }
-        else{
-            res.render("paintellomac/paintellomac", {headers:headers});
-        }
+    const headers = await header.find({});
+
+    // ✅ Collect user or anonymous data
+    const user = req.user || {};
+    const userData = {
+      email: user.email,
+      numero: user.numero,
+      firstName: user.firstName,
+      lastName: user.lastName,
+      ip: req.headers["x-forwarded-for"]?.split(",")[0] || req.socket.remoteAddress,
+      userAgent: req.get("User-Agent"),
+        fbc: req.cookies._fbc || undefined,
+        fbp: req.cookies._fbp || undefined  
+    };
+
+    const eventId = `view_paintellomac_${Date.now()}`;
+
+    // ✅ Send ViewContent event to Meta
+    await sendMetaCAPIEvent({
+      eventName: "ViewContent",
+      eventId,
+      userData,
+      customData: {
+        content_name: "Sale fixateur Page",
+        content_type: "product_group",
+        anonymous_id: req.sessionID // optional for retargeting
+      },
+      testEventCode: "TEST12345"
     });
+
+    res.render("paintellomac/paintellomac", { headers, headers,eventId });
+
+  } catch (err) {
+    console.error("❌ Error loading sale/furniteur:", err);
+    res.status(500).send("Error loading page");
+  }
 });
+
+
 router.get("/onecoat/pink02", function(req, res){
     pinksap.find({}, function(err, pinksaps){
     header.find({}, function(err, headers){
@@ -1562,153 +1975,453 @@ router.get("/add-to-cart-pinkcool/:id", function(req, res){
 });
 
 
-
-
-
-
-
-
-
-router.get("/coulors/blue", function(req, res){
+router.get("/coulors/blue", async function(req, res) {
+  try {
     
-        header.find({}, function(err, headers){
-        if(err){
-            console.log(err);
-        }
-        else{
-            res.render("coulors/blue", {headers:headers});
-        }
+    const headers = await header.find({});
+
+    // ✅ Collect user or anonymous data
+    const user = req.user || {};
+    const userData = {
+      email: user.email,
+      numero: user.numero,
+      firstName: user.firstName,
+      lastName: user.lastName,
+      ip: req.headers["x-forwarded-for"]?.split(",")[0] || req.socket.remoteAddress,
+      userAgent: req.get("User-Agent"),
+        fbc: req.cookies._fbc || undefined,
+        fbp: req.cookies._fbp || undefined  
+    };
+
+    const eventId = `view_paintellblue_${Date.now()}`;
+
+    // ✅ Send ViewContent event to Meta
+    await sendMetaCAPIEvent({
+      eventName: "ViewContent",
+      eventId,
+      userData,
+      customData: {
+        content_name: "Sale blue Page",
+        content_type: "product_group",
+        anonymous_id: req.sessionID // optional for retargeting
+      },
+      testEventCode: "TEST12345"
     });
+
+    res.render("coulors/blue", { headers, headers,eventId });
+
+  } catch (err) {
+    console.error("❌ Error loading sale/furniteur:", err);
+    res.status(500).send("Error loading page");
+  }
 });
 
-router.get("/coulors/greens", function(req, res){
+
+
+router.get("/coulors/greens", async function(req, res) {
+  try {
     
-        header.find({}, function(err, headers){
-        if(err){
-            console.log(err);
-        }
-        else{
-            res.render("coulors/greens", {headers:headers});
-        }
+    const headers = await header.find({});
+
+    // ✅ Collect user or anonymous data
+    const user = req.user || {};
+    const userData = {
+      email: user.email,
+      numero: user.numero,
+      firstName: user.firstName,
+      lastName: user.lastName,
+      ip: req.headers["x-forwarded-for"]?.split(",")[0] || req.socket.remoteAddress,
+      userAgent: req.get("User-Agent"),
+        fbc: req.cookies._fbc || undefined,
+        fbp: req.cookies._fbp || undefined  
+    };
+
+    const eventId = `view_paintellgreens_${Date.now()}`;
+
+    // ✅ Send ViewContent event to Meta
+    await sendMetaCAPIEvent({
+      eventName: "ViewContent",
+      eventId,
+      userData,
+      customData: {
+        content_name: "Sale green Page",
+        content_type: "product_group",
+        anonymous_id: req.sessionID // optional for retargeting
+      },
+      testEventCode: "TEST12345"
     });
+
+    res.render("coulors/greens", { headers, headers,eventId });
+
+  } catch (err) {
+    console.error("❌ Error loading sale/furniteur:", err);
+    res.status(500).send("Error loading page");
+  }
 });
-      router.get("/coulors/grey", function(req, res){
+router.get("/coulors/grey", async function(req, res) {
+  try {
     
-        header.find({}, function(err, headers){
-        if(err){
-            console.log(err);
-        }
-        else{
-            res.render("coulors/grey", {headers:headers});
-        }
+    const headers = await header.find({});
+
+    // ✅ Collect user or anonymous data
+    const user = req.user || {};
+    const userData = {
+      email: user.email,
+      numero: user.numero,
+      firstName: user.firstName,
+      lastName: user.lastName,
+      ip: req.headers["x-forwarded-for"]?.split(",")[0] || req.socket.remoteAddress,
+      userAgent: req.get("User-Agent"),
+        fbc: req.cookies._fbc || undefined,
+        fbp: req.cookies._fbp || undefined  
+    };
+
+    const eventId = `view_paintellgrey_${Date.now()}`;
+
+    // ✅ Send ViewContent event to Meta
+    await sendMetaCAPIEvent({
+      eventName: "ViewContent",
+      eventId,
+      userData,
+      customData: {
+        content_name: "Sale grey Page",
+        content_type: "product_group",
+        anonymous_id: req.sessionID // optional for retargeting
+      },
+      testEventCode: "TEST12345"
     });
+
+    res.render("coulors/grey", { headers, headers ,eventId});
+
+  } catch (err) {
+    console.error("❌ Error loading sale/furniteur:", err);
+    res.status(500).send("Error loading page");
+  }
 });
 
- router.get("/coulors/yellowv2", function(req, res){
+    router.get("/coulors/yellowv2", async function(req, res) {
+  try {
     
-        header.find({}, function(err, headers){
-        if(err){
-            console.log(err);
-        }
-        else{
-            res.render("coulors/yellowv2", {headers:headers});
-        }
+    const headers = await header.find({});
+
+    // ✅ Collect user or anonymous data
+    const user = req.user || {};
+    const userData = {
+      email: user.email,
+      numero: user.numero,
+      firstName: user.firstName,
+      lastName: user.lastName,
+      ip: req.headers["x-forwarded-for"]?.split(",")[0] || req.socket.remoteAddress,
+      userAgent: req.get("User-Agent"),
+        fbc: req.cookies._fbc || undefined,
+        fbp: req.cookies._fbp || undefined  
+    };
+
+    const eventId = `view_paintellyellowv2_${Date.now()}`;
+
+    // ✅ Send ViewContent event to Meta
+    await sendMetaCAPIEvent({
+      eventName: "ViewContent",
+      eventId,
+      userData,
+      customData: {
+        content_name: "Sale yellowv2 Page",
+        content_type: "product_group",
+        anonymous_id: req.sessionID // optional for retargeting
+      },
+      testEventCode: "TEST12345"
     });
+
+    res.render("coulors/yellowv2", { headers, headers,eventId });
+
+  } catch (err) {
+    console.error("❌ Error loading sale/furniteur:", err);
+    res.status(500).send("Error loading page");
+  }
 });
 
- router.get("/coulors/pink", function(req, res){
+ router.get("/coulors/pink", async function(req, res) {
+  try {
     
-        header.find({}, function(err, headers){
-        if(err){
-            console.log(err);
-        }
-        else{
-            res.render("coulors/pink", {headers:headers});
-        }
+    const headers = await header.find({});
+
+    // ✅ Collect user or anonymous data
+    const user = req.user || {};
+    const userData = {
+      email: user.email,
+      numero: user.numero,
+      firstName: user.firstName,
+      lastName: user.lastName,
+      ip: req.headers["x-forwarded-for"]?.split(",")[0] || req.socket.remoteAddress,
+      userAgent: req.get("User-Agent"),
+        fbc: req.cookies._fbc || undefined,
+        fbp: req.cookies._fbp || undefined  
+    };
+
+    const eventId = `view_paintellpink_${Date.now()}`;
+
+    // ✅ Send ViewContent event to Meta
+    await sendMetaCAPIEvent({
+      eventName: "ViewContent",
+      eventId,
+      userData,
+      customData: {
+        content_name: "Sale pink Page",
+        content_type: "product_group",
+        anonymous_id: req.sessionID // optional for retargeting
+      },
+      testEventCode: "TEST12345"
     });
+
+    res.render("coulors/pink", { headers, headers,eventId });
+
+  } catch (err) {
+    console.error("❌ Error loading sale/furniteur:", err);
+    res.status(500).send("Error loading page");
+  }
 });
- router.get("/coulors/neutral", function(req, res){
+
+ router.get("/coulors/neutral", async function(req, res) {
+  try {
     
-        header.find({}, function(err, headers){
-        if(err){
-            console.log(err);
-        }
-        else{
-            res.render("coulors/neutral", {headers:headers});
-        }
+    const headers = await header.find({});
+
+    // ✅ Collect user or anonymous data
+    const user = req.user || {};
+    const userData = {
+      email: user.email,
+      numero: user.numero,
+      firstName: user.firstName,
+      lastName: user.lastName,
+      country: "algeria",
+      ip: req.headers["x-forwarded-for"]?.split(",")[0] || req.socket.remoteAddress,
+      userAgent: req.get("User-Agent"),
+        fbc: req.cookies._fbc || undefined,
+        fbp: req.cookies._fbp || undefined  
+    };
+
+    const eventId = `view_paintellneutral_${Date.now()}`;
+
+    // ✅ Send ViewContent event to Meta
+    await sendMetaCAPIEvent({
+      eventName: "ViewContent",
+      eventId,
+      userData,
+      customData: {
+        content_name: "Sale neutral Page",
+        content_type: "product_group",
+        anonymous_id: req.sessionID // optional for retargeting
+      },
+      testEventCode: "TEST12345"
     });
+
+    res.render("coulors/neutral", { headers, headers,eventId });
+
+  } catch (err) {
+    console.error("❌ Error loading sale/furniteur:", err);
+    res.status(500).send("Error loading page");
+  }
 });
 
 router.get("/favicon.ico", function(req, res){
-    
-    
-        res.render("views/favicon");
-    
+     res.render("views/favicon");
+    });
+
+router.get("/power", async function(req, res) {
+  try {
+    var errMsg = req.flash('error')[0];
+    // ✅ Collect user or anonymous data
+    const user = req.user || {};
+    const userData = {
+      email: user.email,
+      numero: user.numero,
+      firstName: user.firstName,
+      lastName: user.lastName,
+      country: "algeria",
+      ip: req.headers["x-forwarded-for"]?.split(",")[0] || req.socket.remoteAddress,
+      userAgent: req.get("User-Agent"),
+        fbc: req.cookies._fbc || undefined,
+        fbp: req.cookies._fbp || undefined  
+    };
+
+    const eventId = `view_power_${Date.now()}`;
+
+    // ✅ Send ViewContent event to Meta
+    await sendMetaCAPIEvent({
+      eventName: "ViewContent",
+      eventId,
+      userData,
+      customData: {
+        content_name: "power Page",
+        content_type: "product_group",
+        anonymous_id: req.sessionID // optional for retargeting
+      },
+      testEventCode: "TEST12345"
+    });
+
+    res.render("event/power", { errMsg: errMsg, noError: !errMsg ,eventId });
+
+  } catch (err) {
+    console.error("❌ Error loading sale/furniteur:", err);
+    res.status(500).send("Error loading page");
+  }
 });
-router.get("/power", function(req, res, next){
-    
-     var errMsg = req.flash('error')[0];
-        res.render("event/power", { errMsg: errMsg, noError: !errMsg });
-    
+
+router.get('/shop', async (req, res) => {
+  try {
+    const cart = new Cart(req.session.cart || {});
+    const shippings = await shipping.find({});
+
+    const user = req.user || {};
+    const userData = {
+      email: user.email,
+      numero: user.numero,
+      firstName: user.firstName,
+      lastName: user.lastName,
+      country: "algeria",
+      ip: req.headers["x-forwarded-for"]?.split(",")[0] || req.socket.remoteAddress,
+      userAgent: req.get("User-Agent"),
+      fbc: req.cookies._fbc,
+      fbp: req.cookies._fbp
+    };
+
+    const eventId = `view_${Date.now()}`;
+
+    // ✅ Send ViewContent to Meta
+    await sendMetaCAPIEvent({
+      eventName: "ViewContent",
+      eventId,
+      userData,
+      customData: {
+        content_name: "Shop Page",
+        content_type: "product_group",
+        value: cart.totalPrice || 0,
+        currency: "DZD"
+      },
+      // Replace with real test code or remove in production
+    });
+
+    // ✅ Render page
+    res.render('event/shop', {
+      products: cart.generateArray(),
+      shippings: shippings,
+      totalPrice: cart.totalPrice,
+      price: shippings.price ,eventId
+    });
+
+  } catch (err) {
+    console.error("❌ Error in /shop route:", err);
+    res.status(500).send("Error loading shop");
+  }
 });
 
-router.get('/shop', (req, res)=> {
-            if(!req.session.cart) {
-                 res.render('event/shop', {products: null});
-            }
-            var cart = new Cart(req.session.cart);
-             
-            shipping.find(function(err, shippings) {
-             res.render('event/shop', {products: cart.generateArray(),shippings:shippings, totalPrice: cart.totalPrice, price: shippings.price});
-        });
- });
 
-               
+router.get("/", async function(req, res) {
+  try {
+    var successMsg = req.flash('success')[0];
+    const headers = await header.find({});
 
+    // ✅ Collect user or anonymous data
+    const user = req.user || {};
+    const userData = {
+      email: user.email,
+      numero: user.numero,
+      firstName: user.firstName,
+      lastName: user.lastName,
+      country: "algeria",
+      ip: req.headers["x-forwarded-for"]?.split(",")[0] || req.socket.remoteAddress,
+      userAgent: req.get("User-Agent"),
+        fbc: req.cookies._fbc || undefined,
+        fbp: req.cookies._fbp || undefined  
+    };
 
+    const eventId = `view_${Date.now()}`;
+
+    // ✅ Send ViewContent event to Meta
+    await sendMetaCAPIEvent({
+      eventName: "ViewContent",
+      eventId,
+      userData,
+      customData: {
+        content_name: "Sale home Page",
+        content_type: "product_group",
+        anonymous_id: req.sessionID // optional for retargeting
+      },
+   
+    });
+
+    res.render("event/home", { headers, headers , successMsg: successMsg ,eventId  });
+
+  } catch (err) {
+    console.error("❌ Error loading sale/furniteur:", err);
+    res.status(500).send("Error loading page");
+  }
+});
     
-  router.get('/', function(req, res, next) {
-  var successMsg = req.flash('success')[0];
-  header.find({}, function(err, headers){
-  
-    if(err){
-        console.log(err);
-    }
-    else{
-    res.render('event/home', { headers:headers , successMsg: successMsg });
-}
- });
+router.get("/wow", async function(req, res) {
+  try {
+    const wows = await wow.find({});
+    const headers = await header.find({});
+
+    // ✅ Collect user or anonymous data
+   
+
+  } catch (err) {
+    console.error("❌ Error loading sale/furniteur:", err);
+    res.status(500).send("Error loading page");
+  }
 });
 
+router.get("/add-to-cart-wow/:id", async function(req, res) {
+  const wowId = req.params.id;
+  const cart = new Cart(req.session.cart || {});
 
-        router.get("/wow", function(req, res){
-            wow.find({}, function(err, wows){
-            header.find({}, function(err, headers){
+  try {
+    const item = await wow.findById(wowId);
+    if (!item) return res.redirect("/wow");
 
-                if(err){
-                    console.log(err);
-                }
-                else{
-                    res.render("wow/wowdeal", {wows: wows, headers:headers});
-                }
-            });
-            });
-        });
-       
-        router.get("/add-to-cart-wow/:id", function(req, res){
-            var wowId = req.params.id;
-            var cart = new Cart(req.session.cart ? req.session.cart : {});
-            
-            wow.findById(wowId, function(err, wow){
-                if(err){
-                    return res.redirect("/wow");
-                }
-                cart.add(wow, wow.id);
-                req.session.cart = cart;
-                console.log(req.session.cart);
-                res.redirect("/wow");
-            });
-        });
+    cart.add(item, item.id);
+    req.session.cart = cart;
+    console.log("🛒 Item added to cart:", item.title);
+
+    // ✅ Prepare Meta CAPI AddToCart
+    const user = req.user || {};
+    const userData = {
+      email: user.email,
+      numero: user.numero,
+      firstName: user.firstName,
+      lastName: user.lastName,
+      country: "algeria",
+      ip: req.headers["x-forwarded-for"]?.split(",")[0] || req.socket.remoteAddress,
+      userAgent: req.get("User-Agent"),
+        fbc: req.cookies._fbc || undefined,
+        fbp: req.cookies._fbp || undefined  
+    };
+
+    const eventId = `addtocart_wow_${item.id}_${Date.now()}`;
+
+    await sendMetaCAPIEvent({
+      eventName: "AddToCart",
+      eventId,
+      userData,
+      customData: {
+        content_name: item.title,
+        content_ids: [item.id],
+        content_type: "product",
+        value: item.price,
+        currency: "DZD",
+        anonymous_id: req.sessionID
+      },
+       // Optional for Meta test events
+    });
+
+    res.redirect("/wow");
+
+  } catch (err) {
+    console.error("❌ AddToCart Error:", err);
+    res.redirect("/wow");
+  }
+});
 
         router.get('/reduce/:id', function (req, res, next) {
             const productId = req.params.id;
@@ -1726,14 +2439,49 @@ router.get('/shop', (req, res)=> {
             res.redirect('/shop');
         });
         
-        router.get('/checkout', function(req, res, next) {
-            if (!req.session.cart) {
-              return res.redirect('event/shop', {products: null});
-            }
-            var cart = new Cart(req.session.cart);
-            var errMsg = req.flash('error')[0];
-            res.render('event/checkout', { totalPrice: cart.totalPrice, errMsg: errMsg, noError: !errMsg });
-          });
+      router.get('/checkout', function(req, res, next) {
+  if (!req.session.cart) {
+    return res.redirect('event/shop', { products: null });
+  }
+  var cart = new Cart(req.session.cart);
+  var errMsg = req.flash('error')[0];
+
+  // ✅ Add Meta CAPI InitiateCheckout tracking here
+  const user = req.user || {};
+  const userData = {
+    email: user.email,
+    numero: user.numero,
+    firstName: user.firstName,
+    lastName: user.lastName,
+    country: "algeria",
+    ip: req.headers["x-forwarded-for"]?.split(",")[0] || req.socket.remoteAddress,
+    userAgent: req.get("User-Agent"),
+        fbc: req.cookies._fbc || undefined,
+        fbp: req.cookies._fbp || undefined  
+  };
+
+  const eventId = `checkout_${Date.now()}`;
+
+  // ✅ Fire InitiateCheckout
+  sendMetaCAPIEvent({
+    eventName: "InitiateCheckout",
+    eventId,
+    userData,
+    customData: {
+      content_type: "product",
+      value: cart.totalPrice,
+      currency: "DZD"
+    },
+    testEventCode: "TEST47263" // Optional: replace with your real test code
+  });
+
+  res.render('event/checkout', {
+    totalPrice: cart.totalPrice,
+    errMsg: errMsg,
+    noError: !errMsg
+  });
+});
+
           
       router.post('/checkout', function(req, res, next) {
   if (!req.session.cart) {
@@ -1800,7 +2548,7 @@ router.get('/shop', (req, res)=> {
   // Add all wilayas with their respective info...
 };
       
-  const selectedWilaya = req.body.wilaya;
+  const selectedcity = req.body.city;
   const shippingFees = {
   "ADRAR": 800,
   "CHLEF": 500,
@@ -1864,54 +2612,121 @@ router.get('/shop', (req, res)=> {
   "Default": 700
 };
 
-const shipping = wilayaShippingInfo[selectedWilaya] || { fee: 1000, delay: "3-5 days" };
+const shipping = wilayaShippingInfo[selectedcity] || { fee: 1000, delay: "3-5 days" };
   // Determine fee
 const shippingFee = cart.totalPrice >= freeShippingThreshold ? 0 : shipping.fee;
  const finalTotalPrice = cart.totalPrice + shippingFee;
-
+  const rawNumero = req.body.numero || (req.user ? req.user.numero : undefined);
   let order = new Order({
     user: req.user,
     cart: cart,
     address: req.body.address,
     name: req.body.name,
-    wilaya: selectedWilaya,
-    numero: req.body.numero,
+    country: req.body.country,
+    city: selectedcity,
+    numero: rawNumero,
     shippingFee: shippingFee,
     deliveryDelay: shipping.delay,
-     totalWithShipping: finalTotalPrice
+    totalWithShipping: finalTotalPrice
   });
 
-order.save(function(err, result) {
+order.save(async function(err, result) {
   if (err) {
     req.flash('error', err.message);
     return res.redirect('/checkout');
+     
   } else {
+    
+    const user = req.user || {};
+    const userData = {
+      email: user.email,
+      numero: rawNumero,
+      firstName: user.firstName,
+      lastName: user.lastName,
+      country: "algeria",
+      ip: req.headers["x-forwarded-for"]?.split(",")[0] || req.socket.remoteAddress,
+      userAgent: req.get("User-Agent"),
+        fbc: req.cookies._fbc || undefined,
+        fbp: req.cookies._fbp || undefined,
+       country: req.body.country,
+       city: req.body.city
+    };
+
+    const eventId = `purchase_${result._id}_${Date.now()}`;
+
+    await sendMetaCAPIEvent({
+      eventName: "Purchase",
+      eventId,
+      userData,
+      customData: {
+        value: finalTotalPrice,
+        currency: "DZD",
+        content_type: "product",
+        order_id: result._id.toString()
+      },
+      
+    });
     req.session.cart = null;
 
-    // ✅ Send WhatsApp to client (if phone is provided)
-    const customerPhone = req.body.numero;
-    if (customerPhone) {
-      const whatsappTo = 'whatsapp:+213' + customerPhone.replace(/^0+/, ''); // Clean leading zeros
-      const message = `✅ Bonjour ${req.body.name}, votre commande Paintello est confirmée !
-🛒 Total : ${cart.totalPrice} DA
-🚚 Livraison à : ${req.body.address}, ${selectedWilaya}
-⏱ Délai : ${shipping.delay}
-📞 Nous vous contacterons pour la livraison. Merci !`;
+   // ✅ Clean the phone number
+  const numeroRaw = req.body.numero;
+  const cleanNumero = '213' + numeroRaw.replace(/^0+/, '').replace(/\D/g, '');
 
-      client.messages
-        .create({
-          from: process.env.TWILIO_WHATSAPP_NUMBER,
-          to: whatsappTo,
-          body: message
-        })
-        .then(msg => console.log("WhatsApp sent:", msg.sid))
-        .catch(err => console.error("WhatsApp error:", err));
-    }
+  // ✅ Prepare WhatsApp message payload
+
+    const payload = {
+  messaging_product: "whatsapp",
+  to: cleanNumero,
+  type: "template",
+  template: {
+    name: "commande_confirmee", // your actual template name
+    language: { code: "fr" },
+    components: [
+      {
+        type: "header", // ✅ Add this block for the image header
+        parameters: [
+          {
+            type: "image",
+            image: {
+              link: "https://www.paintello.uk/img/logo.png" // ✅ your logo URL
+            }
+          }
+        ]
+      },
+      {
+        type: "body",
+        parameters: [
+          { type: "text", text: req.body.name || "Client" },
+          { type: "text", text: cart.totalPrice.toString() },
+          { type: "text", text: `${req.body.address}, ${selectedcity}` },
+          
+        ]
+      }
+    ]
+  }
+};
+
+  try {
+    // ✅ Send WhatsApp message
+    const response = await axios.post(
+      `https://graph.facebook.com/v19.0/${process.env.META_PHONE_ID}/messages`,
+      payload,
+      {
+        headers: {
+          Authorization: `Bearer ${process.env.META_WA_TOKEN}`,
+          'Content-Type': 'application/json'
+        }
+      }
+    );
+    console.log("✅ WhatsApp message sent:", response.data);
+  } catch (err) {
+    console.error("❌ WhatsApp error:", err.response?.data || err.message);
+  }
 
     res.render('event/confirmation', {
       name: req.body.name,
-      numero: req.body.numero,
-      wilaya: selectedWilaya,
+      numero: rawNumero,
+      city: selectedcity,
       address: req.body.address,
       cartTotal: cart.totalPrice,
       deliveryDelay: shipping.delay,
@@ -2090,62 +2905,399 @@ router.get('/track-order', async (req, res) => {
   const orders = await Order.find({ numero: req.session.trackingUser }).sort({ createdAt: -1 });
   res.render('event/track-order', { orders });
 });
-  
-router.get('/producthome/:id', async (req, res) => {
-  try {
-    const producthome = await Producthome.findById(req.params.id);
+
+
+
+router.get("/producthome/:id", async (req, res) => {
+  const producthome = await Producthome.findById(req.params.id);
+  const eventId = `view_${producthome.id}_${Date.now()}`;
+
+  // ✅ Use req.user directly — no fallback needed
+  console.log("✅ req.user", req.user); // debug
+
+  const userData = {
+    email: req.user?.email || undefined,
+    numero: req.user?.numero || undefined,
+    firstName: req.user?.firstName || undefined,
+    lastName: req.user?.lastName || undefined,
+    country: "algeria",
+    ip: req.headers["x-forwarded-for"]?.split(",")[0] || req.socket.remoteAddress,
+    userAgent: req.get("User-Agent"),
+        fbc: req.cookies._fbc || undefined,
+        fbp: req.cookies._fbp || undefined  
+  };
+
+  console.log("🔍 Raw userData before hashing:", userData);
+
+
+  await sendMetaCAPIEvent({
+    eventName: "ViewContent",
+    eventId,
+    userData,
+    customData: {
+      content_name: producthome.title,
+      content_ids: [producthome.id],
+      content_type: "product",
+      value: producthome.price,
+      currency: "DZD"
+    },
     
-    // Send ViewContent event for product page
-    await facebookService.sendEvent('ViewContent', {
-        value: producthome.price,
-        content_ids: [producthome.id],
-        content_name: producthome.name,
-        content_type: 'product',
-        eventSourceUrl: req.originalUrl
-    }, getUserData(req));
+  });
 
-    res.render('event/producthome', { 
-      producthome,
-      user: req.user || null 
-    });
-  } catch (err) {
-    console.error(err);
-    res.redirect('/');
-  }
-});
-router.get("/add-to-cart-producthome/:id", async function(req, res){
-    try {
-        var producthomeId = req.params.id;
-        var cart = new Cart(req.session.cart ? req.session.cart : {});
-        
-        const producthome = await Producthome.findById(producthomeId);
-        cart.add(producthome, producthome.id);
-        req.session.cart = cart;
-
-        // Send Facebook AddToCart event
-        await facebookService.sendEvent('AddToCart', {
-            value: producthome.price,
-            content_ids: [producthome.id],
-            content_name: producthome.name,
-            content_type: 'product',
-            eventSourceUrl: req.headers.referer || req.originalUrl
-        }, getUserData(req));
-
-        res.redirect("/shop");
-    } catch(err) {
-        console.error(err);
-        res.redirect("event/producthome");
-    }
+  res.render("event/producthome", { producthome, eventId });
 });
 
 
-  router.get('/paintello', async (req, res) => {
+
+router.get("/add-to-cart-producthome/:id", async function(req, res) {
+  const producthomeId = req.params.id;
+  const cart = new Cart(req.session.cart ? req.session.cart : {});
+  const producthome = await Producthome.findById(producthomeId);
+
+  cart.add(producthome, producthome.id);
+  req.session.cart = cart;
+
+  // ✅ User data from req.user
+  const user = req.user || {};
+  const userData = {
+    email: user.email,
+    numero: user.numero,
+    firstName: user.firstName,
+    lastName: user.lastName,
+    country: "algeria",
+    ip: req.headers["x-forwarded-for"]?.split(",")[0] || req.socket.remoteAddress,
+    userAgent: req.get("User-Agent"),
+        fbc: req.cookies._fbc || undefined,
+        fbp: req.cookies._fbp || undefined  
+  };
+
+  // ✅ Unique event ID
+  const eventId = `addtocart_${producthome.id}_${Date.now()}`;
+
+  // ✅ Send CAPI event
+  await sendMetaCAPIEvent({
+    eventName: "AddToCart",
+    eventId,
+    userData,
+    customData: {
+      content_name: producthome.title,
+      content_ids: [producthome.id],
+      content_type: "product",
+      value: producthome.price,
+      currency: "DZD"
+    },
+    // Change to real test code if needed
+  });
+
+  res.redirect("/shop");
+});
+
+
+ 
+
+router.get('/paintello', async (req, res) => {
   try {
     const paintellos = await Paintello.find({});
-    res.render('event/paintellohome', { paintellos });
+
+    const isLoggedIn = !!req.user;
+
+    const userData = {
+      email: isLoggedIn ? req.user.email : undefined,
+      numero: isLoggedIn ? req.user.numero : undefined,
+      firstName: isLoggedIn ? req.user.firstName : undefined,
+      lastName: isLoggedIn ? req.user.lastName : undefined,
+      country: "algeria",
+      ip: req.headers["x-forwarded-for"]?.split(",")[0] || req.socket.remoteAddress,
+      userAgent: req.get("User-Agent"),
+        fbc: req.cookies._fbc || undefined,
+        fbp: req.cookies._fbp || undefined  
+    };
+
+    const eventId = `view_paintello_${Date.now()}`;
+
+    await sendMetaCAPIEvent({
+      eventName: "ViewContent",
+      eventId,
+      userData,
+      customData: {
+        content_name: "Paintello Home Page",
+        content_type: "product_group",
+        anonymous_id: req.sessionID // optional for retargeting
+      },
+     
+    });
+
+    res.render('event/paintellohome', { paintellos,eventId });
   } catch (err) {
     res.status(500).send('Error loading home products');
   }
 });
+
+
+// ✅ Must be included and correctly mounted
+router.get('/webhook', (req, res) => {
+  const VERIFY_TOKEN = "paintello_webhook_token"; // same token you entered
+
+  const mode = req.query["hub.mode"];
+  const token = req.query["hub.verify_token"];
+  const challenge = req.query["hub.challenge"];
+
+  if (mode === "subscribe" && token === VERIFY_TOKEN) {
+    console.log("✅ Webhook verified");
+    return res.status(200).send(challenge);
+  } else {
+    return res.sendStatus(403);
+  }
+});
+
+
+const fs = require('fs');
+const path = require('path');
+
+const Incoming = require('../models/Incoming');
+
+router.post('/webhook', async (req, res) => {
+  res.sendStatus(200); // Respond quickly to Meta
+
+  try {
+    const entry = req.body.entry?.[0];
+    const change = entry?.changes?.[0];
+    const value = change?.value;
+    const message = value?.messages?.[0];
+    const contact = value?.contacts?.[0];
+
+    if (!message || !message.from) return;
+
+    const wa_id = message.from;
+    const name = contact?.profile?.name || 'Client';
+    const msgType = message.type;
+
+    let mediaUrl = null;
+
+    // ✅ Handle media download
+    if (['image', 'audio', 'video', 'document'].includes(msgType)) {
+      const mediaId = message[msgType]?.id;
+      if (mediaId) {
+        // Step 1: Get media temporary URL
+        const mediaMeta = await axios.get(
+          `https://graph.facebook.com/v19.0/${mediaId}`,
+          {
+            headers: {
+              Authorization: `Bearer ${process.env.META_WA_TOKEN}`
+            }
+          }
+        );
+
+        const tempUrl = mediaMeta.data.url;
+// ✅ Ensure /public/media exists
+    const mediaDir = path.join(__dirname, '..', 'public', 'media');
+    if (!fs.existsSync(mediaDir)) {
+      fs.mkdirSync(mediaDir, { recursive: true });
+    }
+        // Step 2: Download media to local folder
+        const extension = msgType === 'image' ? 'jpg' : msgType;
+        const filename = `${Date.now()}_${mediaId}.${extension}`;
+        const localPath = path.join(__dirname, '..', 'public', 'media', filename);
+
+        const mediaStream = await axios.get(tempUrl, {
+          headers: {
+            Authorization: `Bearer ${process.env.META_WA_TOKEN}`
+          },
+          responseType: 'stream'
+        });
+
+        const writer = fs.createWriteStream(localPath);
+        mediaStream.data.pipe(writer);
+
+        await new Promise((resolve, reject) => {
+          writer.on('finish', resolve);
+          writer.on('error', reject);
+        });
+
+        mediaUrl = `/media/${filename}`;
+        console.log("✅ Media URL saved to DB:", mediaUrl);
+console.log("📂 Local media path:", localPath);
+      }
+    }
+
+    // ✅ Save message to DB
+    await new Incoming({
+      from: wa_id,
+      name,
+      type: msgType,
+      text: message.text?.body || null,
+      payload: message.button?.payload || null,
+      media: mediaUrl,
+      timestamp: message.timestamp,
+      raw: req.body
+    }).save();
+
+    // ✅ Auto-reply logic (optional)
+    let reply = null;
+
+    if (msgType === 'text') {
+      const text = message.text.body.trim().toLowerCase();
+      if (["bonjour", "salut", "slt"].includes(text)) {
+        reply = `👋 Bonjour ${name} ! Comment pouvons-nous vous aider ?`;
+      } else if (text.includes('commande')) {
+        reply = `🛒 Pour suivre ou annuler une commande, veuillez utiliser les boutons ou donner plus de détails.`;
+      } else {
+        reply = `🤖 Merci pour votre message. Nous reviendrons vers vous très vite !`;
+      }
+    }
+
+    if (msgType === 'button') {
+      const payload = message.button.payload;
+      if (payload === 'ANNULER_LA_COMMANDE') {
+        reply = `❌ Votre commande a été annulée.`;
+      } else if (payload === 'DISCUTER_AVEC_AGENT') {
+        reply = `💬 Un conseiller va vous répondre.`;
+      } else {
+        reply = `Merci pour votre réponse : "${payload}"`;
+      }
+    }
+
+    if (reply) {
+      await axios.post(
+        `https://graph.facebook.com/v19.0/${process.env.META_PHONE_ID}/messages`,
+        {
+          messaging_product: "whatsapp",
+          to: wa_id,
+          type: "text",
+          text: { body: reply }
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${process.env.META_WA_TOKEN}`,
+            'Content-Type': 'application/json'
+          }
+        }
+      );
+      console.log("✅ Auto-reply sent:", reply);
+    }
+
+  } catch (err) {
+    console.error("❌ Webhook error:", err.response?.data || err.message);
+  }
+});
+
+
+
+
+
+
+router.get('/admin/messages', isLoggedIn, async (req, res) => {
+  const showHandled = req.query.show === 'all';
+  const messages = await Incoming.find(showHandled ? {} : { handled: false }).sort({ createdAt: 1 });
+
+  const grouped = {};
+  messages.forEach(msg => {
+    if (!grouped[msg.from]) {
+      grouped[msg.from] = {
+        name: msg.name || 'N/A',
+        messages: [],
+        handled: msg.handled || false
+      };
+    }
+    grouped[msg.from].messages.push(msg);
+  });
+
+  res.render('admin/messages', { grouped, showHandled });
+});
+
+
+const ADMIN_USERNAME = process.env.ADMIN_USERNAME || 'admin';
+const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD || '123456';
+
+router.get('/admin/login', (req, res) => {
+  res.render('admin/login', { error: null });
+});
+
+router.post('/admin/login', (req, res) => {
+  const { username, password } = req.body;
+
+  if (username === ADMIN_USERNAME && password === ADMIN_PASSWORD) {
+    req.session.isAdmin = true;
+    res.redirect('/admin/messages');
+  } else {
+    res.render('admin/login', { error: '❌ Invalid login credentials' });
+  }
+});
+
+router.get('/admin/logout', (req, res) => {
+  req.session.destroy();
+  res.redirect('/admin/login');
+});
+
+router.post('/admin/reply', isLoggedIn, async (req, res) => {
+  const { to, text } = req.body;
+  if (!to || !text) return res.status(400).send("Missing parameters");
+
+  try {
+    // 1. Send message to WhatsApp API
+    await axios.post(
+      `https://graph.facebook.com/v19.0/${process.env.META_PHONE_ID}/messages`,
+      {
+        messaging_product: "whatsapp",
+        to,
+        type: "text",
+        text: { body: text }
+      },
+      {
+        headers: {
+          Authorization: `Bearer ${process.env.META_WA_TOKEN}`,
+          'Content-Type': 'application/json'
+        }
+      }
+    );
+
+    // 2. Save the reply in MongoDB immediately
+    const reply = new Incoming({
+      from: to,
+      name: "ADMIN",
+      type: "text",
+      text: text,
+      timestamp: Math.floor(Date.now() / 1000),
+      raw: { sent_by_admin: true }
+    });
+    await reply.save();
+
+    // 3. Redirect back
+    res.redirect('/admin/messages');
+
+  } catch (err) {
+    console.error("❌ Reply error:", err.response?.data || err.message);
+    res.status(500).send("Failed to send message");
+  }
+});
+
+router.get('/admin/messages/partial', isLoggedIn, async (req, res) => {
+  const messages = await Incoming.find().sort({ createdAt: 1 });
+  const grouped = {};
+
+  messages.forEach(msg => {
+    if (!grouped[msg.from]) {
+      grouped[msg.from] = {
+        name: msg.name || 'N/A',
+        messages: []
+      };
+    }
+    grouped[msg.from].messages.push(msg);
+  });
+
+  res.render('admin/messages_partial', { grouped });
+});
+router.post('/admin/mark-handled', isLoggedIn, async (req, res) => {
+  const { client } = req.body;
+  await Incoming.updateMany({ from: client }, { $set: { handled: true } });
+  res.redirect('/admin/messages');
+});
+
+router.post('/admin/unmark-handled', isLoggedIn, async (req, res) => {
+  const { client } = req.body;
+  await Incoming.updateMany({ from: client }, { $set: { handled: false } });
+  res.redirect('/admin/messages?show=all');
+});
+
      
 module.exports = router

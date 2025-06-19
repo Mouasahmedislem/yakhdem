@@ -18,17 +18,20 @@
     s.parentNode.insertBefore(t,s);
   }(window, document, 'script', 'https://connect.facebook.net/en_US/fbevents.js');
 
-   fbq('init', '549728007869525', {
+   fbq('init', '633564199312760', {
     em: '<%= user ? user.email : "" %>',
     fn: '<%= user ? user.firstName : "" %>',
     ln: '<%= user ? user.lastName : "" %>',
     ph: '<%= user ? user.numero : "" %>'
   });
-fbq('track', 'PageView');
+fbq('track', 'PageView', {
+eventID: '<%= eventId %>'
+  }
+);
 </script>
 <noscript>
   <img height="1" width="1" style="display:none"
-       src="https://www.facebook.com/tr?id=549728007869525&ev=PageView&noscript=1"/>
+       src="https://www.facebook.com/tr?id=633564199312760&ev=PageView&noscript=1"/>
 </noscript>
 <!-- End Meta Pixel Code -->
 <!-- Google Tag Manager -->
@@ -378,10 +381,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
     fbq('track', 'InitiateCheckout', {
       value: totalPrice,
       currency: 'DZD',
-    em: '<%= user ? user.email : "" %>',
-    fn: '<%= user ? user.firstName : "" %>',
-    ln: '<%= user ? user.lastName : "" %>',
-    ph: '<%= user ? user.numero : "" %>'
+      eventID: '<%= eventId %>'
     });
   }
 
