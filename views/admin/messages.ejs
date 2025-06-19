@@ -79,59 +79,63 @@
 
   <div id="messages-container">
     <% Object.keys(grouped).forEach(from => { %>
-      <div class="user-block">
-        <h2>📞 <%= from %> (<%= grouped[from].name %>)</h2>
+  <div class="user-block">
+    <h2>📞 <%= from %> (<%= grouped[from].name %>)</h2>
 
-       <% grouped[from].messages.forEach(msg => { %>
-  <div class="msg <%= msg.name === 'ADMIN' ? 'admin-msg' : '' %>">
-    <span class="meta">[<%= new Date(msg.createdAt).toLocaleString() %>]</span>
-  <% if (msg.name === 'ADMIN') { %>
-  ✅ <strong>Admin:</strong> <%= msg.text %>
-<% } else { %>
-  <strong><%= msg.type %>:</strong>
-  <% if (msg.media) { %>
-    <% if (msg.type === 'image') { %>
-      <div>
-        <img src="<%= msg.media %>" alt="Image" style="max-width: 220px; border-radius: 8px; box-shadow: 0 2px 6px rgba(0,0,0,0.1);" />
+    <% grouped[from].messages.forEach(msg => { %>
+      <div class="msg <%= msg.name === 'ADMIN' ? 'admin-msg' : '' %>">
+        <span class="meta">[<%= new Date(msg.createdAt).toLocaleString() %>]</span>
 
+        <% if (msg.name === 'ADMIN') { %>
+          ✅ <strong>Admin:</strong> <%= msg.text %>
+        <% } else { %>
+          <strong><%= msg.type %>:</strong>
 
+          <% if (msg.media) { %>
+            <% if (msg.type === 'image') { %>
+              <div>
+                <img 
+                  src="<%= msg.media %>" 
+                  alt="Image"
+                  onerror="this.src='/images/placeholder.jpg'; this.title='Expired or blocked by Meta';"
+                  style="max-width: 220px; border-radius: 8px; box-shadow: 0 2px 6px rgba(0,0,0,0.1);" />
+              </div>
+            <% } else if (msg.type === 'audio') { %>
+              <div style="margin-top: 6px;">
+                🎵 <audio controls style="width: 100%; max-width: 300px;">
+                  <source src="<%= msg.media %>" />
+                  Votre navigateur ne supporte pas l'audio.
+                </audio>
+              </div>
+            <% } else if (msg.type === 'video') { %>
+              <div style="margin-top: 6px;">
+                🎥 <video controls style="width: 100%; max-width: 300px; border-radius: 6px;">
+                  <source src="<%= msg.media %>" />
+                  Votre navigateur ne supporte pas la vidéo.
+                </video>
+              </div>
+            <% } else { %>
+              <div style="margin-top: 6px;">
+                📎 <a href="<%= msg.media %>" target="_blank" style="color: #b08d57;">
+                  Voir le document
+                </a>
+              </div>
+            <% } %>
+          <% } else { %>
+            <%= msg.text || msg.payload || "..." %>
+          <% } %>
+        <% } %>
       </div>
-    <% } else if (msg.type === 'audio') { %>
-      <div style="margin-top: 6px;">
-        🎵 <audio controls style="width: 100%; max-width: 300px;">
-          <source src="<%= msg.media %>" />
-          Votre navigateur ne supporte pas l'audio.
-        </audio>
-      </div>
-    <% } else if (msg.type === 'video') { %>
-      <div style="margin-top: 6px;">
-        🎥 <video controls style="width: 100%; max-width: 300px; border-radius: 6px;">
-          <source src="<%= msg.media %>" />
-          Votre navigateur ne supporte pas la vidéo.
-        </video>
-      </div>
-    <% } else { %>
-      <div style="margin-top: 6px;">
-        📎 <a href="<%= msg.media %>" target="_blank" style="color: #b08d57;">Voir le document</a>
-      </div>
-    <% } %>
-  <% } else { %>
-    <%= msg.text || msg.payload || "..." %>
-  <% } %>
-<% } %>
+    <% }) %>
 
-
+    <form class="reply-form" method="POST" action="/admin/reply">
+      <input type="hidden" name="to" value="<%= from %>">
+      <textarea name="text" placeholder="Votre réponse..."></textarea>
+      <button type="submit">Envoyer</button>
+    </form>
   </div>
 <% }) %>
 
-
-        <form class="reply-form" method="POST" action="/admin/reply">
-          <input type="hidden" name="to" value="<%= from %>">
-          <textarea name="text" placeholder="Votre réponse..."></textarea>
-          <button type="submit">Envoyer</button>
-        </form>
-      </div>
-    <% }) %>
   </div>
 
 <script>
