@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>WhatsApp Messages</title>
+  <style>
+    table { border-collapse: collapse; width: 100%; font-family: sans-serif; }
+    th, td { border: 1px solid #ddd; padding: 8px; font-size: 14px; }
+    th { background-color: #f2f2f2; }
+  </style>
+</head>
+<body>
+  <h2>📩 Received WhatsApp Messages</h2>
+  <table>
+    <thead>
+      <tr>
+        <th>From</th>
+        <th>Name</th>
+        <th>Type</th>
+        <th>Text / Payload</th>
+        <th>Time</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% messages.forEach(msg => { %>
+        <tr>
+          <td><%= msg.from %></td>
+          <td><%= msg.name %></td>
+          <td><%= msg.type %></td>
+          <td><%= msg.text || msg.payload %></td>
+          <td><%= new Date(msg.createdAt).toLocaleString() %></td>
+        </tr>
+      <% }) %>
+    </tbody>
+  </table>
+</body>
+</html>
