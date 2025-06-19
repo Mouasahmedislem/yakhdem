@@ -3,34 +3,31 @@
 <head>
   <title>WhatsApp Messages</title>
   <style>
-    table { border-collapse: collapse; width: 100%; font-family: sans-serif; }
-    th, td { border: 1px solid #ddd; padding: 8px; font-size: 14px; }
-    th { background-color: #f2f2f2; }
+    body { font-family: sans-serif; padding: 30px; }
+    h2 { color: #444; }
+    .user-block { border: 1px solid #ddd; padding: 15px; margin-bottom: 20px; border-radius: 8px; }
+    .meta { color: #888; font-size: 12px; }
+    .msg { margin: 5px 0; }
+    .msg-type { font-weight: bold; margin-right: 5px; }
   </style>
 </head>
 <body>
-  <h2>📩 Received WhatsApp Messages</h2>
-  <table>
-    <thead>
-      <tr>
-        <th>From</th>
-        <th>Name</th>
-        <th>Type</th>
-        <th>Text / Payload</th>
-        <th>Time</th>
-      </tr>
-    </thead>
-    <tbody>
-      <% messages.forEach(msg => { %>
-        <tr>
-          <td><%= msg.from %></td>
-          <td><%= msg.name %></td>
-          <td><%= msg.type %></td>
-          <td><%= msg.text || msg.payload %></td>
-          <td><%= new Date(msg.createdAt).toLocaleString() %></td>
-        </tr>
+  <h1>📩 Admin Message Inbox</h1>
+
+  <% Object.keys(grouped).forEach(from => { %>
+    <div class="user-block">
+      <h2>📞 <%= from %> (<%= grouped[from].name %>)</h2>
+      <% grouped[from].messages.forEach(msg => { %>
+        <div class="msg">
+          <span class="meta">[<%= new Date(msg.createdAt).toLocaleString() %>]</span>
+          <span class="msg-type"><%= msg.type %>:</span>
+          <span>
+            <%= msg.text || msg.payload || "..." %>
+          </span>
+        </div>
       <% }) %>
-    </tbody>
-  </table>
+    </div>
+  <% }) %>
 </body>
 </html>
+
