@@ -201,7 +201,7 @@ app.use(bodyParser.urlencoded({extended: false}))
 app.use(bodyParser.json())
 app.use('/media', express.static(path.join(__dirname, 'public/images')));
 app.use('/images', express.static(path.join(__dirname, 'public/media')));
-
+app.use(express.static(path.join(__dirname, 'public')));
 app.use('/favicon',express.static(__dirname + '/favicon'))
 app.use('/css',express.static(__dirname + '/css'))
 app.use('/js',express.static(__dirname + '/js'))
