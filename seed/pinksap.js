@@ -24,7 +24,7 @@ var pinksaps = [
 ];
 
 function seedpinksap(){
-    pinksap.remove({}, err => {
+    pinksap.deleteMany({}, err => {
         if(err) console.log(err);
         pinksaps.forEach(seed => {
             pinksap.create(seed, (err, pinksap) => {
