@@ -8,6 +8,7 @@ const incomingSchema = new mongoose.Schema({
   payload: String,
   timestamp: String,
   raw: Object,
+  handled: { type: Boolean, default: false }, // 👈 Add this
   media: { type: String, default: null }
 
 }, { timestamps: true });
