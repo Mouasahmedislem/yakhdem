@@ -3111,6 +3111,8 @@ router.post('/webhook', async (req, res) => {
         });
 
         mediaUrl = `/media/${filename}`;
+        console.log("✅ Media URL saved to DB:", mediaUrl);
+console.log("📂 Local media path:", localPath);
       }
     }
 
