@@ -63,6 +63,11 @@
       border-radius: 6px;
       cursor: pointer;
     }
+   .admin-msg {
+  background: #e1f5ec;
+  border-left: 5px solid #61c19f;
+  text-align: right;
+}
 
     .reply-form button:hover {
       background: #9c7a4b;
@@ -77,13 +82,17 @@
       <div class="user-block">
         <h2>📞 <%= from %> (<%= grouped[from].name %>)</h2>
 
-        <% grouped[from].messages.forEach(msg => { %>
-          <div class="msg">
-            <span class="meta">[<%= new Date(msg.createdAt).toLocaleString() %>]</span>
-            <strong><%= msg.type %>:</strong>
-            <%= msg.text || msg.payload || "..." %>
-          </div>
-        <% }) %>
+       <% grouped[from].messages.forEach(msg => { %>
+  <div class="msg <%= msg.name === 'ADMIN' ? 'admin-msg' : '' %>">
+    <span class="meta">[<%= new Date(msg.createdAt).toLocaleString() %>]</span>
+    <% if (msg.name === 'ADMIN') { %>
+      ✅ <strong>Admin:</strong> <%= msg.text %>
+    <% } else { %>
+      <strong><%= msg.type %>:</strong> <%= msg.text || msg.payload || "..." %>
+    <% } %>
+  </div>
+<% }) %>
+
 
         <form class="reply-form" method="POST" action="/admin/reply">
           <input type="hidden" name="to" value="<%= from %>">
@@ -94,17 +103,33 @@
     <% }) %>
   </div>
 
-  <script>
-    setInterval(async () => {
-      try {
-        const res = await fetch('/admin/messages/partial');
-        const html = await res.text();
-        document.getElementById('messages-container').innerHTML = html;
-      } catch (err) {
-        console.error("🔁 Refresh error:", err);
-      }
-    }, 5000); // every 5 seconds
-  </script>
+ <script>
+  setInterval(async () => {
+    const textareas = document.querySelectorAll('.reply-form textarea');
+    const savedInputs = {};
+
+    // Save textarea values by user ID
+    textareas.forEach(textarea => {
+      const userId = textarea.closest('.reply-form').querySelector('input[name="to"]').value;
+      savedInputs[userId] = textarea.value;
+    });
+
+    try {
+      const res = await fetch('/admin/messages/partial');
+      const html = await res.text();
+      document.getElementById('messages-container').innerHTML = html;
+
+      // Restore textarea values
+      Object.entries(savedInputs).forEach(([userId, value]) => {
+        const textarea = document.querySelector(`.reply-form input[value="${userId}"]`)?.closest('.reply-form')?.querySelector('textarea');
+        if (textarea) textarea.value = value;
+      });
+    } catch (err) {
+      console.error("🔁 Refresh error:", err);
+    }
+  }, 5000);
+</script>
+
 
 </body>
 </html>
