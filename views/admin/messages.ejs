@@ -85,11 +85,25 @@
        <% grouped[from].messages.forEach(msg => { %>
   <div class="msg <%= msg.name === 'ADMIN' ? 'admin-msg' : '' %>">
     <span class="meta">[<%= new Date(msg.createdAt).toLocaleString() %>]</span>
-    <% if (msg.name === 'ADMIN') { %>
-      ✅ <strong>Admin:</strong> <%= msg.text %>
+  <% if (msg.name === 'ADMIN') { %>
+  ✅ <strong>Admin:</strong> <%= msg.text %>
+<% } else { %>
+  <strong><%= msg.type %>:</strong>
+  <% if (msg.media) { %>
+    <% if (msg.type === 'image') { %>
+      <div><img src="<%= msg.media %>" style="max-width: 200px; border-radius: 6px;" /></div>
+    <% } else if (msg.type === 'audio') { %>
+      <div><audio controls src="<%= msg.media %>"></audio></div>
+    <% } else if (msg.type === 'video') { %>
+      <div><video controls style="max-width: 300px;"><source src="<%= msg.media %>"></video></div>
     <% } else { %>
-      <strong><%= msg.type %>:</strong> <%= msg.text || msg.payload || "..." %>
+      <div><a href="<%= msg.media %>" target="_blank">📎 View document</a></div>
     <% } %>
+  <% } else { %>
+    <%= msg.text || msg.payload || "..." %>
+  <% } %>
+<% } %>
+
   </div>
 <% }) %>
 
