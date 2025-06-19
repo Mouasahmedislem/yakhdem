@@ -199,6 +199,8 @@ app.set('view engine','ejs')
 app.use(logger('dev'));
 app.use(bodyParser.urlencoded({extended: false}))
 app.use(bodyParser.json())
+app.use('/media', express.static(path.join(__dirname, 'public/images')));
+app.use('/images', express.static(path.join(__dirname, 'public/media')));
 
 app.use('/favicon',express.static(__dirname + '/favicon'))
 app.use('/css',express.static(__dirname + '/css'))
