@@ -3049,13 +3049,7 @@ router.get('/webhook', (req, res) => {
     return res.sendStatus(403);
   }
 });
-router.post('/webhook', (req, res) => {
-  console.log("📩 Webhook POST received:");
-  console.dir(req.body, { depth: null });
 
-  // Respond to Meta to confirm receipt
-  res.sendStatus(200);
-});
 
 const Incoming = require('../models/Incoming'); // For saving messages
 
