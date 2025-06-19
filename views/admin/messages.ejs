@@ -1,33 +1,97 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>WhatsApp Messages</title>
+  <title>Paintello Admin Inbox</title>
   <style>
-    body { font-family: sans-serif; padding: 30px; }
-    h2 { color: #444; }
-    .user-block { border: 1px solid #ddd; padding: 15px; margin-bottom: 20px; border-radius: 8px; }
-    .meta { color: #888; font-size: 12px; }
-    .msg { margin: 5px 0; }
-    .msg-type { font-weight: bold; margin-right: 5px; }
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background: #fefefe;
+      color: #333;
+      padding: 2rem;
+    }
+
+    .user-block {
+      background: #fff;
+      border: 1px solid #eee;
+      border-left: 5px solid #d3bfa6;
+      border-radius: 10px;
+      padding: 20px;
+      margin-bottom: 30px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+    }
+
+    h2 {
+      font-size: 18px;
+      color: #b08d57;
+      margin-bottom: 10px;
+    }
+
+    .msg {
+      margin: 5px 0;
+      padding: 8px;
+      background: #fafafa;
+      border-radius: 6px;
+    }
+
+    .meta {
+      color: #888;
+      font-size: 12px;
+      display: inline-block;
+      width: 180px;
+    }
+
+    form.reply-form {
+      margin-top: 10px;
+    }
+
+    .reply-form textarea {
+      width: 100%;
+      height: 50px;
+      padding: 10px;
+      border-radius: 8px;
+      border: 1px solid #ccc;
+      resize: none;
+      font-family: inherit;
+    }
+
+    .reply-form button {
+      margin-top: 5px;
+      background: #b08d57;
+      color: #fff;
+      border: none;
+      padding: 8px 16px;
+      border-radius: 6px;
+      cursor: pointer;
+    }
+
+    .reply-form button:hover {
+      background: #9c7a4b;
+    }
   </style>
 </head>
 <body>
-  <h1>📩 Admin Message Inbox</h1>
+  <h1>📩 Paintello Admin — WhatsApp Messages</h1>
 
   <% Object.keys(grouped).forEach(from => { %>
     <div class="user-block">
       <h2>📞 <%= from %> (<%= grouped[from].name %>)</h2>
+
       <% grouped[from].messages.forEach(msg => { %>
         <div class="msg">
           <span class="meta">[<%= new Date(msg.createdAt).toLocaleString() %>]</span>
-          <span class="msg-type"><%= msg.type %>:</span>
-          <span>
-            <%= msg.text || msg.payload || "..." %>
-          </span>
+          <strong><%= msg.type %>:</strong>
+          <%= msg.text || msg.payload || "..." %>
         </div>
       <% }) %>
+
+      <form class="reply-form" method="POST" action="/admin/reply">
+        <input type="hidden" name="to" value="<%= from %>">
+        <textarea name="text" placeholder="Votre réponse..."></textarea>
+        <button type="submit">Envoyer</button>
+      </form>
     </div>
   <% }) %>
 </body>
 </html>
+
 
