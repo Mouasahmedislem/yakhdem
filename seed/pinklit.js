@@ -24,7 +24,7 @@ var pinklits = [
 ];
 
 function seedpinklit(){
-    pinklit.remove({}, err => {
+    pinklit.deleteMany({}, err => {
         if(err) console.log(err);
         pinklits.forEach(seed => {
             pinklit.create(seed, (err, pinklit) => {
