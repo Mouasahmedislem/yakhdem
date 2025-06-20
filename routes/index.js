@@ -1162,7 +1162,8 @@ router.get("/", async function(req, res) {
 });
 
           
-      router.post('/checkout', function(req, res, next) {
+     router.post('/checkout', async function(req, res) {
+
   if (!req.session.cart) {
     return res.redirect('event/shop', { products: null });
   }
