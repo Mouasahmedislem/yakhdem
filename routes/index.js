@@ -1309,12 +1309,9 @@ const shippingFee = cart.totalPrice >= freeShippingThreshold ? 0 : shipping.fee;
     totalWithShipping: finalTotalPrice
   });
 
-order.save(async function(err, result) {
-  if (err) {
-    req.flash('error', err.message);
-    return res.redirect('/checkout');
-     
-  } else {
+try {
+  const result = await order.save();
+
     
     const user = req.user || {};
     const userData = {
@@ -1420,9 +1417,11 @@ order.save(async function(err, result) {
       shippingFee: shippingFee,
       totalPrice: finalTotalPrice
     });
+  } catch (err) {
+    console.error("❌ Erreur checkout:", err.message);
+    req.flash('error', err.message);
+    return res.redirect('/checkout');
   }
-});
-
 });
 
 
