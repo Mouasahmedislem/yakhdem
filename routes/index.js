@@ -1773,21 +1773,7 @@ router.post('/webhook', async (req, res) => {
   }
 });
 
-// Webhook endpoint
-router.post('/webhook', async (req, res) => {
-  res.sendStatus(200); // Respond immediately
 
-  try {
-    const entry = req.body.entry?.[0];
-    const change = entry?.changes?.[0];
-    const value = change?.value;
-    const message = value?.messages?.[0];
-    const contact = value?.contacts?.[0];
 
-   
-    }
-
-  
-});
     
 module.exports = router
