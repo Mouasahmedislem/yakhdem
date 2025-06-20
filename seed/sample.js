@@ -22,7 +22,7 @@ var samples = [
 ];
 
 function seedsample(){
-    sample.remove({}, err => {
+    sample.deleteMany({}, err => {
         if(err) console.log(err);
         samples.forEach(seed => {
             sample.create(seed, (err, sample) => {

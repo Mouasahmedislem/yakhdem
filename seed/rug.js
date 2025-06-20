@@ -24,7 +24,7 @@ var rugs = [
 ];
 
 function seedrug(){
-    rug.remove({}, err => {
+    rug.deleteMany({}, err => {
         if(err) console.log(err);
         rugs.forEach(seed => {
             rug.create(seed, (err, rug) => {

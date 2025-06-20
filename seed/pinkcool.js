@@ -24,7 +24,7 @@ var pinkcools = [
 ];
 
 function seedpinkcool(){
-    pinkcool.remove({}, err => {
+    pinkcool.deleteMany({}, err => {
         if(err) console.log(err);
         pinkcools.forEach(seed => {
             pinkcool.create(seed, (err, pinkcool) => {

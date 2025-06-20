@@ -22,7 +22,7 @@ var tools = [
 ];
 
 function seedtool(){
-    tool.remove({}, err => {
+    tool.deleteMany({}, err => {
         if(err) console.log(err);
         tools.forEach(seed => {
             tool.create(seed, (err, tool) => {

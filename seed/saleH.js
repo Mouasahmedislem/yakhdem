@@ -53,7 +53,7 @@ mongoose.connect('mongodb+srv://Islem:cmygNChSy2L9Q4xt@paintello.cu30n.mongodb.n
 ];
 
 function seedsale(){
-sale.remove({}, err => {
+sale.deleteMany({}, err => {
     if(err) console.log(err);
     sales.forEach(seed => {
         sale.create(seed, (err, sale) => {

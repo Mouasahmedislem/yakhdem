@@ -22,7 +22,7 @@ var yallaws = [
 ];
 
 function seedyallaw(){
-    yallaw.remove({}, err => {
+    yallaw.deleteMany({}, err => {
         if(err) console.log(err);
         yallaws.forEach(seed => {
           yallaw.create(seed, (err, yallaw) => {

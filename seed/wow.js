@@ -25,7 +25,7 @@ var wows = [
 
 
 function seedwow(){
-    wow.remove({}, err => {
+    wow.deleteMany({}, err => {
         if(err) console.log(err);
         wows.forEach(seed => {
             wow.create(seed, (err, wow) => {

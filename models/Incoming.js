@@ -9,7 +9,7 @@ const incomingSchema = new mongoose.Schema({
   timestamp: String,
   raw: Object,
   handled: { type: Boolean, default: false }, // 👈 Add this
-  media: { type: String, default: null }
+  media: String
 
 }, { timestamps: true });
 

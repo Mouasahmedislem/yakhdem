@@ -31,7 +31,7 @@ var shippings = [
 ];
 
 function seedshipping(){
-    shipping.remove({}, err => {
+    shipping.deleteMany({}, err => {
         if(err) console.log(err);
         shippings.forEach(seed => {
             shipping.create(seed, (err, shipping) => {
