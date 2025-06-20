@@ -16,7 +16,7 @@ const middleware = require('../middleware');
 const stripe = require("stripe")(process.env.STRIPE_API_KEY);
 const { isLoggedIn } = require('../middleware/index');
 const mongoose = require('mongoose');
-
+const { sendAdminOrderEmail } = require('../utils/mailer'); // optional
 
 
 
@@ -1162,7 +1162,8 @@ router.get("/", async function(req, res) {
 });
 
           
-      router.post('/checkout', function(req, res, next) {
+     router.post('/checkout', async function(req, res) {
+
   if (!req.session.cart) {
     return res.redirect('event/shop', { products: null });
   }
@@ -1296,7 +1297,7 @@ const shipping = wilayaShippingInfo[selectedcity] || { fee: 1000, delay: "3-5 da
 const shippingFee = cart.totalPrice >= freeShippingThreshold ? 0 : shipping.fee;
  const finalTotalPrice = cart.totalPrice + shippingFee;
   const rawNumero = req.body.numero || (req.user ? req.user.numero : undefined);
-  let order = new Order({
+  const order = new Order({
     user: req.user,
     cart: cart,
     address: req.body.address,
@@ -1308,13 +1309,10 @@ const shippingFee = cart.totalPrice >= freeShippingThreshold ? 0 : shipping.fee;
     deliveryDelay: shipping.delay,
     totalWithShipping: finalTotalPrice
   });
+console.log("📝 Tentative d’enregistrement :", order);
+try {
+  const result = await order.save();
 
-order.save(async function(err, result) {
-  if (err) {
-    req.flash('error', err.message);
-    return res.redirect('/checkout');
-     
-  } else {
     
     const user = req.user || {};
     const userData = {
@@ -1402,6 +1400,14 @@ order.save(async function(err, result) {
     console.error("❌ WhatsApp error:", err.response?.data || err.message);
   }
 
+    // ✅ OPTIONAL: Send email notification to admin
+    await sendAdminOrderEmail({
+      name: req.body.name,
+      numero: cleanNumero,
+      total: cart.totalPrice.toString(),
+      address: `${req.body.address}, ${selectedcity}`
+    });
+    
     res.render('event/confirmation', {
       name: req.body.name,
       numero: rawNumero,
@@ -1412,9 +1418,11 @@ order.save(async function(err, result) {
       shippingFee: shippingFee,
       totalPrice: finalTotalPrice
     });
-  }
-});
-
+ } catch (err) {
+  console.error("❌ Erreur lors de la sauvegarde de la commande :", err.message);
+  req.flash('error', "Erreur lors de la commande.");
+  return res.redirect('/checkout');
+}
 });
 
 
@@ -1736,235 +1744,36 @@ const Incoming = require('../models/Incoming');
 const fs = require('fs');
 const path = require('path');
 
-
-// Webhook endpoint
 router.post('/webhook', async (req, res) => {
-  res.sendStatus(200); // Respond immediately
-
   try {
     const entry = req.body.entry?.[0];
-    const change = entry?.changes?.[0];
-    const value = change?.value;
-    const message = value?.messages?.[0];
-    const contact = value?.contacts?.[0];
+    const changes = entry?.changes?.[0];
+    const messages = changes?.value?.messages?.[0];
 
-    if (!message || !message.from) return;
-
-    const wa_id = message.from;
-    const name = contact?.profile?.name || 'Client';
-    const msgType = message.type;
-
-    console.log(`📥 Message from ${wa_id} (${name}) — Type: ${msgType}`);
-
-    // ✅ Handle media (save locally to public/media/)
-    let savedMediaFilename = null;
-    if (['image', 'audio', 'video', 'document'].includes(msgType)) {
-      const mediaId = message[msgType]?.id;
-      if (mediaId) {
-        console.log('🔍 Downloading media:', mediaId);
-
-        const meta = await axios.get(
-          `https://graph.facebook.com/v19.0/${mediaId}`,
-          {
-            headers: {
-              Authorization: `Bearer ${process.env.META_WA_TOKEN}`
-            }
-          }
-        );
-
-        const tempUrl = meta.data.url;
-
-        const mediaStream = await axios({
-          method: 'GET',
-          url: tempUrl,
-          responseType: 'stream',
-          headers: {
-            Authorization: `Bearer ${process.env.META_WA_TOKEN}`
-          }
-        });
-
-        const extMap = { image: 'jpg', audio: 'ogg', video: 'mp4', document: 'pdf' };
-        const ext = extMap[msgType] || 'bin';
-        savedMediaFilename = `${Date.now()}_${mediaId}.${ext}`;
-        const filePath = path.join(__dirname, '..', 'public', 'media', savedMediaFilename);
-
-        const writeStream = fs.createWriteStream(filePath);
-        mediaStream.data.pipe(writeStream);
-
-        console.log(`✅ Media saved to /public/media/${savedMediaFilename}`);
-      }
+    if (!messages) {
+      return res.sendStatus(200);
     }
 
-    // ✅ Auto-reply
-    let replyText = null;
+    const from = messages.from; // numéro de téléphone du client
+    const text = messages.text?.body?.trim().toUpperCase();
 
-    if (msgType === 'text') {
-      const text = message.text.body.toLowerCase().trim();
-      if (['salut', 'bonjour', 'slt'].includes(text)) {
-        replyText = `👋 Bonjour ${name} ! Comment pouvons-nous vous aider ?`;
-      } else {
-        replyText = `🤖 Merci pour votre message. Nous reviendrons vers vous rapidement.`;
-      }
-    }
+   
+    // ✉️ Info à envoyer par email
+    const name = "Client WhatsApp";
+    const numero = from.startsWith('213') ? '0' + from.slice(3) : from;
+    const response = text;
 
-    if (msgType === 'button') {
-      const payload = message.button.payload;
-      if (payload === 'DISCUTER_AVEC_AGENT') {
-        replyText = `🧑‍💼 Un agent va vous répondre bientôt.`;
-      } else {
-        replyText = `Merci pour votre réponse : "${payload}"`;
-      }
-    }
+    // 📧 Email à l’admin avec la réponse du client
+    await sendClientReplyEmail({ name, numero, response });
 
-    if (replyText) {
-      await axios.post(
-        `https://graph.facebook.com/v19.0/${process.env.META_PHONE_ID}/messages`,
-        {
-          messaging_product: "whatsapp",
-          to: wa_id,
-          type: "text",
-          text: { body: replyText }
-        },
-        {
-          headers: {
-            Authorization: `Bearer ${process.env.META_WA_TOKEN}`,
-            'Content-Type': 'application/json'
-          }
-        }
-      );
-
-      console.log("✅ Auto-reply sent:", replyText);
-    }
-
+  
   } catch (err) {
-    console.error("❌ Webhook error:", err.response?.data || err.message);
+    console.error("❌ Erreur Webhook:", err.message);
+    return res.sendStatus(500);
   }
 });
 
 
 
-
-
-
-
-
-
-router.get('/admin/messages', isLoggedIn, async (req, res) => {
-  const showHandled = req.query.show === 'all';
-  const messages = await Incoming.find(showHandled ? {} : { handled: false }).sort({ createdAt: 1 });
-
-  const grouped = {};
-  messages.forEach(msg => {
-    if (!grouped[msg.from]) {
-      grouped[msg.from] = {
-        name: msg.name || 'N/A',
-        messages: [],
-        handled: msg.handled || false
-      };
-    }
-    grouped[msg.from].messages.push(msg);
-  });
-
-  res.render('admin/messages', { grouped, showHandled });
-});
-
-
-const ADMIN_USERNAME = process.env.ADMIN_USERNAME || 'admin';
-const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD || '123456';
-
-router.get('/admin/login', (req, res) => {
-  res.render('admin/login', { error: null });
-});
-
-router.post('/admin/login', (req, res) => {
-  const { username, password } = req.body;
-
-  if (username === ADMIN_USERNAME && password === ADMIN_PASSWORD) {
-    req.session.isAdmin = true;
-    res.redirect('/admin/messages');
-  } else {
-    res.render('admin/login', { error: '❌ Invalid login credentials' });
-  }
-});
-
-router.get('/admin/logout', (req, res) => {
-  req.session.destroy();
-  res.redirect('/admin/login');
-});
-
-router.post('/admin/reply', isLoggedIn, async (req, res) => {
-  const { to, text } = req.body;
-  if (!to || !text) return res.status(400).send("Missing parameters");
-
-  try {
-    // 1. Send message to WhatsApp API
-    await axios.post(
-      `https://graph.facebook.com/v19.0/${process.env.META_PHONE_ID}/messages`,
-      {
-        messaging_product: "whatsapp",
-        to,
-        type: "text",
-        text: { body: text }
-      },
-      {
-        headers: {
-          Authorization: `Bearer ${process.env.META_WA_TOKEN}`,
-          'Content-Type': 'application/json'
-        }
-      }
-    );
-
-    // 2. Save the reply in MongoDB immediately
-    const reply = new Incoming({
-      from: to,
-      name: "ADMIN",
-      type: "text",
-      text: text,
-      timestamp: Math.floor(Date.now() / 1000),
-      raw: { sent_by_admin: true }
-    });
-    await reply.save();
-
-    // 3. Redirect back
-    res.redirect('/admin/messages');
-
-  } catch (err) {
-    console.error("❌ Reply error:", err.response?.data || err.message);
-    res.status(500).send("Failed to send message");
-  }
-});
-
-router.get('/admin/messages/partial', isLoggedIn, async (req, res) => {
-  const messages = await Incoming.find().sort({ createdAt: 1 });
-  const grouped = {};
-
-  messages.forEach(msg => {
-    if (!grouped[msg.from]) {
-      grouped[msg.from] = {
-        name: msg.name || 'N/A',
-        messages: []
-      };
-    }
-    grouped[msg.from].messages.push(msg);
-  });
-
-  res.render('admin/messages_partial', { grouped });
-});
-router.post('/admin/mark-handled', isLoggedIn, async (req, res) => {
-  const { client } = req.body;
-  await Incoming.updateMany({ from: client }, { $set: { handled: true } });
-  res.redirect('/admin/messages');
-});
-
-router.post('/admin/unmark-handled', isLoggedIn, async (req, res) => {
-  const { client } = req.body;
-  await Incoming.updateMany({ from: client }, { $set: { handled: false } });
-  res.redirect('/admin/messages?show=all');
-});
-
-
-
-
-
-     
+    
 module.exports = router
