@@ -1297,7 +1297,7 @@ const shipping = wilayaShippingInfo[selectedcity] || { fee: 1000, delay: "3-5 da
 const shippingFee = cart.totalPrice >= freeShippingThreshold ? 0 : shipping.fee;
  const finalTotalPrice = cart.totalPrice + shippingFee;
   const rawNumero = req.body.numero || (req.user ? req.user.numero : undefined);
-  let order = new Order({
+  const order = new Order({
     user: req.user,
     cart: cart,
     address: req.body.address,
