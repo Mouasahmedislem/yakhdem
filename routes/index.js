@@ -1309,7 +1309,7 @@ const shippingFee = cart.totalPrice >= freeShippingThreshold ? 0 : shipping.fee;
     deliveryDelay: shipping.delay,
     totalWithShipping: finalTotalPrice
   });
-
+console.log("📝 Tentative d’enregistrement :", order);
 try {
   const result = await order.save();
 
@@ -1418,11 +1418,11 @@ try {
       shippingFee: shippingFee,
       totalPrice: finalTotalPrice
     });
-  } catch (err) {
-    console.error("❌ Erreur checkout:", err.message);
-    req.flash('error', err.message);
-    return res.redirect('/checkout');
-  }
+ } catch (err) {
+  console.error("❌ Erreur lors de la sauvegarde de la commande :", err.message);
+  req.flash('error', "Erreur lors de la commande.");
+  return res.redirect('/checkout');
+}
 });
 
 
