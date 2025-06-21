@@ -7,6 +7,7 @@ var userSchema = new Schema({
   password: {type: String, required: true},
   firstName: {type: String, required: true},
   lastName: {type: String, required: true},
+  facebookId: { type: String, unique: true, sparse: true },
   numero: {type: String, required: true} // for phone number
 });
 
