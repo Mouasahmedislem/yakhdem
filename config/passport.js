@@ -1,6 +1,35 @@
 var passport = require('passport');
 var User = require('../models/user');
 var LocalStrategy = require('passport-local').Strategy;
+const FacebookStrategy = require('passport-facebook').Strategy;
+
+passport.use(new FacebookStrategy({
+  clientID: process.env.FACEBOOK_APP_ID,
+  clientSecret: process.env.FACEBOOK_APP_SECRET,
+  callbackURL: "/auth/facebook/callback",
+  profileFields: ['id', 'emails', 'name'] // Request email, first and last name
+}, async function(accessToken, refreshToken, profile, done) {
+  try {
+    const existingUser = await User.findOne({ 'facebookId': profile.id });
+
+    if (existingUser) return done(null, existingUser);
+
+    // If not found, create new user
+    const newUser = new User({
+      facebookId: profile.id,
+      email: profile.emails?.[0].value || `user_${profile.id}@facebook.com`,
+      firstName: profile.name.givenName || '',
+      lastName: profile.name.familyName || '',
+      numero: '', // Facebook doesn't provide phone number
+      isAdmin: false
+    });
+
+    await newUser.save();
+    return done(null, newUser);
+  } catch (err) {
+    return done(err, null);
+  }
+}));
 
 passport.serializeUser(function(user, done) {
   done(null, user.id);
