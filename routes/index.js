@@ -1752,28 +1752,28 @@ router.post('/webhook', async (req, res) => {
     const messages = changes?.value?.messages?.[0];
 
     if (!messages) {
-      return res.sendStatus(200);
+      return res.sendStatus(200); // ✅ pas de message, réponse immédiate
     }
 
-    const from = messages.from; // numéro de téléphone du client
-    const text = messages.text?.body?.trim().toUpperCase();
+    const from = messages.from; // ✅ numéro client (WhatsApp ID)
+    const text = messages.text?.body?.trim(); // ✅ on ne transforme pas encore en uppercase ici
 
-   
-    // ✉️ Info à envoyer par email
+    // ✉️ Informations à transmettre
     const name = "Client WhatsApp";
     const numero = from.startsWith('213') ? '0' + from.slice(3) : from;
-    const response = text;
+    const response = text || "[Message vide ou non texte]";
 
-    // 📧 Email à l’admin avec la réponse du client
+    // ✅ Envoie de l'email
     await sendClientReplyEmail({ name, numero, response });
 
-  
+    console.log("📨 Réponse client reçue et email envoyé :", response);
+    return res.sendStatus(200); // ✅ très important : on répond 200 à Meta
+
   } catch (err) {
     console.error("❌ Erreur Webhook:", err.message);
     return res.sendStatus(500);
   }
 });
-
 
 
     
