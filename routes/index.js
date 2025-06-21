@@ -24,6 +24,20 @@ var Grey = require('../models/grey');
 var Green = require('../models/green');
 var Yelloow = require('../models/yelloow');
 var Neutral = require('../models/neutral');
+const passport = require('passport');
+
+router.get('/auth/facebook', passport.authenticate('facebook', {
+  scope: ['email']
+}));
+
+router.get('/auth/facebook/callback',
+  passport.authenticate('facebook', {
+    failureRedirect: '/login',
+    failureFlash: true
+  }),
+  function(req, res) {
+    res.redirect('/');
+  });
 
 
 
