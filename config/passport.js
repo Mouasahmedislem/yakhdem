@@ -6,7 +6,7 @@ const FacebookStrategy = require('passport-facebook').Strategy;
 passport.use(new FacebookStrategy({
   clientID: process.env.FACEBOOK_APP_ID,
   clientSecret: process.env.FACEBOOK_APP_SECRET,
-  callbackURL: "/auth/facebook/callback",
+  callbackURL: "https://www.paintello.uk/auth/facebook/callback",
   profileFields: ['id', 'emails', 'name'] // Request email, first and last name
 }, async function(accessToken, refreshToken, profile, done) {
   try {
