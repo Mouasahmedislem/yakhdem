@@ -181,15 +181,22 @@ footer {
       <ul class="navbar-nav nav-flex-icons ml-auto ">
 
         <!-- PROFILE -->
-        <li class="nav-item mx-2">
-        
-            <a class="nav-link" href="/track-login" title="My Account">
-              <i class="fas fa-user"></i>
-            </a>
-          
-           
-          
-        </li>
+       <li class="nav-item dropdown">
+                       <a class="nav-link dropdown" id="menu1" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        <i class="fas fa-user  black-text"></i>
+                      </a>
+                      <div class="dropdown-menu dropdown-menu-right bootstrap-menu  white scrollbar-default" aria-labelledby="menu1">
+                        <% if (login){ %>
+                          <a class="dropdown-item" href="/user/profile">profile</a>
+                           <a class="dropdown-item" href="/user/logout">Logout</a>
+            
+                           <% } else{ %>
+                           <a class="dropdown-item" href="/user/signup">Register</a>
+                           <a class="dropdown-item" href="/user/signin">Sing up</a>
+                           <a class="dropdown-item" href="/track-login">Track Order</a>
+                           <% } %>
+                 </div> 
+          </li>
 
         <!-- CART -->
         <li class="nav-item mx-2 position-relative">
@@ -207,8 +214,13 @@ footer {
 </nav>
   </header>
   <div class="banner" style="background-image: url('https://live.staticflickr.com/65535/54530748939_dda2a74c86.jpg');">
-    <div class="banner-text">Transform Your Home with Color & Comfort</div>
-  </div>
+   <div class="banner-text">
+                <h1 class="h1-responsive font-weight-bold mt-sm-5 mb-4 wow fadeInLeft" data-wow-delay="0.3s">Transform Your Home with Color & Comfort</h1>
+                <hr class="hr-light wow fadeInLeft" data-wow-delay="0.3s">
+ <a class="btn btn-white btn-rounded btn-lg orange-text font-weight-bold ml-lg-0 wow fadeInLeft" data-wow-delay="0.4s" href="/"><img src="/favicon/android-chrome-192x192.png" alt="Paintello Logo" style="max-height: 80px;"></a>
+ <a class="btn btn-white btn-rounded btn-lg orange-text font-weight-bold ml-lg-0 wow fadeInLeft" data-wow-delay="0.4s" href="/paintello"><img src="/img/logo.png" alt="Paintello Logo" style="max-height: 80px;"></a>
+              </div>
+            </div>
 <div class="section">
   <div class="section-title">New Arrivals</div>
   <div class="row">
