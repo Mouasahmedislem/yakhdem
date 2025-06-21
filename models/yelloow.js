@@ -1,7 +1,7 @@
 // models/product.js
 const mongoose = require('mongoose');
 
-const yelloow = new mongoose.Schema({
+const yelloowSchema = new mongoose.Schema({
   title: String,
   price: Number,
   image: [String],         // For image slider
