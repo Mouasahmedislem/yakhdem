@@ -125,7 +125,7 @@ mongoose.connect('mongodb+srv://Islem:cmygNChSy2L9Q4xt@paintello.cu30n.mongodb.n
       resave: true,
       saveUninitialized: true
     }));
-    
+    app.use(express.json({ limit: '10mb' })); // pour supporter les JSON des webhooks
     app.use(flash());
     app.use(passport.initialize());
     app.use(passport.session());

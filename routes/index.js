@@ -16,7 +16,14 @@ const middleware = require('../middleware');
 
 const { isLoggedIn } = require('../middleware/index');
 const mongoose = require('mongoose');
-const { sendAdminOrderEmail } = require('../utils/mailer'); // optional
+
+const { sendAdminOrderEmail, sendClientReplyEmail } = require('../utils/mailer');
+var Blue = require('../models/blue');
+var Pink = require('../models/pink');
+var Grey = require('../models/grey');
+var Green = require('../models/green');
+var Yelloow = require('../models/yelloow');
+var Neutral = require('../models/neutral');
 
 
 
@@ -582,55 +589,6 @@ var Cart = require("../models/cart");
 var sale = require('../models/saleH');
 var header = require('../models/header');
 var shipping = require('../models/shipping');
-var pinksap = require('../models/pinksap');
-var pinkpon = require('../models/pinkpon');
-var pinklit = require('../models/pinklit');
-var pinkcool = require('../models/pinkcool');
-var yallaw = require('../models/yallaw');
-var yellow = require('../models/yellow');
-var greya = require('../models/greya');
-var greyb = require('../models/greyb');
-var greyc = require('../models/greyc');
-var greyd = require('../models/greyd');
-var greye = require('../models/greye');
-var greyf = require('../models/greyf');
-var greena = require('../models/greena');
-var greenb = require('../models/greenb');
-var greenc = require('../models/greenc');
-var greend = require('../models/greend');
-var greene = require('../models/greene');
-var greenf = require('../models/greenf');
-var greeng = require('../models/greeng');
-var greenh = require('../models/greenh');
-var bluea = require('../models/bluea');
-var blueb = require('../models/blueb');
-var bluec = require('../models/bluec');
-var blued = require('../models/blued');
-var beigea = require('../models/beigea');
-var beigeb = require('../models/beigeb');
-var beigec = require('../models/beigec');
-var beiged = require('../models/beiged');
-var beigee = require('../models/beigee');
-var beigef = require('../models/beigef');
-var beigeg = require('../models/beigeg');
-var beigeh = require('../models/beigeh');
-var beigei = require('../models/beigei');
-var beigej = require('../models/beigej');
-var beigek = require('../models/beigek');
-var beigel = require('../models/beigel');
-var beigem = require('../models/beigem');
-var beigen = require('../models/beigen');
-var beigeo = require('../models/beigeo');
-var beigep = require('../models/beigep');
-var beigeq = require('../models/beigeq');
-var beiger = require('../models/beiger');
-var beiges = require('../models/beiges');
-var beiget = require('../models/beiget');
-
-
-
-
-
 
 router.get("/myfixateur/fixateur", async function(req, res) {
   try {
@@ -739,7 +697,7 @@ router.get("/coulors/blue", async function(req, res) {
 
     // ✅ Send ViewContent event to Meta
     await sendMetaCAPIEvent({
-      eventName: "ViewContent",
+      eventName: "PageView",
       eventId,
       userData,
       customData: {
@@ -758,7 +716,89 @@ router.get("/coulors/blue", async function(req, res) {
   }
 });
 
+router.get("/blue/:id", async (req, res) => {
+  const blue = await Blue.findById(req.params.id);
+  const eventId = `view_${blue.id}_${Date.now()}`;
 
+  // ✅ Use req.user directly — no fallback needed
+  console.log("✅ req.user", req.user); // debug
+
+  const userData = {
+    email: req.user?.email || undefined,
+    numero: req.user?.numero || undefined,
+    firstName: req.user?.firstName || undefined,
+    lastName: req.user?.lastName || undefined,
+    country: "algeria",
+    ip: req.headers["x-forwarded-for"]?.split(",")[0] || req.socket.remoteAddress,
+    userAgent: req.get("User-Agent"),
+        fbc: req.cookies._fbc || undefined,
+        fbp: req.cookies._fbp || undefined  
+  };
+
+  console.log("🔍 Raw userData before hashing:", userData);
+
+
+  await sendMetaCAPIEvent({
+    eventName: "ViewContent",
+    eventId,
+    userData,
+    customData: {
+      content_name: blue.title,
+      content_ids: [blue.id],
+      content_type: "product",
+      value: blue.price,
+      currency: "DZD"
+    },
+    
+  });
+
+  res.render("event/blue", { blue, eventId });
+});
+
+
+
+router.get("/add-to-cart-blue/:id", async function(req, res) {
+  const blueId = req.params.id;
+  const cart = new Cart(req.session.cart ? req.session.cart : {});
+  const blue = await Blue.findById(blueId);
+
+  cart.add(blue, blue.id);
+  req.session.cart = cart;
+
+  // ✅ User data from req.user
+  const user = req.user || {};
+  const userData = {
+    email: user.email,
+    numero: user.numero,
+    firstName: user.firstName,
+    lastName: user.lastName,
+    country: "algeria",
+    ip: req.headers["x-forwarded-for"]?.split(",")[0] || req.socket.remoteAddress,
+    userAgent: req.get("User-Agent"),
+        fbc: req.cookies._fbc || undefined,
+        fbp: req.cookies._fbp || undefined  
+  };
+
+  // ✅ Unique event ID
+  const eventId = `addtocart_${blue.id}_${Date.now()}`;
+
+  // ✅ Send CAPI event
+  await sendMetaCAPIEvent({
+    eventName: "AddToCart",
+    eventId,
+    userData,
+    customData: {
+      content_name: blue.title,
+      content_ids: [blue.id],
+      content_type: "product",
+      value: blue.price,
+      currency: "DZD"
+    },
+    // Change to real test code if needed
+  });
+
+  res.redirect("/shop");
+});
 
 router.get("/coulors/greens", async function(req, res) {
   try {
@@ -782,7 +822,7 @@ router.get("/coulors/greens", async function(req, res) {
 
     // ✅ Send ViewContent event to Meta
     await sendMetaCAPIEvent({
-      eventName: "ViewContent",
+      eventName: "PageView",
       eventId,
       userData,
       customData: {
@@ -799,6 +839,90 @@ router.get("/coulors/greens", async function(req, res) {
     console.error("❌ Error loading sale/furniteur:", err);
     res.status(500).send("Error loading page");
   }
+});
+
+router.get("/green/:id", async (req, res) => {
+  const green = await Green.findById(req.params.id);
+  const eventId = `view_${green.id}_${Date.now()}`;
+
+  // ✅ Use req.user directly — no fallback needed
+  console.log("✅ req.user", req.user); // debug
+
+  const userData = {
+    email: req.user?.email || undefined,
+    numero: req.user?.numero || undefined,
+    firstName: req.user?.firstName || undefined,
+    lastName: req.user?.lastName || undefined,
+    country: "algeria",
+    ip: req.headers["x-forwarded-for"]?.split(",")[0] || req.socket.remoteAddress,
+    userAgent: req.get("User-Agent"),
+        fbc: req.cookies._fbc || undefined,
+        fbp: req.cookies._fbp || undefined  
+  };
+
+  console.log("🔍 Raw userData before hashing:", userData);
+
+
+  await sendMetaCAPIEvent({
+    eventName: "ViewContent",
+    eventId,
+    userData,
+    customData: {
+      content_name: green.title,
+      content_ids: [green.id],
+      content_type: "product",
+      value: green.price,
+      currency: "DZD"
+    },
+    
+  });
+
+  res.render("event/green", { green, eventId });
+});
+
+
+
+router.get("/add-to-cart-green/:id", async function(req, res) {
+  const greenId = req.params.id;
+  const cart = new Cart(req.session.cart ? req.session.cart : {});
+  const green = await Green.findById(greenId);
+
+  cart.add(green, green.id);
+  req.session.cart = cart;
+
+  // ✅ User data from req.user
+  const user = req.user || {};
+  const userData = {
+    email: user.email,
+    numero: user.numero,
+    firstName: user.firstName,
+    lastName: user.lastName,
+    country: "algeria",
+    ip: req.headers["x-forwarded-for"]?.split(",")[0] || req.socket.remoteAddress,
+    userAgent: req.get("User-Agent"),
+        fbc: req.cookies._fbc || undefined,
+        fbp: req.cookies._fbp || undefined  
+  };
+
+  // ✅ Unique event ID
+  const eventId = `addtocart_${green.id}_${Date.now()}`;
+
+  // ✅ Send CAPI event
+  await sendMetaCAPIEvent({
+    eventName: "AddToCart",
+    eventId,
+    userData,
+    customData: {
+      content_name: green.title,
+      content_ids: [green.id],
+      content_type: "product",
+      value: green.price,
+      currency: "DZD"
+    },
+    // Change to real test code if needed
+  });
+
+  res.redirect("/shop");
 });
 router.get("/coulors/grey", async function(req, res) {
   try {
@@ -822,7 +946,7 @@ router.get("/coulors/grey", async function(req, res) {
 
     // ✅ Send ViewContent event to Meta
     await sendMetaCAPIEvent({
-      eventName: "ViewContent",
+      eventName: "PageView",
       eventId,
       userData,
       customData: {
@@ -841,6 +965,89 @@ router.get("/coulors/grey", async function(req, res) {
   }
 });
 
+router.get("/grey/:id", async (req, res) => {
+  const grey = await Grey.findById(req.params.id);
+  const eventId = `view_${grey.id}_${Date.now()}`;
+
+  // ✅ Use req.user directly — no fallback needed
+  console.log("✅ req.user", req.user); // debug
+
+  const userData = {
+    email: req.user?.email || undefined,
+    numero: req.user?.numero || undefined,
+    firstName: req.user?.firstName || undefined,
+    lastName: req.user?.lastName || undefined,
+    country: "algeria",
+    ip: req.headers["x-forwarded-for"]?.split(",")[0] || req.socket.remoteAddress,
+    userAgent: req.get("User-Agent"),
+        fbc: req.cookies._fbc || undefined,
+        fbp: req.cookies._fbp || undefined  
+  };
+
+  console.log("🔍 Raw userData before hashing:", userData);
+
+
+  await sendMetaCAPIEvent({
+    eventName: "ViewContent",
+    eventId,
+    userData,
+    customData: {
+      content_name: grey.title,
+      content_ids: [grey.id],
+      content_type: "product",
+      value: grey.price,
+      currency: "DZD"
+    },
+    
+  });
+
+  res.render("event/grey", { grey, eventId });
+});
+
+
+
+router.get("/add-to-cart-grey/:id", async function(req, res) {
+  const greyId = req.params.id;
+  const cart = new Cart(req.session.cart ? req.session.cart : {});
+  const grey = await Grey.findById(greyId);
+
+  cart.add(grey, grey.id);
+  req.session.cart = cart;
+
+  // ✅ User data from req.user
+  const user = req.user || {};
+  const userData = {
+    email: user.email,
+    numero: user.numero,
+    firstName: user.firstName,
+    lastName: user.lastName,
+    country: "algeria",
+    ip: req.headers["x-forwarded-for"]?.split(",")[0] || req.socket.remoteAddress,
+    userAgent: req.get("User-Agent"),
+        fbc: req.cookies._fbc || undefined,
+        fbp: req.cookies._fbp || undefined  
+  };
+
+  // ✅ Unique event ID
+  const eventId = `addtocart_${grey.id}_${Date.now()}`;
+
+  // ✅ Send CAPI event
+  await sendMetaCAPIEvent({
+    eventName: "AddToCart",
+    eventId,
+    userData,
+    customData: {
+      content_name: grey.title,
+      content_ids: [grey.id],
+      content_type: "product",
+      value: grey.price,
+      currency: "DZD"
+    },
+    // Change to real test code if needed
+  });
+
+  res.redirect("/shop");
+});
     router.get("/coulors/yellowv2", async function(req, res) {
   try {
     
@@ -863,7 +1070,7 @@ router.get("/coulors/grey", async function(req, res) {
 
     // ✅ Send ViewContent event to Meta
     await sendMetaCAPIEvent({
-      eventName: "ViewContent",
+      eventName: "PageView",
       eventId,
       userData,
       customData: {
@@ -880,6 +1087,90 @@ router.get("/coulors/grey", async function(req, res) {
     console.error("❌ Error loading sale/furniteur:", err);
     res.status(500).send("Error loading page");
   }
+});
+
+router.get("/yelloow/:id", async (req, res) => {
+  const yelloow = await Yelloow.findById(req.params.id);
+  const eventId = `view_${yelloow.id}_${Date.now()}`;
+
+  // ✅ Use req.user directly — no fallback needed
+  console.log("✅ req.user", req.user); // debug
+
+  const userData = {
+    email: req.user?.email || undefined,
+    numero: req.user?.numero || undefined,
+    firstName: req.user?.firstName || undefined,
+    lastName: req.user?.lastName || undefined,
+    country: "algeria",
+    ip: req.headers["x-forwarded-for"]?.split(",")[0] || req.socket.remoteAddress,
+    userAgent: req.get("User-Agent"),
+        fbc: req.cookies._fbc || undefined,
+        fbp: req.cookies._fbp || undefined  
+  };
+
+  console.log("🔍 Raw userData before hashing:", userData);
+
+
+  await sendMetaCAPIEvent({
+    eventName: "ViewContent",
+    eventId,
+    userData,
+    customData: {
+      content_name: yelloow.title,
+      content_ids: [yelloow.id],
+      content_type: "product",
+      value: yelloow.price,
+      currency: "DZD"
+    },
+    
+  });
+
+  res.render("event/yelloow", { yelloow, eventId });
+});
+
+
+
+router.get("/add-to-cart-yelloow/:id", async function(req, res) {
+  const yelloowId = req.params.id;
+  const cart = new Cart(req.session.cart ? req.session.cart : {});
+  const yelloow = await Yelloow.findById(yelloowId);
+
+  cart.add(yelloow, yelloow.id);
+  req.session.cart = cart;
+
+  // ✅ User data from req.user
+  const user = req.user || {};
+  const userData = {
+    email: user.email,
+    numero: user.numero,
+    firstName: user.firstName,
+    lastName: user.lastName,
+    country: "algeria",
+    ip: req.headers["x-forwarded-for"]?.split(",")[0] || req.socket.remoteAddress,
+    userAgent: req.get("User-Agent"),
+        fbc: req.cookies._fbc || undefined,
+        fbp: req.cookies._fbp || undefined  
+  };
+
+  // ✅ Unique event ID
+  const eventId = `addtocart_${yelloow.id}_${Date.now()}`;
+
+  // ✅ Send CAPI event
+  await sendMetaCAPIEvent({
+    eventName: "AddToCart",
+    eventId,
+    userData,
+    customData: {
+      content_name: yelloow.title,
+      content_ids: [yelloow.id],
+      content_type: "product",
+      value: yelloow.price,
+      currency: "DZD"
+    },
+    // Change to real test code if needed
+  });
+
+  res.redirect("/shop");
 });
 
  router.get("/coulors/pink", async function(req, res) {
@@ -904,7 +1195,7 @@ router.get("/coulors/grey", async function(req, res) {
 
     // ✅ Send ViewContent event to Meta
     await sendMetaCAPIEvent({
-      eventName: "ViewContent",
+      eventName: "PageView",
       eventId,
       userData,
       customData: {
@@ -921,6 +1212,90 @@ router.get("/coulors/grey", async function(req, res) {
     console.error("❌ Error loading sale/furniteur:", err);
     res.status(500).send("Error loading page");
   }
+});
+
+router.get("/pink/:id", async (req, res) => {
+  const pink = await Pink.findById(req.params.id);
+  const eventId = `view_${pink.id}_${Date.now()}`;
+
+  // ✅ Use req.user directly — no fallback needed
+  console.log("✅ req.user", req.user); // debug
+
+  const userData = {
+    email: req.user?.email || undefined,
+    numero: req.user?.numero || undefined,
+    firstName: req.user?.firstName || undefined,
+    lastName: req.user?.lastName || undefined,
+    country: "algeria",
+    ip: req.headers["x-forwarded-for"]?.split(",")[0] || req.socket.remoteAddress,
+    userAgent: req.get("User-Agent"),
+        fbc: req.cookies._fbc || undefined,
+        fbp: req.cookies._fbp || undefined  
+  };
+
+  console.log("🔍 Raw userData before hashing:", userData);
+
+
+  await sendMetaCAPIEvent({
+    eventName: "ViewContent",
+    eventId,
+    userData,
+    customData: {
+      content_name: pink.title,
+      content_ids: [pink.id],
+      content_type: "product",
+      value: pink.price,
+      currency: "DZD"
+    },
+    
+  });
+
+  res.render("event/pink", { pink, eventId });
+});
+
+
+
+router.get("/add-to-cart-pink/:id", async function(req, res) {
+  const pinkId = req.params.id;
+  const cart = new Cart(req.session.cart ? req.session.cart : {});
+  const pink = await Pink.findById(pinkId);
+
+  cart.add(pink, pink.id);
+  req.session.cart = cart;
+
+  // ✅ User data from req.user
+  const user = req.user || {};
+  const userData = {
+    email: user.email,
+    numero: user.numero,
+    firstName: user.firstName,
+    lastName: user.lastName,
+    country: "algeria",
+    ip: req.headers["x-forwarded-for"]?.split(",")[0] || req.socket.remoteAddress,
+    userAgent: req.get("User-Agent"),
+        fbc: req.cookies._fbc || undefined,
+        fbp: req.cookies._fbp || undefined  
+  };
+
+  // ✅ Unique event ID
+  const eventId = `addtocart_${pink.id}_${Date.now()}`;
+
+  // ✅ Send CAPI event
+  await sendMetaCAPIEvent({
+    eventName: "AddToCart",
+    eventId,
+    userData,
+    customData: {
+      content_name: pink.title,
+      content_ids: [pink.id],
+      content_type: "product",
+      value: pink.price,
+      currency: "DZD"
+    },
+    // Change to real test code if needed
+  });
+
+  res.redirect("/shop");
 });
 
  router.get("/coulors/neutral", async function(req, res) {
@@ -946,7 +1321,7 @@ router.get("/coulors/grey", async function(req, res) {
 
     // ✅ Send ViewContent event to Meta
     await sendMetaCAPIEvent({
-      eventName: "ViewContent",
+      eventName: "PageView",
       eventId,
       userData,
       customData: {
@@ -963,6 +1338,90 @@ router.get("/coulors/grey", async function(req, res) {
     console.error("❌ Error loading sale/furniteur:", err);
     res.status(500).send("Error loading page");
   }
+});
+
+router.get("/neutral/:id", async (req, res) => {
+  const neutral = await Neutral.findById(req.params.id);
+  const eventId = `view_${neutral.id}_${Date.now()}`;
+
+  // ✅ Use req.user directly — no fallback needed
+  console.log("✅ req.user", req.user); // debug
+
+  const userData = {
+    email: req.user?.email || undefined,
+    numero: req.user?.numero || undefined,
+    firstName: req.user?.firstName || undefined,
+    lastName: req.user?.lastName || undefined,
+    country: "algeria",
+    ip: req.headers["x-forwarded-for"]?.split(",")[0] || req.socket.remoteAddress,
+    userAgent: req.get("User-Agent"),
+        fbc: req.cookies._fbc || undefined,
+        fbp: req.cookies._fbp || undefined  
+  };
+
+  console.log("🔍 Raw userData before hashing:", userData);
+
+
+  await sendMetaCAPIEvent({
+    eventName: "ViewContent",
+    eventId,
+    userData,
+    customData: {
+      content_name: neutral.title,
+      content_ids: [neutral.id],
+      content_type: "product",
+      value: neutral.price,
+      currency: "DZD"
+    },
+    
+  });
+
+  res.render("event/neutral", { neutral, eventId });
+});
+
+
+
+router.get("/add-to-cart-neutral/:id", async function(req, res) {
+  const neutralId = req.params.id;
+  const cart = new Cart(req.session.cart ? req.session.cart : {});
+  const neutral = await Neutral.findById(neutralId);
+
+  cart.add(neutral, neutral.id);
+  req.session.cart = cart;
+
+  // ✅ User data from req.user
+  const user = req.user || {};
+  const userData = {
+    email: user.email,
+    numero: user.numero,
+    firstName: user.firstName,
+    lastName: user.lastName,
+    country: "algeria",
+    ip: req.headers["x-forwarded-for"]?.split(",")[0] || req.socket.remoteAddress,
+    userAgent: req.get("User-Agent"),
+        fbc: req.cookies._fbc || undefined,
+        fbp: req.cookies._fbp || undefined  
+  };
+
+  // ✅ Unique event ID
+  const eventId = `addtocart_${neutral.id}_${Date.now()}`;
+
+  // ✅ Send CAPI event
+  await sendMetaCAPIEvent({
+    eventName: "AddToCart",
+    eventId,
+    userData,
+    customData: {
+      content_name: neutral.title,
+      content_ids: [neutral.id],
+      content_type: "product",
+      value: neutral.price,
+      currency: "DZD"
+    },
+    // Change to real test code if needed
+  });
+
+  res.redirect("/shop");
 });
 
 router.get("/favicon.ico", function(req, res){
@@ -1751,28 +2210,28 @@ router.post('/webhook', async (req, res) => {
     const messages = changes?.value?.messages?.[0];
 
     if (!messages) {
-      return res.sendStatus(200);
+      return res.sendStatus(200); // ✅ pas de message, réponse immédiate
     }
 
-    const from = messages.from; // numéro de téléphone du client
-    const text = messages.text?.body?.trim().toUpperCase();
+    const from = messages.from; // ✅ numéro client (WhatsApp ID)
+    const text = messages.text?.body?.trim(); // ✅ on ne transforme pas encore en uppercase ici
 
-   
-    // ✉️ Info à envoyer par email
+    // ✉️ Informations à transmettre
     const name = "Client WhatsApp";
     const numero = from.startsWith('213') ? '0' + from.slice(3) : from;
-    const response = text;
+    const response = text || "[Message vide ou non texte]";
 
-    // 📧 Email à l’admin avec la réponse du client
+    // ✅ Envoie de l'email
     await sendClientReplyEmail({ name, numero, response });
 
-  
+    console.log("📨 Réponse client reçue et email envoyé :", response);
+    return res.sendStatus(200); // ✅ très important : on répond 200 à Meta
+
   } catch (err) {
     console.error("❌ Erreur Webhook:", err.message);
     return res.sendStatus(500);
   }
 });
-
 
 
     
