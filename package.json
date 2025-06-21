@@ -15,7 +15,6 @@
     "bcrypt-nodejs": "*",
     "bcryptjs": "*",
     "body-parser": "*",
-    "bson": "^6.10.4",
     "connect-flash": "*",
     "connect-mongo": "*",
     "connect-mongodb-session": "^3.1.1",
