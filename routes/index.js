@@ -16,7 +16,8 @@ const middleware = require('../middleware');
 
 const { isLoggedIn } = require('../middleware/index');
 const mongoose = require('mongoose');
-const { sendAdminOrderEmail } = require('../utils/mailer'); // optional
+
+const { sendAdminOrderEmail, sendClientReplyEmail } = require('../utils/mailer');
 
 
 
