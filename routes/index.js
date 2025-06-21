@@ -18,7 +18,7 @@ const { isLoggedIn } = require('../middleware/index');
 const mongoose = require('mongoose');
 
 const { sendAdminOrderEmail, sendClientReplyEmail } = require('../utils/mailer');
-
+var Blue = require('../models/blue');
 
 
 var furniteur = require('../models/furniteur');
@@ -759,7 +759,89 @@ router.get("/coulors/blue", async function(req, res) {
   }
 });
 
+router.get("/blue/:id", async (req, res) => {
+  const blue = await Blue.findById(req.params.id);
+  const eventId = `view_${blue.id}_${Date.now()}`;
 
+  // ✅ Use req.user directly — no fallback needed
+  console.log("✅ req.user", req.user); // debug
+
+  const userData = {
+    email: req.user?.email || undefined,
+    numero: req.user?.numero || undefined,
+    firstName: req.user?.firstName || undefined,
+    lastName: req.user?.lastName || undefined,
+    country: "algeria",
+    ip: req.headers["x-forwarded-for"]?.split(",")[0] || req.socket.remoteAddress,
+    userAgent: req.get("User-Agent"),
+        fbc: req.cookies._fbc || undefined,
+        fbp: req.cookies._fbp || undefined  
+  };
+
+  console.log("🔍 Raw userData before hashing:", userData);
+
+
+  await sendMetaCAPIEvent({
+    eventName: "ViewContent",
+    eventId,
+    userData,
+    customData: {
+      content_name: blue.title,
+      content_ids: [blue.id],
+      content_type: "product",
+      value: blue.price,
+      currency: "DZD"
+    },
+    
+  });
+
+  res.render("event/blue", { blue, eventId });
+});
+
+
+
+router.get("/add-to-cart-blue/:id", async function(req, res) {
+  const blueId = req.params.id;
+  const cart = new Cart(req.session.cart ? req.session.cart : {});
+  const blue = await Blue.findById(blueId);
+
+  cart.add(blue, blue.id);
+  req.session.cart = cart;
+
+  // ✅ User data from req.user
+  const user = req.user || {};
+  const userData = {
+    email: user.email,
+    numero: user.numero,
+    firstName: user.firstName,
+    lastName: user.lastName,
+    country: "algeria",
+    ip: req.headers["x-forwarded-for"]?.split(",")[0] || req.socket.remoteAddress,
+    userAgent: req.get("User-Agent"),
+        fbc: req.cookies._fbc || undefined,
+        fbp: req.cookies._fbp || undefined  
+  };
+
+  // ✅ Unique event ID
+  const eventId = `addtocart_${blue.id}_${Date.now()}`;
+
+  // ✅ Send CAPI event
+  await sendMetaCAPIEvent({
+    eventName: "AddToCart",
+    eventId,
+    userData,
+    customData: {
+      content_name: blue.title,
+      content_ids: [blue.id],
+      content_type: "product",
+      value: blue.price,
+      currency: "DZD"
+    },
+    // Change to real test code if needed
+  });
+
+  res.redirect("/shop");
+});
 
 router.get("/coulors/greens", async function(req, res) {
   try {
