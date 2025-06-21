@@ -39,7 +39,19 @@ router.get('/auth/facebook/callback',
     res.redirect('/');
   });
 
+// Politique de confidentialité
+router.get('/privacy', (req, res) => {
+  res.render('privacy', {
+    title: 'Politique de Confidentialité'
+  });
+});
 
+// Conditions générales d’utilisation
+router.get('/terms', (req, res) => {
+  res.render('terms', {
+    title: 'Conditions Générales d\'Utilisation'
+  });
+});
 
 var furniteur = require('../models/furniteur');
 var rug = require('../models/rug');
