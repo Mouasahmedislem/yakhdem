@@ -45,80 +45,66 @@ passport.deserializeUser(async function(id, done) {
 });
 
 
-// sign up logic
+// SIGNUP
 passport.use('local-signup', new LocalStrategy({
   usernameField: 'email',
   passwordField: 'password',
   passReqToCallback: true
-}, function(req, email, password, done) {
+}, async function(req, email, password, done) {
   req.assert('email', 'invalid email').notEmpty().isEmail();
   req.assert('password', 'invalid password (must be more than 4 characters)').notEmpty().isLength({ min: 4 });
   var errors = req.validationErrors();
   if (errors) {
-    var messages = [];
-    console.log(errors);
-    errors.forEach(function(error) {
-      messages.push(error.msg);
-    });
+    var messages = errors.map(error => error.msg);
     return done(null, false, req.flash('error', messages));
   }
 
-  User.findOne({ 'email': email }, function(err, user) {
-    if (err) {
-      return done(err);
-    }
-    if (user) {
+  try {
+    const existingUser = await User.findOne({ email }).exec();
+    if (existingUser) {
       return done(null, false, { message: 'This email is already used' });
     }
 
-    var newUser = new User();
-    newUser.email = email;
-    newUser.firstName = req.body.firstName;
-    newUser.lastName = req.body.lastName;
-    newUser.numero = req.body.numero;
-    newUser.password = newUser.encryptPassword(password);
-    newUser.isAdmin = true;
-
-    newUser.save(function(err, result) {
-      if (err) {
-        return done(err);
-      }
-
-      // ✅ Set session after successful signup
-      req.session.user = {
-        email: newUser.email,
-        numero: newUser.numero,
-        firstName: newUser.firstName,
-        lastName: newUser.lastName
-      };
-
-      return done(null, newUser);
+    const newUser = new User({
+      email,
+      firstName: req.body.firstName,
+      lastName: req.body.lastName,
+      numero: req.body.numero,
+      password: new User().encryptPassword(password),
+      isAdmin: true
     });
-  });
+
+    const result = await newUser.save();
+
+    req.session.user = {
+      email: result.email,
+      numero: result.numero,
+      firstName: result.firstName,
+      lastName: result.lastName
+    };
+
+    return done(null, result);
+  } catch (err) {
+    return done(err);
+  }
 }));
 
-// sign in logic
+// SIGNIN
 passport.use('local-signin', new LocalStrategy({
   usernameField: 'email',
   passwordField: 'password',
   passReqToCallback: true
-}, function(req, email, password, done) {
+}, async function(req, email, password, done) {
   req.assert('email', 'invalid email').notEmpty().isEmail();
   req.assert('password', 'invalid password (must be more than 4 characters)').notEmpty();
   var errors = req.validationErrors();
   if (errors) {
-    var messages = [];
-    console.log(errors);
-    errors.forEach(function(error) {
-      messages.push(error.msg);
-    });
+    var messages = errors.map(error => error.msg);
     return done(null, false, req.flash('error', messages));
   }
 
-  User.findOne({ 'email': email }, function(err, user) {
-    if (err) {
-      return done(err);
-    }
+  try {
+    const user = await User.findOne({ email }).exec();
     if (!user) {
       return done(null, false, { message: 'No user found.' });
     }
@@ -127,7 +113,6 @@ passport.use('local-signin', new LocalStrategy({
       return done(null, false, { message: 'Wrong password.' });
     }
 
-    // ✅ Set session after successful login
     req.session.user = {
       email: user.email,
       numero: user.numero,
@@ -136,5 +121,8 @@ passport.use('local-signin', new LocalStrategy({
     };
 
     return done(null, user);
-  });
+  } catch (err) {
+    return done(err);
+  }
 }));
+
