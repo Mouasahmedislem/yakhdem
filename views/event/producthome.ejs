@@ -9,7 +9,7 @@
 <% if (process.env.FB_PIXEL_ID) { %>
 <!-- Facebook Pixel Code -->
 <script>
-  const eventId = `view_${producthome.id}_${Date.now()}`;
+
 
   !function(f,b,e,v,n,t,s){
     if(f.fbq)return;n=f.fbq=function(){n.callMethod ?
@@ -38,7 +38,7 @@
   });
 
   // Optional: expose to use in <script> tag or route
-  window.__meta_event_id = eventId;
+  
 </script>
 
 <noscript>
