@@ -33,7 +33,7 @@ router.get('/profile', middleware.isLoggedIn, function(req, res, next) {
 router.get('/logout', middleware.isLoggedIn, function(req, res, next) {
   req.logout(function(err) {
     if (err) { return next(err); }
-    res.redirect('/user/signin');
+    res.redirect('/user/signup');
   });
 });
 
@@ -57,7 +57,7 @@ router.post('/signup', passport.authenticate('local-signup', {
     req.session.oldUrl = null;
     res.redirect(oldUrl);
   } else {
-    res.redirect('/producthome/6829bff300275640946ba0bd'); //home
+    res.redirect('/producthome/68589aee03d002f20190271d'); //home
   }
 });
 
@@ -76,7 +76,7 @@ router.post('/signin', passport.authenticate('local-signin', {
     req.session.oldUrl = null;
     res.redirect(oldUrl);
   } else {
-    res.redirect('/producthome/6829bff300275640946ba0bd'); //user/profil
+    res.redirect('/producthome/68589aee03d002f20190271d'); //user/profil
   }
 });
 
