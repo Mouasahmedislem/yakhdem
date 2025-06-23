@@ -392,14 +392,32 @@ footer {
       document.getElementById("accordionContent").classList.toggle("open");
     }
   </script>
+
+
+
 <script>
+  function handleAddToCart(event, title, price, id) {
+    const eventId = window.__meta_event_id || `addtocart_${id}_${Date.now()}`;
 
+    fbq('track', 'AddToCart', {
+      content_name: title,
+      content_ids: [id],
+      content_type: 'product',
+      value: price,
+      currency: 'DZD'
+    }, {
+      eventID: eventId
+    });
 
-
-  
-
-  
+    // Allow form to continue
+    return true;
+  }
 </script>
+
+  
+
+  
+
 
 
 <%- include ("../partials/footer") %>.
