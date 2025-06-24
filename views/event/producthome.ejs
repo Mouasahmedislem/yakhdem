@@ -397,7 +397,7 @@ footer {
 
 <script>
   function handleAddToCart(event, title, price, id) {
-    const eventId = 'addtocart_${id}_window.__meta_event_id || `addtocart_${id}_${Date.now()}`;
+    const eventId = window.__meta_event_id || `addtocart_${id}_${Date.now()}`;
 
     fbq('track', 'AddToCart', {
       content_name: title,
