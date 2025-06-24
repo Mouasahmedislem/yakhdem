@@ -9,7 +9,7 @@
 <% if (process.env.FB_PIXEL_ID) { %>
 <!-- Facebook Pixel Code -->
 <script>
-const eventId = View_${producthome.id}_window.__meta || `View_${producthome.id}_${Date.now()}`;
+const eventId = 'View_${producthome.id}_window.__meta' || `View_${producthome.id}_${Date.now()}`;
 
   !function(f,b,e,v,n,t,s){
     if(f.fbq)return;n=f.fbq=function(){n.callMethod ?
@@ -397,7 +397,7 @@ footer {
 
 <script>
   function handleAddToCart(event, title, price, id) {
-    const eventId = addtocart_${id}_window.__meta || `addtocart_${id}_${Date.now()}`;
+    const eventId = 'addtocart_${id}_window.__meta' || `addtocart_${id}_${Date.now()}`;
 
     fbq('track', 'AddToCart', {
       content_name: title,
