@@ -2082,7 +2082,7 @@ router.get('/track-order', async (req, res) => {
 
 router.get("/producthome/:id", async (req, res) => {
   const producthome = await Producthome.findById(req.params.id);
-  const eventId = `view_${producthome.id}_1`;
+  const eventId = req.body.eventId || `addtocart_${producthome.id}_${Date.now()}`;
 
   // ✅ Use req.user directly — no fallback needed
   console.log("✅ req.user", req.user); // debug
@@ -2144,7 +2144,7 @@ router.get("/add-to-cart-producthome/:id", async function(req, res) {
   };
 
   // ✅ Unique event ID
-  const eventId = `addtocart_${producthome.id}_11`;
+  const eventId = `addtocart_${producthome.id}_${Date.now()}`;
 
   // ✅ Send CAPI event
   await sendMetaCAPIEvent({
