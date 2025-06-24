@@ -9,7 +9,7 @@
 <% if (process.env.FB_PIXEL_ID) { %>
 <!-- Facebook Pixel Code -->
 <script>
-const eventId = window.__meta_event_id || "view_<%= typeof producthome !== 'undefined' ? producthome._id : 'page' %>_<%= Date.now() %>";
+const eventId = "view_<%= typeof producthome !== 'undefined' ? producthome._id : 'page' %>_<%= Date.now() %>";
 
   !function(f,b,e,v,n,t,s){
     if(f.fbq)return;n=f.fbq=function(){n.callMethod ?
