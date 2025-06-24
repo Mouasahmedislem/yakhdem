@@ -2144,7 +2144,7 @@ router.get("/add-to-cart-producthome/:id", async function(req, res) {
   };
 
   // ✅ Unique event ID
-  const eventId = `addtocart_${producthome.id}_${Date.now()}`;
+  const eventId = `addtocart_${producthome.id}_11`;
 
   // ✅ Send CAPI event
   await sendMetaCAPIEvent({
