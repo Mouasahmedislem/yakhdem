@@ -2082,7 +2082,7 @@ router.get('/track-order', async (req, res) => {
 
 router.get("/producthome/:id", async (req, res) => {
   const producthome = await Producthome.findById(req.params.id);
-  const eventId = req.body.eventId || `addtocart_${producthome.id}_${Date.now()}`;
+  const eventId = req.body.eventId ;
 
   // ✅ Use req.user directly — no fallback needed
   console.log("✅ req.user", req.user); // debug
