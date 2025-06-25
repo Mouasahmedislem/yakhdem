@@ -46,48 +46,38 @@ passport.deserializeUser(async function(id, done) {
 
 
 // SIGNUP
-passport.use('local-signup', new LocalStrategy({
-  usernameField: 'email',
-  passwordField: 'password',
-  passReqToCallback: true
-}, async function(req, email, password, done) {
-  req.assert('email', 'invalid email').notEmpty().isEmail();
-  req.assert('password', 'invalid password (must be more than 4 characters)').notEmpty().isLength({ min: 4 });
-  var errors = req.validationErrors();
-  if (errors) {
-    var messages = errors.map(error => error.msg);
-    return done(null, false, req.flash('error', messages));
-  }
-
-  try {
-    const existingUser = await User.findOne({ email }).exec();
-    if (existingUser) {
-      return done(null, false, { message: 'This email is already used' });
+// Local Signup Strategy
+passport.use(
+  "local-signup",
+  new LocalStrategy(
+    {
+      usernameField: "email",
+      passwordField: "password",
+      passReqToCallback: true,
+    },
+    function (req, email, password, done) {
+      process.nextTick(function () {
+        User.findOne({ email: email.toLowerCase() }, function (err, existingUser) {
+          if (err) return done(err);
+          if (existingUser) {
+            return done(null, false, req.flash("signupMessage", "L'email existe déjà."));
+          } else {
+            const newUser = new User();
+            newUser.email = email.toLowerCase();
+            newUser.password = newUser.generateHash(password);
+            newUser.firstName = req.body.firstName.toLowerCase();
+            newUser.lastName = req.body.lastName.toLowerCase();
+            newUser.numero = req.body.numero;
+            newUser.save(function (err) {
+              if (err) throw err;
+              return done(null, newUser);
+            });
+          }
+        });
+      });
     }
-
-    const newUser = new User({
-      email,
-      firstName: req.body.firstName,
-      lastName: req.body.lastName,
-      numero: req.body.numero,
-      password: new User().encryptPassword(password),
-      isAdmin: true
-    });
-
-    const result = await newUser.save();
-
-    req.session.user = {
-      email: result.email,
-      numero: result.numero,
-      firstName: result.firstName,
-      lastName: result.lastName
-    };
-
-    return done(null, result);
-  } catch (err) {
-    return done(err);
-  }
-}));
+  )
+);
 
 // SIGNIN
 passport.use('local-signin', new LocalStrategy({
