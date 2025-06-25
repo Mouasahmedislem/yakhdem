@@ -43,9 +43,6 @@ passport.deserializeUser(async function(id, done) {
     done(err, null);
   }
 });
-
-
-// SIGNUP
 // Local Signup Strategy
 passport.use(
   "local-signup",
@@ -76,6 +73,38 @@ passport.use(
     }
   )
 );
+
+// Local Signup Strategy
+passport.use(
+  "local-signup",
+  new LocalStrategy(
+    {
+      usernameField: "email",
+      passwordField: "password",
+      passReqToCallback: true,
+    },
+    async function (req, email, password, done) {
+      try {
+        const existingUser = await User.findOne({ email: email.toLowerCase() });
+        if (existingUser) {
+          return done(null, false, req.flash("signupMessage", "L'email existe déjà."));
+        } else {
+          const newUser = new User();
+          newUser.email = email.toLowerCase();
+          newUser.password = newUser.encryptPassword(password);
+          newUser.firstName = req.body.firstName.toLowerCase();
+          newUser.lastName = req.body.lastName.toLowerCase();
+          newUser.numero = req.body.numero;
+          await newUser.save();
+          return done(null, newUser);
+        }
+      } catch (err) {
+        return done(err);
+      }
+    }
+  )
+);
+
 
 // SIGNIN
 passport.use('local-signin', new LocalStrategy({
