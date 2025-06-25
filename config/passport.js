@@ -55,26 +55,24 @@ passport.use(
       passwordField: "password",
       passReqToCallback: true,
     },
-    function (req, email, password, done) {
-      process.nextTick(function () {
-        User.findOne({ email: email.toLowerCase() }, function (err, existingUser) {
-          if (err) return done(err);
-          if (existingUser) {
-            return done(null, false, req.flash("signupMessage", "L'email existe déjà."));
-          } else {
-            const newUser = new User();
-            newUser.email = email.toLowerCase();
-            newUser.password = newUser.generateHash(password);
-            newUser.firstName = req.body.firstName.toLowerCase();
-            newUser.lastName = req.body.lastName.toLowerCase();
-            newUser.numero = req.body.numero;
-            newUser.save(function (err) {
-              if (err) throw err;
-              return done(null, newUser);
-            });
-          }
-        });
-      });
+    async function (req, email, password, done) {
+      try {
+        const existingUser = await User.findOne({ email: email.toLowerCase() });
+        if (existingUser) {
+          return done(null, false, req.flash("signupMessage", "L'email existe déjà."));
+        } else {
+          const newUser = new User();
+          newUser.email = email.toLowerCase();
+          newUser.password = newUser.generateHash(password);
+          newUser.firstName = req.body.firstName.toLowerCase();
+          newUser.lastName = req.body.lastName.toLowerCase();
+          newUser.numero = req.body.numero;
+          await newUser.save();
+          return done(null, newUser);
+        }
+      } catch (err) {
+        return done(err);
+      }
     }
   )
 );
