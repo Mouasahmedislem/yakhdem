@@ -375,6 +375,37 @@ footer {
     </div>
   </div>
 </div>
+<div itemscope itemtype="https://schema.org/Product">
+  <meta itemprop="productID" content="<%= pink._id %>" />
+  <meta itemprop="name" content="<%= pink.title %>" />
+  <meta itemprop="description" content="<%= pink.description %>" />
+  <meta itemprop="image" content="<%= pink.image %>" />
+
+  <div itemprop="offers" itemscope itemtype="https://schema.org/Offer">
+    <meta itemprop="priceCurrency" content="DZD" />
+    <meta itemprop="price" content="<%= pink.price %>" />
+    <meta itemprop="availability" content="https://schema.org/InStock" />
+    <meta itemprop="url" content="<%= req.protocol + '://' + req.get('host') + req.originalUrl %>" />
+  </div>
+</div>
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org/",
+  "@type": "Product",
+  "name": "<%= pink.title %>",
+  "image": "<%= pink.image %>",
+  "description": "<%= pink.description %>",
+  "sku": "<%= pink._id %>",
+  "offers": {
+    "@type": "Offer",
+    "url": "https://<%= req.get('host') + req.originalUrl %>",
+    "priceCurrency": "DZD",
+    "price": "<%= pink.price %>",
+    "availability": "https://schema.org/InStock"
+  }
+}
+</script>
 </body>
  <script>
     function toggleAccordion() {
