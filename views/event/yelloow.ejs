@@ -375,6 +375,37 @@ footer {
     </div>
   </div>
 </div>
+<div itemscope itemtype="https://schema.org/Product">
+  <meta itemprop="productID" content="<%= yelloow._id %>" />
+  <meta itemprop="name" content="<%= yelloow.title %>" />
+  <meta itemprop="description" content="<%= yelloow.description %>" />
+  <meta itemprop="image" content="<%= yelloow.image %>" />
+
+  <div itemprop="offers" itemscope itemtype="https://schema.org/Offer">
+    <meta itemprop="priceCurrency" content="DZD" />
+    <meta itemprop="price" content="<%= yelloow.price %>" />
+    <meta itemprop="availability" content="https://schema.org/InStock" />
+    <meta itemprop="url" content="<%= req.protocol + '://' + req.get('host') + req.originalUrl %>" />
+  </div>
+</div>
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org/",
+  "@type": "Product",
+  "name": "<%= yelloow.title %>",
+  "image": "<%= yelloow.image %>",
+  "description": "<%= yelloow.description %>",
+  "sku": "<%= yelloow._id %>",
+  "offers": {
+    "@type": "Offer",
+    "url": "https://<%= req.get('host') + req.originalUrl %>",
+    "priceCurrency": "DZD",
+    "price": "<%= yelloow.price %>",
+    "availability": "https://schema.org/InStock"
+  }
+}
+</script>
 </body>
  <script>
     function toggleAccordion() {
