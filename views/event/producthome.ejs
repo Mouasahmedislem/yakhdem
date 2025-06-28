@@ -363,6 +363,24 @@ footer {
     </div>
   </div>
 </div>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org/",
+  "@type": "Product",
+  "name": "<%= producthome.title %>",
+  "image": "<%= producthome.image %>",
+  "description": "<%= producthome.description %>",
+  "sku": "<%= producthome._id %>",
+  "offers": {
+    "@type": "Offer",
+    "url": "<%= req.protocol + '://' + req.get('host') + req.originalUrl %>",
+    "priceCurrency": "DZD",
+    "price": "<%= producthome.price %>",
+    "availability": "https://schema.org/InStock"
+  }
+}
+</script>
+
 </body>
  <script>
     function toggleAccordion() {
