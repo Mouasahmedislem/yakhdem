@@ -28,6 +28,15 @@
 <!-- End Facebook Pixel Code -->
 <% } %>
 
+<!-- Open Graph Meta Tags -->
+<meta property="og:type" content="product" />
+<meta property="og:title" content="<%= producthome.title %>" />
+<meta property="og:description" content="<%= producthome.description %>" />
+<meta property="og:image" content="<%= producthome.image %>" />
+<meta property="og:url" content="https://<%= req.get('host') + req.originalUrl %>" />
+<meta property="og:site_name" content="Paintello" />
+<meta property="product:price:amount" content="<%= producthome.price %>" />
+<meta property="product:price:currency" content="DZD" />
 
   <title>Paintello Home</title>
   <link rel="apple-touch-icon" sizes="180x180" href="/favicon/apple-touch-icon.png">
