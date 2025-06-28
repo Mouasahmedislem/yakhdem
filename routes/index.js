@@ -2116,7 +2116,7 @@ router.get("/producthome/:id", async (req, res) => {
     
   });
 
-  res.render("event/producthome", { producthome, eventId });
+  res.render("event/producthome", { producthome, eventId, req });
 });
 
 
