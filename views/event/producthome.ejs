@@ -373,7 +373,7 @@ footer {
     <meta itemprop="priceCurrency" content="DZD" />
     <meta itemprop="price" content="<%= producthome.price %>" />
     <meta itemprop="availability" content="https://schema.org/InStock" />
-    <meta itemprop="url" content="<%= req.protocol + '://' + req.get('host') + req.originalUrl %>" />
+    <meta itemprop="url" content="https://<%= req.get('host') + req.originalUrl %>" />
   </div>
 </div>
 
