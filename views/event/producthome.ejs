@@ -387,7 +387,7 @@ footer {
   "sku": "<%= producthome._id %>",
   "offers": {
     "@type": "Offer",
-    "url": "<%= req.protocol + '://' + req.get('host') + req.originalUrl %>",
+    "url": "https://<%= req.get('host') + req.originalUrl %>",
     "priceCurrency": "DZD",
     "price": "<%= producthome.price %>",
     "availability": "https://schema.org/InStock"
