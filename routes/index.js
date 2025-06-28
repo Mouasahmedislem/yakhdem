@@ -778,7 +778,7 @@ router.get("/blue/:id", async (req, res) => {
     
   });
 
-  res.render("event/blue", { blue, eventId });
+  res.render("event/blue", { blue, eventId, req });
 });
 
 
@@ -903,7 +903,7 @@ router.get("/green/:id", async (req, res) => {
     
   });
 
-  res.render("event/green", { green, eventId });
+  res.render("event/green", { green, eventId, req });
 });
 
 
@@ -1027,7 +1027,7 @@ router.get("/grey/:id", async (req, res) => {
     
   });
 
-  res.render("event/grey", { grey, eventId });
+  res.render("event/grey", { grey, eventId, req });
 });
 
 
@@ -1151,7 +1151,7 @@ router.get("/yelloow/:id", async (req, res) => {
     
   });
 
-  res.render("event/yelloow", { yelloow, eventId });
+  res.render("event/yelloow", { yelloow, eventId, req });
 });
 
 
@@ -1276,7 +1276,7 @@ router.get("/pink/:id", async (req, res) => {
     
   });
 
-  res.render("event/pink", { pink, eventId });
+  res.render("event/pink", { pink, eventId, req });
 });
 
 
@@ -1402,7 +1402,7 @@ router.get("/neutral/:id", async (req, res) => {
     
   });
 
-  res.render("event/neutral", { neutral, eventId });
+  res.render("event/neutral", { neutral, eventId, req });
 });
 
 
