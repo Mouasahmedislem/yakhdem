@@ -387,8 +387,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
   function trackCheckout(totalPrice) {
     fbq('track', 'InitiateCheckout', {
       value: totalPrice,
-      currency: 'DZD',
-      eventID: '<%= eventId %>'
+      currency: 'DZD'
     });
   }
 
