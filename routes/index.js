@@ -2078,20 +2078,11 @@ router.get('/track-order', async (req, res) => {
   res.render('event/track-order', { orders });
 });
 
-router.post('/store-event-id', (req, res) => {
-  const { eventId } = req.body;
-  if (eventId) {
-    req.session.eventId = eventId;
-    res.sendStatus(200);
-  } else {
-    res.status(400).send("No eventId received");
-  }
-});
 
 
 router.get("/producthome/:id", async (req, res) => {
   const producthome = await Producthome.findById(req.params.id);
-  const eventId = req.body.eventId || `fallback_${Date.now()}`; // fallback if missing
+  const eventId = generateEventId(); // Use a proper UUID generator
 
 
   // ✅ Use req.user directly — no fallback needed
@@ -2126,10 +2117,17 @@ router.get("/producthome/:id", async (req, res) => {
     testEventCode: "TEST44573"
   });
 
-  res.render("event/producthome", { producthome, req });
+  res.render("event/producthome", { producthome, req,
+    metaEventId: eventId  });
 });
 
-
+// UUID v4 generator function
+function generateEventId() {
+  return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
+    const r = Math.random() * 16 | 0, v = c == 'x' ? r : (r & 0x3 | 0x8);
+    return v.toString(16);
+  });
+}
 
 router.get("/add-to-cart-producthome/:id", async function(req, res) {
   const producthomeId = req.params.id;
