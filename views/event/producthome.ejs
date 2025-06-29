@@ -2,23 +2,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<script>
-  // Generate a unique event ID in browser
-  const eventId = "<%= eventId %>";
 
-  // Expose globally for reuse
-  window.__meta_event_id = eventId;
-
-  // Save to a hidden input (used for CAPI)
-  document.addEventListener("DOMContentLoaded", () => {
-    const input = document.createElement("input");
-    input.type = "hidden";
-    input.name = "eventId";
-    input.value = eventId;
-    input.id = "eventId";
-    document.body.appendChild(input);
-  });
-</script>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.1/crypto-js.min.js"></script>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
