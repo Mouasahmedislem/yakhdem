@@ -1483,7 +1483,7 @@ router.get("/power", async function(req, res) {
         content_type: "product_group",
         anonymous_id: req.sessionID // optional for retargeting
       },
-      testEventCode: "TEST12345"
+      testEventCode: "TEST44573"
     });
 
     res.render("event/power", { errMsg: errMsg, noError: !errMsg ,eventId });
@@ -2113,7 +2113,7 @@ router.get("/producthome/:id", async (req, res) => {
       value: producthome.price,
       currency: "DZD"
     },
-    
+    testEventCode: "TEST44573"
   });
 
   res.render("event/producthome", { producthome, eventId, req });
@@ -2158,6 +2158,7 @@ router.get("/add-to-cart-producthome/:id", async function(req, res) {
       value: producthome.price,
       currency: "DZD"
     },
+    testEventCode: "TEST44573"
     // Change to real test code if needed
   });
 
