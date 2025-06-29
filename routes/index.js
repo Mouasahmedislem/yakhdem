@@ -1499,34 +1499,10 @@ router.get('/shop', async (req, res) => {
     const cart = new Cart(req.session.cart || {});
     const shippings = await shipping.find({});
 
-    const user = req.user || {};
-    const userData = {
-      email: user.email,
-      numero: user.numero,
-      firstName: user.firstName,
-      lastName: user.lastName,
-      country: "algeria",
-      ip: req.headers["x-forwarded-for"]?.split(",")[0] || req.socket.remoteAddress,
-      userAgent: req.get("User-Agent"),
-      fbc: req.cookies._fbc,
-      fbp: req.cookies._fbp
-    };
+   
+    
 
-    const eventId = `view_${Date.now()}`;
-
-    // ✅ Send ViewContent to Meta
-    await sendMetaCAPIEvent({
-      eventName: "ViewContent",
-      eventId,
-      userData,
-      customData: {
-        content_name: "Shop Page",
-        content_type: "product_group",
-        value: cart.totalPrice || 0,
-        currency: "DZD"
-      },
-      // Replace with real test code or remove in production
-    });
+    
  const metaEvent = req.session.metaEventData ? {
     id: req.session.metaEventId,
     ...req.session.metaEventData
