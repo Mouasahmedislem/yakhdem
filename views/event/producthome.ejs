@@ -11,7 +11,7 @@
 <% if (process.env.FB_PIXEL_ID) { %>
 <!-- Facebook Pixel Code -->
 const eventId = `view_<%= producthome._id %>_${Date.now()}`;
-window.__meta_event_id = eventId;
+
 <script>
   !function(f,b,e,v,n,t,s)
   {if(f.fbq)return;n=f.fbq=function(){n.callMethod?
@@ -37,7 +37,11 @@ window.__meta_event_id = eventId;
   }, {
      eventID: eventId
   });
-
+fetch('/meta/event-id', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ eventId })
+  }).then(res => console.log("Event ID sent to server:", eventId));
 </script>
 <noscript>
   <img height="1" width="1" style="display:none" 
