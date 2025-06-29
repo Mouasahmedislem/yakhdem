@@ -1499,27 +1499,28 @@ router.get('/shop', async (req, res) => {
     const cart = new Cart(req.session.cart || {});
     const shippings = await shipping.find({});
 
-   
-    
+    // Check for pending Meta events
+    const metaEvent = req.session.metaEventData ? {
+      id: req.session.metaEventId,
+      ...req.session.metaEventData
+    } : null;
 
-    
- const metaEvent = req.session.metaEventData ? {
-    id: req.session.metaEventId,
-    ...req.session.metaEventData
-  } : null;
+    // Clear the session data after retrieving
+    if (req.session.metaEventData) {
+      delete req.session.metaEventId;
+      delete req.session.metaEventData;
+    }
 
-  // Clear the session data after retrieving
-  if (req.session.metaEventData) {
-    delete req.session.metaEventId;
-    delete req.session.metaEventData;
-  }
-    // ✅ Render page
+    // Render page with all necessary data
     res.render('event/shop', {
       metaEvent,
       products: cart.generateArray(),
       shippings: shippings,
       totalPrice: cart.totalPrice,
-      price: shippings.price 
+      price: shippings.price,
+      user: req.user || null, // Important for pixel initialization
+      _fbp: req.cookies._fbp || null, // Facebook click ID
+      _fbc: req.cookies._fbc || null // Facebook browser ID
     });
 
   } catch (err) {
@@ -1527,7 +1528,6 @@ router.get('/shop', async (req, res) => {
     res.status(500).send("Error loading shop");
   }
 });
-
 
 router.get("/", async function(req, res) {
   try {
