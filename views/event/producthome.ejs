@@ -37,11 +37,7 @@ const eventId = `view_<%= producthome._id %>_${Date.now()}`;
   }, {
      eventID: eventId
   });
-fetch('/meta/event-id', {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ eventId })
-  }).then(res => console.log("Event ID sent to server:", eventId));
+
 </script>
 <noscript>
   <img height="1" width="1" style="display:none" 
@@ -455,9 +451,14 @@ footer {
   }
 </script>
 
-  
+  <script>
 
-  
+  fetch('/meta/event-id', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ eventId })
+  }).then(res => console.log("Event ID sent to server:", eventId));
+</script>
 
 
 
