@@ -13,6 +13,10 @@
 
 
 <script>
+
+const eventId = "view_<%= producthome._id %>_" + Date.now();
+  window.__meta_event_id = eventId;.
+
   !function(f,b,e,v,n,t,s)
   {if(f.fbq)return;n=f.fbq=function(){n.callMethod?
   n.callMethod.apply(n,arguments):n.queue.push(arguments)};
@@ -27,8 +31,7 @@
     ln: '<%= user ? user.lastName : "" %>',
     ph: '<%= user ? user.numero : "" %>'
   });
-const eventId = `view_<%= producthome._id %>_${Date.now()}`;
-  document.cookie = "meta_event_id=" + eventId + "; path=/";
+
   fbq('track', 'ViewContent', {
     content_name: '<%= producthome.title %>',
     content_ids: ['<%= producthome._id %>'],
@@ -38,7 +41,17 @@ const eventId = `view_<%= producthome._id %>_${Date.now()}`;
   }, {
      eventID: eventId
   });
-
+// Optional: Append to form if exists
+  document.addEventListener("DOMContentLoaded", function () {
+    const form = document.querySelector("form#add-to-cart-form");
+    if (form) {
+      const hiddenInput = document.createElement("input");
+      hiddenInput.type = "hidden";
+      hiddenInput.name = "eventId";
+      hiddenInput.value = eventId;
+      form.appendChild(hiddenInput);
+    }
+  });
 </script>
 <noscript>
   <img height="1" width="1" style="display:none" 
