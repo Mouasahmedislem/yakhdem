@@ -30,19 +30,7 @@
     ln: '<%= user ? user.lastName : "" %>',
     ph: '<%= user ? user.numero : "" %>'
   });
-  document.addEventListener("DOMContentLoaded", function () {
-    const eventId = "view_<%= producthome._id %>_" + Date.now();
-    window.__meta_event_id = eventId;
-
-    // Inject into form for CAPI use
-    const form = document.querySelector("form#add-to-cart-form");
-    if (form) {
-      const hidden = document.createElement("input");
-      hidden.type = "hidden";
-      hidden.name = "eventId";
-      hidden.value = eventId;
-      form.appendChild(hidden);
-    }
+ 
   fbq('track', 'ViewContent', {
     content_name: '<%= producthome.title %>',
     content_ids: ['<%= producthome._id %>'],
@@ -50,7 +38,8 @@
     value: <%= producthome.price %>,
     currency: 'DZD'
   }, {
-     eventID: eventId
+        eventID: '<%= metaEventId %>' // Same ID as server-side
+
   });
 
 </script>
