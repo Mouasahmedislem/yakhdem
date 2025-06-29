@@ -2082,7 +2082,7 @@ router.get('/track-order', async (req, res) => {
 
 router.get("/producthome/:id", async (req, res) => {
   const producthome = await Producthome.findById(req.params.id);
-  const eventId = req.body.eventId || `fallback_${Date.now()}`;
+  const eventId = `view_${producthome._id}_${Date.now()}`;
 
   // ✅ Use req.user directly — no fallback needed
   console.log("✅ req.user", req.user); // debug
@@ -2104,7 +2104,7 @@ router.get("/producthome/:id", async (req, res) => {
 
   await sendMetaCAPIEvent({
     eventName: "ViewContent",
-    eventId,
+    eventId: req.body.eventId || req.query.eventId,
     userData,
     customData: {
       content_name: producthome.title,
