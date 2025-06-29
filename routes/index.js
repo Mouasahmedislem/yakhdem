@@ -2078,11 +2078,19 @@ router.get('/track-order', async (req, res) => {
   res.render('event/track-order', { orders });
 });
 
-
+router.post('/meta/event-id', (req, res) => {
+  const { eventId } = req.body;
+  if (eventId) {
+    req.session.eventId = eventId;
+    res.sendStatus(200);
+  } else {
+    res.sendStatus(400);
+  }
+});
 
 router.get("/producthome/:id", async (req, res) => {
   const producthome = await Producthome.findById(req.params.id);
-  const eventId = `view_${producthome._id}_${Date.now()}`;
+  const eventId = req.session.eventId || `fallback_${Date.now()}`;
 
   // ✅ Use req.user directly — no fallback needed
   console.log("✅ req.user", req.user); // debug
@@ -2104,7 +2112,7 @@ router.get("/producthome/:id", async (req, res) => {
 
   await sendMetaCAPIEvent({
     eventName: "ViewContent",
-    eventId: req.body.eventId || req.query.eventId,
+    eventId,
     userData,
     customData: {
       content_name: producthome.title,
@@ -2116,7 +2124,7 @@ router.get("/producthome/:id", async (req, res) => {
     testEventCode: "TEST44573"
   });
 
-  res.render("event/producthome", { producthome, eventId, req });
+  res.render("event/producthome", { producthome, req });
 });
 
 
