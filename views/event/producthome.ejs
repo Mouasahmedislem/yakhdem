@@ -438,7 +438,7 @@ footer {
 
 <script>
   function handleAddToCart(event, title, price, id) {
-    const eventId = window.__meta_event_id || `addtocart_${id}_${Date.now()}`;
+    
 
     fbq('track', 'AddToCart', {
       content_name: title,
@@ -447,7 +447,7 @@ footer {
       value: price,
       currency: 'DZD'
     }, {
-      eventID: eventId
+      eventID: '<%= metaEventId %>'
     });
 
     // Allow form to continue
@@ -455,15 +455,7 @@ footer {
   }
 </script>
 
-  <script>
-
-  fetch('/store-event-id', {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ eventId })
-  }).then(res => console.log("Event ID sent to server:", eventId));
-</script>
-
+  
 
 
 <%- include ("../partials/footer") %>.
