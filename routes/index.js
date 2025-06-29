@@ -1527,9 +1527,19 @@ router.get('/shop', async (req, res) => {
       },
       // Replace with real test code or remove in production
     });
+ const metaEvent = req.session.metaEventData ? {
+    id: req.session.metaEventId,
+    ...req.session.metaEventData
+  } : null;
 
+  // Clear the session data after retrieving
+  if (req.session.metaEventData) {
+    delete req.session.metaEventId;
+    delete req.session.metaEventData;
+  }
     // ✅ Render page
     res.render('event/shop', {
+      metaEvent,
       products: cart.generateArray(),
       shippings: shippings,
       totalPrice: cart.totalPrice,
@@ -2152,7 +2162,8 @@ router.get("/add-to-cart-producthome/:id", async function(req, res) {
   };
 
   // ✅ Unique event ID
-  const eventId = `addtocart_${producthome.id}_${Date.now()}`;
+   const eventId = generateEventId(); // Use a proper UUID generator
+
 
   // ✅ Send CAPI event
   await sendMetaCAPIEvent({
@@ -2169,7 +2180,18 @@ router.get("/add-to-cart-producthome/:id", async function(req, res) {
     testEventCode: "TEST44573"
     // Change to real test code if needed
   });
-
+// Store the event ID in session for client-side tracking
+  req.session.metaEventId = eventId;
+  req.session.metaEventData = {
+    eventName: "AddToCart",
+    productData: {
+      content_name: producthome.title,
+      content_ids: [producthome.id],
+      content_type: "product",
+      value: producthome.price,
+      currency: "DZD"
+    }
+  };
   res.redirect("/shop");
 });
 
