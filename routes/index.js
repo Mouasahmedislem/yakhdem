@@ -2078,15 +2078,16 @@ router.get('/track-order', async (req, res) => {
   res.render('event/track-order', { orders });
 });
 
-router.post('/meta/event-id', (req, res) => {
+router.post('/store-event-id', (req, res) => {
   const { eventId } = req.body;
   if (eventId) {
     req.session.eventId = eventId;
     res.sendStatus(200);
   } else {
-    res.sendStatus(400);
+    res.status(400).send("No eventId received");
   }
 });
+
 
 router.get("/producthome/:id", async (req, res) => {
   const producthome = await Producthome.findById(req.params.id);
