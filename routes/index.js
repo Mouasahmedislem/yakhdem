@@ -1519,7 +1519,7 @@ router.get('/shop', async (req, res) => {
       products: cart.generateArray(),
       shippings: shippings,
       totalPrice: cart.totalPrice,
-      price: shippings.price ,eventId
+      price: shippings.price 
     });
 
   } catch (err) {
