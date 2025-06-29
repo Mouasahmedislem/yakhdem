@@ -24,9 +24,15 @@
     ln: '<%= user ? user.lastName : "" %>',
     ph: '<%= user ? user.numero : "" %>'
   });
-fbq('track', 'PageView', {
-eventID: '<%= eventId %>'
-  }
+<% if (metaEvent) { %>
+
+    // Track the pending Meta event
+    fbq('track', '<%= metaEvent.eventName %>', {
+      ...<%= JSON.stringify(metaEvent.productData) %>,
+      eventID: '<%= metaEvent.id %>'
+    });
+  
+<% } %>
 );
 </script>
 <noscript>
