@@ -24,6 +24,7 @@
     ln: '<%= user ? user.lastName : "" %>',
     ph: '<%= user ? user.numero : "" %>'
   });
+fbq('track', 'PageView');
 <% if (metaEvent) { %>
 
     // Track the pending Meta event
@@ -33,7 +34,7 @@
     });
   
 <% } %>
-);
+
 </script>
 <noscript>
   <img height="1" width="1" style="display:none"
