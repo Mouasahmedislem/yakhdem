@@ -10,6 +10,8 @@
 <!-- Meta Pixel Code -->
 <% if (process.env.FB_PIXEL_ID) { %>
 <!-- Facebook Pixel Code -->
+const eventId = `view_<%= producthome._id %>_${Date.now()}`;
+window.__meta_event_id = eventId;
 <script>
   !function(f,b,e,v,n,t,s)
   {if(f.fbq)return;n=f.fbq=function(){n.callMethod?
@@ -25,7 +27,7 @@
     ln: '<%= user ? user.lastName : "" %>',
     ph: '<%= user ? user.numero : "" %>'
   });
- const eventId = "<%= eventId %>"
+
   fbq('track', 'ViewContent', {
     content_name: '<%= producthome.title %>',
     content_ids: ['<%= producthome._id %>'],
