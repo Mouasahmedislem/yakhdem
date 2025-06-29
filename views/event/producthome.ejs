@@ -4,7 +4,7 @@
 <head>
 <script>
   // Generate a unique event ID in browser
-  const eventId = 'view_<%= producthome._id %>_<%= Date.now() %>';
+  const eventId = "<%= eventId %>";
 
   // Expose globally for reuse
   window.__meta_event_id = eventId;
@@ -49,7 +49,7 @@
     value: <%= producthome.price %>,
     currency: 'DZD'
   }, {
-    eventID: window.__meta_event_id
+    eventID: "<%= eventId %>"
   });
 
 </script>
