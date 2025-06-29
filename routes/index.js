@@ -2091,7 +2091,8 @@ router.post('/store-event-id', (req, res) => {
 
 router.get("/producthome/:id", async (req, res) => {
   const producthome = await Producthome.findById(req.params.id);
-  const eventId = req.session.eventId || `fallback_${Date.now()}`;
+  const eventId = req.cookies.meta_event_id || `fallback_${Date.now()}`;
+
 
   // ✅ Use req.user directly — no fallback needed
   console.log("✅ req.user", req.user); // debug
