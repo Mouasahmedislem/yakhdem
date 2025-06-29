@@ -26,21 +26,8 @@
     fbp: '<%= _fbp %>',
     fbc: '<%= _fbc %>'
   });
+  fbq('track', 'PageView');
   
-  
-  
-  <% if (metaEvent) { %>
-    // Track the pending Meta event (AddToCart, ViewContent, etc.)
-    fbq('track', '<%= metaEvent.eventName %>', {
-      content_name: '<%= metaEvent.productData.content_name %>',
-      content_ids: ['<%= metaEvent.productData.content_ids[0] %>'],
-      content_type: '<%= metaEvent.productData.content_type %>',
-      value: <%= metaEvent.productData.value %>,
-      currency: '<%= metaEvent.productData.currency %>'
-    }, {
-      eventID: '<%= metaEvent.id %>'
-    });
-  <% } %>
 </script>
 <noscript>
   <img height="1" width="1" style="display:none" 
