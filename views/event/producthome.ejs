@@ -41,7 +41,7 @@
     ln: '<%= user ? user.lastName : "" %>',
     ph: '<%= user ? user.numero : "" %>'
   });
-
+ const eventId = "<%= eventId %>"
   fbq('track', 'ViewContent', {
     content_name: '<%= producthome.title %>',
     content_ids: ['<%= producthome._id %>'],
@@ -49,7 +49,7 @@
     value: <%= producthome.price %>,
     currency: 'DZD'
   }, {
-    eventID: "<%= eventId %>"
+     eventID: eventId
   });
 
 </script>
