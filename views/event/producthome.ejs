@@ -28,7 +28,7 @@
     ph: '<%= user ? user.numero : "" %>'
   });
 const eventId = `view_<%= producthome._id %>_${Date.now()}`;
-  window.__meta_event_id = eventId;
+  document.cookie = "meta_event_id=" + eventId + "; path=/";
   fbq('track', 'ViewContent', {
     content_name: '<%= producthome.title %>',
     content_ids: ['<%= producthome._id %>'],
