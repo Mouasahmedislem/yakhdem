@@ -2288,13 +2288,7 @@ router.get('/start-return/:orderId', async (req, res) => {
             return res.redirect('/track-order');
         }
         
-        // Verify order belongs to the current user
-        if ((req.user && order.user.toString() !== req.user._id.toString()) || 
-            (!req.user && order.numero !== req.session.trackingUser)) {
-            req.flash('error', 'You are not authorized to return this order');
-            return res.redirect('/track-order');
-        }
-        
+       
         res.render('event/start-return', { order });
     } catch (err) {
         console.error('Error starting return:', err);
