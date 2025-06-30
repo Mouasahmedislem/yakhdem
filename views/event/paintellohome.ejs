@@ -22,7 +22,10 @@
     em: '<%= user ? user.email : "" %>',
     fn: '<%= user ? user.firstName : "" %>',
     ln: '<%= user ? user.lastName : "" %>',
-    ph: '<%= user ? user.numero : "" %>'
+    ph: '<%= user ? user.numero : "" %>',
+    external_id: '<%= user ? user._id : "" %>',
+    fbp: '<%= _fbp %>',
+    fbc: '<%= _fbc %>'
   });
 fbq('track', 'PageView');
 </script>
