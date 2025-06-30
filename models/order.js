@@ -19,6 +19,6 @@ const orderSchema = new Schema({
   totalWithShipping: { type: Number }
 }, { timestamps: true }); // Adding timestamps for created/updated dates
 
-});
+
 
 module.exports = mongoose.model('Order', orderSchema);
