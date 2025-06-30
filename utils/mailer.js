@@ -50,10 +50,43 @@ paintello.uk`
     console.error("❌ Erreur email réponse:", err.message);
   }
 }
+async function sendReturnConfirmationEmail({ orderId, returnId }) {
+    try {
+        let transporter = nodemailer.createTransport({
+            service: 'gmail',
+            auth: {
+                user: process.env.EMAIL_USER,
+                pass: process.env.EMAIL_PASS
+            }
+        });
+
+        let mailOptions = {
+            from: `"Paintello Returns" <${process.env.EMAIL_USER}>`,
+            to: process.env.ADMIN_EMAIL,
+            subject: 'Your Return Request Has Been Received',
+            html: `
+                <div style="font-family: Arial, sans-serif; padding: 20px;">
+                    <h2>Return Request Confirmation</h2>
+                    <p>We've received your return request for Order #${orderId}.</p>
+                    <p>Return ID: <strong>${returnId}</strong></p>
+                    <p>We'll process your request within 3-5 business days.</p>
+                    <p>You can check the status of your return at any time by visiting your order tracking page.</p>
+                    <p>Thank you for shopping with Paintello!</p>
+                </div>
+            `
+        };
+
+        await transporter.sendMail(mailOptions);
+    } catch (err) {
+        console.error('Error sending return confirmation email:', err);
+    }
+}
 
 module.exports = {
   sendAdminOrderEmail,
-  sendClientReplyEmail
+  sendClientReplyEmail,
+  sendReturnConfirmationEmail
+  
 };
 
 
