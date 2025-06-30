@@ -1368,7 +1368,7 @@ router.get("/add-to-cart-pink/:id", async function(req, res) {
 
 router.get("/neutral/:id", async (req, res) => {
   const neutral = await Neutral.findById(req.params.id);
-  const eventId = `view_${neutral.id}_${Date.now()}`;
+  const eventId = generateEventId(); // Use a proper UUID generator
 
   // ✅ Use req.user directly — no fallback needed
   console.log("✅ req.user", req.user); // debug
@@ -1402,7 +1402,8 @@ router.get("/neutral/:id", async (req, res) => {
     
   });
 
-  res.render("event/neutral", { neutral, eventId, req });
+  res.render("event/neutral", { neutral, req,
+    metaEventId: eventId});
 });
 
 
@@ -2168,8 +2169,7 @@ router.get("/add-to-cart-producthome/:id", async function(req, res) {
       currency: "DZD"
     }
   };
-  res.render("event/producthome", { producthome, req,
-    metaEventId: req.session.metaEventId  });
+  res.redirect('/shop');
 });
 
 
@@ -2193,7 +2193,7 @@ router.get('/paintello', async (req, res) => {
         fbp: req.cookies._fbp || undefined  
     };
 
-    const eventId = `view_paintello_${Date.now()}`;
+    const eventId = generateEventId(); // Use a proper UUID generator
 
     await sendMetaCAPIEvent({
       eventName: "ViewContent",
@@ -2207,7 +2207,8 @@ router.get('/paintello', async (req, res) => {
      
     });
 
-    res.render('event/paintellohome', { paintellos,eventId });
+    res.render('event/paintellohome', { paintellos, req,
+    metaEventId: eventId });
   } catch (err) {
     res.status(500).send('Error loading home products');
   }
