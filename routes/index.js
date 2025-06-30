@@ -2063,7 +2063,7 @@ router.post('/track-login', async (req, res) => {
   }
 });
 
-/ Add this to your track-order route to show return status
+
 router.get('/track-order', async (req, res) => {
     if (!req.session.trackingUser) return res.redirect('/track-login');
 
