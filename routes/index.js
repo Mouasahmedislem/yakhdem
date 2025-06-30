@@ -2168,7 +2168,8 @@ router.get("/add-to-cart-producthome/:id", async function(req, res) {
       currency: "DZD"
     }
   };
-  res.redirect("/shop");
+  res.render("event/producthome", { producthome, req,
+    metaEventId: eventId  });
 });
 
 
