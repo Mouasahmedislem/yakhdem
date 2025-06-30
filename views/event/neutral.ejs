@@ -12,8 +12,6 @@
 
 <script>
 
-
-
   !function(f,b,e,v,n,t,s)
   {if(f.fbq)return;n=f.fbq=function(){n.callMethod?
   n.callMethod.apply(n,arguments):n.queue.push(arguments)};
@@ -49,7 +47,15 @@
 <% } %>
 
 
-
+<!-- Open Graph Meta Tags -->
+<meta property="og:type" content="product" />
+<meta property="og:title" content="<%= neutral.title %>" />
+<meta property="og:description" content="<%= neutral.description %>" />
+<meta property="og:image" content="<%= neutral.image %>" />
+<meta property="og:url" content="https://<%= req.get('host') + req.originalUrl %>" />
+<meta property="og:site_name" content="Paintello" />
+<meta property="product:price:amount" content="<%= neutral.price %>" />
+<meta property="product:price:currency" content="DZD" />
 
   <title>Paintello Home</title>
   <link rel="apple-touch-icon" sizes="180x180" href="/favicon/apple-touch-icon.png">
