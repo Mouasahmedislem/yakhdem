@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Track Your Order</title>
+  <title>Track Your Order | Paintello</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <style>
     /* Fixed Logo Header */
@@ -24,7 +24,7 @@
     /* Page content */
     .content-with-logo {
       margin-top: 100px;
-      max-width: 600px;
+      max-width: 800px;
       margin-left: auto;
       margin-right: auto;
       padding: 20px;
@@ -34,18 +34,28 @@
     h2 {
       text-align: center;
       margin-bottom: 20px;
+      color: #333;
+    }
+
+    /* Form Styles */
+    .track-form {
+      background: #fff;
+      padding: 25px;
+      border-radius: 10px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+      margin-bottom: 30px;
     }
 
     input[type="tel"] {
       width: 100%;
       padding: 12px;
       margin-bottom: 16px;
-      border: 1px solid #ccc;
+      border: 1px solid #ddd;
       border-radius: 6px;
       font-size: 16px;
     }
 
-    button {
+    button, .btn {
       width: 100%;
       background-color: #f4791f;
       color: white;
@@ -54,38 +64,185 @@
       border-radius: 6px;
       font-size: 16px;
       cursor: pointer;
+      text-decoration: none;
+      display: block;
+      text-align: center;
+      transition: all 0.3s;
     }
 
-    button:hover {
+    button:hover, .btn:hover {
       background-color: #c86000;
+      transform: translateY(-2px);
+    }
+
+    /* Order Card Styles */
+    .order-card {
+      background: #fff;
+      border-radius: 10px;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+      padding: 20px;
+      margin-bottom: 25px;
+      border-left: 4px solid #f4791f;
+    }
+
+    .order-info {
+      margin-bottom: 15px;
+    }
+
+    .order-info p {
+      margin: 8px 0;
+      color: #555;
+      font-size: 16px;
+    }
+
+    .order-info strong {
+      color: #333;
+      font-weight: 600;
+    }
+
+    .order-actions {
+      display: flex;
+      gap: 10px;
+      margin-top: 20px;
+      padding-top: 15px;
+      border-top: 1px solid #eee;
+    }
+
+    .btn-return {
+      background-color: #e74c3c;
+    }
+
+    .btn-return:hover {
+      background-color: #c0392b;
+    }
+
+    .btn-secondary {
+      background-color: #3498db;
+    }
+
+    .btn-secondary:hover {
+      background-color: #2980b9;
+    }
+
+    .order-status {
+      background: #f4791f;
+      color: white;
+      padding: 5px 10px;
+      border-radius: 4px;
+      font-size: 14px;
+      font-weight: bold;
+      display: inline-block;
+      margin-bottom: 10px;
+    }
+
+    .return-status {
+      margin-top: 15px;
+      padding: 10px;
+      background: #f8f9fa;
+      border-radius: 6px;
+      border-left: 3px solid #3498db;
+    }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+      .order-actions {
+        flex-direction: column;
+      }
     }
   </style>
 </head>
 <body>
 
-  <!-- Fixed Logo -->
+  <!-- Fixed Logo Header -->
   <div id="fixed-logo-header">
- <a href="/">
-    <img src="/favicon/android-chrome-192x192.png" alt="Paintello Logo">
- </a>
-<a href="/">
+    <a href="/">
+      <img src="/favicon/android-chrome-192x192.png" alt="Paintello Logo">
+    </a>
+    <a href="/">
       <img src="/img/logo.png" alt="Paintello Logo" style="max-height: 80px;">
     </a>
   </div>
 
   <!-- Content Area -->
- <div class="content-with-logo">
-<form action="/track-login" method="POST" class="text-center mt-5">
-  <h4>🔎 Track Your Order</h4>
-  <input type="tel" name="numero" placeholder="Enter your phone number" required pattern="0[5-7][0-9]{8}" />
-  <button type="submit" class="btn btn-primary mt-3">Track</button>
-</form>
- <hr>
-                    
-                <div class="cart-link">
-      <a href="/">Go to Shop</a>
-    </div>
-</div>
+  <div class="content-with-logo">
+    <% if (typeof orders === 'undefined') { %>
+      <!-- Tracking Form -->
+      <div class="track-form">
+        <h2>🔎 Track Your Order</h2>
+        <form action="/track-login" method="POST">
+          <input 
+            type="tel" 
+            name="numero" 
+            placeholder="Enter your phone number (Example: 0551234567)" 
+            required 
+            pattern="0[5-7][0-9]{8}" 
+            title="Please enter a valid Algerian phone number (0551234567)"
+          />
+          <button type="submit">Track Order</button>
+        </form>
+      </div>
+      
+      <div class="text-center">
+        <p>Don't have an order number? <a href="/contact">Contact support</a></p>
+      </div>
+    <% } else if (orders.length === 0) { %>
+      <!-- No Orders Found -->
+      <div class="track-form">
+        <h2>No Orders Found</h2>
+        <p>We couldn't find any orders associated with this phone number.</p>
+        <a href="/" class="btn">Continue Shopping</a>
+      </div>
+    <% } else { %>
+      <!-- Orders List -->
+      <h2>Your Orders</h2>
+      
+      <% orders.forEach(order => { %>
+        <div class="order-card">
+          <div class="order-status">
+            Order #<%= order._id.toString().slice(-6).toUpperCase() %>
+          </div>
+          
+          <div class="order-info">
+            <p><strong>Order Date:</strong> <%= order.createdAt.toLocaleDateString() %></p>
+            <p><strong>Name:</strong> <%= order.name %></p>
+            <p><strong>Phone:</strong> <%= order.numero %></p>
+            <p><strong>Wilaya:</strong> <%= order.city %></p>
+            <p><strong>Address:</strong> <%= order.address %></p>
+            <p><strong>Total:</strong> <%= order.totalWithShipping %> DZD</p>
+            <p><strong>Status:</strong> In Transit (Estimated delivery: <%= order.deliveryDelay %>)</p>
+          </div>
+
+          <% if (order.returnRequest) { %>
+            <div class="return-status">
+              <p><strong>Return Status:</strong> 
+                <span style="color: <%= 
+                  order.returnRequest.status === 'approved' ? '#2ecc71' : 
+                  order.returnRequest.status === 'rejected' ? '#e74c3c' : 
+                  '#f39c12' %>">
+                  <%= order.returnRequest.status.toUpperCase() %>
+                </span>
+              </p>
+              <% if (order.returnRequest.status === 'approved') { %>
+                <p>Your return has been approved. We'll contact you shortly.</p>
+              <% } %>
+            </div>
+          <% } else { %>
+            <div class="order-actions">
+              <a href="/start-return/<%= order._id %>" class="btn btn-return">Request Return</a>
+              <a href="/contact?order=<%= order._id %>" class="btn btn-secondary">Contact Support</a>
+            </div>
+          <% } %>
+        </div>
+      <% }); %>
+      
+      <div class="text-center mt-4">
+        <a href="/" class="btn">Continue Shopping</a>
+      </div>
+    <% } %>
+  </div>
+
+</body>
+</html>
 
 </body>
 </html>
