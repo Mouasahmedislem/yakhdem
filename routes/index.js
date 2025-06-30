@@ -17,7 +17,7 @@ const ReturnRequest = require('../models/ReturnRequest');
 const { isLoggedIn } = require('../middleware/index');
 const mongoose = require('mongoose');
 
-const { sendAdminOrderEmail, sendClientReplyEmail } = require('../utils/mailer');
+const { sendAdminOrderEmail, sendClientReplyEmail, sendReturnConfirmationEmail } = require('../utils/mailer');
 var Blue = require('../models/blue');
 var Pink = require('../models/pink');
 var Grey = require('../models/grey');
