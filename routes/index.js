@@ -2169,7 +2169,7 @@ router.get("/add-to-cart-producthome/:id", async function(req, res) {
     }
   };
   res.render("event/producthome", { producthome, req,
-    metaEventId: eventId  });
+    metaEventId: req.session.metaEventId  });
 });
 
 
