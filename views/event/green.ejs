@@ -24,9 +24,8 @@
     fn: '<%= user ? user.firstName : "" %>',
     ln: '<%= user ? user.lastName : "" %>',
     ph: '<%= user ? user.numero : "" %>',
-    external_id: '<%= user ? user.id : "" %>',
-    fbp: '<%= fbp %>',
-    fbc: '<%= fbc %>'
+    external_id: '<%= user ? user.id : "" %>'
+   
   });
  
   fbq('track', 'ViewContent', {
