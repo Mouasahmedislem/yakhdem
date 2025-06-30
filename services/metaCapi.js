@@ -46,18 +46,7 @@ const sendMetaCAPIEvent = async ({
       ct: hash(userData.city)          // ✅ ct = city
     };
 
-    // ✅ Step 3: Skip if not enough identifiers
-    if (
-      !hashedUserData.em &&
-      !hashedUserData.ph &&
-      (!hashedUserData.fn ||
-        !hashedUserData.ln ||
-        !hashedUserData.client_ip_address ||
-        !hashedUserData.client_user_agent)
-    ) {
-      console.warn("❌ Not enough identifiers — skipping Meta CAPI event.");
-      return;
-    }
+    
 
     // ✅ Step 4: Build final payload
     const payload = {
