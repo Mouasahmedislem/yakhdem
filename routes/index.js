@@ -2306,12 +2306,7 @@ router.post('/submit-return', async (req, res) => {
             return res.redirect('/track-order');
         }
         
-        // Verify order belongs to the current user
-        if ((req.user && order.user.toString() !== req.user._id.toString()) || 
-            (!req.user && order.numero !== req.session.trackingUser)) {
-            req.flash('error', 'You are not authorized to return this order');
-            return res.redirect('/track-order');
-        }
+    
         
         // Create return request
         const returnRequest = new ReturnRequest({
