@@ -2047,22 +2047,40 @@ router.get("/track-login", function(req, res){
 });
 
 router.post('/track-login', async (req, res) => {
-  const numero = req.body.numero;
-  try {
-    const order = await Order.findOne({ numero: numero });
-    if (order) {
-      req.session.trackingUser = numero; // Store login
-      res.redirect('/track-order');
-    } else {
-      req.flash('error', 'No order found for this number.');
-      res.redirect('/track-login');
+    const { numero } = req.body;
+    
+    // 1. Validate phone number format first
+    if (!/^0[5-7][0-9]{8}$/.test(numero)) {
+        return res.render('event/track-order', {
+            error: "Invalid phone number format. Please use format like 0551234567",
+            phoneNumber: numero // Send back the invalid number to show in form
+        });
     }
-  } catch (err) {
-    console.error(err);
-    res.redirect('/track-login');
-  }
-});
 
+    try {
+        // 2. Check for existing orders
+        const orders = await Order.find({ numero }).sort({ createdAt: -1 });
+        
+        if (orders.length === 0) {
+            return res.render('event/track-order', {
+                noOrders: true,
+                phoneNumber: numero
+            });
+        }
+
+        // 3. If orders exist
+        return res.render('event/track-order', {
+            orders,
+            phoneNumber: numero
+        });
+
+    } catch (err) {
+        console.error('Track order error:', err);
+        return res.render('event/track-order', {
+            error: "System error - please try again later"
+        });
+    }
+});
 
 router.get('/track-order', async (req, res) => {
     if (!req.session.trackingUser) return res.redirect('/track-login');
