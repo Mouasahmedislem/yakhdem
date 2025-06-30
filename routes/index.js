@@ -744,7 +744,7 @@ router.get("/coulors/blue", async function(req, res) {
 
 router.get("/blue/:id", async (req, res) => {
   const blue = await Blue.findById(req.params.id);
-  const eventId = `view_${blue.id}_${Date.now()}`;
+  const eventId = generateEventId(); // Use a proper UUID generator
 
   // ✅ Use req.user directly — no fallback needed
   console.log("✅ req.user", req.user); // debug
@@ -778,7 +778,8 @@ router.get("/blue/:id", async (req, res) => {
     
   });
 
-  res.render("event/blue", { blue, eventId, req });
+  res.render("event/blue", { blue, 
+    metaEventId: eventId, req });
 });
 
 
@@ -869,7 +870,7 @@ router.get("/coulors/greens", async function(req, res) {
 
 router.get("/green/:id", async (req, res) => {
   const green = await Green.findById(req.params.id);
-  const eventId = `view_${green.id}_${Date.now()}`;
+ const eventId = generateEventId(); // Use a proper UUID generator
 
   // ✅ Use req.user directly — no fallback needed
   console.log("✅ req.user", req.user); // debug
@@ -903,7 +904,8 @@ router.get("/green/:id", async (req, res) => {
     
   });
 
-  res.render("event/green", { green, eventId, req });
+  res.render("event/green", { green, 
+    metaEventId: eventId, req });
 });
 
 
@@ -993,7 +995,7 @@ router.get("/coulors/grey", async function(req, res) {
 
 router.get("/grey/:id", async (req, res) => {
   const grey = await Grey.findById(req.params.id);
-  const eventId = `view_${grey.id}_${Date.now()}`;
+ const eventId = generateEventId(); // Use a proper UUID generator
 
   // ✅ Use req.user directly — no fallback needed
   console.log("✅ req.user", req.user); // debug
@@ -1027,7 +1029,8 @@ router.get("/grey/:id", async (req, res) => {
     
   });
 
-  res.render("event/grey", { grey, eventId, req });
+  res.render("event/grey", { grey, 
+    metaEventId: eventId, req });
 });
 
 
@@ -1117,7 +1120,7 @@ router.get("/add-to-cart-grey/:id", async function(req, res) {
 
 router.get("/yelloow/:id", async (req, res) => {
   const yelloow = await Yelloow.findById(req.params.id);
-  const eventId = `view_${yelloow.id}_${Date.now()}`;
+  const eventId = generateEventId(); // Use a proper UUID generator
 
   // ✅ Use req.user directly — no fallback needed
   console.log("✅ req.user", req.user); // debug
@@ -1151,7 +1154,8 @@ router.get("/yelloow/:id", async (req, res) => {
     
   });
 
-  res.render("event/yelloow", { yelloow, eventId, req });
+  res.render("event/yelloow", { yelloow,
+    metaEventId: eventId , req });
 });
 
 
@@ -1242,7 +1246,7 @@ router.get("/add-to-cart-yelloow/:id", async function(req, res) {
 
 router.get("/pink/:id", async (req, res) => {
   const pink = await Pink.findById(req.params.id);
-  const eventId = `view_${pink.id}_${Date.now()}`;
+const eventId = generateEventId(); // Use a proper UUID generator
 
   // ✅ Use req.user directly — no fallback needed
   console.log("✅ req.user", req.user); // debug
@@ -1276,7 +1280,8 @@ router.get("/pink/:id", async (req, res) => {
     
   });
 
-  res.render("event/pink", { pink, eventId, req });
+  res.render("event/pink", { pink, req,
+    metaEventId: eventId });
 });
 
 
