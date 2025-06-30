@@ -1,7 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-
   <meta charset="UTF-8">
   <title>Track Your Order</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -25,7 +24,7 @@
     /* Page content */
     .content-with-logo {
       margin-top: 100px;
-      max-width: 600px;
+      max-width: 800px;
       margin-left: auto;
       margin-right: auto;
       padding: 20px;
@@ -35,70 +34,251 @@
     h2 {
       text-align: center;
       margin-bottom: 20px;
+      color: #333;
     }
 
-    input[type="tel"] {
-      width: 100%;
-      padding: 12px;
-      margin-bottom: 16px;
-      border: 1px solid #ccc;
-      border-radius: 6px;
+    .order-card {
+      background: #fff;
+      border-radius: 10px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      padding: 20px;
+      margin-bottom: 25px;
+      position: relative;
+      border-left: 4px solid #f4791f;
+    }
+
+    .order-info {
+      margin-bottom: 15px;
+    }
+
+    .order-info p {
+      margin: 8px 0;
+      color: #555;
       font-size: 16px;
     }
 
-    button {
-      width: 100%;
+    .order-info strong {
+      color: #333;
+      font-weight: 600;
+    }
+
+    .order-actions {
+      display: flex;
+      justify-content: space-between;
+      margin-top: 20px;
+      border-top: 1px solid #eee;
+      padding-top: 15px;
+    }
+
+    .btn {
+      padding: 10px 20px;
+      border-radius: 6px;
+      font-size: 15px;
+      font-weight: 600;
+      text-decoration: none;
+      text-align: center;
+      transition: all 0.3s;
+      cursor: pointer;
+      border: none;
+    }
+
+    .btn-primary {
       background-color: #f4791f;
       color: white;
-      padding: 12px;
-      border: none;
-      border-radius: 6px;
-      font-size: 16px;
-      cursor: pointer;
     }
 
-    button:hover {
-      background-color: #c86000;
+    .btn-primary:hover {
+      background-color: #e06a12;
+      transform: translateY(-2px);
+    }
+
+    .btn-return {
+      background-color: #e74c3c;
+      color: white;
+    }
+
+    .btn-return:hover {
+      background-color: #c0392b;
+      transform: translateY(-2px);
+    }
+
+    .btn-secondary {
+      background-color: #3498db;
+      color: white;
+    }
+
+    .btn-secondary:hover {
+      background-color: #2980b9;
+      transform: translateY(-2px);
+    }
+
+    .cart-link {
+      text-align: center;
+      margin-top: 30px;
+    }
+
+    .cart-link a {
+      color: #f4791f;
+      text-decoration: none;
+      font-weight: 600;
+      font-size: 16px;
+    }
+
+    .cart-link a:hover {
+      text-decoration: underline;
+    }
+
+    .order-status {
+      position: absolute;
+      top: 20px;
+      right: 20px;
+      background: #f4791f;
+      color: white;
+      padding: 5px 10px;
+      border-radius: 4px;
+      font-size: 14px;
+      font-weight: bold;
+    }
+
+    .return-status {
+      margin-top: 15px;
+      padding: 10px;
+      background: #f8f9fa;
+      border-radius: 6px;
+      border-left: 3px solid #3498db;
+    }
+
+    .return-status p {
+      margin: 5px 0;
+      color: #555;
+    }
+
+    .status-pending {
+      color: #f39c12;
+    }
+
+    .status-approved {
+      color: #2ecc71;
+    }
+
+    .status-rejected {
+      color: #e74c3c;
+    }
+
+    .status-processed {
+      color: #3498db;
+    }
+
+    .no-orders {
+      text-align: center;
+      padding: 30px;
+      background: #f8f9fa;
+      border-radius: 10px;
+      color: #555;
+    }
+
+    .order-date {
+      font-size: 14px;
+      color: #888;
+      margin-bottom: 10px;
+    }
+
+    @media (max-width: 768px) {
+      .order-actions {
+        flex-direction: column;
+        gap: 10px;
+      }
+      
+      .btn {
+        width: 100%;
+      }
     }
   </style>
 </head>
 <body>
 
- <!-- Fixed Logo -->
+  <!-- Fixed Logo -->
   <div id="fixed-logo-header">
- <a href="/">
-    <img src="/favicon/android-chrome-192x192.png" alt="Paintello Logo">
- </a>
-<a href="/">
+    <a href="/">
+      <img src="/favicon/android-chrome-192x192.png" alt="Paintello Logo">
+    </a>
+    <a href="/">
       <img src="/img/logo.png" alt="Paintello Logo" style="max-height: 80px;">
     </a>
   </div>
 
   <!-- Content Area -->
   <div class="content-with-logo">
+    <h2>تفاصيل الطلب</h2>
 
+    <% if (orders.length === 0) { %>
+      <div class="no-orders">
+        <p>No orders found for this number.</p>
+        <a href="/" class="btn btn-primary">Go to Shop</a>
+      </div>
+    <% } %>
 
-<h2>تفاصيل الطلب</h2>
-<% orders.forEach(order => { %>
-  <div>
-    <p>الاسم: <%= order.name %></p>
-    <p>رقم الهاتف: <%= order.numero %></p>
-    <p>الولاية: <%= order.city %></p>
-    <p>العنوان: <%= order.address %></p>
-    <p>المجموع: <%= order.cart.totalPrice %> دج</p>
-  
-  </div>
-<% }) %>
- <hr>
-                    
-                <div class="cart-link">
+    <% orders.forEach(order => { %>
+      <div class="order-card">
+        <div class="order-status">
+          Order #<%= order._id.toString().slice(-6).toUpperCase() %>
+        </div>
+        
+        <div class="order-date">
+          Ordered on: <%= order.createdAt.toLocaleDateString() %>
+        </div>
+        
+        <div class="order-info">
+          <p><strong>الاسم:</strong> <%= order.name %></p>
+          <p><strong>رقم الهاتف:</strong> <%= order.numero %></p>
+          <p><strong>الولاية:</strong> <%= order.city %></p>
+          <p><strong>العنوان:</strong> <%= order.address %></p>
+          <p><strong>المجموع:</strong> <%= order.cart.totalPrice %> دج</p>
+          <p><strong>Shipping Fee:</strong> <%= order.shippingFee %> دج</p>
+          <p><strong>Total with Shipping:</strong> <%= order.totalWithShipping %> دج</p>
+          <p><strong>Estimated Delivery:</strong> <%= order.deliveryDelay %></p>
+        </div>
+
+        <% if (order.returnRequest) { %>
+          <div class="return-status">
+            <p><strong>Return Status:</strong> 
+              <span class="status-<%= order.returnRequest.status %>">
+                <%= order.returnRequest.status.toUpperCase() %>
+              </span>
+            </p>
+            <% if (order.returnRequest.status === 'approved') { %>
+              <p>Your return has been approved. Please follow the instructions sent to your email.</p>
+            <% } else if (order.returnRequest.status === 'rejected') { %>
+              <p>Your return request was rejected. Contact support for more information.</p>
+            <% } %>
+            <p><strong>Reason:</strong> <%= {
+              'wrong_item': 'Wrong item received',
+              'defective': 'Item is defective/damaged',
+              'not_as_described': 'Item not as described',
+              'changed_mind': 'Changed my mind',
+              'other': 'Other reason'
+            }[order.returnRequest.reason] %></p>
+          </div>
+        <% } %>
+
+        <div class="order-actions">
+          <% if (!order.returnRequest) { %>
+            <a href="/start-return/<%= order._id %>" class="btn btn-return">Create Return</a>
+          <% } else if (order.returnRequest.status === 'pending') { %>
+            <button class="btn btn-secondary" disabled>Return Pending</button>
+          <% } %>
+          <a href="/" class="btn btn-primary">Continue Shopping</a>
+        </div>
+      </div>
+    <% }) %>
+
+    <div class="cart-link">
       <a href="/">Go to Shop</a>
     </div>
-</div>
-</div>
-
+  </div>
 </body>
 </html>
+
 
 
 
