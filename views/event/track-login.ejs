@@ -302,28 +302,31 @@
             <p><strong>Status:</strong> In Transit (Estimated delivery: <%= order.deliveryDelay %>)</p>
           </div>
 
-          <% if (order.returnRequest) { %>
-            <div class="return-status">
-              <p><strong>Return Status:</strong> 
-                <span class="status-<%= order.returnRequest.status %>">
-                  <%= order.returnRequest.status.toUpperCase() %>
-                </span>
-              </p>
-              <% if (order.returnRequest.status === 'approved') { %>
-                <p>Your return has been approved. We'll contact you shortly.</p>
-              <% } else if (order.returnRequest.status === 'rejected') { %>
-                <p>Your return request was rejected. Contact support for more information.</p>
-              <% } %>
-              <p><strong>Reason:</strong> 
-                <%= {
-                  'wrong_item': 'Wrong item received',
-                  'defective': 'Item is defective/damaged',
-                  'not_as_described': 'Item not as described',
-                  'changed_mind': 'Changed my mind',
-                  'other': 'Other reason'
-                }[order.returnRequest.reason] %>
-              </p>
-            </div>
+          <% if (order.returnRequest && order.returnRequest.status) { %>
+  <div class="return-status">
+    <p><strong>Return Status:</strong> 
+      <span class="status-<%= order.returnRequest.status.toLowerCase() %>">
+        <%= order.returnRequest.status ? order.returnRequest.status.toUpperCase() : 'UNKNOWN' %>
+      </span>
+    </p>
+    <% if (order.returnRequest.status === 'approved') { %>
+      <p>Your return has been approved. We'll contact you shortly.</p>
+    <% } else if (order.returnRequest.status === 'rejected') { %>
+      <p>Your return request was rejected. Contact support for more information.</p>
+    <% } %>
+    <% if (order.returnRequest.reason) { %>
+      <p><strong>Reason:</strong> 
+        <%= {
+          'wrong_item': 'Wrong item received',
+          'defective': 'Item is defective/damaged',
+          'not_as_described': 'Item not as described',
+          'changed_mind': 'Changed my mind',
+          'other': 'Other reason'
+        }[order.returnRequest.reason] || order.returnRequest.reason %>
+      </p>
+    <% } %>
+  </div>
+
           <% } else { %>
             <div class="order-actions">
               <a href="/start-return/<%= order._id %>" class="btn btn-return">Request Return</a>
