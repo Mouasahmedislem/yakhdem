@@ -13,7 +13,7 @@ const client = twilio(process.env.TWILIO_ACCOUNT_SID, process.env.TWILIO_AUTH_TO
 const Order = require('../models/order');
 const Powers = require('../models/powers');
 const middleware = require('../middleware');
-
+const ReturnRequest = require('../models/ReturnRequest');
 const { isLoggedIn } = require('../middleware/index');
 const mongoose = require('mongoose');
 
@@ -2063,11 +2063,15 @@ router.post('/track-login', async (req, res) => {
   }
 });
 
+/ Add this to your track-order route to show return status
 router.get('/track-order', async (req, res) => {
-  if (!req.session.trackingUser) return res.redirect('/track-login');
+    if (!req.session.trackingUser) return res.redirect('/track-login');
 
-  const orders = await Order.find({ numero: req.session.trackingUser }).sort({ createdAt: -1 });
-  res.render('event/track-order', { orders });
+    const orders = await Order.find({ numero: req.session.trackingUser })
+                            .sort({ createdAt: -1 })
+                            .populate('returnRequest');
+    
+    res.render('event/track-order', { orders });
 });
 
 
@@ -2273,6 +2277,81 @@ router.post('/webhook', async (req, res) => {
   }
 });
 
+// Add these routes:
+
+// Start return process
+router.get('/start-return/:orderId', async (req, res) => {
+    try {
+        const order = await Order.findById(req.params.orderId);
+        if (!order) {
+            req.flash('error', 'Order not found');
+            return res.redirect('/track-order');
+        }
+        
+        // Verify order belongs to the current user
+        if ((req.user && order.user.toString() !== req.user._id.toString()) || 
+            (!req.user && order.numero !== req.session.trackingUser)) {
+            req.flash('error', 'You are not authorized to return this order');
+            return res.redirect('/track-order');
+        }
+        
+        res.render('event/start-return', { order });
+    } catch (err) {
+        console.error('Error starting return:', err);
+        req.flash('error', 'Error processing your request');
+        res.redirect('/track-order');
+    }
+});
+
+// Submit return request
+router.post('/submit-return', async (req, res) => {
+    try {
+        const order = await Order.findById(req.body.orderId);
+        if (!order) {
+            req.flash('error', 'Order not found');
+            return res.redirect('/track-order');
+        }
+        
+        // Verify order belongs to the current user
+        if ((req.user && order.user.toString() !== req.user._id.toString()) || 
+            (!req.user && order.numero !== req.session.trackingUser)) {
+            req.flash('error', 'You are not authorized to return this order');
+            return res.redirect('/track-order');
+        }
+        
+        // Create return request
+        const returnRequest = new ReturnRequest({
+            orderId: req.body.orderId,
+            userId: req.user ? req.user._id : null,
+            numero: req.user ? req.user.numero : order.numero,
+            reason: req.body.reason,
+            refundMethod: req.body.refundMethod,
+            exchangeItem: req.body.exchangeItem,
+            ccpNumber: req.body.ccpNumber,
+            notes: req.body.notes,
+            status: 'pending'
+        });
+        
+        await returnRequest.save();
+        
+        // Update order with return request
+        order.returnRequest = returnRequest._id;
+        await order.save();
+        
+        // Send confirmation email (implement this function in your mailer utils)
+        await sendReturnConfirmationEmail({
+            email: req.user?.email || order.email,
+            orderId: order._id,
+            returnId: returnRequest._id
+        });
+        
+        res.render('event/return-confirmation', { returnRequest });
+    } catch (err) {
+        console.error('Error submitting return:', err);
+        req.flash('error', 'Error processing your return request');
+        res.redirect('/track-order');
+    }
+});
 
     
 module.exports = router
