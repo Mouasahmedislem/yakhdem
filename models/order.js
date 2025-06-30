@@ -9,7 +9,15 @@ const orderSchema = new Schema({
   city: {type: String, required: true},
   country: {type: String, required: true},
   
-  numero : {type: Number, required: true}
+  numero : {type: Number, required: true},
+   returnRequest: { 
+    type: Schema.Types.ObjectId, 
+    ref: 'ReturnRequest' 
+  },
+  shippingFee: { type: Number, default: 0 },
+  deliveryDelay: { type: String },
+  totalWithShipping: { type: Number }
+}, { timestamps: true }); // Adding timestamps for created/updated dates
 
 });
 
