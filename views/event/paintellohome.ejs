@@ -23,9 +23,7 @@
     fn: '<%= user ? user.firstName : "" %>',
     ln: '<%= user ? user.lastName : "" %>',
     ph: '<%= user ? user.numero : "" %>',
-    external_id: '<%= user ? user._id : "" %>',
-    fbp: '<%= _fbp %>',
-    fbc: '<%= _fbc %>'
+    external_id: '<%= user ? user._id : "" %>'
   });
 fbq('track', 'PageView');
 </script>
