@@ -2039,12 +2039,7 @@ await transporter.sendMail(mailOptions);
     res.redirect('event/confirmation'); // Redirect back with error
   }
 });
-router.get("/track-login", function(req, res){
-    
-    
-        res.render("event/track-login");
-    
-});
+
 
 router.get("/contact", function(req, res){
     
@@ -2053,51 +2048,139 @@ router.get("/contact", function(req, res){
     
 });
 
+// Track Login Page
+router.get('/track-login', (req, res) => {
+    res.render('event/track-order', {
+        title: 'Track Your Order',
+        phoneNumber: '',
+        error: req.flash('error')[0]
+    });
+});
+
+// Process Track Login
 router.post('/track-login', async (req, res) => {
     const { numero } = req.body;
     
+    // Validate Algerian phone number
+    if (!/^0[5-7][0-9]{8}$/.test(numero)) {
+        req.flash('error', 'رقم الهاتف غير صحيح - يجب أن يبدأ بـ 05/06/07 ويتكون من 10 أرقام');
+        return res.redirect('/track-login');
+    }
+
     try {
-        // Validate phone number format
-        if (!/^0[5-7][0-9]{8}$/.test(numero)) {
-            req.flash('error', 'Invalid phone number format');
-            return res.redirect('/track-order');
+        const orders = await Order.find({ numero })
+                                .sort({ createdAt: -1 })
+                                .populate('returnRequest');
+        
+        if (orders.length === 0) {
+            req.flash('error', 'لا توجد طلبات مرتبطة بهذا الرقم');
+            return res.render('event/track-order', {
+                phoneNumber: numero,
+                error: 'لا توجد طلبات مرتبطة بهذا الرقم'
+            });
         }
 
-        // Find orders by phone number
-        const orders = await Order.find({ numero }).sort({ createdAt: -1 });
-        
-        // Render track-order page with orders (empty array if none found)
-        return res.render('event/track-order', { 
+        req.session.trackingUser = numero;
+        res.render('event/track-order', { 
             orders,
-            phoneNumber: numero // Pass the searched number to display
+            phoneNumber: numero 
         });
-        
+
     } catch (err) {
         console.error('Track order error:', err);
-        req.flash('error', 'Error processing your request');
-        return res.redirect('/track-order');
+        req.flash('error', 'خطأ في النظام - يرجى المحاولة لاحقاً');
+        res.redirect('/track-login');
     }
 });
 
+// Track Order Page
 router.get('/track-order', async (req, res) => {
-  if (!req.session.trackingUser) return res.redirect('/track-login');
+    if (!req.session.trackingUser) {
+        return res.redirect('/track-login');
+    }
 
-  try {
-    const orders = await Order.find({ numero: req.session.trackingUser })
-                            .sort({ createdAt: -1 })
-                            .populate({
-                              path: 'returnRequest',
-                              options: { strictPopulate: false } // Bypass the check
-                            });
-    
-    res.render('event/track-order', { orders });
-  } catch (err) {
-    console.error('Error fetching orders:', err);
-    req.flash('error', 'Error loading your orders');
-    res.redirect('/track-login');
-  }
+    try {
+        const orders = await Order.find({ numero: req.session.trackingUser })
+                                .sort({ createdAt: -1 })
+                                .populate('returnRequest');
+        
+        res.render('event/track-order', { 
+            orders,
+            phoneNumber: req.session.trackingUser 
+        });
+    } catch (err) {
+        console.error('Error fetching orders:', err);
+        req.flash('error', 'خطأ في تحميل الطلبات');
+        res.redirect('/track-login');
+    }
 });
 
+// Start Return Process
+router.get('/start-return/:orderId', async (req, res) => {
+    try {
+        const order = await Order.findById(req.params.orderId);
+        if (!order) {
+            req.flash('error', 'الطلب غير موجود');
+            return res.redirect('/track-order');
+        }
+        
+        res.render('event/start-return', { 
+            order,
+            title: 'طلب إرجاع المنتج'
+        });
+    } catch (err) {
+        console.error('Error starting return:', err);
+        req.flash('error', 'خطأ في النظام');
+        res.redirect('/track-order');
+    }
+});
+
+// Submit Return Request
+router.post('/submit-return', async (req, res) => {
+    try {
+        const { orderId, reason, refundMethod, exchangeItem, ccpNumber, notes } = req.body;
+        
+        // Validate required fields
+        if (!orderId || !reason || !refundMethod) {
+            req.flash('error', 'جميع الحقول المطلوبة يجب ملؤها');
+            return res.redirect('back');
+        }
+
+        // Validate refund method specific fields
+        if (refundMethod === 'exchange' && !exchangeItem) {
+            req.flash('error', 'يجب تحديد المنتج البديل');
+            return res.redirect('back');
+        }
+
+        if (refundMethod === 'ccp_refund' && !ccpNumber) {
+            req.flash('error', 'يجب إدخال رقم الحساب البريدي');
+            return res.redirect('back');
+        }
+
+        const returnRequest = new ReturnRequest({
+            orderId,
+            reason,
+            refundMethod,
+            exchangeItem,
+            ccpNumber,
+            notes,
+            status: 'pending'
+        });
+
+        await returnRequest.save();
+
+        // Update the order
+        await Order.findByIdAndUpdate(orderId, { returnRequest: returnRequest._id });
+
+        req.flash('success', 'تم إرسال طلب الإرجاع بنجاح');
+        res.redirect('/track-order');
+
+    } catch (err) {
+        console.error('Return submission error:', err);
+        req.flash('error', 'فشل في تقديم طلب الإرجاع');
+        res.redirect('back');
+    }
+});
 
 
 router.get("/producthome/:id", async (req, res) => {
@@ -2301,70 +2384,8 @@ router.post('/webhook', async (req, res) => {
   }
 });
 
-// Add these routes:
 
-// Start return process
-router.get('/start-return/:orderId', async (req, res) => {
-    try {
-        const order = await Order.findById(req.params.orderId);
-        if (!order) {
-            req.flash('error', 'Order not found');
-            return res.redirect('/track-order');
-        }
-        
-       
-        res.render('event/start-return', { order });
-    } catch (err) {
-        console.error('Error starting return:', err);
-        req.flash('error', 'Error processing your request');
-        res.redirect('/track-order');
-    }
-});
 
-// Submit return request
-router.post('/submit-return', async (req, res) => {
-    try {
-        const order = await Order.findById(req.body.orderId);
-        if (!order) {
-            req.flash('error', 'Order not found');
-            return res.redirect('/track-order');
-        }
-        
-    
-        
-        // Create return request
-        const returnRequest = new ReturnRequest({
-            orderId: req.body.orderId,
-            userId: req.user ? req.user._id : null,
-            numero: req.user ? req.user.numero : order.numero,
-            reason: req.body.reason,
-            refundMethod: req.body.refundMethod,
-            exchangeItem: req.body.exchangeItem,
-            ccpNumber: req.body.ccpNumber,
-            notes: req.body.notes,
-            status: 'pending'
-        });
-        
-        await returnRequest.save();
-        
-        // Update order with return request
-        order.returnRequest = returnRequest._id;
-        await order.save();
-        
-        // Send confirmation email (implement this function in your mailer utils)
-        await sendReturnConfirmationEmail({
-            email: req.user?.email || order.email,
-            orderId: order._id,
-            returnId: returnRequest._id
-        });
-        
-        res.render('event/return-confirmation', { returnRequest });
-    } catch (err) {
-        console.error('Error submitting return:', err);
-        req.flash('error', 'Error processing your return request');
-        res.redirect('/track-order');
-    }
-});
 
     
 module.exports = router
