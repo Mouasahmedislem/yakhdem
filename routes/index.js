@@ -2049,36 +2049,26 @@ router.get("/track-login", function(req, res){
 router.post('/track-login', async (req, res) => {
     const { numero } = req.body;
     
-    // 1. Validate phone number format first
-    if (!/^0[5-7][0-9]{8}$/.test(numero)) {
-        return res.render('event/track-login', {
-            error: "Invalid phone number format. Please use format like 0551234567",
-            phoneNumber: numero // Send back the invalid number to show in form
-        });
-    }
-
     try {
-        // 2. Check for existing orders
-        const orders = await Order.find({ numero }).sort({ createdAt: -1 });
-        
-        if (orders.length === 0) {
-            return res.render('event/track-login', {
-                noOrders: true,
-                phoneNumber: numero
-            });
+        // Validate phone number format
+        if (!/^0[5-7][0-9]{8}$/.test(numero)) {
+            req.flash('error', 'Invalid phone number format');
+            return res.redirect('/track-order');
         }
 
-        // 3. If orders exist
-        return res.render('event/track-order', {
+        // Find orders by phone number
+        const orders = await Order.find({ numero }).sort({ createdAt: -1 });
+        
+        // Render track-order page with orders (empty array if none found)
+        return res.render('event/track-order', { 
             orders,
-            phoneNumber: numero
+            phoneNumber: numero // Pass the searched number to display
         });
-
+        
     } catch (err) {
         console.error('Track order error:', err);
-        return res.render('event/track-order', {
-            error: "System error - please try again later"
-        });
+        req.flash('error', 'Error processing your request');
+        return res.redirect('/track-order');
     }
 });
 
