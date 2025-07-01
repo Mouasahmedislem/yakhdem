@@ -18,26 +18,6 @@
     }
 
     #fixed-logo-header img {
-      max-height: 60px;<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <title>Track Your Order | Paintello</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <style>
-    /* Fixed Logo Header */
-    #fixed-logo-header {
-      position: fixed;
-      top: 0;
-      width: 100%;
-      background-color: white;
-      padding: 10px 0;
-      text-align: center;
-      z-index: 9999;
-      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-    }
-
-    #fixed-logo-header img {
       max-height: 60px;
     }
 
@@ -49,6 +29,12 @@
       margin-right: auto;
       padding: 20px;
       font-family: Arial, sans-serif;
+    }
+
+    h2 {
+      text-align: center;
+      margin-bottom: 20px;
+      color: #333;
     }
 
     /* Form Styles */
@@ -89,25 +75,6 @@
       transform: translateY(-2px);
     }
 
-    /* Error Messages */
-    .error-message {
-      background: #ffeeee;
-      color: #d32f2f;
-      padding: 12px;
-      border-radius: 4px;
-      margin: 15px 0;
-      border-left: 3px solid #d32f2f;
-    }
-
-    /* No Orders Message */
-    .no-orders-message {
-      background: #fff8e1;
-      padding: 20px;
-      border-radius: 8px;
-      margin-top: 30px;
-      border-left: 4px solid #ffa000;
-    }
-
     /* Order Card Styles */
     .order-card {
       background: #fff;
@@ -133,6 +100,30 @@
       font-weight: 600;
     }
 
+    .order-actions {
+      display: flex;
+      gap: 10px;
+      margin-top: 20px;
+      padding-top: 15px;
+      border-top: 1px solid #eee;
+    }
+
+    .btn-return {
+      background-color: #e74c3c;
+    }
+
+    .btn-return:hover {
+      background-color: #c0392b;
+    }
+
+    .btn-secondary {
+      background-color: #3498db;
+    }
+
+    .btn-secondary:hover {
+      background-color: #2980b9;
+    }
+
     .order-status {
       background: #f4791f;
       color: white;
@@ -144,9 +135,17 @@
       margin-bottom: 10px;
     }
 
+    .return-status {
+      margin-top: 15px;
+      padding: 10px;
+      background: #f8f9fa;
+      border-radius: 6px;
+      border-left: 3px solid #3498db;
+    }
+
     /* Responsive */
     @media (max-width: 768px) {
-      .actions {
+      .order-actions {
         flex-direction: column;
       }
     }
@@ -166,47 +165,35 @@
 
   <!-- Content Area -->
   <div class="content-with-logo">
-    <!-- Initial Tracking Form -->
-    <div class="track-form">
-      <h2>🔎 Track Your Order</h2>
-      <form action="/track-login" method="POST">
-        <input 
-          type="tel" 
-          name="numero" 
-          placeholder="Enter your phone number (Example: 0551234567)" 
-          required
-          pattern="0[5-7][0-9]{8}"
-          value="<%= typeof phoneNumber !== 'undefined' ? phoneNumber : '' %>"
-        />
-        
-        <% if (typeof error !== 'undefined') { %>
-          <div class="error-message">
-            <%= error %>
-          </div>
-        <% } %>
-        
-        <button type="submit">Track Order</button>
-      </form>
-    </div>
-
-    <!-- No Orders Found -->
-    <% if (typeof noOrders !== 'undefined' && noOrders) { %>
-      <div class="no-orders-message">
-        <h3>No orders found for <%= phoneNumber %></h3>
-        <p>Please verify:</p>
-        <ul>
-          <li>You entered the correct phone number used when ordering</li>
-          <li>Your order was placed within the last 6 months</li>
-        </ul>
-        <div class="actions">
-          <a href="/contact" class="btn">Need Help?</a>
-          <a href="/track-order" class="btn">Try Again</a>
-        </div>
+    <% if (typeof orders === 'undefined') { %>
+      <!-- Tracking Form -->
+      <div class="track-form">
+        <h2>🔎 Track Your Order</h2>
+        <form action="/track-login" method="POST">
+          <input 
+            type="tel" 
+            name="numero" 
+            placeholder="Enter your phone number (Example: 0551234567)" 
+            required 
+            pattern="0[5-7][0-9]{8}" 
+            title="Please enter a valid Algerian phone number (0551234567)"
+          />
+          <button type="submit">Track Order</button>
+        </form>
       </div>
-    <% } %>
-
-    <!-- Orders List -->
-    <% if (typeof orders !== 'undefined' && orders.length > 0) { %>
+      
+      <div class="text-center">
+        <p>Don't have an order number? <a href="/contact">Contact support</a></p>
+      </div>
+    <% } else if (orders.length === 0) { %>
+      <!-- No Orders Found -->
+      <div class="track-form">
+        <h2>No Orders Found</h2>
+        <p>We couldn't find any orders associated with this phone number.</p>
+        <a href="/" class="btn">Continue Shopping</a>
+      </div>
+    <% } else { %>
+      <!-- Orders List -->
       <h2>Your Orders</h2>
       
       <% orders.forEach(order => { %>
@@ -224,6 +211,27 @@
             <p><strong>Total:</strong> <%= order.totalWithShipping %> DZD</p>
             <p><strong>Status:</strong> In Transit (Estimated delivery: <%= order.deliveryDelay %>)</p>
           </div>
+
+          <% if (order.returnRequest) { %>
+            <div class="return-status">
+              <p><strong>Return Status:</strong> 
+                <span style="color: <%= 
+                  order.returnRequest.status === 'approved' ? '#2ecc71' : 
+                  order.returnRequest.status === 'rejected' ? '#e74c3c' : 
+                  '#f39c12' %>">
+                  <%= order.returnRequest.status.toUpperCase() %>
+                </span>
+              </p>
+              <% if (order.returnRequest.status === 'approved') { %>
+                <p>Your return has been approved. We'll contact you shortly.</p>
+              <% } %>
+            </div>
+          <% } else { %>
+            <div class="order-actions">
+              <a href="/start-return/<%= order._id %>" class="btn btn-return">Request Return</a>
+              <a href="/contact?order=<%= order._id %>" class="btn btn-secondary">Contact Support</a>
+            </div>
+          <% } %>
         </div>
       <% }); %>
       
