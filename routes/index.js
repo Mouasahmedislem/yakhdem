@@ -2051,7 +2051,7 @@ router.post('/track-login', async (req, res) => {
     
     // 1. Validate phone number format first
     if (!/^0[5-7][0-9]{8}$/.test(numero)) {
-        return res.render('event/track-order', {
+        return res.render('event/track-login', {
             error: "Invalid phone number format. Please use format like 0551234567",
             phoneNumber: numero // Send back the invalid number to show in form
         });
@@ -2062,7 +2062,7 @@ router.post('/track-login', async (req, res) => {
         const orders = await Order.find({ numero }).sort({ createdAt: -1 });
         
         if (orders.length === 0) {
-            return res.render('event/track-order', {
+            return res.render('event/track-login', {
                 noOrders: true,
                 phoneNumber: numero
             });
@@ -2083,13 +2083,22 @@ router.post('/track-login', async (req, res) => {
 });
 
 router.get('/track-order', async (req, res) => {
-    if (!req.session.trackingUser) return res.redirect('/track-login');
+  if (!req.session.trackingUser) return res.redirect('/track-login');
 
+  try {
     const orders = await Order.find({ numero: req.session.trackingUser })
                             .sort({ createdAt: -1 })
-                            .populate('returnRequest');
+                            .populate({
+                              path: 'returnRequest',
+                              options: { strictPopulate: false } // Bypass the check
+                            });
     
     res.render('event/track-order', { orders });
+  } catch (err) {
+    console.error('Error fetching orders:', err);
+    req.flash('error', 'Error loading your orders');
+    res.redirect('/track-login');
+  }
 });
 
 
