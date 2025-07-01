@@ -149,6 +149,74 @@
         flex-direction: column;
       }
     }
+.return-policy-banner {
+    background: #f8f9fa;
+    border-radius: 10px;
+    padding: 20px;
+    margin: 25px 0;
+    border-left: 4px solid #f4791f;
+  }
+  
+  .return-policy-banner h3 {
+    color: #f4791f;
+    margin-top: 0;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  
+  .policy-details {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 15px;
+    margin: 20px 0;
+  }
+  
+  .benefit-box {
+    display: flex;
+    gap: 15px;
+    align-items: center;
+    background: white;
+    padding: 15px;
+    border-radius: 8px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+  }
+  
+  .benefit-icon {
+    font-size: 24px;
+    background: #f4791f20;
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+  }
+  
+  .benefit-box h4 {
+    margin: 0 0 5px 0;
+    color: #333;
+  }
+  
+  .benefit-box p {
+    margin: 0;
+    color: #666;
+    font-size: 14px;
+  }
+  
+  .note {
+    font-size: 14px;
+    color: #666;
+    text-align: center;
+    margin: 15px 0 0 0;
+  }
+  
+  @media (max-width: 600px) {
+    .policy-details {
+      grid-template-columns: 1fr;
+    }
+  }
   </style>
 </head>
 <body>
@@ -166,6 +234,36 @@
   <!-- Content Area -->
   <div class="content-with-logo">
     <% if (typeof orders === 'undefined') { %>
+<div class="return-policy-banner" dir="rtl">
+  <h3><i class="fas fa-exchange-alt"></i> إرجاع المنتجات خلال 5 أيام</h3>
+  <div class="policy-details">
+    <div class="benefit-box">
+      <div class="benefit-icon">🔄</div>
+      <div>
+        <h4>استبدال المنتج</h4>
+        <p>غير راضٍ عن المنتج؟ يمكنك استبداله بأي منتج آخر بنفس القيمة</p>
+      </div>
+    </div>
+    
+    <div class="benefit-box">
+      <div class="benefit-icon">💵</div>
+      <div>
+        <h4>استرداد النقود</h4>
+        <p>استرداد المبلغ إلى حسابك البريدي CCP</p>
+      </div>
+    </div>
+    
+    <div class="benefit-box">
+      <div class="benefit-icon">⏱️</div>
+      <div>
+        <h4>ضمان 5 أيام</h4>
+        <p>يمكنك طلب الإرجاع خلال 5 أيام من استلام الطلب</p>
+      </div>
+    </div>
+  </div>
+  
+  <p class="note">قم بتتبع طلبك أ لبدء طلب الإرجاع</p>
+</div>
       <!-- Tracking Form -->
       <div class="track-form">
         <h2>🔎 Track Your Order</h2>
