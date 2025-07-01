@@ -4,6 +4,36 @@
   <meta charset="UTF-8">
   <title>Track Your Order | Paintello</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="apple-touch-icon" sizes="180x180" href="/favicon/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon/favicon-16x16.png">
+<link rel="manifest" href="/favicon/site.webmanifest">  
+  <meta name="theme-color" content="#ffffff">  <link href='https://cdn.jsdelivr.net/npm/boxicons@2.0.5/css/boxicons.min.css' rel='stylesheet'>
+  <link rel="stylesheet" href="/assets/vendor/font-awesome/css/fontawesome-all.min.css">
+  <link rel="stylesheet" href="/assets/vendor/animate.css/animate.min.css">
+  <link rel="stylesheet" href="/assets/vendor/hs-megamenu/src/hs.megamenu.css">
+<!-- Bootstrap 4 CSS -->
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+<!-- Font Awesome (optional for icons) -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+
+  <!-- Font Awesome -->
+  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.11.2/css/all.css">
+  <!-- Bootstrap core CSS -->
+   <!-- Bootstrap core CSS -->
+  <link href="../../css/bootstrap.min.css" rel="stylesheet">
+  <!-- Material Design Bootstrap -->
+  <link href="../../css/mdb.min.css" rel="stylesheet">
+<!-- Add the slick-theme.css if you want default styling -->
+<link rel="stylesheet" type="text/css" href="//cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.css"/>
+<!-- Add the slick-theme.css if you want default styling -->
+<link rel="stylesheet" type="text/css" href="//cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick-theme.css"/>
+  <!-- Material Design Bootstrap -->
+  <link href="/css/mdb.min.css" rel="stylesheet">
+  <link href="/css/magiczoomplus.css" rel="stylesheet">
+  <link href="/css/zoomm.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
+
   <style>
     /* Fixed Logo Header */
     #fixed-logo-header {
@@ -219,8 +249,80 @@
   }
   </style>
 </head>
-<body>
 
+<body>
+<header>
+
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-light fixed-top scrolling-navbar white">
+      <div class="container">
+        <a class="navbar-brand font-weight-bold title" href="/">Paintello</a>
+        <!--Navigation icons-->
+        <ul class="nav navbar-nav nav-flex-icons ml-auto">
+          <li class="nav-item dropdown">
+                       <a class="nav-link dropdown" id="menu1" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        <i class="fas fa-user  black-text"></i>
+                      </a>
+                      <div class="dropdown-menu dropdown-menu-right bootstrap-menu  white scrollbar-default" aria-labelledby="menu1">
+                        <% if (login){ %>
+                          <a class="dropdown-item" href="/user/profile">profile</a>
+                           <a class="dropdown-item" href="/user/logout">Logout</a>
+                           <% } else{ %>
+                           <a class="dropdown-item" href="/user/signup">Register</a>
+                           <a class="dropdown-item" href="/user/signin">Sing up</a>
+                           <% } %>
+                 </div> 
+          </li>
+          <li class="nav-item ">
+                      <a class="nav-link " id="menu2" href="/shop" role="button"  aria-haspopup="true" aria-expanded="false">
+                        <i class="fas fa-shopping-cart black-text"></i>
+                        <% if(session.cart){ %>
+                      <span class="mycounter"><%= session.cart.totalQty %></span>
+                      <% } %>
+                      </a>
+          </li>
+    
+        </ul>
+        
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarTogglerDemo02"
+          aria-controls="navbarTogglerDemo02" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+          
+        </button>
+        
+        
+        <div class="collapse navbar-collapse" id="navbarTogglerDemo02">
+          <ul class="list-unstyled navbar-nav mr-auto">
+         
+            
+            <li class="nav-item ml-4">
+              <a class="nav-link title" href="/sale/wow" data-offset="90">Nos Services</a>
+            </li>
+            <li class="nav-item ml-4">
+              <a class="nav-link title" href="/sale/clean" data-offset="90">interior paint</a>
+            </li>
+            <li class="nav-item ml-4">
+              <a class="nav-link title" href="/sale/furniteur" data-offset="90">Vinyl paint</a>
+            </li>
+            <li class="nav-item ml-4">
+              <a class="nav-link title" href="/sale/wow" data-offset="90">outils</a>
+            </li>
+            <li class="nav-item ml-4">
+             <a class="nav-link title" href="/track-login" data-offset="90">Returns</a>
+            </li>
+            
+          </ul>
+          
+          <!-- Social Icon  -->
+         
+              </div>
+      </div>
+  
+         
+      </div>
+      </div>
+    </nav>
+</header> 
   <!-- Fixed Logo Header -->
   <div id="fixed-logo-header">
     <a href="/">
@@ -234,6 +336,26 @@
   <!-- Content Area -->
   <div class="content-with-logo">
     <% if (typeof orders === 'undefined') { %>
+
+      <!-- Tracking Form -->
+      <div class="track-form">
+        <h2>🔎 Track Your Order</h2>
+        <form action="/track-login" method="POST">
+          <input 
+            type="tel" 
+            name="numero" 
+            placeholder="Enter your phone number (Example: 0551234567)" 
+            required 
+            pattern="0[5-7][0-9]{8}" 
+            title="Please enter a valid Algerian phone number (0551234567)"
+          />
+          <button type="submit">Track Order</button>
+        </form>
+      </div>
+      
+      <div class="text-center">
+        <p>Don't have an order number? <a href="/contact">Contact support</a></p>
+      </div>
 <div class="return-policy-banner" dir="rtl">
   <h3><i class="fas fa-exchange-alt"></i> إرجاع المنتجات خلال 5 أيام</h3>
   <div class="policy-details">
@@ -262,27 +384,8 @@
     </div>
   </div>
   
-  <p class="note">قم بتتبع طلبك أ لبدء طلب الإرجاع</p>
+  <p class="note">قم بتتبع طلبك  لبدء طلب الإرجاع</p>
 </div>
-      <!-- Tracking Form -->
-      <div class="track-form">
-        <h2>🔎 Track Your Order</h2>
-        <form action="/track-login" method="POST">
-          <input 
-            type="tel" 
-            name="numero" 
-            placeholder="Enter your phone number (Example: 0551234567)" 
-            required 
-            pattern="0[5-7][0-9]{8}" 
-            title="Please enter a valid Algerian phone number (0551234567)"
-          />
-          <button type="submit">Track Order</button>
-        </form>
-      </div>
-      
-      <div class="text-center">
-        <p>Don't have an order number? <a href="/contact">Contact support</a></p>
-      </div>
     <% } else if (orders.length === 0) { %>
       <!-- No Orders Found -->
       <div class="track-form">
@@ -339,5 +442,4 @@
     <% } %>
   </div>
 
-</body>
-</html>
+ <%- include('../partials/footer') %>
