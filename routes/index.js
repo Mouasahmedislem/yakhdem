@@ -2049,12 +2049,11 @@ router.get("/contact", function(req, res){
 });
 
 // Track Login Page
-router.get('/track-login', (req, res) => {
-    res.render('event/track-order', {
-        title: 'Track Your Order',
-        phoneNumber: '',
-        error: req.flash('error')[0]
-    });
+router.get("/track-login", function(req, res){
+    
+    
+        res.render("event/track-login");
+    
 });
 
 // Process Track Login
