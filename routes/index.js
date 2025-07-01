@@ -2046,6 +2046,13 @@ router.get("/track-login", function(req, res){
     
 });
 
+router.get("/contact", function(req, res){
+    
+    
+        res.render("event/contact");
+    
+});
+
 router.post('/track-login', async (req, res) => {
     const { numero } = req.body;
     
