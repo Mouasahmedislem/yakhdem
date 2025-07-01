@@ -2094,24 +2094,22 @@ router.post('/track-login', async (req, res) => {
 
 // Track Order Page
 router.get('/track-order', async (req, res) => {
-    if (!req.session.trackingUser) {
-        return res.redirect('/track-login');
-    }
+  if (!req.session.trackingUser) return res.redirect('/track-login');
 
-    try {
-        const orders = await Order.find({ numero: req.session.trackingUser })
-                                .sort({ createdAt: -1 })
-                                .populate('returnRequest');
-        
-        res.render('event/track-order', { 
-            orders,
-            phoneNumber: req.session.trackingUser 
-        });
-    } catch (err) {
-        console.error('Error fetching orders:', err);
-        req.flash('error', 'خطأ في تحميل الطلبات');
-        res.redirect('/track-login');
-    }
+  try {
+    const orders = await Order.find({ numero: req.session.trackingUser })
+                            .sort({ createdAt: -1 })
+                            .populate({
+                              path: 'returnRequest',
+                              options: { strictPopulate: false } // Bypass the check
+                            });
+    
+    res.render('event/track-order', { orders });
+  } catch (err) {
+    console.error('Error fetching orders:', err);
+    req.flash('error', 'Error loading your orders');
+    res.redirect('/track-login');
+  }
 });
 
 // Start Return Process
