@@ -347,59 +347,67 @@
                 </ul>
             </div>
             
-        <% } else if (orders.length === 0) { %>
-            <!-- No Orders Found -->
-            <div class="no-orders">
-                <h3>لا توجد طلبات</h3>
-                <p>لم يتم العثور على أي طلبات مرتبطة بالرقم: <strong><%= phoneNumber %></strong></p>
-                <a href="/track-login" class="btn btn-primary">إعادة المحاولة</a>
-                <a href="/" class="btn btn-primary">العودة للمتجر</a>
-            </div>
-        <% } else { %>
-            <!-- Orders List -->
-            <% orders.forEach(order => { %>
-                <div class="order-card">
-                    <div class="order-status">
-                        طلب رقم #<%= order._id.toString().slice(-6).toUpperCase() %>
-                    </div>
-                    
-                    <div class="order-info">
-                        <p><strong>تاريخ الطلب:</strong> <%= order.createdAt.toLocaleDateString('ar-EG') %></p>
-                        <p><strong>الاسم:</strong> <%= order.name %></p>
-                        <p><strong>رقم الهاتف:</strong> <%= order.numero %></p>
-                        <p><strong>الولاية:</strong> <%= order.city %></p>
-                        <p><strong>العنوان:</strong> <%= order.address %></p>
-                        <p><strong>المجموع:</strong> <%= order.totalWithShipping %> دج</p>
-                        <p><strong>مدة التوصيل:</strong> <%= order.deliveryDelay %></p>
-                    </div>
+         <% if (orders.length === 0) { %>
+      <div class="no-orders">
+        <p>No orders found for this number.</p>
+        <a href="/" class="btn btn-primary">Go to Shop</a>
+      </div>
+    <% } %>
 
-                    <% if (order.returnRequest) { %>
-                        <div class="return-status">
-                            <p><strong>حالة الإرجاع:</strong> 
-                                <span class="status-<%= order.returnRequest.status %>">
-                                    <%= order.returnRequest.status === 'pending' ? 'قيد المراجعة' : 
-                                       order.returnRequest.status === 'approved' ? 'تم الموافقة' : 'مرفوض' %>
-                                </span>
-                            </p>
-                            <p><strong>السبب:</strong> 
-                                <%= {
-                                    'wrong_item': 'تم استلام منتج خاطئ',
-                                    'defective': 'المنتج به عيب',
-                                    'not_as_described': 'لا يتطابق مع الوصف',
-                                    'changed_mind': 'تغيير في الرغبة',
-                                    'other': 'سبب آخر'
-                                }[order.returnRequest.reason] %>
-                            </p>
-                        </div>
-                    <% } else { %>
-                        <div class="order-actions">
-                            <a href="/start-return/<%= order._id %>" class="btn btn-return">طلب إرجاع</a>
-                            <a href="/" class="btn btn-primary">العودة للمتجر</a>
-                        </div>
-                    <% } %>
-                </div>
-            <% }); %>
+    <% orders.forEach(order => { %>
+      <div class="order-card">
+        <div class="order-status">
+          Order #<%= order._id.toString().slice(-6).toUpperCase() %>
+        </div>
+        
+        <div class="order-date">
+          Ordered on: <%= order.createdAt.toLocaleDateString() %>
+        </div>
+        
+        <div class="order-info">
+          <p><strong>الاسم:</strong> <%= order.name %></p>
+          <p><strong>رقم الهاتف:</strong> <%= order.numero %></p>
+          <p><strong>الولاية:</strong> <%= order.city %></p>
+          <p><strong>العنوان:</strong> <%= order.address %></p>
+          <p><strong>المجموع:</strong> <%= order.cart.totalPrice %> دج</p>
+          <p><strong>Shipping Fee:</strong> <%= order.shippingFee %> دج</p>
+          <p><strong>Total with Shipping:</strong> <%= order.totalWithShipping %> دج</p>
+          <p><strong>Estimated Delivery:</strong> <%= order.deliveryDelay %></p>
+        </div>
+
+        <% if (order.returnRequest) { %>
+          <div class="return-status">
+            <p><strong>Return Status:</strong> 
+              <span class="status-<%= order.returnRequest.status %>">
+                <%= order.returnRequest.status.toUpperCase() %>
+              </span>
+            </p>
+            <% if (order.returnRequest.status === 'approved') { %>
+              <p>Your return has been approved. Please follow the instructions sent to your email.</p>
+            <% } else if (order.returnRequest.status === 'rejected') { %>
+              <p>Your return request was rejected. Contact support for more information.</p>
+            <% } %>
+            <p><strong>Reason:</strong> <%= {
+              'wrong_item': 'Wrong item received',
+              'defective': 'Item is defective/damaged',
+              'not_as_described': 'Item not as described',
+              'changed_mind': 'Changed my mind',
+              'other': 'Other reason'
+            }[order.returnRequest.reason] %></p>
+          </div>
         <% } %>
+
+        <div class="order-actions">
+          <% if (!order.returnRequest) { %>
+            <a href="/start-return/<%= order._id %>" class="btn btn-return">Create Return</a>
+          <% } else if (order.returnRequest.status === 'pending') { %>
+            <button class="btn btn-secondary" disabled>Return Pending</button>
+          <% } %>
+          <a href="/" class="btn btn-primary">Continue Shopping</a>
+        </div>
+      </div>
+    <% }) %>
+
     </div>
     <%- include('../partials/footer') %
 
