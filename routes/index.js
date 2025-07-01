@@ -1816,7 +1816,9 @@ try {
         value: finalTotalPrice,
         currency: "DZD",
         content_type: "product",
-        order_id: result._id.toString()
+        order_id: result._id.toString(),
+        content_ids: cart.items.map(item => item.item._id.toString())
+      
       },
       
     });
