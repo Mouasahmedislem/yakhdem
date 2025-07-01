@@ -366,80 +366,231 @@
   
   <p class="note">قم بتتبع طلبك  لبدء طلب الإرجاع</p>
 </div>
-       <% if (typeof orders === 'undefined') { %>
+      
+
+
+    <% if (typeof orders === 'undefined') { %>
+
+
       <!-- Tracking Form -->
-      <div class="track-form">
+
+
+      <div class="track-form">Add commentMore actions
+
+
         <h2>🔎 Track Your Order</h2>
+
+
         <form action="/track-login" method="POST">
+
+
           <input 
+
+
             type="tel" 
+
+
             name="numero" 
+
+
             placeholder="Enter your phone number (Example: 0551234567)" 
+
+
             required 
+
+
             pattern="0[5-7][0-9]{8}" 
+
+
             title="Please enter a valid Algerian phone number (0551234567)"
+
+
           />
+
+
           <button type="submit">Track Order</button>
+
+
         </form>
+
+
       </div>
+
+
       
+
+
       <div class="text-center">
+
+
         <p>Don't have an order number? <a href="/contact">Contact support</a></p>
+
+
       </div>
+
+
     <% } else if (orders.length === 0) { %>
+
+
       <!-- No Orders Found -->
+
+
       <div class="track-form">
+
+
         <h2>No Orders Found</h2>
+
+
         <p>We couldn't find any orders associated with this phone number.</p>
+
+
         <a href="/" class="btn">Continue Shopping</a>
+
+
       </div>
+
+
     <% } else { %>
+
+
       <!-- Orders List -->
+
+
       <h2>Your Orders</h2>
+
+
       
+
+
       <% orders.forEach(order => { %>
+
+
         <div class="order-card">
+
+
           <div class="order-status">
+
+
             Order #<%= order._id.toString().slice(-6).toUpperCase() %>
-          </div>
-          
-          <div class="order-info">
-            <p><strong>Order Date:</strong> <%= order.createdAt.toLocaleDateString() %></p>
-            <p><strong>Name:</strong> <%= order.name %></p>
-            <p><strong>Phone:</strong> <%= order.numero %></p>
-            <p><strong>Wilaya:</strong> <%= order.city %></p>
-            <p><strong>Address:</strong> <%= order.address %></p>
-            <p><strong>Total:</strong> <%= order.totalWithShipping %> DZD</p>
-            <p><strong>Status:</strong> In Transit (Estimated delivery: <%= order.deliveryDelay %>)</p>
+
+
           </div>
 
+
+          
+
+
+          <div class="order-info">
+
+
+            <p><strong>Order Date:</strong> <%= order.createdAt.toLocaleDateString() %></p>
+
+
+            <p><strong>Name:</strong> <%= order.name %></p>
+
+
+            <p><strong>Phone:</strong> <%= order.numero %></p>
+
+
+            <p><strong>Wilaya:</strong> <%= order.city %></p>
+
+
+            <p><strong>Address:</strong> <%= order.address %></p>
+
+
+            <p><strong>Total:</strong> <%= order.totalWithShipping %> DZD</p>
+
+
+            <p><strong>Status:</strong> In Transit (Estimated delivery: <%= order.deliveryDelay %>)</p>
+
+
+          </div>
+
+
+
+
+
           <% if (order.returnRequest) { %>
+
+
             <div class="return-status">
+
+
               <p><strong>Return Status:</strong> 
+
+
                 <span style="color: <%= 
+
+
                   order.returnRequest.status === 'approved' ? '#2ecc71' : 
+
+
                   order.returnRequest.status === 'rejected' ? '#e74c3c' : 
+
+
                   '#f39c12' %>">
+
+
                   <%= order.returnRequest.status.toUpperCase() %>
+
+
                 </span>
+
+
               </p>
+
+
               <% if (order.returnRequest.status === 'approved') { %>
+
+
                 <p>Your return has been approved. We'll contact you shortly.</p>
+
+
               <% } %>
+
+
             </div>
+
+
           <% } else { %>
+
+
             <div class="order-actions">
+
+
               <a href="/start-return/<%= order._id %>" class="btn btn-return">Request Return</a>
+
+
               <a href="/contact?order=<%= order._id %>" class="btn btn-secondary">Contact Support</a>
+
+
             </div>
+
+
           <% } %>
+
+
         </div>
+
+
       <% }); %>
+
+
       
+
+
       <div class="text-center mt-4">
+
+
         <a href="/" class="btn">Continue Shopping</a>
+
+
       </div>
+
+
     <% } %>
+
+
   </div>
 
  <%- include('../partials/footer') %>.
