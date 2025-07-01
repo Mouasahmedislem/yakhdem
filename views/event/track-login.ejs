@@ -336,26 +336,6 @@
   <!-- Content Area -->
   <div class="content-with-logo">
     <% if (typeof orders === 'undefined') { %>
-
-      <!-- Tracking Form -->
-      <div class="track-form">
-        <h2>🔎 Track Your Order</h2>
-        <form action="/track-login" method="POST">
-          <input 
-            type="tel" 
-            name="numero" 
-            placeholder="Enter your phone number (Example: 0551234567)" 
-            required 
-            pattern="0[5-7][0-9]{8}" 
-            title="Please enter a valid Algerian phone number (0551234567)"
-          />
-          <button type="submit">Track Order</button>
-        </form>
-      </div>
-      
-      <div class="text-center">
-        <p>Don't have an order number? <a href="/contact">Contact support</a></p>
-      </div>
 <div class="return-policy-banner" dir="rtl">
   <h3><i class="fas fa-exchange-alt"></i> إرجاع المنتجات خلال 5 أيام</h3>
   <div class="policy-details">
@@ -386,6 +366,26 @@
   
   <p class="note">قم بتتبع طلبك  لبدء طلب الإرجاع</p>
 </div>
+      <!-- Tracking Form -->
+      <div class="track-form">
+        <h2>🔎 Track Your Order</h2>
+        <form action="/track-login" method="POST">
+          <input 
+            type="tel" 
+            name="numero" 
+            placeholder="Enter your phone number (Example: 0551234567)" 
+            required 
+            pattern="0[5-7][0-9]{8}" 
+            title="Please enter a valid Algerian phone number (0551234567)"
+          />
+          <button type="submit">Track Order</button>
+        </form>
+      </div>
+      
+      <div class="text-center">
+        <p>Don't have an order number? <a href="/contact">Contact support</a></p>
+      </div>
+
     <% } else if (orders.length === 0) { %>
       <!-- No Orders Found -->
       <div class="track-form">
