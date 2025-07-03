@@ -31,7 +31,6 @@
     ph: '<%= user ? user.numero : "" %>',
     external_id: '<%= user ? user._id : "" %>'
   });
- fbq('set', 'agent', '1870046203728734', '819726129012113');
  
   fbq('track', 'ViewContent', {
     content_name: '<%= producthome.title %>',
@@ -43,13 +42,7 @@
         eventID: '<%= metaEventId %>' // Same ID as server-side
 
   });
- // Debugging
-    console.log('Meta Pixel initialized with:', {
-      pixelId: '<%= process.env.FB_PIXEL_ID %>',
-      businessId: '1870046203728734',
-      catalogId: '819726129012113'
-    });
-  });
+
 
 </script>
 <noscript>
