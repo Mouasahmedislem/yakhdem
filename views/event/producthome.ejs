@@ -31,6 +31,7 @@
     ph: '<%= user ? user.numero : "" %>',
     external_id: '<%= user ? user._id : "" %>'
   });
+ fbq('set', 'agent', '1870046203728734', '819726129012113');
  
   fbq('track', 'ViewContent', {
     content_name: '<%= producthome.title %>',
