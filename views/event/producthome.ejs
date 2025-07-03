@@ -43,6 +43,13 @@
         eventID: '<%= metaEventId %>' // Same ID as server-side
 
   });
+ // Debugging
+    console.log('Meta Pixel initialized with:', {
+      pixelId: '<%= process.env.FB_PIXEL_ID %>',
+      businessId: '1870046203728734',
+      catalogId: '819726129012113'
+    });
+  });
 
 </script>
 <noscript>
