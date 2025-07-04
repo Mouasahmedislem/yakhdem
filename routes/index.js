@@ -1806,7 +1806,7 @@ try {
        city: req.body.city
     };
 
-    const eventId = `purchase_${result._id}_${Date.now()}`;
+   const eventId = generateEventId(); // Use a proper UUID generator
 
     await sendMetaCAPIEvent({
       eventName: "Purchase",
@@ -1886,7 +1886,8 @@ try {
       address: `${req.body.address}, ${selectedcity}`
     });
     
-    res.render('event/confirmation', {
+    res.render('event/confirmation', {  req,
+    metaEventId: eventId,
       name: req.body.name,
       numero: rawNumero,
       city: selectedcity,
