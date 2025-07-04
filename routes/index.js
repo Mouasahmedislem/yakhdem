@@ -1895,7 +1895,8 @@ try {
       cartTotal: cart.totalPrice,
       deliveryDelay: shipping.delay,
       shippingFee: shippingFee,
-      totalPrice: finalTotalPrice
+      totalPrice: finalTotalPrice,
+      cartItems: cart.generateArray()                                 
     });
  } catch (err) {
   console.error("❌ Erreur lors de la sauvegarde de la commande :", err.message);
