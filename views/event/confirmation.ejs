@@ -21,6 +21,7 @@
     ln: '<%= user ? user.lastName : "" %>',
     ph: '<%= user ? user.numero : "" %>'
   });
+  fbq('track', 'PageView');
 
   fbq('track', 'Purchase', {
     content_ids: <%= JSON.stringify(cartItems.map(p => p.item._id.toString())) %>,
