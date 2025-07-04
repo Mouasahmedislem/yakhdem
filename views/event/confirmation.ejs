@@ -23,7 +23,7 @@
   });
 
   fbq('track', 'Purchase', {
-    content_ids: <%= JSON.stringify(cart.map(p => p.item._id)) %>,
+    content_ids: <%= JSON.stringify(cartItems.map(p => p.item._id.toString())) %>,
     content_type: 'product',
     value: <%= finalTotalPrice %>,
     currency: 'DZD'
