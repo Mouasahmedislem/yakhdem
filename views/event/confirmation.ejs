@@ -21,7 +21,17 @@
     ln: '<%= user ? user.lastName : "" %>',
     ph: '<%= user ? user.numero : "" %>'
   });
-fbq('track', 'PageView');
+
+  fbq('track', 'Purchase', {
+    content_ids: <%= JSON.stringify(cart.map(p => p.item._id)) %>,
+    content_type: 'product',
+    value: <%= finalTotalPrice %>,
+    currency: 'DZD'
+  }, {
+    eventID: "<%= metaEventId %>" // should match the one used in CAPI
+  });
+
+
 </script>
 <noscript>
   <img height="1" width="1" style="display:none"
