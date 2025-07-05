@@ -23,6 +23,14 @@
   });
  fbq('track', 'PageView');
 
+ fbq('track', 'Purchase', {
+    content_ids: <%= JSON.stringify(cartItems.map(p => p.item._id.toString())) %>,
+    content_type: 'product',
+    value: <%= totalPrice %>,
+    currency: 'DZD'
+  }, {
+    eventID: "<%= metaEventId %>" // should match the one used in CAPI
+  });
 </script>
 <noscript>
   <img height="1" width="1" style="display:none" 
@@ -298,17 +306,7 @@
     setTimeout(closePopup, 3000);
   }
 </script>
-<script>
- fbq('track', 'Purchase', {
-    content_ids: <%= JSON.stringify(cartItems.map(p => p.item._id.toString())) %>,
-    content_type: 'product',
-    value: <%= totalPrice %>,
-    currency: 'DZD'
-  }, {
-    eventID: "<%= metaEventId %>" // should match the one used in CAPI
-  });
 
-</script>
 
 </body>
 
