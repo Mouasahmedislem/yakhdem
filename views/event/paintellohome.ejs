@@ -251,6 +251,9 @@ footer {
           <div class="card-body text-center">
             <h5 class="card-title"><%= paintello.title %></h5>
             <p class="card-text"><%= paintello.price %> DA</p>
+ <% if (paintello.disponible){ %>
+            <span class="badge badge-danger product mb-4 ml-xl-0 ml-4"><%= paintello.disponible %></span>
+ <% } %>
           </div>
  </a>
         </div>
