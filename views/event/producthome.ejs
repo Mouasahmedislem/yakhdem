@@ -293,6 +293,8 @@ footer {
   position: relative;
   display: inline-block;
   cursor: pointer;
+  min-height: 315px; /* Keeps section height before iframe loads */
+  background: #000;
 }
 
 .video-thumbnail img {
@@ -318,6 +320,7 @@ footer {
 .video-thumbnail:hover .play-button {
   background: rgba(0, 0, 0, 0.8);
 }
+
 
 </style>
 
@@ -439,14 +442,23 @@ footer {
         </div>
       </div>
 <% if (producthome.videoUrl) { 
-     // Extract YouTube video ID from the embed URL
-     let videoId = producthome.videoUrl.split('/embed/')[1];
+     let url = producthome.videoUrl.trim();
+     let videoId = "";
+
+     // Extract video ID for different YouTube link formats
+     if (url.includes("/embed/")) {
+       videoId = url.split("/embed/")[1].split(/[?&]/)[0];
+     } else if (url.includes("watch?v=")) {
+       videoId = url.split("watch?v=")[1].split(/[?&]/)[0];
+     } else if (url.includes("youtu.be/")) {
+       videoId = url.split("youtu.be/")[1].split(/[?&]/)[0];
+     }
 %>
   <div class="product-video-section mt-5 text-center">
     <h3 class="mb-3">Product Video</h3>
 
     <!-- Video Thumbnail with Play Button -->
-    <div class="video-thumbnail" data-video-id="<%= videoId %>">
+    <div class="video-thumbnail" style="max-width: 800px; margin: auto;" data-video-id="<%= videoId %>">
       <img 
         src="https://img.youtube.com/vi/<%= videoId %>/maxresdefault.jpg" 
         alt="Product Video Thumbnail" 
@@ -456,6 +468,7 @@ footer {
     </div>
   </div>
 <% } %>
+
 
     </div>
   </div>
@@ -521,11 +534,12 @@ footer {
   }
 </script>
 
-  <script>
+ <script>
   document.addEventListener("DOMContentLoaded", function() {
     document.querySelectorAll(".video-thumbnail").forEach(function(thumbnail) {
       thumbnail.addEventListener("click", function() {
         let videoId = this.getAttribute("data-video-id");
+
         this.innerHTML = `
           <div class="embed-responsive embed-responsive-16by9">
             <iframe 
