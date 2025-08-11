@@ -274,6 +274,51 @@ footer {
   padding: 2px 6px;
   border-radius: 50%;
 }
+
+.product-video-section {
+  background: #fff;
+  padding: 20px;
+  border: 1px solid #eee;
+  border-radius: 6px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+}
+
+.product-video-section h3 {
+  font-size: 1.4rem;
+  font-weight: 600;
+  color: #333;
+}
+
+.video-thumbnail {
+  position: relative;
+  display: inline-block;
+  cursor: pointer;
+}
+
+.video-thumbnail img {
+  max-width: 100%;
+  border-radius: 8px;
+  display: block;
+}
+
+.play-button {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 3rem;
+  color: white;
+  background: rgba(0, 0, 0, 0.6);
+  border-radius: 50%;
+  padding: 10px 20px;
+  pointer-events: none;
+  transition: background 0.3s;
+}
+
+.video-thumbnail:hover .play-button {
+  background: rgba(0, 0, 0, 0.8);
+}
+
 </style>
 
 </head>
@@ -393,6 +438,25 @@ footer {
           </ul>
         </div>
       </div>
+<% if (producthome.videoUrl) { 
+     // Extract YouTube video ID from the embed URL
+     let videoId = producthome.videoUrl.split('/embed/')[1];
+%>
+  <div class="product-video-section mt-5 text-center">
+    <h3 class="mb-3">Product Video</h3>
+
+    <!-- Video Thumbnail with Play Button -->
+    <div class="video-thumbnail" data-video-id="<%= videoId %>">
+      <img 
+        src="https://img.youtube.com/vi/<%= videoId %>/maxresdefault.jpg" 
+        alt="Product Video Thumbnail" 
+        class="img-fluid rounded shadow-sm"
+      >
+      <div class="play-button">&#9658;</div>
+    </div>
+  </div>
+<% } %>
+
     </div>
   </div>
 </div>
@@ -457,7 +521,28 @@ footer {
   }
 </script>
 
-  
+  <script>
+  document.addEventListener("DOMContentLoaded", function() {
+    document.querySelectorAll(".video-thumbnail").forEach(function(thumbnail) {
+      thumbnail.addEventListener("click", function() {
+        let videoId = this.getAttribute("data-video-id");
+        this.innerHTML = `
+          <div class="embed-responsive embed-responsive-16by9">
+            <iframe 
+              class="embed-responsive-item"
+              src="https://www.youtube.com/embed/${videoId}?autoplay=1" 
+              title="Product Video"
+              frameborder="0" 
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+              allowfullscreen>
+            </iframe>
+          </div>
+        `;
+      });
+    });
+  });
+</script>
+
 
 
 <%- include ("../partials/footer") %>.
