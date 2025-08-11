@@ -444,7 +444,7 @@ footer {
   <div class="product-video-section mt-5 text-center">
     <h3 class="mb-3">Product Video</h3>
 
-    <!-- Video Thumbnail with Play Button -->
+    <!-- Thumbnail with Play Button -->
     <div class="video-thumbnail" data-video-id="<%= videoId %>">
       <img 
         src="https://img.youtube.com/vi/<%= videoId %>/maxresdefault.jpg" 
@@ -456,6 +456,7 @@ footer {
     </div>
   </div>
 <% } %>
+
 
 
 
@@ -545,18 +546,16 @@ footer {
       thumbnail.addEventListener("click", function() {
         let videoId = this.getAttribute("data-video-id");
 
-        // Debug to confirm we have a valid ID
-        console.log("[VIDEO DEBUG] Replacing with embed for:", videoId);
-
+        // Replace thumbnail with the working iframe
         this.innerHTML = `
           <div class="embed-responsive embed-responsive-16by9">
             <iframe 
-              src="https://www.youtube.com/embed/${videoId}?autoplay=1&rel=0&playsinline=1" 
+              src="https://www.youtube.com/embed/${videoId}?autoplay=1&rel=0&playsinline=1"
               frameborder="0"
               allow="autoplay; encrypted-media; gyroscope; picture-in-picture"
               allowfullscreen
-              style="width:100%; height:100%;"
-            ></iframe>
+              style="width:100%; height:100%;">
+            </iframe>
           </div>
         `;
       });
