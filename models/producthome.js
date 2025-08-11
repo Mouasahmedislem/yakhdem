@@ -8,10 +8,7 @@ const producthomeSchema = new mongoose.Schema({
   description: String,     // Description tab
   details: Object,         // Info tab
   type: String,            // Optional: used for add-to-cart route logic
-  videoUrl: {              // YouTube embed link (optional)
-    type: String,
-    required: false
-  }
+  videoId: String // <-- store YouTube video ID here
 });
 
 module.exports = mongoose.model('Producthome', producthomeSchema);
