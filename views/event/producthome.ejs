@@ -438,25 +438,19 @@ footer {
       </div>
     </div>
   </div>
-<% if (producthome.videoUrl) { 
-     let url = producthome.videoUrl.trim();
-     let videoIdMatch = url.match(/(?:youtube\.com\/.*v=|youtu\.be\/|youtube\.com\/embed\/)([^?&]+)/);
-     let videoId = videoIdMatch ? videoIdMatch[1] : "";
-%>
-  <div class="product-video-section mt-5 text-center">
-    <h3 class="mb-3">Product Video</h3>
-
-    <!-- Thumbnail with Play Button -->
-    <div class="video-thumbnail" data-video-id="<%= videoId %>">
-      <img 
-        src="https://img.youtube.com/vi/<%= videoId %>/maxresdefault.jpg" 
-        alt="Product Video Thumbnail" 
-        class="img-fluid rounded shadow-sm"
-        style="max-width: 100%; height: auto;"
-      >
-      <div class="play-button">&#9658;</div>
-    </div>
+<% if (producthome.videoId) { %>
+<div class="product-video-section mt-5 text-center">
+  <h3 class="mb-3">Product Video</h3>
+  <div class="embed-responsive embed-responsive-16by9">
+    <iframe
+      src="https://www.youtube.com/embed/<%= producthome.videoId %>?rel=0&autoplay=0&playsinline=1"
+      frameborder="0"
+      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+      allowfullscreen
+      style="width:100%; height:100%;">
+    </iframe>
   </div>
+</div>
 <% } %>
 
 
