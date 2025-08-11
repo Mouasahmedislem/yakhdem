@@ -443,22 +443,15 @@ footer {
       </div>
 <% if (producthome.videoUrl) { 
      let url = producthome.videoUrl.trim();
-     let videoId = "";
-
-     // Extract video ID for different YouTube link formats
-     if (url.includes("/embed/")) {
-       videoId = url.split("/embed/")[1].split(/[?&]/)[0];
-     } else if (url.includes("watch?v=")) {
-       videoId = url.split("watch?v=")[1].split(/[?&]/)[0];
-     } else if (url.includes("youtu.be/")) {
-       videoId = url.split("youtu.be/")[1].split(/[?&]/)[0];
-     }
+     let videoIdMatch = url.match(/(?:youtube\.com\/.*v=|youtu\.be\/|youtube\.com\/embed\/)([^?&]+)/);
+     let videoId = videoIdMatch ? videoIdMatch[1] : "";
 %>
   <div class="product-video-section mt-5 text-center">
     <h3 class="mb-3">Product Video</h3>
 
     <!-- Video Thumbnail with Play Button -->
-    <div class="video-thumbnail" style="max-width: 800px; margin: auto;" data-video-id="<%= videoId %>">
+    <div class="video-thumbnail" data-video-id="<%= videoId %>">
+      <link rel="preload" as="image" href="https://img.youtube.com/vi/<%= videoId %>/maxresdefault.jpg">
       <img 
         src="https://img.youtube.com/vi/<%= videoId %>/maxresdefault.jpg" 
         alt="Product Video Thumbnail" 
@@ -468,6 +461,7 @@ footer {
     </div>
   </div>
 <% } %>
+
 
 
     </div>
@@ -541,11 +535,11 @@ footer {
         let videoId = this.getAttribute("data-video-id");
 
         this.innerHTML = `
-          <div class="embed-responsive embed-responsive-16by9">
+          <div class="embed-responsive embed-responsive-16by9" style="width:100%; height:0; padding-bottom:56.25%; position:relative;">
             <iframe 
-              class="embed-responsive-item"
-              src="https://www.youtube.com/embed/${videoId}?autoplay=1" 
+              src="https://www.youtube-nocookie.com/embed/${videoId}?autoplay=1" 
               title="Product Video"
+              style="position:absolute; top:0; left:0; width:100%; height:100%;"
               frameborder="0" 
               allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
               allowfullscreen>
@@ -556,6 +550,7 @@ footer {
     });
   });
 </script>
+
 
 
 
