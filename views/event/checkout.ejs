@@ -342,7 +342,7 @@ fbq('track', 'PageView');
     citySelect.parentNode.insertBefore(infoBox, citySelect.nextSibling);
 
     citySelect.addEventListener('change', () => {
-      const selected = citySelect.value.toUpperCase();
+       const selected = citySelect.value.toLowerCase();
       const data = shippingData[selected] || { fee: 700, delay: "3–5 days" };
       let shippingFee = data.fee;
       const deliveryTime = data.delay;
