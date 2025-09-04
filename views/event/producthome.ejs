@@ -42,7 +42,7 @@
         eventID: '<%= metaEventId %>' // Same ID as server-side
 
   });
-
+ fbq('disableAutoConfig');
 
 </script>
 <noscript>
@@ -512,7 +512,12 @@ footer {
       content_ids: [id],
       content_type: 'product',
       value: price,
-      currency: 'DZD'
+      currency: 'DZD',
+      contents: [{  // ← ADD THIS REQUIRED PARAMETER
+        id: id,
+        quantity: 1,
+        item_price: price
+      }]
     }, {
       eventID: '<%= metaEventId %>'
     });
