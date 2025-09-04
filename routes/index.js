@@ -1816,11 +1816,14 @@ try {
         value: finalTotalPrice,
         currency: "DZD",
         content_type: "product",
-        content_ids: cart.generateArray().map(p => p.item._id.toString()) // required!
-      
-      },
-      
-    });
+        content_ids: cart.generateArray().map(p => p.item._id.toString()) ,
+    contents: cart.generateArray().map(p => ({
+      id: p.item._id.toString(),
+      quantity: p.qty,
+      item_price: p.item.price  // Helps with catalog matching
+    }))
+  }
+});
     req.session.cart = null;
 
    // ✅ Clean the phone number
@@ -2275,7 +2278,7 @@ router.get("/add-to-cart-producthome/:id", async function(req, res) {
       quantity: 1  // Default quantity for view
     }],
       content_type: "product",
-      value: producthome.price * cart.items[producthome.id].quantity, // Calculate total
+      value: producthome.price, // Calculate total
       currency: "DZD"
     },
     testEventCode: "TEST44573"
@@ -2288,6 +2291,10 @@ router.get("/add-to-cart-producthome/:id", async function(req, res) {
     productData: {
       content_name: producthome.title,
       content_ids: [producthome.id],
+      contents: [{  // ← ADD THIS
+      id: producthome.id,
+      quantity: 1  // Default quantity for view
+    }],
       content_type: "product",
       value: producthome.price,
       currency: "DZD"
