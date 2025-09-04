@@ -2213,6 +2213,10 @@ router.get("/producthome/:id", async (req, res) => {
     customData: {
       content_name: producthome.title,
       content_ids: [producthome.id],
+      contents: [{  // ← ADD THIS
+      id: producthome.id,
+      quantity: 1  // Default quantity for view
+      }],
       content_type: "product",
       value: producthome.price,
       currency: "DZD"
@@ -2266,8 +2270,12 @@ router.get("/add-to-cart-producthome/:id", async function(req, res) {
     customData: {
       content_name: producthome.title,
       content_ids: [producthome.id],
+      contents: [{  // ← ADD THIS
+      id: producthome.id,
+      quantity: 1  // Default quantity for view
+    }],
       content_type: "product",
-      value: producthome.price,
+      value: producthome.price * cart.items[producthome.id].quantity, // Calculate total
       currency: "DZD"
     },
     testEventCode: "TEST44573"
