@@ -2227,7 +2227,8 @@ router.get("/producthome/:id", async (req, res) => {
   });
 
   res.render("event/producthome", { producthome, req,
-    metaEventIdView: eventIdView });
+    metaEventIdView: eventIdView,
+    metaEventIdCart: eventIdCart  });
 });
 
 // UUID v4 generator function
