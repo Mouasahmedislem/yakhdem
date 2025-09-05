@@ -13,26 +13,30 @@
 
 
 <script>
+!function(f,b,e,v,n,t,s)
+{if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+n.callMethod.apply(n,arguments):n.queue.push(arguments)};
+if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
+n.queue=[];t=b.createElement(e);t.async=!0;
+t.src=v;s=b.getElementsByTagName(e)[0];
+s.parentNode.insertBefore(t,s)}(window, document,'script',
+'https://connect.facebook.net/en_US/fbevents.js');
 
+// Create config object dynamically
+var pixelConfig = {};
 
+// Only add parameters that have values
+<% if (user && user.email) { %> pixelConfig.em = '<%= user.email %>'; <% } %>
+<% if (user && user.firstName) { %> pixelConfig.fn = '<%= user.firstName %>'; <% } %>
+<% if (user && user.lastName) { %> pixelConfig.ln = '<%= user.lastName %>'; <% } %>
+<% if (user && user.numero) { %> pixelConfig.ph = '<%= user.numero %>'; <% } %>
+<% if (user && user._id) { %> pixelConfig.external_id = '<%= user._id %>'; <% } %>
 
-  !function(f,b,e,v,n,t,s)
-  {if(f.fbq)return;n=f.fbq=function(){n.callMethod?
-  n.callMethod.apply(n,arguments):n.queue.push(arguments)};
-  if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
-  n.queue=[];t=b.createElement(e);t.async=!0;
-  t.src=v;s=b.getElementsByTagName(e)[0];
-  s.parentNode.insertBefore(t,s)}(window, document,'script',
-  'https://connect.facebook.net/en_US/fbevents.js');
-  fbq('init', '<%= process.env.FB_PIXEL_ID %>', {
-    em: '<%= user ? user.email : "" %>',
-    fn: '<%= user ? user.firstName : "" %>',
-    ln: '<%= user ? user.lastName : "" %>',
-    ph: '<%= user ? user.numero : "" %>',
-    external_id: '<%= user ? user._id : "" %>'
-  });
- 
-  // ✅ FIX: Delay ViewContent to ensure pixel is loaded
+// Initialize with dynamic config
+fbq('init', '<%= process.env.FB_PIXEL_ID %>', pixelConfig);
+fbq('track', 'PageView');
+
+// Delay ViewContent to ensure pixel is loaded
 setTimeout(function() {
   fbq('track', 'ViewContent', {
     content_name: '<%= producthome.title %>',
@@ -40,7 +44,7 @@ setTimeout(function() {
     content_type: 'product',
     value: <%= producthome.price %>,
     currency: 'DZD',
-    contents: [{  // ← ADD THIS MISSING PARAMETER!
+    contents: [{
       id: '<%= producthome._id %>',
       quantity: 1,
       item_price: <%= producthome.price %>
@@ -48,7 +52,7 @@ setTimeout(function() {
   }, {
     eventID: '<%= metaEventId %>'
   });
-}, 2000); // 2-second delay to ensure pixel is ready
+}, 2000);
 </script>
 <noscript>
   <img height="1" width="1" style="display:none" 
