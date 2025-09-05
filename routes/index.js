@@ -1892,7 +1892,6 @@ try {
 res.render('event/confirmation', {
   req,
   metaEventIdPurchase: eventIdPurchase,
-  order: cart,
   name: req.body.name,
   numero: rawNumero,
   city: selectedcity,
