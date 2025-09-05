@@ -1888,27 +1888,48 @@ try {
       address: `${req.body.address}, ${selectedcity}`
     });
     
-   console.log("➡️ About to render confirmation page");
-res.render('event/confirmation', {
-  req,
-  user: req.user || {}, // Make sure user is passed
-  metaEventIdPurchase: eventIdPurchase,
-  name: req.body.name,
-  numero: rawNumero,
-  city: selectedcity,
-  address: req.body.address,
-  cartTotal: cart.totalPrice,
-  deliveryDelay: shipping.delay,
-  shippingFee: shippingFee,
-  totalPrice: finalTotalPrice,
-  cartItems: cart.generateArray()
+  // ✅ Clear cart after saving
+    req.session.cart = null;
+
+    // ✅ Store confirmation data in session
+    req.session.confirmationData = {
+      metaEventIdPurchase: eventIdPurchase,
+      name: req.body.name,
+      numero: rawNumero,
+      city: selectedcity,
+      address: req.body.address,
+      cartTotal: cart.totalPrice,
+      deliveryDelay: shipping.delay,
+      shippingFee: shippingFee,
+      totalPrice: finalTotalPrice,
+      cartItems: cart.generateArray()
+    };
+
+    // ✅ Redirect to confirmation page
+    console.log("➡️ Redirecting to /confirmation");
+    res.redirect('/confirmation');
+
+  } catch (err) {
+    console.error("❌ Checkout error:", err.message);
+    req.flash('error', "Erreur lors de la commande.");
+    return res.redirect('/checkout');
+  }
 });
-console.log("✅ Confirmation page render called");
- } catch (err) {
-  console.error("❌ Erreur lors de la sauvegarde de la commande :", err.message);
-  req.flash('error', "Erreur lors de la commande.");
-  return res.redirect('/checkout');
-}
+router.get('/confirmation', (req, res) => {
+  const data = req.session.confirmationData;
+  if (!data) {
+    return res.redirect('/'); // No confirmation data, send home
+  }
+
+  console.log("✅ Confirmation page render called");
+
+  res.render('event/confirmation', {
+    ...data, // spread all confirmation data
+    req // pass request for Pixel user matching
+  });
+
+  // Clear session data after rendering
+  req.session.confirmationData = null;
 });
 
 
