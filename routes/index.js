@@ -2188,7 +2188,7 @@ router.post('/submit-return', async (req, res) => {
 
 router.get("/producthome/:id", async (req, res) => {
   const producthome = await Producthome.findById(req.params.id);
-  const eventId = generateEventId(); // Use a proper UUID generator
+  const eventIdView = generateEventId(); // Use a proper UUID generator
 
 
   // ✅ Use req.user directly — no fallback needed
@@ -2211,7 +2211,7 @@ router.get("/producthome/:id", async (req, res) => {
 
   await sendMetaCAPIEvent({
     eventName: "ViewContent",
-    eventId,
+    eventId: eventIdView,
     userData,
     customData: {
       content_name: producthome.title,
@@ -2223,12 +2223,11 @@ router.get("/producthome/:id", async (req, res) => {
       content_type: "product",
       value: producthome.price,
       currency: "DZD"
-    },
-    testEventCode: "TEST44573"
+    }
   });
 
   res.render("event/producthome", { producthome, req,
-    metaEventId: eventId  });
+    metaEventIdView: eventIdView });
 });
 
 // UUID v4 generator function
@@ -2262,13 +2261,13 @@ router.get("/add-to-cart-producthome/:id", async function(req, res) {
   };
 
   // ✅ Unique event ID
-   const eventId = generateEventId(); // Use a proper UUID generator
+  const eventIdCart = generateEventId(); // Use a proper UUID generator
 
 
   // ✅ Send CAPI event
   await sendMetaCAPIEvent({
     eventName: "AddToCart",
-    eventId,
+    eventId: eventIdCart,
     userData,
     customData: {
       content_name: producthome.title,
@@ -2280,12 +2279,11 @@ router.get("/add-to-cart-producthome/:id", async function(req, res) {
       content_type: "product",
       value: producthome.price, // Calculate total
       currency: "DZD"
-    },
-    testEventCode: "TEST44573"
+    }
     // Change to real test code if needed
   });
 // Store the event ID in session for client-side tracking
-  req.session.metaEventId = eventId;
+  req.session.metaEventIdCart = eventIdCart;
   req.session.metaEventData = {
     eventName: "AddToCart",
     productData: {
