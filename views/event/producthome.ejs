@@ -32,18 +32,23 @@
     external_id: '<%= user ? user._id : "" %>'
   });
  
+  // ✅ FIX: Delay ViewContent to ensure pixel is loaded
+setTimeout(function() {
   fbq('track', 'ViewContent', {
     content_name: '<%= producthome.title %>',
     content_ids: ['<%= producthome._id %>'],
     content_type: 'product',
     value: <%= producthome.price %>,
-    currency: 'DZD'
+    currency: 'DZD',
+    contents: [{  // ← ADD THIS MISSING PARAMETER!
+      id: '<%= producthome._id %>',
+      quantity: 1,
+      item_price: <%= producthome.price %>
+    }]
   }, {
-        eventID: '<%= metaEventId %>' // Same ID as server-side
-
+    eventID: '<%= metaEventId %>'
   });
-
-
+}, 2000); // 2-second delay to ensure pixel is ready
 </script>
 <noscript>
   <img height="1" width="1" style="display:none" 
@@ -504,16 +509,16 @@ footer {
 
 
 <script>
-  function handleAddToCart(event, title, price, id) {
-    
-
+ function handleAddToCart(event, title, price, id) {
+  // ✅ Check if fbq is available before using it
+  if (typeof fbq === 'function') {
     fbq('track', 'AddToCart', {
       content_name: title,
       content_ids: [id],
       content_type: 'product',
       value: price,
       currency: 'DZD',
-      contents: [{  // ← ADD THIS REQUIRED PARAMETER
+      contents: [{  // ← ADD THIS!
         id: id,
         quantity: 1,
         item_price: price
@@ -521,6 +526,12 @@ footer {
     }, {
       eventID: '<%= metaEventId %>'
     });
+  } else {
+    console.warn('Facebook Pixel not loaded yet');
+  }
+  
+  return true;
+}
 
     // Allow form to continue
     return true;
