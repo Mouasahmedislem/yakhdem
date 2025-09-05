@@ -307,11 +307,11 @@ fbq('track', 'PageView');
 
 <script>
   fbq('track', 'Purchase', {
-    value: <%= order.totalPrice %>,
+    value: <%= totalPrice %>,
     currency: 'DZD',
     content_type: 'product',
-    content_ids: <%- JSON.stringify(order.generateArray().map(p => p.item._id.toString())) %>,
-    contents: <%- JSON.stringify(order.generateArray().map(p => ({
+    content_ids: <%- JSON.stringify(cartItems.map(p => p.item._id.toString())) %>,
+    contents: <%- JSON.stringify(cartItems.map(p => ({
       id: p.item._id.toString(),
       quantity: p.qty,
       item_price: p.item.price
@@ -320,6 +320,7 @@ fbq('track', 'PageView');
     eventID: '<%= metaEventIdPurchase %>'
   });
 </script>
+
 
 
 </body>
