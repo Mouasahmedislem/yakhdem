@@ -40,10 +40,14 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 <div class="flex-fill mw-100 bm-product-link-text">
 <h3 class="d-block font-weight-normal h6 mb-0 text-body"><%= furniteur.title %></h3>
 <span class="d-block h5 mb-0 mt-1 text-body"><%= furniteur.price%>DA</span>
-<a href="/add-to-cart-furniteur/<%= furniteur._id %>" 
-   class="btn btn-pink btn-rounded"
-   onclick="trackAddToCart('<%= furniteur.title %>', <%= furniteur.price %>, '<%= furniteur._id %>')"><i class="fas fa-cart-plus mr-2" aria-hidden="true"></i>buy</a>
 
+
+<form action="/add-to-cart-furniteur/<%= furniteur._id %>" method="GET" 
+      onsubmit="return handleAddToCart(event, '<%= furniteur.title %>', <%= furniteur.price %>, '<%= furniteur._id %>')">
+  <button type="submit" class="btn btn-primary btn-lg mb-4">
+    <i class="fas fa-cart-plus mr-2"></i>Add to Cart
+  </button>
+</form>
 </div>	
 </div>	
 </li>
@@ -61,14 +65,26 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 </div>
 
 <script>
-  function trackAddToCart(title, price, id) {
+  function handleAddToCart(event, title, price, id) {
+    // Fire AddToCart event
     fbq('track', 'AddToCart', {
       content_name: title,
       content_ids: [id],
       content_type: 'product',
       value: price,
-      currency: 'DZD'
+      currency: 'DZD',
+      contents: [
+        {
+          id: id,
+          quantity: 1,
+          item_price: price
+        }
+      ]
+    }, {
+      eventID: '<%= metaEventIdCart %>'
     });
+
+    return true; // let the form submit continue
   }
 </script>
 
