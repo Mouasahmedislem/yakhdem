@@ -2189,7 +2189,7 @@ router.post('/submit-return', async (req, res) => {
 router.get("/producthome/:id", async (req, res) => {
   const producthome = await Producthome.findById(req.params.id);
   const eventIdView = generateEventId(); // Use a proper UUID generator
-
+  const eventIdCart = generateEventId(); // prepare for AddToCart
 
   // ✅ Use req.user directly — no fallback needed
   console.log("✅ req.user", req.user); // debug
