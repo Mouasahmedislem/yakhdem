@@ -22,16 +22,19 @@
     
   });
  fbq('track', 'PageView');
-
- fbq('track', 'Purchase', {
-    content_ids: <%= JSON.stringify(cartItems.map(p => p.item._id.toString())) %>,
+  fbq('track', 'Purchase', {
+    value: <%= order.totalPrice %>,
+    currency: 'DZD',
     content_type: 'product',
-    value: <%= totalPrice %>,
-    currency: 'DZD'
+    content_ids: <%- JSON.stringify(order.generateArray().map(p => p.item._id.toString())) %>,
+    contents: <%- JSON.stringify(order.generateArray().map(p => ({
+      id: p.item._id.toString(),
+      quantity: p.qty,
+      item_price: p.item.price
+    }))) %>
   }, {
-    eventID: "<%= metaEventId %>" 
+    eventID: '<%= metaEventIdPurchase %>'
   });
-</script>
 <noscript>
   <img height="1" width="1" style="display:none" 
        src="https://www.facebook.com/tr?id=<%= process.env.FB_PIXEL_ID %>&ev=PageView&noscript=1"/>
