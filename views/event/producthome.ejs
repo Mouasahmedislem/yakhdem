@@ -513,34 +513,29 @@ footer {
 
 
 <script>
- function handleAddToCart(event, title, price, id) {
-  // ✅ Check if fbq is available before using it
-  if (typeof fbq === 'function') {
+  function handleAddToCart(event, title, price, id) {
+    // Fire AddToCart event
     fbq('track', 'AddToCart', {
       content_name: title,
       content_ids: [id],
       content_type: 'product',
       value: price,
       currency: 'DZD',
-      contents: [{  // ← ADD THIS!
-        id: id,
-        quantity: 1,
-        item_price: price
-      }]
+      contents: [
+        {
+          id: id,
+          quantity: 1,
+          item_price: price
+        }
+      ]
     }, {
       eventID: '<%= metaEventId %>'
     });
-  } else {
-    console.warn('Facebook Pixel not loaded yet');
-  }
-  
-  return true;
-}
 
-    // Allow form to continue
-    return true;
+    return true; // let the form submit continue
   }
 </script>
+
 
 <script>
   document.addEventListener("DOMContentLoaded", function() {
