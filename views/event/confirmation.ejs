@@ -29,8 +29,7 @@ var pixelConfig = {};
 // Initialize with dynamic config
 fbq('init', '<%= process.env.FB_PIXEL_ID %>', pixelConfig);
 fbq('track', 'PageView');
-
-  fbq('track', 'Purchase', {
+fbq('track', 'Purchase', {
     value: <%= order.totalPrice %>,
     currency: 'DZD',
     content_type: 'product',
