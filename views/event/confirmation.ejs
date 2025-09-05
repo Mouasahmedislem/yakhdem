@@ -29,19 +29,7 @@ var pixelConfig = {};
 // Initialize with dynamic config
 fbq('init', '<%= process.env.FB_PIXEL_ID %>', pixelConfig);
 fbq('track', 'PageView');
-fbq('track', 'Purchase', {
-    value: <%= order.totalPrice %>,
-    currency: 'DZD',
-    content_type: 'product',
-    content_ids: <%- JSON.stringify(order.generateArray().map(p => p.item._id.toString())) %>,
-    contents: <%- JSON.stringify(order.generateArray().map(p => ({
-      id: p.item._id.toString(),
-      quantity: p.qty,
-      item_price: p.item.price
-    }))) %>
-  }, {
-    eventID: '<%= metaEventIdPurchase %>'
-  });
+
 <noscript>
   <img height="1" width="1" style="display:none" 
        src="https://www.facebook.com/tr?id=<%= process.env.FB_PIXEL_ID %>&ev=PageView&noscript=1"/>
@@ -315,6 +303,22 @@ fbq('track', 'Purchase', {
     // Optionally close after few seconds
     setTimeout(closePopup, 3000);
   }
+</script>
+
+<script>
+  fbq('track', 'Purchase', {
+    value: <%= order.totalPrice %>,
+    currency: 'DZD',
+    content_type: 'product',
+    content_ids: <%- JSON.stringify(order.generateArray().map(p => p.item._id.toString())) %>,
+    contents: <%- JSON.stringify(order.generateArray().map(p => ({
+      id: p.item._id.toString(),
+      quantity: p.qty,
+      item_price: p.item.price
+    }))) %>
+  }, {
+    eventID: '<%= metaEventIdPurchase %>'
+  });
 </script>
 
 
