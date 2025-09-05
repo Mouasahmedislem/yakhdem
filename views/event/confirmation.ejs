@@ -233,8 +233,10 @@ fbq('track', 'PageView');
 
     <a href="/" class="btn-home">Back to Home</a>
   </div>
-<!-- ✅ Meta Pixel Purchase Event -->
-  <script>
+<% if (process.env.FB_PIXEL_ID) { %>
+<script>
+  // Check if fbq is defined before using it
+  if (typeof fbq !== 'undefined') {
     fbq('track', 'Purchase', {
       value: <%= totalPrice %>,
       currency: 'DZD',
@@ -248,7 +250,9 @@ fbq('track', 'PageView');
     }, {
       eventID: '<%= metaEventIdPurchase %>'
     });
-  </script>
+  }
+</script>
+<% } %>
 <!-- Newsletter Popup -->
 
 <div id="newsletter-popup" class="popup-overlay">
