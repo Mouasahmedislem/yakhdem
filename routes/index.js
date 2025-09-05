@@ -1891,6 +1891,7 @@ try {
    console.log("➡️ About to render confirmation page");
 res.render('event/confirmation', {
   req,
+  user: req.user || {}, // Make sure user is passed
   metaEventIdPurchase: eventIdPurchase,
   name: req.body.name,
   numero: rawNumero,
