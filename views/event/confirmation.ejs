@@ -233,6 +233,22 @@ fbq('track', 'PageView');
 
     <a href="/" class="btn-home">Back to Home</a>
   </div>
+<!-- ✅ Meta Pixel Purchase Event -->
+  <script>
+    fbq('track', 'Purchase', {
+      value: <%= totalPrice %>,
+      currency: 'DZD',
+      content_type: 'product',
+      content_ids: <%- JSON.stringify(cartItems.map(p => p.item._id.toString())) %>,
+      contents: <%- JSON.stringify(cartItems.map(p => ({
+        id: p.item._id.toString(),
+        quantity: p.qty,
+        item_price: p.item.price
+      }))) %>
+    }, {
+      eventID: '<%= metaEventIdPurchase %>'
+    });
+  </script>
 <!-- Newsletter Popup -->
 
 <div id="newsletter-popup" class="popup-overlay">
@@ -305,21 +321,6 @@ fbq('track', 'PageView');
   }
 </script>
 
-<script>
-  fbq('track', 'Purchase', {
-    value: <%= totalPrice %>,
-    currency: 'DZD',
-    content_type: 'product',
-    content_ids: <%- JSON.stringify(cartItems.map(p => p.item._id.toString())) %>,
-    contents: <%- JSON.stringify(cartItems.map(p => ({
-      id: p.item._id.toString(),
-      quantity: p.qty,
-      item_price: p.item.price
-    }))) %>
-  }, {
-    eventID: '<%= metaEventIdPurchase %>'
-  });
-</script>
 
 
 
