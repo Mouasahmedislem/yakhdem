@@ -1923,10 +1923,7 @@ router.get('/confirmation', (req, res) => {
 
   console.log("✅ Confirmation page render called");
 
-  res.render('event/confirmation', {
-    ...data, // spread all confirmation data
-    req // pass request for Pixel user matching
-  });
+  res.render('event/confirmation', data ,req);
 
   // Clear session data after rendering
   req.session.confirmationData = null;
