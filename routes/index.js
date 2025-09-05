@@ -1888,19 +1888,22 @@ try {
       address: `${req.body.address}, ${selectedcity}`
     });
     
-    res.render('event/confirmation', {  req,
-      metaEventIdPurchase: eventIdPurchase,
-      order: cart,
-      name: req.body.name,
-      numero: rawNumero,
-      city: selectedcity,
-      address: req.body.address,
-      cartTotal: cart.totalPrice,
-      deliveryDelay: shipping.delay,
-      shippingFee: shippingFee,
-      totalPrice: finalTotalPrice,
-      cartItems: cart.generateArray()                                 
-    });
+   console.log("➡️ About to render confirmation page");
+res.render('event/confirmation', {
+  req,
+  metaEventIdPurchase: eventIdPurchase,
+  order: cart,
+  name: req.body.name,
+  numero: rawNumero,
+  city: selectedcity,
+  address: req.body.address,
+  cartTotal: cart.totalPrice,
+  deliveryDelay: shipping.delay,
+  shippingFee: shippingFee,
+  totalPrice: finalTotalPrice,
+  cartItems: cart.generateArray()
+});
+console.log("✅ Confirmation page render called");
  } catch (err) {
   console.error("❌ Erreur lors de la sauvegarde de la commande :", err.message);
   req.flash('error', "Erreur lors de la commande.");
