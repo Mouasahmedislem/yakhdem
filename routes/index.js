@@ -1627,8 +1627,7 @@ router.get("/", async function(req, res) {
       content_type: "product",
       value: cart.totalPrice,
       currency: "DZD"
-    },
-    testEventCode: "TEST47263" // Optional: replace with your real test code
+    }
   });
 
   res.render('event/checkout', {
@@ -1806,11 +1805,11 @@ try {
        city: req.body.city
     };
 
-   const eventId = generateEventId(); // Use a proper UUID generator
+    const eventIdPurchase = generateEventId(); // Use a proper UUID generator
 
     await sendMetaCAPIEvent({
       eventName: "Purchase",
-      eventId,
+      eventId: eventIdPurchase,
       userData,
       customData: {
         value: finalTotalPrice,
@@ -1890,7 +1889,7 @@ try {
     });
     
     res.render('event/confirmation', {  req,
-    metaEventId: eventId,
+    metaEventIdPurchase: eventIdPurchase,
       name: req.body.name,
       numero: rawNumero,
       city: selectedcity,
