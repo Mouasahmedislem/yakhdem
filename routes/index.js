@@ -80,12 +80,13 @@ router.get("/sale/furniteur", async function(req, res) {
          fbp: req.cookies._fbp || undefined  
     };
 
-    const eventId = `view_furniteur_${Date.now()}`;
+   const eventIdView = generateEventId(); // Use a proper UUID generator
+   const eventIdCart = generateEventId(); // prepare for AddToCart
 
     // ✅ Send ViewContent event to Meta
     await sendMetaCAPIEvent({
       eventName: "ViewContent",
-      eventId,
+      eventId: eventIdView,
       userData,
       customData: {
         content_name: "Sale Furniteur Page",
@@ -95,7 +96,8 @@ router.get("/sale/furniteur", async function(req, res) {
       testEventCode: "TEST12345"
     });
 
-    res.render("sale/furniteur", { furniteurs, headers,eventId });
+    res.render("sale/furniteur", { furniteurs, headers,metaEventIdView: eventIdView,
+    metaEventIdCart: eventIdCart  });
 
   } catch (err) {
     console.error("❌ Error loading sale/furniteur:", err);
@@ -106,7 +108,7 @@ router.get("/sale/furniteur", async function(req, res) {
 router.get("/add-to-cart-furniteur/:id", async function(req, res) {
   const furniteurId = req.params.id;
   const cart = new Cart(req.session.cart || {});
-
+  
   try {
     const item = await furniteur.findById(furniteurId);
     if (!item) return res.redirect("/sale/furniteur");
@@ -128,15 +130,19 @@ router.get("/add-to-cart-furniteur/:id", async function(req, res) {
          fbp: req.cookies._fbp || undefined  
     };
 
-    const eventId = `addtocart_furniteur_${item.id}_${Date.now()}`;
+    const eventIdCart = generateEventId(); // Use a proper UUID generator
 
     await sendMetaCAPIEvent({
       eventName: "AddToCart",
-      eventId,
+      eventId: eventIdCart,
       userData,
       customData: {
         content_name: item.title,
         content_ids: [item.id],
+        contents: [{  // ← ADD THIS
+      id: item.id,
+      quantity: 1  // Default quantity for view
+    }],
         content_type: "product",
         value: item.price,
         currency: "DZD",
