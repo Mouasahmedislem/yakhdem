@@ -50,7 +50,7 @@ setTimeout(function() {
       item_price: <%= producthome.price %>
     }]
   }, {
-    eventID: '<%= metaEventId %>'
+    eventID: '<%= metaEventIdView %>'
   });
 }, 2000);
 </script>
@@ -529,7 +529,7 @@ footer {
         }
       ]
     }, {
-      eventID: '<%= metaEventId %>'
+      eventID: '<%= metaEventIdCart %>'
     });
 
     return true; // let the form submit continue
