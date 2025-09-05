@@ -1924,7 +1924,7 @@ router.get('/confirmation', (req, res) => {
 
   console.log("✅ Confirmation page render called");
 
-  res.render('event/confirmation', data ,req);
+ res.render('event/confirmation', data);  // ✅ this is correct
 
   // Clear session data after rendering
   req.session.confirmationData = null;
