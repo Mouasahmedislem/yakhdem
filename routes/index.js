@@ -1894,6 +1894,7 @@ try {
     // ✅ Store confirmation data in session
     req.session.confirmationData = {
       metaEventIdPurchase: eventIdPurchase,
+      user: req.user || {}, // Make sure user is passed
       name: req.body.name,
       numero: rawNumero,
       city: selectedcity,
