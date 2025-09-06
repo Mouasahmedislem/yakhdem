@@ -11,34 +11,46 @@
 
 
 <script>
+!function(f,b,e,v,n,t,s)
+{if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+n.callMethod.apply(n,arguments):n.queue.push(arguments)};
+if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
+n.queue=[];t=b.createElement(e);t.async=!0;
+t.src=v;s=b.getElementsByTagName(e)[0];
+s.parentNode.insertBefore(t,s)}(window, document,'script',
+'https://connect.facebook.net/en_US/fbevents.js');
 
-  !function(f,b,e,v,n,t,s)
-  {if(f.fbq)return;n=f.fbq=function(){n.callMethod?
-  n.callMethod.apply(n,arguments):n.queue.push(arguments)};
-  if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
-  n.queue=[];t=b.createElement(e);t.async=!0;
-  t.src=v;s=b.getElementsByTagName(e)[0];
-  s.parentNode.insertBefore(t,s)}(window, document,'script',
-  'https://connect.facebook.net/en_US/fbevents.js');
-  fbq('init', '<%= process.env.FB_PIXEL_ID %>', {
-    em: '<%= user ? user.email : "" %>',
-    fn: '<%= user ? user.firstName : "" %>',
-    ln: '<%= user ? user.lastName : "" %>',
-    ph: '<%= user ? user.numero : "" %>',
-    external_id: '<%= user ? user._id : "" %>'
-  });
- 
+// Create config object dynamically
+var pixelConfig = {};
+
+// Only add parameters that have values
+<% if (user && user.email) { %> pixelConfig.em = '<%= user.email %>'; <% } %>
+<% if (user && user.firstName) { %> pixelConfig.fn = '<%= user.firstName %>'; <% } %>
+<% if (user && user.lastName) { %> pixelConfig.ln = '<%= user.lastName %>'; <% } %>
+<% if (user && user.numero) { %> pixelConfig.ph = '<%= user.numero %>'; <% } %>
+<% if (user && user._id) { %> pixelConfig.external_id = '<%= user._id %>'; <% } %>
+
+// Initialize with dynamic config
+fbq('init', '<%= process.env.FB_PIXEL_ID %>', pixelConfig);
+fbq('track', 'PageView');
+
+// Delay ViewContent to ensure pixel is loaded
+setTimeout(function() {
   fbq('track', 'ViewContent', {
     content_name: '<%= blue.title %>',
     content_ids: ['<%= blue._id %>'],
     content_type: 'product',
     value: <%= blue.price %>,
-    currency: 'DZD'
+    currency: 'DZD',
+    contents: [{
+      id: '<%= blue._id %>',
+      quantity: 1,
+      item_price: <%= blue.price %>
+    }]
   }, {
-        eventID: '<%= metaEventId %>' // Same ID as server-side
-
+    eventID: '<%= metaEventIdView %>'
   });
-
+}, 2000);
 </script>
 <noscript>
   <img height="1" width="1" style="display:none" 
@@ -46,6 +58,7 @@
 </noscript>
 <!-- End Facebook Pixel Code -->
 <% } %>
+
 
 
 <!-- Open Graph Meta Tags -->
@@ -433,12 +446,27 @@ footer {
     }
   </script>
 <script>
+  function handleAddToCart(event, title, price, id) {
+    // Fire AddToCart event
+    fbq('track', 'AddToCart', {
+      content_name: title,
+      content_ids: [id],
+      content_type: 'product',
+      value: price,
+      currency: 'DZD',
+      contents: [
+        {
+          id: id,
+          quantity: 1,
+          item_price: price
+        }
+      ]
+    }, {
+      eventID: '<%= metaEventIdCart %>'
+    });
 
-
-
-  
-
-  
+    return true; // let the form submit continue
+  }
 </script>
 
 
