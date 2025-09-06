@@ -178,22 +178,23 @@ router.get("/sale/cuisin", async function(req, res) {
         fbp: req.cookies._fbp || undefined  
     };
 
-    const eventId = `view_cuisin_${Date.now()}`;
+      const eventIdView = generateEventId(); // Use a proper UUID generator
+   const eventIdCart = generateEventId(); // prepare for AddToCart
 
     // ✅ Send ViewContent event to Meta
     await sendMetaCAPIEvent({
       eventName: "ViewContent",
-      eventId,
+       eventId: eventIdView,
       userData,
       customData: {
         content_name: "sale cuisin Page",
         content_type: "product_group",
         anonymous_id: req.sessionID // optional for retargeting
-      },
-      testEventCode: "TEST12345"
+      }
     });
 
-    res.render("sale/cuisin", { cuisins, headers,eventId });
+    res.render("sale/cuisin", { cuisins, headers,metaEventIdView: eventIdView,
+    metaEventIdCart: eventIdCart  });
 
   } catch (err) {
     console.error("❌ Error loading /sale/cuisin:", err);
@@ -226,21 +227,24 @@ router.get("/add-to-cart-cuisin/:id", async function(req, res) {
         fbp: req.cookies._fbp || undefined  
     };
 
-    const eventId = `addtocart_cuisin_${item.id}_${Date.now()}`;
+    const eventIdCart = generateEventId(); // Use a proper UUID generator
 
     await sendMetaCAPIEvent({
       eventName: "AddToCart",
-      eventId,
+      eventId: eventIdCart,
       userData,
       customData: {
         content_name: item.title,
         content_ids: [item.id],
+        contents: [{  // ← ADD THIS
+      id: item.id,
+      quantity: 1  // Default quantity for view
+        }],
         content_type: "product",
         value: item.price,
         currency: "DZD",
         anonymous_id: req.sessionID
-      },
-      testEventCode: "TEST12345" // Optional for Meta test events
+      }
     });
 
     res.redirect("/sale/cuisin");
@@ -269,22 +273,23 @@ router.get("/sale/clean", async function(req, res) {
         fbp: req.cookies._fbp || undefined  
     };
 
-    const eventId = `view_clean_${Date.now()}`;
+     const eventIdView = generateEventId(); // Use a proper UUID generator
+   const eventIdCart = generateEventId(); // prepare for AddToCart
 
     // ✅ Send ViewContent event to Meta
     await sendMetaCAPIEvent({
       eventName: "ViewContent",
-      eventId,
+     eventId: eventIdView,
       userData,
       customData: {
         content_name: "sale clean Page",
         content_type: "product_group",
         anonymous_id: req.sessionID // optional for retargeting
-      },
-      testEventCode: "TEST12345"
+      }
     });
 
-    res.render("sale/clean", { cleans, headers,eventId });
+    res.render("sale/clean", { cleans, headers,metaEventIdView: eventIdView,
+    metaEventIdCart: eventIdCart});
 
   } catch (err) {
     console.error("❌ Error loading /sale/cuisin:", err);
@@ -317,21 +322,23 @@ router.get("/add-to-cart-clean/:id", async function(req, res) {
         fbp: req.cookies._fbp || undefined  
     };
 
-    const eventId = `addtocart_clean_${item.id}_${Date.now()}`;
-
+    const eventIdCart = generateEventId(); // Use a proper UUID generator
     await sendMetaCAPIEvent({
       eventName: "AddToCart",
-      eventId,
+      eventId: eventIdCart,
       userData,
       customData: {
         content_name: item.title,
         content_ids: [item.id],
+        contents: [{  // ← ADD THIS
+      id: item.id,
+      quantity: 1  // Default quantity for view
+    }],
         content_type: "product",
         value: item.price,
         currency: "DZD",
         anonymous_id: req.sessionID
-      },
-      testEventCode: "TEST12345" // Optional for Meta test events
+      }
     });
 
     res.redirect("/sale/clean");
@@ -360,22 +367,23 @@ router.get("/sale/coat", async function(req, res) {
         fbp: req.cookies._fbp || undefined  
     };
 
-    const eventId = `view_coat_${Date.now()}`;
+    const eventIdView = generateEventId(); // Use a proper UUID generator
+   const eventIdCart = generateEventId(); // prepare for AddToCart
 
     // ✅ Send ViewContent event to Meta
     await sendMetaCAPIEvent({
       eventName: "ViewContent",
-      eventId,
+      eventId: eventIdView,
       userData,
       customData: {
         content_name: "Sale coat Page",
         content_type: "product_group",
         anonymous_id: req.sessionID // optional for retargeting
-      },
-      testEventCode: "TEST12345"
+      }
     });
 
-    res.render("sale/coat", { coats, headers,eventId });
+    res.render("sale/coat", { coats, headers,metaEventIdView: eventIdView,
+    metaEventIdCart: eventIdCart });
 
   } catch (err) {
     console.error("❌ Error loading sale/furniteur:", err);
@@ -408,21 +416,23 @@ router.get("/add-to-cart-coat/:id", async function(req, res) {
         fbp: req.cookies._fbp || undefined  
     };
 
-    const eventId = `addtocart_coat_${item.id}_${Date.now()}`;
-
+    const eventIdCart = generateEventId(); // Use a proper UUID generator
     await sendMetaCAPIEvent({
       eventName: "AddToCart",
-      eventId,
+      eventId: eventIdCart,
       userData,
       customData: {
         content_name: item.title,
         content_ids: [item.id],
+        contents: [{  // ← ADD THIS
+      id: item.id,
+      quantity: 1  // Default quantity for view
+    }],
         content_type: "product",
         value: item.price,
         currency: "DZD",
         anonymous_id: req.sessionID
-      },
-      testEventCode: "TEST12345" // Optional for Meta test events
+      }
     });
 
     res.redirect("/sale/coat");
@@ -451,22 +461,23 @@ router.get("/sale/sample", async function(req, res) {
         fbp: req.cookies._fbp || undefined  
     };
 
-    const eventId = `view_coat_${Date.now()}`;
+     const eventIdView = generateEventId(); // Use a proper UUID generator
+   const eventIdCart = generateEventId(); // prepare for AddToCart
 
     // ✅ Send ViewContent event to Meta
     await sendMetaCAPIEvent({
       eventName: "ViewContent",
-      eventId,
+       eventId: eventIdView,
       userData,
       customData: {
         content_name: "Sale Furniteur Page",
         content_type: "product_group",
         anonymous_id: req.sessionID // optional for retargeting
-      },
-      testEventCode: "TEST12345"
+      }
     });
 
-    res.render("sale/sample", { samples, headers,eventId });
+    res.render("sale/sample", { samples, headers,metaEventIdView: eventIdView,
+    metaEventIdCart: eventIdCart });
 
   } catch (err) {
     console.error("❌ Error loading sale/furniteur:", err);
@@ -499,21 +510,23 @@ router.get("/add-to-cart-sample/:id", async function(req, res) {
         fbp: req.cookies._fbp || undefined  
     };
 
-    const eventId = `addtocart_sample_${item.id}_${Date.now()}`;
-
+    const eventIdCart = generateEventId(); // Use a proper UUID generator
     await sendMetaCAPIEvent({
       eventName: "AddToCart",
-      eventId,
+      eventId: eventIdCart,
       userData,
       customData: {
         content_name: item.title,
         content_ids: [item.id],
+        contents: [{  // ← ADD THIS
+      id: item.id,
+      quantity: 1  // Default quantity for view
+    }],
         content_type: "product",
         value: item.price,
         currency: "DZD",
         anonymous_id: req.sessionID
-      },
-      testEventCode: "TEST12345" // Optional for Meta test events
+      }
     });
 
     res.redirect("/sale/sample");
@@ -543,22 +556,23 @@ router.get("/sale/tool", async function(req, res) {
         fbp: req.cookies._fbp || undefined  
     };
 
-    const eventId = `view_tool_${Date.now()}`;
+     const eventIdView = generateEventId(); // Use a proper UUID generator
+   const eventIdCart = generateEventId(); // prepare for AddToCart
 
     // ✅ Send ViewContent event to Meta
     await sendMetaCAPIEvent({
       eventName: "ViewContent",
-      eventId,
+      eventId: eventIdView,
       userData,
       customData: {
         content_name: "Sale coat Page",
         content_type: "product_group",
         anonymous_id: req.sessionID // optional for retargeting
-      },
-      testEventCode: "TEST12345"
+      }
     });
 
-    res.render("sale/tool", { tools, headers,eventId });
+    res.render("sale/tool", { tools, headers,metaEventIdView: eventIdView,
+    metaEventIdCart: eventIdCart });
 
   } catch (err) {
     console.error("❌ Error loading sale/furniteur:", err);
@@ -591,21 +605,23 @@ router.get("/add-to-cart-tool/:id", async function(req, res) {
         fbp: req.cookies._fbp || undefined  
     };
 
-    const eventId = `addtocart_tool_${item.id}_${Date.now()}`;
-
+    const eventIdCart = generateEventId(); // Use a proper UUID generator
     await sendMetaCAPIEvent({
       eventName: "AddToCart",
-      eventId,
+     eventId: eventIdCart,
       userData,
       customData: {
         content_name: item.title,
         content_ids: [item.id],
+        contents: [{  // ← ADD THIS
+      id: item.id,
+      quantity: 1  // Default quantity for view
+    }],
         content_type: "product",
         value: item.price,
         currency: "DZD",
         anonymous_id: req.sessionID
-      },
-      testEventCode: "TEST12345" // Optional for Meta test events
+      }
     });
 
     res.redirect("/sale/tool");
@@ -640,22 +656,23 @@ router.get("/myfixateur/fixateur", async function(req, res) {
         fbp: req.cookies._fbp || undefined  
     };
 
-    const eventId = `view_fixateur_${Date.now()}`;
+    const eventIdView = generateEventId(); // Use a proper UUID generator
+   const eventIdCart = generateEventId(); // prepare for AddToCart
 
     // ✅ Send ViewContent event to Meta
     await sendMetaCAPIEvent({
       eventName: "ViewContent",
-      eventId,
+     eventId: eventIdView,
       userData,
       customData: {
         content_name: "Sale fixateur Page",
-        content_type: "product_group",
+        content_type: "product",
         anonymous_id: req.sessionID // optional for retargeting
-      },
-      testEventCode: "TEST12345"
+      }
     });
 
-    res.render("myfixateur/fixateur", { headers, headers,eventId });
+    res.render("myfixateur/fixateur", { headers, headers,metaEventIdView: eventIdView,
+    metaEventIdCart: eventIdCart });
 
   } catch (err) {
     console.error("❌ Error loading sale/furniteur:", err);
@@ -682,22 +699,23 @@ router.get("/paintellomac/paintellomac", async function(req, res) {
         fbp: req.cookies._fbp || undefined  
     };
 
-    const eventId = `view_paintellomac_${Date.now()}`;
+    const eventIdView = generateEventId(); // Use a proper UUID generator
+   const eventIdCart = generateEventId(); // prepare for AddToCart
 
     // ✅ Send ViewContent event to Meta
     await sendMetaCAPIEvent({
       eventName: "ViewContent",
-      eventId,
+       eventId: eventIdView,
       userData,
       customData: {
         content_name: "Sale fixateur Page",
-        content_type: "product_group",
+        content_type: "product",
         anonymous_id: req.sessionID // optional for retargeting
-      },
-      testEventCode: "TEST12345"
+      }
     });
 
-    res.render("paintellomac/paintellomac", { headers, headers,eventId });
+    res.render("paintellomac/paintellomac", { headers, headers,metaEventIdView: eventIdView,
+    metaEventIdCart: eventIdCart });
 
   } catch (err) {
     console.error("❌ Error loading sale/furniteur:", err);
@@ -725,7 +743,7 @@ router.get("/coulors/blue", async function(req, res) {
         fbp: req.cookies._fbp || undefined  
     };
 
-    const eventId = `view_paintellblue_${Date.now()}`;
+    const eventId = generateEventId(); // Use a proper UUID generator
 
     // ✅ Send ViewContent event to Meta
     await sendMetaCAPIEvent({
@@ -736,8 +754,7 @@ router.get("/coulors/blue", async function(req, res) {
         content_name: "Sale blue Page",
         content_type: "product_group",
         anonymous_id: req.sessionID // optional for retargeting
-      },
-      testEventCode: "TEST12345"
+      }
     });
 
     res.render("coulors/blue", { headers, headers,eventId });
@@ -750,7 +767,9 @@ router.get("/coulors/blue", async function(req, res) {
 
 router.get("/blue/:id", async (req, res) => {
   const blue = await Blue.findById(req.params.id);
-  const eventId = generateEventId(); // Use a proper UUID generator
+ const eventIdView = generateEventId(); // Use a proper UUID generator
+  const eventIdCart = generateEventId(); // prepare for AddToCart
+
 
   // ✅ Use req.user directly — no fallback needed
   console.log("✅ req.user", req.user); // debug
@@ -772,11 +791,15 @@ router.get("/blue/:id", async (req, res) => {
 
   await sendMetaCAPIEvent({
     eventName: "ViewContent",
-    eventId,
+    eventId: eventIdView,
     userData,
     customData: {
-      content_name: blue.title,
+      content_name: c.title,
       content_ids: [blue.id],
+      contents: [{  // ← ADD THIS
+      id: blue.id,
+      quantity: 1  // Default quantity for view
+      }],
       content_type: "product",
       value: blue.price,
       currency: "DZD"
@@ -784,8 +807,9 @@ router.get("/blue/:id", async (req, res) => {
     
   });
 
-  res.render("event/blue", { blue, 
-    metaEventId: eventId, req });
+  res.render("event/blue", { blue, req,
+    metaEventIdView: eventIdView,
+    metaEventIdCart: eventIdCart  });
 });
 
 
@@ -813,16 +837,20 @@ router.get("/add-to-cart-blue/:id", async function(req, res) {
   };
 
   // ✅ Unique event ID
-  const eventId = `addtocart_${blue.id}_${Date.now()}`;
+  const eventIdCart = generateEventId(); // Use a proper UUID generator
 
   // ✅ Send CAPI event
   await sendMetaCAPIEvent({
     eventName: "AddToCart",
-    eventId,
+    eventId: eventIdCart,
     userData,
     customData: {
       content_name: blue.title,
       content_ids: [blue.id],
+      contents: [{  // ← ADD THIS
+      id: blue.id,
+      quantity: 1  // Default quantity for view
+    }],
       content_type: "product",
       value: blue.price,
       currency: "DZD"
@@ -851,7 +879,7 @@ router.get("/coulors/greens", async function(req, res) {
         fbp: req.cookies._fbp || undefined  
     };
 
-    const eventId = `view_paintellgreens_${Date.now()}`;
+    const eventId = generateEventId(); // Use a proper UUID generator
 
     // ✅ Send ViewContent event to Meta
     await sendMetaCAPIEvent({
@@ -876,7 +904,8 @@ router.get("/coulors/greens", async function(req, res) {
 
 router.get("/green/:id", async (req, res) => {
   const green = await Green.findById(req.params.id);
- const eventId = generateEventId(); // Use a proper UUID generator
+ const eventIdView = generateEventId(); // Use a proper UUID generator
+  const eventIdCart = generateEventId(); // prepare for AddToCart
 
   // ✅ Use req.user directly — no fallback needed
   console.log("✅ req.user", req.user); // debug
@@ -898,11 +927,15 @@ router.get("/green/:id", async (req, res) => {
 
   await sendMetaCAPIEvent({
     eventName: "ViewContent",
-    eventId,
+    eventId: eventIdView,
     userData,
     customData: {
       content_name: green.title,
       content_ids: [green.id],
+      contents: [{  // ← ADD THIS
+      id: green.id,
+      quantity: 1  // Default quantity for view
+      }],
       content_type: "product",
       value: green.price,
       currency: "DZD"
@@ -910,8 +943,9 @@ router.get("/green/:id", async (req, res) => {
     
   });
 
-  res.render("event/green", { green, 
-    metaEventId: eventId, req });
+  res.render("event/green", { green, req,
+    metaEventIdView: eventIdView,
+    metaEventIdCart: eventIdCart  });
 });
 
 
@@ -939,16 +973,20 @@ router.get("/add-to-cart-green/:id", async function(req, res) {
   };
 
   // ✅ Unique event ID
-  const eventId = `addtocart_${green.id}_${Date.now()}`;
+    const eventIdCart = generateEventId(); // Use a proper UUID generator
 
   // ✅ Send CAPI event
   await sendMetaCAPIEvent({
     eventName: "AddToCart",
-    eventId,
+   eventId: eventIdCart,
     userData,
     customData: {
       content_name: green.title,
       content_ids: [green.id],
+      contents: [{  // ← ADD THIS
+      id: green.id,
+      quantity: 1  // Default quantity for view
+    }],
       content_type: "product",
       value: green.price,
       currency: "DZD"
@@ -976,7 +1014,7 @@ router.get("/coulors/grey", async function(req, res) {
         fbp: req.cookies._fbp || undefined  
     };
 
-    const eventId = `view_paintellgrey_${Date.now()}`;
+    const eventId = generateEventId(); // Use a proper UUID generator
 
     // ✅ Send ViewContent event to Meta
     await sendMetaCAPIEvent({
@@ -1001,7 +1039,8 @@ router.get("/coulors/grey", async function(req, res) {
 
 router.get("/grey/:id", async (req, res) => {
   const grey = await Grey.findById(req.params.id);
- const eventId = generateEventId(); // Use a proper UUID generator
+  const eventIdView = generateEventId(); // Use a proper UUID generator
+  const eventIdCart = generateEventId(); // prepare for AddToCart
 
   // ✅ Use req.user directly — no fallback needed
   console.log("✅ req.user", req.user); // debug
@@ -1023,11 +1062,15 @@ router.get("/grey/:id", async (req, res) => {
 
   await sendMetaCAPIEvent({
     eventName: "ViewContent",
-    eventId,
+   eventId: eventIdView,
     userData,
     customData: {
       content_name: grey.title,
       content_ids: [grey.id],
+      contents: [{  // ← ADD THIS
+      id: grey.id,
+      quantity: 1  // Default quantity for view
+      }],
       content_type: "product",
       value: grey.price,
       currency: "DZD"
@@ -1035,8 +1078,9 @@ router.get("/grey/:id", async (req, res) => {
     
   });
 
-  res.render("event/grey", { grey, 
-    metaEventId: eventId, req });
+  res.render("event/grey", { grey, req,
+    metaEventIdView: eventIdView,
+    metaEventIdCart: eventIdCart });
 });
 
 
@@ -1064,16 +1108,19 @@ router.get("/add-to-cart-grey/:id", async function(req, res) {
   };
 
   // ✅ Unique event ID
-  const eventId = `addtocart_${grey.id}_${Date.now()}`;
-
+  const eventIdCart = generateEventId(); // Use a proper UUID generator
   // ✅ Send CAPI event
   await sendMetaCAPIEvent({
     eventName: "AddToCart",
-    eventId,
+   eventId: eventIdCart,
     userData,
     customData: {
       content_name: grey.title,
       content_ids: [grey.id],
+      contents: [{  // ← ADD THIS
+      id: grey.id,
+      quantity: 1  // Default quantity for view
+    }],
       content_type: "product",
       value: grey.price,
       currency: "DZD"
@@ -1101,7 +1148,7 @@ router.get("/add-to-cart-grey/:id", async function(req, res) {
         fbp: req.cookies._fbp || undefined  
     };
 
-    const eventId = `view_paintellyellowv2_${Date.now()}`;
+    const eventId = generateEventId(); // Use a proper UUID generator
 
     // ✅ Send ViewContent event to Meta
     await sendMetaCAPIEvent({
@@ -1126,7 +1173,8 @@ router.get("/add-to-cart-grey/:id", async function(req, res) {
 
 router.get("/yelloow/:id", async (req, res) => {
   const yelloow = await Yelloow.findById(req.params.id);
-  const eventId = generateEventId(); // Use a proper UUID generator
+   const eventIdView = generateEventId(); // Use a proper UUID generator
+  const eventIdCart = generateEventId(); // prepare for AddToCart
 
   // ✅ Use req.user directly — no fallback needed
   console.log("✅ req.user", req.user); // debug
@@ -1148,11 +1196,15 @@ router.get("/yelloow/:id", async (req, res) => {
 
   await sendMetaCAPIEvent({
     eventName: "ViewContent",
-    eventId,
+    eventId: eventIdView,
     userData,
     customData: {
       content_name: yelloow.title,
       content_ids: [yelloow.id],
+      contents: [{  // ← ADD THIS
+      id: yelloow.id,
+      quantity: 1  // Default quantity for view
+      }],
       content_type: "product",
       value: yelloow.price,
       currency: "DZD"
@@ -1160,8 +1212,9 @@ router.get("/yelloow/:id", async (req, res) => {
     
   });
 
-  res.render("event/yelloow", { yelloow,
-    metaEventId: eventId , req });
+  res.render("event/yelloow", { yelloow, req,
+    metaEventIdView: eventIdView,
+    metaEventIdCart: eventIdCart });
 });
 
 
@@ -1189,16 +1242,19 @@ router.get("/add-to-cart-yelloow/:id", async function(req, res) {
   };
 
   // ✅ Unique event ID
-  const eventId = `addtocart_${yelloow.id}_${Date.now()}`;
-
+  const eventIdCart = generateEventId(); // Use a proper UUID generator
   // ✅ Send CAPI event
   await sendMetaCAPIEvent({
     eventName: "AddToCart",
-    eventId,
+ eventId: eventIdCart,
     userData,
     customData: {
       content_name: yelloow.title,
       content_ids: [yelloow.id],
+      contents: [{  // ← ADD THIS
+      id: yelloow.id,
+      quantity: 1  // Default quantity for view
+    }],
       content_type: "product",
       value: yelloow.price,
       currency: "DZD"
@@ -1227,7 +1283,7 @@ router.get("/add-to-cart-yelloow/:id", async function(req, res) {
         fbp: req.cookies._fbp || undefined  
     };
 
-    const eventId = `view_paintellpink_${Date.now()}`;
+    const eventId = generateEventId(); // Use a proper UUID generator
 
     // ✅ Send ViewContent event to Meta
     await sendMetaCAPIEvent({
@@ -1238,8 +1294,7 @@ router.get("/add-to-cart-yelloow/:id", async function(req, res) {
         content_name: "Sale pink Page",
         content_type: "product_group",
         anonymous_id: req.sessionID // optional for retargeting
-      },
-      testEventCode: "TEST12345"
+      }
     });
 
     res.render("coulors/pink", { headers, headers,eventId });
@@ -1252,8 +1307,8 @@ router.get("/add-to-cart-yelloow/:id", async function(req, res) {
 
 router.get("/pink/:id", async (req, res) => {
   const pink = await Pink.findById(req.params.id);
-const eventId = generateEventId(); // Use a proper UUID generator
-
+const eventIdView = generateEventId(); // Use a proper UUID generator
+  const eventIdCart = generateEventId(); // prepare for AddToCart
   // ✅ Use req.user directly — no fallback needed
   console.log("✅ req.user", req.user); // debug
 
@@ -1274,11 +1329,15 @@ const eventId = generateEventId(); // Use a proper UUID generator
 
   await sendMetaCAPIEvent({
     eventName: "ViewContent",
-    eventId,
+     eventId: eventIdView,
     userData,
     customData: {
       content_name: pink.title,
       content_ids: [pink.id],
+      contents: [{  // ← ADD THIS
+      id: pink.id,
+      quantity: 1  // Default quantity for view
+      }],
       content_type: "product",
       value: pink.price,
       currency: "DZD"
@@ -1287,7 +1346,8 @@ const eventId = generateEventId(); // Use a proper UUID generator
   });
 
   res.render("event/pink", { pink, req,
-    metaEventId: eventId });
+    metaEventIdView: eventIdView,
+    metaEventIdCart: eventIdCart });
 });
 
 
@@ -1315,16 +1375,20 @@ router.get("/add-to-cart-pink/:id", async function(req, res) {
   };
 
   // ✅ Unique event ID
-  const eventId = `addtocart_${pink.id}_${Date.now()}`;
+   const eventIdCart = generateEventId(); // Use a proper UUID generator
 
   // ✅ Send CAPI event
   await sendMetaCAPIEvent({
     eventName: "AddToCart",
-    eventId,
+   eventId: eventIdCart,
     userData,
     customData: {
       content_name: pink.title,
       content_ids: [pink.id],
+      contents: [{  // ← ADD THIS
+      id: pink.id,
+      quantity: 1  // Default quantity for view
+    }],
       content_type: "product",
       value: pink.price,
       currency: "DZD"
@@ -1354,7 +1418,7 @@ router.get("/add-to-cart-pink/:id", async function(req, res) {
         fbp: req.cookies._fbp || undefined  
     };
 
-    const eventId = `view_paintellneutral_${Date.now()}`;
+    const eventId = generateEventId(); // Use a proper UUID generator
 
     // ✅ Send ViewContent event to Meta
     await sendMetaCAPIEvent({
@@ -1365,8 +1429,7 @@ router.get("/add-to-cart-pink/:id", async function(req, res) {
         content_name: "Sale neutral Page",
         content_type: "product_group",
         anonymous_id: req.sessionID // optional for retargeting
-      },
-      testEventCode: "TEST12345"
+      }
     });
 
     res.render("coulors/neutral", { headers, headers,eventId });
@@ -1379,8 +1442,8 @@ router.get("/add-to-cart-pink/:id", async function(req, res) {
 
 router.get("/neutral/:id", async (req, res) => {
   const neutral = await Neutral.findById(req.params.id);
-  const eventId = generateEventId(); // Use a proper UUID generator
-
+const eventIdView = generateEventId(); // Use a proper UUID generator
+  const eventIdCart = generateEventId(); // prepare for AddToCart
   // ✅ Use req.user directly — no fallback needed
   console.log("✅ req.user", req.user); // debug
 
@@ -1401,11 +1464,15 @@ router.get("/neutral/:id", async (req, res) => {
 
   await sendMetaCAPIEvent({
     eventName: "ViewContent",
-    eventId,
+     eventId: eventIdView,
     userData,
     customData: {
       content_name: neutral.title,
       content_ids: [neutral.id],
+      contents: [{  // ← ADD THIS
+      id: neutral.id,
+      quantity: 1  // Default quantity for view
+      }],
       content_type: "product",
       value: neutral.price,
       currency: "DZD"
@@ -1414,7 +1481,8 @@ router.get("/neutral/:id", async (req, res) => {
   });
 
   res.render("event/neutral", { neutral, req,
-    metaEventId: eventId});
+    metaEventIdView: eventIdView,
+    metaEventIdCart: eventIdCart});
 });
 
 
@@ -1442,16 +1510,19 @@ router.get("/add-to-cart-neutral/:id", async function(req, res) {
   };
 
   // ✅ Unique event ID
-  const eventId = `addtocart_${neutral.id}_${Date.now()}`;
-
+  const eventIdCart = generateEventId(); // Use a proper UUID generator
   // ✅ Send CAPI event
   await sendMetaCAPIEvent({
     eventName: "AddToCart",
-    eventId,
+    eventId: eventIdCart,
     userData,
     customData: {
       content_name: neutral.title,
       content_ids: [neutral.id],
+      contents: [{  // ← ADD THIS
+      id: neutral.id,
+      quantity: 1  // Default quantity for view
+    }],
       content_type: "product",
       value: neutral.price,
       currency: "DZD"
@@ -1483,19 +1554,18 @@ router.get("/power", async function(req, res) {
         fbp: req.cookies._fbp || undefined  
     };
 
-    const eventId = `view_power_${Date.now()}`;
+    const eventId = generateEventId(); // Use a proper UUID generator
 
     // ✅ Send ViewContent event to Meta
     await sendMetaCAPIEvent({
-      eventName: "ViewContent",
+      eventName: "PageView",
       eventId,
       userData,
       customData: {
         content_name: "power Page",
         content_type: "product_group",
         anonymous_id: req.sessionID // optional for retargeting
-      },
-      testEventCode: "TEST44573"
+      }
     });
 
     res.render("event/power", { errMsg: errMsg, noError: !errMsg ,eventId });
@@ -1560,11 +1630,11 @@ router.get("/", async function(req, res) {
         fbp: req.cookies._fbp || undefined  
     };
 
-    const eventId = `view_${Date.now()}`;
+    const eventId = generateEventId(); // Use a proper UUID generator
 
     // ✅ Send ViewContent event to Meta
     await sendMetaCAPIEvent({
-      eventName: "ViewContent",
+      eventName: "PageView",
       eventId,
       userData,
       customData: {
@@ -2354,7 +2424,7 @@ router.get('/paintello', async (req, res) => {
     const eventId = generateEventId(); // Use a proper UUID generator
 
     await sendMetaCAPIEvent({
-      eventName: "ViewContent",
+      eventName: "PageView",
       eventId,
       userData,
       customData: {
@@ -2365,8 +2435,7 @@ router.get('/paintello', async (req, res) => {
      
     });
 
-    res.render('event/paintellohome', { paintellos, req,
-    metaEventId: eventId });
+    res.render('event/paintellohome', { paintellos, req, eventId });
   } catch (err) {
     res.status(500).send('Error loading home products');
   }
