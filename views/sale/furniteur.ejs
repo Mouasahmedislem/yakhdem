@@ -34,23 +34,6 @@ var pixelConfig = {};
 fbq('init', '<%= process.env.FB_PIXEL_ID %>', pixelConfig);
 fbq('track', 'PageView');
 
-// Delay ViewContent to ensure pixel is loaded
-setTimeout(function() {
-  fbq('track', 'ViewContent', {
-    content_name: '<%= furniteur.title %>',
-    content_ids: ['<%= furniteur._id %>'],
-    content_type: 'product',
-    value: <%= furniteur.price %>,
-    currency: 'DZD',
-    contents: [{
-      id: '<%= furniteur._id %>',
-      quantity: 1,
-      item_price: <%= furniteur.price %>
-    }]
-  }, {
-    eventID: '<%= metaEventIdView %>'
-  });
-}, 2000);
 </script>
 <noscript>
   <img height="1" width="1" style="display:none" 
@@ -376,14 +359,26 @@ right: 12px;
 </ul>
 <div aria-hidden="true" class="row border-bottom mb-4 mx-md-auto"></div>
 </div>
+<script>
+// Delay ViewContent to ensure pixel is loaded
+setTimeout(function() {
+  fbq('track', 'ViewContent', {
+    content_name: '<%= furniteur.title %>',
+    content_ids: ['<%= furniteur._id %>'],
+    content_type: 'product',
+    value: <%= furniteur.price %>,
+    currency: 'DZD',
+    contents: [{
+      id: '<%= furniteur._id %>',
+      quantity: 1,
+      item_price: <%= furniteur.price %>
+    }]
+  }, {
+    eventID: '<%= metaEventIdView %>'
+  });
+}, 2000);
+</script>
 
-
-</div>
-</div>
-<% }); %>
-</div>
-</div>
-</div>
 
 <script>
   function handleAddToCart(event, title, price, id) {
@@ -408,5 +403,12 @@ right: 12px;
     return true; // let the form submit continue
   }
 </script>
+</div>
+</div>
+<% }); %>
+</div>
+</div>
+</div>
+
 
 <%- include ("../partials/footer") %>.
