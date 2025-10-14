@@ -702,6 +702,12 @@ footer {
 
 <script>
 function init3DViewer(stlFilePath, defaultColor, autoRotateEnabled) {
+// ADD DEBUG LOGS AT THE START
+  console.log('=== 3D VIEWER DEBUG ===');
+  console.log('stlFilePath:', stlFilePath);
+  console.log('defaultColor:', defaultColor);
+  console.log('defaultColor type:', typeof defaultColor);
+  console.log('autoRotateEnabled:', autoRotateEnabled);
   let scene, camera, renderer, controls, model, modelGroup;
   let container = document.getElementById('modelViewer');
   let autoRotate = autoRotateEnabled;
