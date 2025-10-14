@@ -521,7 +521,16 @@ footer {
     </div>
   </div>
 </div>
-
+<!-- ADD DEBUG CODE RIGHT HERE -->
+<script>
+  console.log('=== 3D MODEL DEBUG INFO ===');
+  console.log('has3DModel:', <%= has3DModel %>);
+  console.log('stlFile:', '<%= model3DSettings.stlFile %>');
+  console.log('defaultColor:', '<%= model3DSettings.defaultColor %>');
+  console.log('autoRotate:', <%= model3DSettings.autoRotate %>);
+  console.log('Product ID:', '<%= producthome._id %>');
+  console.log('========================');
+</script>
 <script>
   document.addEventListener('DOMContentLoaded', function() {
     init3DViewer(
