@@ -731,15 +731,7 @@ function init3DViewer(stlFilePath, defaultColor, autoRotateEnabled) {
     container.innerHTML = '';
     container.appendChild(renderer.domElement);
     
-    // Enhanced Lighting
-   // Remove your current lighting and replace with this:
-
-// 1. SUPER BRIGHT Ambient Light (fills all shadows)
-const ambientLight = new THREE.AmbientLight(0xffffff, 1.2); // Increased to 1.2
-scene.add(ambientLight);
-
-// 2. Multiple Directional Lights from different angles
-// Enhanced Lighting
+   // Enhanced Lighting
     const ambientLight = new THREE.AmbientLight(0xffffff, 0.7);
     scene.add(ambientLight);
     
@@ -750,7 +742,7 @@ scene.add(ambientLight);
     const directionalLight2 = new THREE.DirectionalLight(0xffffff, 0.5);
     directionalLight2.position.set(-5, 5, -5);
     scene.add(directionalLight2);
-    
+
     // Controls
     controls = new THREE.OrbitControls(camera, renderer.domElement);
     controls.enableDamping = true;
