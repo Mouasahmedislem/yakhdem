@@ -2324,10 +2324,26 @@ router.get("/producthome/:id", async (req, res) => {
     }
   });
 
-  res.render("event/producthome", { producthome, req,
-    metaEventIdView: eventIdView,
-    metaEventIdCart: eventIdCart  });
-});
+  // Check if product has 3D model and prepare data
+    const has3DModel = !!(producthome.stlFile || (producthome.model3D && producthome.model3D.enabled));
+    const stlFile = producthome.stlFile || (producthome.model3D ? producthome.model3D.stlFile : null);
+    
+    // Prepare 3D model settings
+    const model3DSettings = {
+      enabled: has3DModel,
+      stlFile: stlFile,
+      autoRotate: producthome.model3D?.autoRotate !== undefined ? producthome.model3D.autoRotate : true,
+      defaultColor: producthome.model3D?.defaultColor || '#aaaaaa'
+    };
+
+    res.render("event/producthome", { 
+      producthome, 
+      req,
+      metaEventIdView: eventIdView,
+      metaEventIdCart: eventIdCart,
+      has3DModel: has3DModel,
+      model3DSettings: model3DSettings
+    });
 
 // UUID v4 generator function
 function generateEventId() {
