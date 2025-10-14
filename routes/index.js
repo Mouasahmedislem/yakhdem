@@ -2283,7 +2283,6 @@ router.post('/submit-return', async (req, res) => {
     }
 });
 
-
 router.get("/producthome/:id", async (req, res) => {
   const producthome = await Producthome.findById(req.params.id);
   const eventIdView = generateEventId(); // Use a proper UUID generator
@@ -2344,8 +2343,9 @@ router.get("/producthome/:id", async (req, res) => {
       has3DModel: has3DModel,
       model3DSettings: model3DSettings
     });
+}); // <-- ADD THIS MISSING CLOSING BRACE AND PARENTHESIS
 
-// UUID v4 generator function
+// UUID v4 generator function - MOVE THIS OUTSIDE THE ROUTE
 function generateEventId() {
   return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
     const r = Math.random() * 16 | 0, v = c == 'x' ? r : (r & 0x3 | 0x8);
@@ -2415,7 +2415,6 @@ router.get("/add-to-cart-producthome/:id", async function(req, res) {
   };
   res.redirect('/shop');
 });
-
 
  
 
