@@ -646,6 +646,16 @@ footer {
     </div>
   </div>
 </div>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    init3DViewer(
+      '<%= model3DSettings.stlFile %>',
+      '<%= model3DSettings.defaultColor %>',
+      <%= model3DSettings.autoRotate %>
+    );
+  });
+</script>
 <% } %>
 
 
@@ -687,15 +697,7 @@ footer {
 <% } %>
 
 
-<script>
-  document.addEventListener('DOMContentLoaded', function() {
-    init3DViewer(
-      '<%= model3DSettings.stlFile %>',
-      '<%= model3DSettings.defaultColor %>',
-      <%= model3DSettings.autoRotate %>
-    );
-  });
-</script>
+
 
 
 <script>
