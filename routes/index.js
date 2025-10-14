@@ -2323,34 +2323,31 @@ router.get("/producthome/:id", async (req, res) => {
     }
   });
 
-// Check if product has 3D model and prepare data
+ // ... your existing userData and tracking code ...
+
   const has3DModel = !!(producthome.stlFile);
   const stlFile = producthome.stlFile;
   
-  // FIX: Use the actual color from the database, not hardcoded fallback
+  // FIX: Use the color from model3D object
   const model3DSettings = {
     enabled: has3DModel,
     stlFile: stlFile,
-    autoRotate: true,
-    defaultColor: producthome.defaultColor || '#8CAAE6' // This line is the problem!
+    autoRotate: producthome.model3D?.autoRotate ?? true,
+    defaultColor: producthome.model3D?.defaultColor || '#8CAAE6'
   };
- // ADD DEBUG TO SEE WHAT'S IN THE DATABASE
-  console.log('DATABASE DEBUG - Product color:', producthome.defaultColor);
-  console.log('DATABASE DEBUG - Full product:', {
-    defaultColor: producthome.defaultColor,
-    stlFile: producthome.stlFile,
-    title: producthome.title
-  });
 
-    res.render("event/producthome", { 
-      producthome, 
-      req,
-      metaEventIdView: eventIdView,
-      metaEventIdCart: eventIdCart,
-      has3DModel: has3DModel,
-      model3DSettings: model3DSettings
-    });
-}); // <-- ADD THIS MISSING CLOSING BRACE AND PARENTHESIS
+  console.log('🔍 ROUTE DEBUG - model3D object:', producthome.model3D);
+  console.log('🔍 ROUTE DEBUG - model3D.defaultColor:', producthome.model3D?.defaultColor);
+
+  res.render("event/producthome", { 
+    producthome, 
+    req,
+    metaEventIdView: eventIdView,
+    metaEventIdCart: eventIdCart,
+    has3DModel: has3DModel,
+    model3DSettings: model3DSettings
+  });
+});
 
 // UUID v4 generator function - MOVE THIS OUTSIDE THE ROUTE
 function generateEventId() {
