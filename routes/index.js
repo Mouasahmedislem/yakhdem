@@ -2323,17 +2323,24 @@ router.get("/producthome/:id", async (req, res) => {
     }
   });
 
-  // Check if product has 3D model and prepare data
-    const has3DModel = !!(producthome.stlFile || (producthome.model3D && producthome.model3D.enabled));
-    const stlFile = producthome.stlFile || (producthome.model3D ? producthome.model3D.stlFile : null);
-    
-    // Prepare 3D model settings
-    const model3DSettings = {
-      enabled: has3DModel,
-      stlFile: stlFile,
-      autoRotate: producthome.model3D?.autoRotate !== undefined ? producthome.model3D.autoRotate : true,
-      defaultColor: producthome.model3D?.defaultColor || '#aaaaaa'
-    };
+// Check if product has 3D model and prepare data
+  const has3DModel = !!(producthome.stlFile);
+  const stlFile = producthome.stlFile;
+  
+  // FIX: Use the actual color from the database, not hardcoded fallback
+  const model3DSettings = {
+    enabled: has3DModel,
+    stlFile: stlFile,
+    autoRotate: true,
+    defaultColor: producthome.defaultColor || '#8CAAE6' // This line is the problem!
+  };
+ // ADD DEBUG TO SEE WHAT'S IN THE DATABASE
+  console.log('DATABASE DEBUG - Product color:', producthome.defaultColor);
+  console.log('DATABASE DEBUG - Full product:', {
+    defaultColor: producthome.defaultColor,
+    stlFile: producthome.stlFile,
+    title: producthome.title
+  });
 
     res.render("event/producthome", { 
       producthome, 
