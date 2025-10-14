@@ -732,16 +732,30 @@ function init3DViewer(stlFilePath, defaultColor, autoRotateEnabled) {
     container.appendChild(renderer.domElement);
     
     // Enhanced Lighting
-    const ambientLight = new THREE.AmbientLight(0xffffff, 0.7);
-    scene.add(ambientLight);
-    
-    const directionalLight1 = new THREE.DirectionalLight(0xffffff, 0.9);
-    directionalLight1.position.set(10, 10, 5);
-    scene.add(directionalLight1);
-    
-    const directionalLight2 = new THREE.DirectionalLight(0xffffff, 0.5);
-    directionalLight2.position.set(-5, 5, -5);
-    scene.add(directionalLight2);
+   // Remove your current lighting and replace with this:
+
+// 1. SUPER BRIGHT Ambient Light (fills all shadows)
+const ambientLight = new THREE.AmbientLight(0xffffff, 1.2); // Increased to 1.2
+scene.add(ambientLight);
+
+// 2. Multiple Directional Lights from different angles
+const directionalLight1 = new THREE.DirectionalLight(0xffffff, 1.0);
+directionalLight1.position.set(10, 10, 10); // Top-right-front
+scene.add(directionalLight1);
+
+const directionalLight2 = new THREE.DirectionalLight(0xffffff, 0.8);
+directionalLight2.position.set(-10, 10, -10); // Top-left-back
+scene.add(directionalLight2);
+
+const directionalLight3 = new THREE.DirectionalLight(0xffffff, 0.6);
+directionalLight3.position.set(0, -10, 0); // Bottom up
+scene.add(directionalLight3);
+
+const directionalLight4 = new THREE.DirectionalLight(0xffffff, 0.5);
+directionalLight4.position.set(10, 0, 10); // Right-front
+scene.add(directionalLight4);
+
+console.log('💡 Lighting setup complete - 4 directional lights + ambient');
     
     // Controls
     controls = new THREE.OrbitControls(camera, renderer.domElement);
