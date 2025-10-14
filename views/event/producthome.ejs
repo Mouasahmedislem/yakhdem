@@ -592,48 +592,9 @@ footer {
     <i class="fas fa-cart-plus mr-2"></i>Add to Cart
   </button>
 </form>
-
- 
-      <ul class="nav nav-tabs" id="infoTab" role="tablist">
-        <li class="nav-item">
-          <a class="nav-link active" id="desc-tab" data-toggle="tab" href="#desc" role="tab">Description</a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" id="info-tab" data-toggle="tab" href="#info" role="tab">Information</a>
-        </li>
-      </ul>
-      <div class="tab-content p-3 border border-top-0" id="infoTabContent">
-        <div class="tab-pane fade show active" id="desc" role="tabpanel">
-          <p><%= producthome.description %></p>
-        </div>
-        <div class="tab-pane fade" id="info" role="tabpanel">
-          <ul class="list-unstyled">
-            <% for (let key in producthome.details) { %>
-              <li><strong><%= key %>:</strong> <%= producthome.details[key] %></li>
-            <% } %>
-          </ul>
-        </div>
-      </div>
-    </div>
+</div>
   </div>
-
-
-</div>
-<% if (producthome.videoId) { %>
-<div class="product-video-section mt-5 text-center" style="max-width: 400px; margin: auto;">
-  <h3 class="mb-3">Product Video</h3>
-  <iframe
-    src="https://www.youtube.com/embed/<%= producthome.videoId %>?rel=0&autoplay=0&playsinline=1"
-    width="100%"
-    height="700"
-    frameborder="0"
-    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-    allowfullscreen
-    style="border-radius: 8px;">
-  </iframe>
-</div>
-<% } %>
-
+    </div>
 <% if (has3DModel) { %>
 <div class="product-3d-section mt-5">
   <div class="container">
@@ -685,6 +646,46 @@ footer {
     </div>
   </div>
 </div>
+<% } %>
+
+
+ 
+      <ul class="nav nav-tabs" id="infoTab" role="tablist">
+        <li class="nav-item">
+          <a class="nav-link active" id="desc-tab" data-toggle="tab" href="#desc" role="tab">Description</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" id="info-tab" data-toggle="tab" href="#info" role="tab">Information</a>
+        </li>
+      </ul>
+      <div class="tab-content p-3 border border-top-0" id="infoTabContent">
+        <div class="tab-pane fade show active" id="desc" role="tabpanel">
+          <p><%= producthome.description %></p>
+        </div>
+        <div class="tab-pane fade" id="info" role="tabpanel">
+          <ul class="list-unstyled">
+            <% for (let key in producthome.details) { %>
+              <li><strong><%= key %>:</strong> <%= producthome.details[key] %></li>
+            <% } %>
+          </ul>
+        </div>
+      </div>
+    
+<% if (producthome.videoId) { %>
+<div class="product-video-section mt-5 text-center" style="max-width: 400px; margin: auto;">
+  <h3 class="mb-3">Product Video</h3>
+  <iframe
+    src="https://www.youtube.com/embed/<%= producthome.videoId %>?rel=0&autoplay=0&playsinline=1"
+    width="100%"
+    height="700"
+    frameborder="0"
+    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+    allowfullscreen
+    style="border-radius: 8px;">
+  </iframe>
+</div>
+<% } %>
+
 
 <script>
   document.addEventListener('DOMContentLoaded', function() {
@@ -695,7 +696,7 @@ footer {
     );
   });
 </script>
-<% } %>
+
 
 <script>
 function init3DViewer(stlFilePath, defaultColor, autoRotateEnabled) {
