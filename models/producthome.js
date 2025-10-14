@@ -26,8 +26,7 @@ const producthomeSchema = new mongoose.Schema({
       default: true
     },
     defaultColor: {
-      type: String,
-      default: '#aaaaaa'
+      type: String
     }
   }
 }, {
