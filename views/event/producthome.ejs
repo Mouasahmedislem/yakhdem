@@ -439,7 +439,57 @@ footer {
   text-align: center;
   margin-bottom: 30px;
 }
+.model-viewer-container {
+  width: 100%;
+  height: 500px;
+  border: 1px solid #ddd;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+  background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+  position: relative;
+  touch-action: none; /* Important for mobile controls */
+}
 
+/* Mobile-specific fixes */
+@media (max-width: 768px) {
+  .model-viewer-container {
+    height: 400px;
+  }
+  
+  .viewer-controls .btn {
+    padding: 8px 12px;
+    font-size: 0.9rem;
+  }
+  
+  .viewer-instructions p {
+    font-size: 0.8rem;
+    line-height: 1.3;
+  }
+}
+
+@media (max-width: 576px) {
+  .model-viewer-container {
+    height: 350px;
+  }
+  
+  .viewer-controls {
+    flex-direction: column;
+    gap: 8px;
+  }
+  
+  .viewer-controls .btn {
+    width: 100%;
+    justify-content: center;
+  }
+}
+
+/* Active state for auto-rotate button */
+.viewer-controls .btn.active {
+  background-color: #007bff;
+  color: white;
+  border-color: #007bff;
+}
 </style>
 
 </head>
@@ -649,7 +699,7 @@ footer {
 
 <script>
 function init3DViewer(stlFilePath, defaultColor, autoRotateEnabled) {
-  let scene, camera, renderer, controls, model;
+  let scene, camera, renderer, controls, model, modelGroup;
   let container = document.getElementById('modelViewer');
   let autoRotate = autoRotateEnabled;
   
@@ -688,6 +738,8 @@ function init3DViewer(stlFilePath, defaultColor, autoRotateEnabled) {
     controls = new THREE.OrbitControls(camera, renderer.domElement);
     controls.enableDamping = true;
     controls.dampingFactor = 0.05;
+    controls.autoRotate = autoRotate; // Enable built-in auto-rotate
+    controls.autoRotateSpeed = 1.0; // Rotation speed
     
     // Load STL model
     const loader = new THREE.STLLoader();
@@ -701,32 +753,33 @@ function init3DViewer(stlFilePath, defaultColor, autoRotateEnabled) {
       
       model = new THREE.Mesh(geometry, material);
       
-      // IMPROVED CENTERING
-      geometry.computeBoundingSphere();
-      const center = geometry.boundingSphere.center;
+      // PROPER CENTERING - Method 1: Using bounding box
+      geometry.computeBoundingBox();
+      const boundingBox = geometry.boundingBox;
+      const center = new THREE.Vector3();
+      boundingBox.getCenter(center);
       
-      // Create a group to center the model
-      const group = new THREE.Group();
-      group.position.x = -center.x;
-      group.position.y = -center.y;
-      group.position.z = -center.z;
-      group.add(model);
+      // Create a group and center the model in it
+      modelGroup = new THREE.Group();
+      model.position.x = -center.x;
+      model.position.y = -center.y;
+      model.position.z = -center.z;
+      modelGroup.add(model);
       
-      // Calculate scale based on bounding sphere
-      const radius = geometry.boundingSphere.radius;
-      const scale = 1.5 / radius; // Adjust this value as needed
-      group.scale.set(scale, scale, scale);
+      // Calculate scale to fit view
+      const size = new THREE.Vector3();
+      boundingBox.getSize(size);
+      const maxDim = Math.max(size.x, size.y, size.z);
+      const scale = 1.8 / maxDim;
+      modelGroup.scale.set(scale, scale, scale);
       
-      scene.add(group);
+      scene.add(modelGroup);
       
-      // Reset controls to focus on centered model
-      controls.reset();
+      // Set camera to look at the center
+      controls.target.set(0, 0, 0);
       controls.update();
       
-      // Auto-rotate the group instead of the model
-      if (autoRotate) {
-        group.rotation.y += 0.005;
-      }
+      console.log('Model loaded and centered');
       
     }, undefined, function(error) {
       console.error('Error loading STL file:', error);
@@ -750,32 +803,54 @@ function init3DViewer(stlFilePath, defaultColor, autoRotateEnabled) {
   
   function animate() {
     requestAnimationFrame(animate);
-    if (autoRotate && model) {
-      // Rotate the entire scene group if needed
-      scene.children[0].rotation.y += 0.005;
+    
+    // Use OrbitControls built-in auto-rotate
+    if (controls.autoRotate) {
+      controls.update();
+    } else {
+      controls.update();
     }
-    controls.update();
+    
     renderer.render(scene, camera);
   }
   
   init();
-
   
-  // Your existing control buttons...
-
   // Set up control buttons
   document.getElementById('resetView').addEventListener('click', function() {
     controls.reset();
+    controls.autoRotate = autoRotate; // Maintain auto-rotate setting
   });
   
   document.getElementById('autoRotate').addEventListener('click', function() {
-    autoRotate = !autoRotate;
-    this.classList.toggle('active', autoRotate);
+    controls.autoRotate = !controls.autoRotate;
+    this.classList.toggle('active', controls.autoRotate);
+    this.innerHTML = controls.autoRotate 
+      ? '<i class="fas fa-pause me-2"></i>Pause Rotation' 
+      : '<i class="fas fa-redo me-2"></i>Auto Rotate';
   });
   
-  // ... other control button event listeners
+  document.getElementById('viewTop').addEventListener('click', function() {
+    controls.reset();
+    camera.position.set(0, 5, 0.001);
+    controls.target.set(0, 0, 0);
+    controls.update();
+  });
+  
+  document.getElementById('viewFront').addEventListener('click', function() {
+    controls.reset();
+    camera.position.set(0, 0, 5);
+    controls.target.set(0, 0, 0);
+    controls.update();
+  });
+  
+  document.getElementById('viewSide').addEventListener('click', function() {
+    controls.reset();
+    camera.position.set(5, 0, 0);
+    controls.target.set(0, 0, 0);
+    controls.update();
+  });
 }
-
 </script>
 
 <div itemscope itemtype="https://schema.org/Product">
