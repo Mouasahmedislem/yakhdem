@@ -2323,21 +2323,29 @@ router.get("/producthome/:id", async (req, res) => {
     }
   });
 
- // ... your existing userData and tracking code ...
+// ... your existing userData and tracking code ...
 
   const has3DModel = !!(producthome.stlFile);
   const stlFile = producthome.stlFile;
   
-  // FIX: Use the color from model3D object
+  // Get color from model3D or use default
+  let defaultColor = '#8CAAE6'; // Your desired blue
+  
+  if (producthome.model3D && producthome.model3D.defaultColor) {
+    // Ensure the color has # prefix
+    defaultColor = producthome.model3D.defaultColor.startsWith('#') 
+      ? producthome.model3D.defaultColor 
+      : `#${producthome.model3D.defaultColor}`;
+  }
+  
   const model3DSettings = {
     enabled: has3DModel,
     stlFile: stlFile,
     autoRotate: producthome.model3D?.autoRotate ?? true,
-    defaultColor: producthome.model3D?.defaultColor || '#8CAAE6'
+    defaultColor: defaultColor
   };
 
-  console.log('🔍 ROUTE DEBUG - model3D object:', producthome.model3D);
-  console.log('🔍 ROUTE DEBUG - model3D.defaultColor:', producthome.model3D?.defaultColor);
+  console.log('🎨 FINAL COLOR:', defaultColor);
 
   res.render("event/producthome", { 
     producthome, 
