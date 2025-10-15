@@ -560,7 +560,7 @@ footer {
   <div class="row">
     <!-- IMAGE SLIDER -->
     <div class="col-md-6">
-      <div id="productCarousel" class="carousel slide" data-ride="carousel">
+      <div id="productCarousel" class="carousel slide" data-interval="false">
         <ol class="carousel-indicators">
           <% producthome.image.forEach((img, i) => { %>
             <li data-target="#productCarousel" data-slide-to="<%= i %>" class="<%= i===0?'active':'' %>"></li>
