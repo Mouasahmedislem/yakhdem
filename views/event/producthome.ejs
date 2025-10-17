@@ -585,7 +585,21 @@ footer {
     <!-- DETAILS -->
     <div class="col-md-6">
       <h1 class="product-title"><%= producthome.title %></h1>
-      <p class="product-price"><%= producthome.price.toFixed(2) %> DA</p>
+
+<% if (producthome.oldPrice && producthome.oldPrice > producthome.price) { %>
+  <p class="product-price">
+    <span style="text-decoration: line-through; color: #999; font-size: 1.2rem; margin-right: 10px;">
+      <%= producthome.oldPrice.toFixed(2) %> DA
+    </span>
+    <span style="color: #f4791f; font-weight: bold; font-size: 1.6rem;">
+      <%= producthome.price.toFixed(2) %> DA
+    </span>
+    <span class="badge badge-success ml-2" style="font-size: 0.8rem;">Promo</span>
+  </p>
+<% } else { %>
+  <p class="product-price"><%= producthome.price.toFixed(2) %> DA</p>
+<% } %>
+
 <form action="/add-to-cart-producthome/<%= producthome._id %>" method="GET" 
       onsubmit="return handleAddToCart(event, '<%= producthome.title %>', <%= producthome.price %>, '<%= producthome._id %>')">
   <button type="submit" class="btn btn-primary btn-lg mb-4">
