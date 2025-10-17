@@ -4,6 +4,10 @@ const mongoose = require('mongoose');
 const producthomeSchema = new mongoose.Schema({
   title: String,
   price: Number,
+  oldPrice: {          // 👈 add this field for promo
+    type: Number,
+    default: null
+  },
   image: [String],         // For image slider
   description: String,     // Description tab
   details: Object,         // Info tab
