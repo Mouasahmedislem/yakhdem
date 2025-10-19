@@ -936,7 +936,17 @@ function init3DViewer(stlFilePath, defaultColor, autoRotateEnabled) {
 
 
 <script>
-  function handleAddToCart(event, title, price, id) {
+function handleAddToCart(event, title, price, id) {
+  // Push to DataLayer for GTM
+  window.dataLayer = window.dataLayer || [];
+  dataLayer.push({
+    'event': 'addToCart',
+    'productId': id,
+    'productName': title,
+    'productPrice': price,
+    'currency': 'DZD'
+  });
+ 
     // Fire AddToCart event
     fbq('track', 'AddToCart', {
       content_name: title,
