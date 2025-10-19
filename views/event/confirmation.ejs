@@ -252,6 +252,21 @@ fbq('track', 'PageView');
     });
   }
 </script>
+<!-- GA4 Purchase Event -->
+<script>
+window.dataLayer = window.dataLayer || [];
+dataLayer.push({
+  'event': 'purchase',
+  'value': <%= totalPrice %>,
+  'currency': 'DZD',
+  'items': <%- JSON.stringify(cartItems.map(p => ({
+    'item_id': p.item._id.toString(),
+    'item_name': p.item.title,
+    'price': p.item.price,
+    'quantity': p.qty
+  }))) %>
+});
+</script>
 <% } %>
 <!-- Newsletter Popup -->
 
