@@ -221,19 +221,33 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
     </a>
   </div>
 
-  <div class="confirmation-box">
-    <h1>✅ Thank you for your order!</h1>
-    <p><strong>Name:</strong> <%= name %></p>
-    <p><strong>Phone:</strong> <%= numero %></p>
-    <p><strong>Wilaya:</strong> <%= city %></p>
-    <p><strong>Address:</strong> <%= address %></p>
-    <p><strong>Delivery Estimate:</strong> <%= deliveryDelay %></p>
-    <p><strong>Cart Total:</strong> <%= cartTotal %> DZD</p>
-    <p><strong>Shipping Fee:</strong> <%= shippingFee %> DZD</p>
-    <p><strong>Total (incl. shipping):</strong> <%= totalPrice %> DZD</p>
-
-    <a href="/" class="btn-home">Back to Home</a>
+<div class="confirmation-box">
+  <h1>✅ Thank you for your order!</h1>
+  <p><strong>Name:</strong> <%= name %></p>
+  <p><strong>Phone:</strong> <%= numero %></p>
+  <p><strong>Wilaya:</strong> <%= city %></p>
+  <p><strong>Address:</strong> <%= address %></p>
+  <p><strong>Delivery Estimate:</strong> <%= deliveryDelay %></p>
+  
+  <!-- Order Summary with Shipping -->
+  <div style="margin: 20px 0; padding: 15px; background: #f9f9f9; border-radius: 8px;">
+    <h3>Order Summary</h3>
+    <p><strong>Subtotal:</strong> <%= cartTotal %> DZD</p>
+    
+    <% if (shippingFee === 0) { %>
+      <p><strong>Shipping:</strong> <span style="color: green;">FREE</span> (Orders over <%= freeShippingThreshold %> DZD)</p>
+    <% } else { %>
+      <p><strong>Shipping Fee:</strong> <%= shippingFee %> DZD</p>
+    <% } %>
+    
+    <hr style="margin: 10px 0;">
+    <p style="font-size: 1.2em; font-weight: bold;">
+      <strong>Total:</strong> <%= totalPrice %> DZD
+    </p>
   </div>
+
+  <a href="/" class="btn-home">Back to Home</a>
+</div>
 <% if (process.env.FB_PIXEL_ID) { %>
 <script>
   // Check if fbq is defined before using it
