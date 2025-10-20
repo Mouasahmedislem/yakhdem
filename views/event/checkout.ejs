@@ -354,32 +354,39 @@ fbq('track', 'PageView');
     "annaba": { fee: 500, delay: "2–3 days" }
   };
 
-citySelect.addEventListener('change', () => {
-  const selected = citySelect.value.trim().toLowerCase(); // match lowercase keys
-  const data = shippingData[selected] || { fee: 1000, delay: "3–5 days" };
+ document.addEventListener('DOMContentLoaded', () => {
+    const citySelect = document.getElementById('city');
+    const infoBox = document.createElement('div');
+    infoBox.style.marginTop = '15px';
+    infoBox.style.fontWeight = 'bold';
+    citySelect.parentNode.insertBefore(infoBox, citySelect.nextSibling);
 
-  let shippingFee = data.fee;
-  const deliveryTime = data.delay;
+    citySelect.addEventListener('change', () => {
+       const selected = citySelect.value.toLowerCase();
+      const data = shippingData[selected] || { fee: 700, delay: "3–5 days" };
+      let shippingFee = data.fee;
+      const deliveryTime = data.delay;
 
-  if (basePrice >= FREE_SHIPPING_THRESHOLD) {
-    shippingFee = 0;
-  }
+      let shippingText = `${shippingFee} DA`;
+      let finalPrice = basePrice + shippingFee;
 
-  const finalPrice = basePrice + shippingFee;
+      if (basePrice >= FREE_SHIPPING_THRESHOLD) {
+        shippingFee = 0;
+        shippingText = `Free (over ${FREE_SHIPPING_THRESHOLD} DA)`;
+        finalPrice = basePrice;
+      }
 
-  // ✅ Update visible info box
-  infoBox.innerHTML = `
-    🚚 <strong>Shipping Fee:</strong> ${shippingFee} DA<br>
-    ⏱ <strong>Estimated Delivery:</strong> ${deliveryTime}<br>
-    💰 <strong>Total Including Shipping:</strong> ${finalPrice} DA
-  `;
-
-  // ✅ Update hidden form fields
-  document.getElementById('shippingFee').value = shippingFee;
-  document.getElementById('deliveryDelay').value = deliveryTime;
-  document.getElementById('totalPriceFinal').value = finalPrice;
-});
-
+      infoBox.innerHTML = `
+        🚚 <strong>Shipping Fee:</strong> ${shippingText}<br>
+        ⏱ <strong>Estimated Delivery:</strong> ${deliveryTime}<br>
+        💰 <strong>Total Including Shipping:</strong> ${finalPrice} DA
+      `;
+// ✅ send values to backend
+document.getElementById('shippingFee').value = shippingFee;
+document.getElementById('deliveryDelay').value = deliveryTime;
+document.getElementById('totalPriceFinal').value = finalPrice;
+    });
+  })
 </script>
 
 
