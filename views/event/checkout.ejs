@@ -275,9 +275,10 @@ fbq('track', 'PageView');
 
         <label for="address">Full Address</label>
         <input type="text" name="address" id="address" required>
-        <input type="hidden" id="shippingFee" name="shippingFee">
-        <input type="hidden" id="deliveryDelay" name="deliveryDelay">
-        <input type="hidden" id="totalPriceFinal" name="totalPriceFinal">
+       <!-- ADD THESE HIDDEN FIELDS -->
+  <input type="hidden" id="shippingFee" name="shippingFee" value="0">
+  <input type="hidden" id="deliveryDelay" name="deliveryDelay" value="">
+  <input type="hidden" id="totalPriceFinal" name="totalPriceFinal" value="<%= totalPrice %>">
 
         <button type="submit" class="btn btn-pink btn-rounded">Place Order</button>
       </form>
@@ -354,33 +355,68 @@ fbq('track', 'PageView');
     "annaba": { fee: 500, delay: "2–3 days" }
   };
 
- // In your checkout form JavaScript, update the change event:
-citySelect.addEventListener('change', () => {
-  const selected = citySelect.value.toLowerCase();
-  const data = shippingData[selected] || { fee: 700, delay: "3–5 days" };
-  let shippingFee = data.fee;
-  const deliveryTime = data.delay;
+ document.addEventListener('DOMContentLoaded', () => {
+    const citySelect = document.getElementById('city');
+    
+    // Create info box element
+    const infoBox = document.createElement('div');
+    infoBox.id = 'shipping-info';
+    infoBox.style.marginTop = '15px';
+    infoBox.style.padding = '15px';
+    infoBox.style.backgroundColor = '#f8f9fa';
+    infoBox.style.border = '1px solid #dee2e6';
+    infoBox.style.borderRadius = '8px';
+    infoBox.style.fontWeight = 'bold';
+    infoBox.style.display = 'none'; // Hidden initially
+    
+    // Insert the info box after the city select
+    citySelect.parentNode.insertBefore(infoBox, citySelect.nextSibling);
 
-  let shippingText = `${shippingFee} DA`;
-  let finalPrice = basePrice + shippingFee;
+    function updateShippingInfo() {
+      const selected = citySelect.value.toLowerCase();
+      
+      if (!selected) {
+        infoBox.style.display = 'none';
+        return;
+      }
 
-  if (basePrice >= FREE_SHIPPING_THRESHOLD) {
-    shippingFee = 0;
-    shippingText = `Free (over ${FREE_SHIPPING_THRESHOLD} DA)`;
-    finalPrice = basePrice;
-  }
+      const data = shippingData[selected] || { fee: 700, delay: "3–5 days" };
+      let shippingFee = data.fee;
+      const deliveryTime = data.delay;
 
-  infoBox.innerHTML = `
-    🚚 <strong>Shipping Fee:</strong> ${shippingText}<br>
-    ⏱ <strong>Estimated Delivery:</strong> ${deliveryTime}<br>
-    💰 <strong>Total Including Shipping:</strong> ${finalPrice} DA
-  `;
+      let shippingText = `${shippingFee} DA`;
+      let finalPrice = basePrice + shippingFee;
 
-  // ✅ Ensure these values are sent to backend
-  document.getElementById('shippingFee').value = shippingFee;
-  document.getElementById('deliveryDelay').value = deliveryTime;
-  document.getElementById('totalPriceFinal').value = finalPrice;
-});
+      if (basePrice >= FREE_SHIPPING_THRESHOLD) {
+        shippingFee = 0;
+        shippingText = `FREE (orders over ${FREE_SHIPPING_THRESHOLD} DA)`;
+        finalPrice = basePrice;
+      }
+
+      infoBox.innerHTML = `
+        <div style="color: #333;">
+          <div style="margin-bottom: 8px;">🚚 <strong>Shipping Fee:</strong> ${shippingText}</div>
+          <div style="margin-bottom: 8px;">⏱ <strong>Estimated Delivery:</strong> ${deliveryTime}</div>
+          <div style="font-size: 1.1em; color: #e44d26;">💰 <strong>Total Including Shipping:</strong> ${finalPrice} DA</div>
+        </div>
+      `;
+      
+      infoBox.style.display = 'block';
+
+      // Update hidden form fields
+      document.getElementById('shippingFee').value = shippingFee;
+      document.getElementById('deliveryDelay').value = deliveryTime;
+      document.getElementById('totalPriceFinal').value = finalPrice;
+    }
+
+    // Add event listener
+    citySelect.addEventListener('change', updateShippingInfo);
+
+    // Also update when page loads if a city is already selected
+    if (citySelect.value) {
+      updateShippingInfo();
+    }
+  });
 </script>
 
 
