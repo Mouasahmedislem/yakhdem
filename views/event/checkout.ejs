@@ -275,6 +275,9 @@ fbq('track', 'PageView');
 
         <label for="address">Full Address</label>
         <input type="text" name="address" id="address" required>
+        <input type="hidden" id="shippingFee" name="shippingFee">
+        <input type="hidden" id="deliveryDelay" name="deliveryDelay">
+        <input type="hidden" id="totalPriceFinal" name="totalPriceFinal">
 
         <button type="submit" class="btn btn-pink btn-rounded">Place Order</button>
       </form>
@@ -351,35 +354,30 @@ fbq('track', 'PageView');
     "annaba": { fee: 500, delay: "2–3 days" }
   };
 
-  document.addEventListener('DOMContentLoaded', () => {
-    const citySelect = document.getElementById('city');
-    const infoBox = document.createElement('div');
-    infoBox.style.marginTop = '15px';
-    infoBox.style.fontWeight = 'bold';
-    citySelect.parentNode.insertBefore(infoBox, citySelect.nextSibling);
+ citySelect.addEventListener('change', () => {
+  const selected = citySelect.value.toUpperCase(); // uppercase for match
+  const data = shippingData[selected.toLowerCase()] || { fee: 1000, delay: "3–5 days" };
+  let shippingFee = data.fee;
+  const deliveryTime = data.delay;
 
-    citySelect.addEventListener('change', () => {
-       const selected = citySelect.value.toLowerCase();
-      const data = shippingData[selected] || { fee: 700, delay: "3–5 days" };
-      let shippingFee = data.fee;
-      const deliveryTime = data.delay;
+  if (basePrice >= FREE_SHIPPING_THRESHOLD) {
+    shippingFee = 0;
+  }
 
-      let shippingText = `${shippingFee} DA`;
-      let finalPrice = basePrice + shippingFee;
+  const finalPrice = basePrice + shippingFee;
 
-      if (basePrice >= FREE_SHIPPING_THRESHOLD) {
-        shippingFee = 0;
-        shippingText = `Free (over ${FREE_SHIPPING_THRESHOLD} DA)`;
-        finalPrice = basePrice;
-      }
+  infoBox.innerHTML = `
+    🚚 <strong>Shipping Fee:</strong> ${shippingFee} DA<br>
+    ⏱ <strong>Estimated Delivery:</strong> ${deliveryTime}<br>
+    💰 <strong>Total Including Shipping:</strong> ${finalPrice} DA
+  `;
 
-      infoBox.innerHTML = `
-        🚚 <strong>Shipping Fee:</strong> ${shippingText}<br>
-        ⏱ <strong>Estimated Delivery:</strong> ${deliveryTime}<br>
-        💰 <strong>Total Including Shipping:</strong> ${finalPrice} DA
-      `;
-    });
-  });
+  // ✅ update hidden form fields
+  document.getElementById('shippingFee').value = shippingFee;
+  document.getElementById('deliveryDelay').value = deliveryTime;
+  document.getElementById('totalPriceFinal').value = finalPrice;
+});
+
 </script>
 
 
