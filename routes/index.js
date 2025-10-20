@@ -1779,7 +1779,7 @@ router.get("/", async function(req, res) {
     "annaba": { fee: 500, delay: "2–3 days" }
 };
       
-  const selectedcity = req.body.city;
+  
   const shippingFees = {
   "ADRAR": 800,
   "CHLEF": 500,
