@@ -354,9 +354,10 @@ fbq('track', 'PageView');
     "annaba": { fee: 500, delay: "2–3 days" }
   };
 
- citySelect.addEventListener('change', () => {
-  const selected = citySelect.value.toUpperCase(); // uppercase for match
-  const data = shippingData[selected.toLowerCase()] || { fee: 1000, delay: "3–5 days" };
+citySelect.addEventListener('change', () => {
+  const selected = citySelect.value.trim().toLowerCase(); // match lowercase keys
+  const data = shippingData[selected] || { fee: 1000, delay: "3–5 days" };
+
   let shippingFee = data.fee;
   const deliveryTime = data.delay;
 
@@ -366,13 +367,14 @@ fbq('track', 'PageView');
 
   const finalPrice = basePrice + shippingFee;
 
+  // ✅ Update visible info box
   infoBox.innerHTML = `
     🚚 <strong>Shipping Fee:</strong> ${shippingFee} DA<br>
     ⏱ <strong>Estimated Delivery:</strong> ${deliveryTime}<br>
     💰 <strong>Total Including Shipping:</strong> ${finalPrice} DA
   `;
 
-  // ✅ update hidden form fields
+  // ✅ Update hidden form fields
   document.getElementById('shippingFee').value = shippingFee;
   document.getElementById('deliveryDelay').value = deliveryTime;
   document.getElementById('totalPriceFinal').value = finalPrice;
