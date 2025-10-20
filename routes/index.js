@@ -1723,61 +1723,60 @@ router.get("/", async function(req, res) {
   var cart = new Cart(req.session.cart);
   const freeShippingThreshold = 5000;
   const wilayaShippingInfo = {
-   "ADRAR": { fee: 800, delay: "4–6 days" },
-    "CHLEF": { fee: 600, delay: "3–5 days" },
-    "LAGHOUAT": { fee: 750, delay: "4–6 days" },
-    "OUM EL BOUAGHI": { fee: 600, delay: "3–5 days" },
-    "BATNA": { fee: 600, delay: "3–5 days" },
-    "BEJAIA": { fee: 500, delay: "2–4 days" },
-    "BISKRA": { fee: 700, delay: "3–5 days" },
-    "BECHAR": { fee: 850, delay: "4–6 days" },
-    "BLIDA": { fee: 300, delay: "1–2 days" },
-    "BOUIRA": { fee: 500, delay: "2–3 days" },
-    "TAMANRASSET": { fee: 1000, delay: "5–8 days" },
-    "TEBESSA": { fee: 700, delay: "3–5 days" },
-    "TLEMCAN": { fee: 500, delay: "2–3 days" },
-    "TIARET": { fee: 550, delay: "3–4 days" },
-    "TIZI OUZOU": { fee: 400, delay: "2–3 days" },
-    "DJELFA": { fee: 600, delay: "3–4 days" },
-    "JIJEL": { fee: 450, delay: "2–3 days" },
-    "SETIF": { fee: 500, delay: "2–3 days" },
-    "SAIDA": { fee: 600, delay: "3–4 days" },
-    "SKIKDA": { fee: 500, delay: "2–3 days" },
-    "SIDI BELABBAS": { fee: 550, delay: "3–4 days" },
-    "GEULMA": { fee: 600, delay: "3–4 days" },
-    "MEDEA": { fee: 400, delay: "2–3 days" },
-    "MOSTAGANEM": { fee: 450, delay: "2–3 days" },
-    "M'SILA": { fee: 500, delay: "2–3 days" },
-    "MASCARA": { fee: 500, delay: "2–3 days" },
-    "OUERGLA": { fee: 700, delay: "4–6 days" },
-    "EL BAYADH": { fee: 750, delay: "4–6 days" },
-    "BORJ BOU ARRERIDJ": { fee: 500, delay: "2–3 days" },
-    "BOUMERDAS": { fee: 350, delay: "1–2 days" },
-    "EL TAREF": { fee: 700, delay: "3–5 days" },
-    "TISSEMSIL": { fee: 550, delay: "3–4 days" },
-    "EL OUED": { fee: 750, delay: "4–6 days" },
-    "KHENCHLA": { fee: 650, delay: "3–5 days" },
-    "SOUK AHRAS": { fee: 600, delay: "3–4 days" },
-    "TIPAZA": { fee: 300, delay: "1–2 days" },
-    "MILA": { fee: 500, delay: "2–3 days" },
-    "AIN DEFLA": { fee: 400, delay: "2–3 days" },
-    "NAAMA": { fee: 800, delay: "4–6 days" },
-    "AIN TEMOUCHENT": { fee: 550, delay: "3–4 days" },
-    "GHARDAIA": { fee: 700, delay: "4–6 days" },
-    "GHILEZAN": { fee: 500, delay: "2–3 days" },
-    "EL M'GHAIAR": { fee: 800, delay: "4–6 days" },
-    "EL MENIA": { fee: 900, delay: "5–7 days" },
-    "OULED DJELLAL": { fee: 700, delay: "4–6 days" },
-    "BENI ABBAS": { fee: 900, delay: "5–7 days" },
-    "TIMIMOUN": { fee: 950, delay: "5–7 days" },
-    "TOUGGOURT": { fee: 850, delay: "4–6 days" },
-    "IN SALEH": { fee: 1000, delay: "6–8 days" },
-    "IN GUEZZAM": { fee: 1200, delay: "6–9 days" },
-    "ALGIERS": { fee: 300, delay: "1–2 days" },
-    "ORAN": { fee: 400, delay: "2–3 days" },
-    "CONSTANTINE": { fee: 500, delay: "2–3 days" },
-    "ANNABA": { fee: 500, delay: "2–3 days" }
-  // Add all wilayas with their respective info...
+  "adrar": { fee: 800, delay: "4–6 days" },
+    "chlef": { fee: 600, delay: "3–5 days" },
+    "laghouat": { fee: 750, delay: "4–6 days" },
+    "oum el bouaghi": { fee: 600, delay: "3–5 days" },
+    "batna": { fee: 600, delay: "3–5 days" },
+    "bejaia": { fee: 500, delay: "2–4 days" },
+    "biskra": { fee: 700, delay: "3–5 days" },
+    "bechar": { fee: 850, delay: "4–6 days" },
+    "blida": { fee: 300, delay: "1–2 days" },
+    "bouira": { fee: 500, delay: "2–3 days" },
+    "tamanrasset": { fee: 1000, delay: "5–8 days" },
+    "tebessa": { fee: 700, delay: "3–5 days" },
+    "tlemcan": { fee: 500, delay: "2–3 days" },
+    "tiaret": { fee: 550, delay: "3–4 days" },
+    "tizi ouzou": { fee: 400, delay: "2–3 days" },
+    "djelfa": { fee: 600, delay: "3–4 days" },
+    "jijel": { fee: 450, delay: "2–3 days" },
+    "setif": { fee: 500, delay: "2–3 days" },
+    "saida": { fee: 600, delay: "3–4 days" },
+    "skikda": { fee: 500, delay: "2–3 days" },
+    "sidi belabbas": { fee: 550, delay: "3–4 days" },
+    "geulma": { fee: 600, delay: "3–4 days" },
+    "medea": { fee: 400, delay: "2–3 days" },
+    "mostaganem": { fee: 450, delay: "2–3 days" },
+    "m'sila": { fee: 500, delay: "2–3 days" },
+    "mascara": { fee: 500, delay: "2–3 days" },
+    "ouergla": { fee: 700, delay: "4–6 days" },
+    "el bayadh": { fee: 750, delay: "4–6 days" },
+    "borj bou arreridj": { fee: 500, delay: "2–3 days" },
+    "boumerdas": { fee: 350, delay: "1–2 days" },
+    "el taref": { fee: 700, delay: "3–5 days" },
+    "tissemsil": { fee: 550, delay: "3–4 days" },
+    "el oued": { fee: 750, delay: "4–6 days" },
+    "khenchla": { fee: 650, delay: "3–5 days" },
+    "souk ahras": { fee: 600, delay: "3–4 days" },
+    "tipaza": { fee: 300, delay: "1–2 days" },
+    "mila": { fee: 500, delay: "2–3 days" },
+    "ain defla": { fee: 400, delay: "2–3 days" },
+    "naama": { fee: 800, delay: "4–6 days" },
+    "ain temouchent": { fee: 550, delay: "3–4 days" },
+    "ghardaia": { fee: 700, delay: "4–6 days" },
+    "ghilezan": { fee: 500, delay: "2–3 days" },
+    "el m'ghaiar": { fee: 800, delay: "4–6 days" },
+    "el menia": { fee: 900, delay: "5–7 days" },
+    "ouled djellal": { fee: 700, delay: "4–6 days" },
+    "beni abbas": { fee: 900, delay: "5–7 days" },
+    "timimoun": { fee: 950, delay: "5–7 days" },
+    "touggourt": { fee: 850, delay: "4–6 days" },
+    "in saleh": { fee: 1000, delay: "6–8 days" },
+    "in guezzam": { fee: 1200, delay: "6–9 days" },
+    "algiers": { fee: 300, delay: "1–2 days" },
+    "oran": { fee: 400, delay: "2–3 days" },
+    "constantine": { fee: 500, delay: "2–3 days" },
+    "annaba": { fee: 500, delay: "2–3 days" }
 };
       
   const selectedcity = req.body.city;
@@ -1844,10 +1843,12 @@ router.get("/", async function(req, res) {
   "Default": 700
 };
 
-const shipping = wilayaShippingInfo[selectedcity] || { fee: 1000, delay: "3-5 days" };
+ const selectedcity = req.body.city;
+  const shipping = wilayaShippingInfo[selectedcity] || { fee: 1000, delay: "3-5 days" };
+  
   // Determine fee
-const shippingFee = cart.totalPrice >= freeShippingThreshold ? 0 : shipping.fee;
- const finalTotalPrice = cart.totalPrice + shippingFee;
+  const shippingFee = cart.totalPrice >= freeShippingThreshold ? 0 : shipping.fee;
+  const finalTotalPrice = cart.totalPrice + shippingFee;
   const rawNumero = req.body.numero || (req.user ? req.user.numero : undefined);
   const order = new Order({
     user: req.user,
@@ -1905,81 +1906,90 @@ try {
   const numeroRaw = req.body.numero;
   const cleanNumero = '213' + numeroRaw.replace(/^0+/, '').replace(/\D/g, '');
 
-  // ✅ Prepare WhatsApp message payload
-
+ // ✅ Prepare WhatsApp message payload with shipping info
     const payload = {
-  messaging_product: "whatsapp",
-  to: cleanNumero,
-  type: "template",
-  template: {
-    name: "commande_confirmee", // your actual template name
-    language: { code: "fr" },
-    components: [
-      {
-        type: "header", // ✅ Add this block for the image header
-        parameters: [
+      messaging_product: "whatsapp",
+      to: cleanNumero,
+      type: "template",
+      template: {
+        name: "commande_confirmee", // your actual template name
+        language: { code: "fr" },
+        components: [
           {
-            type: "image",
-            image: {
-              link: "https://www.paintello.uk/img/logo.png" // ✅ your logo URL
-            }
+            type: "header",
+            parameters: [
+              {
+                type: "image",
+                image: {
+                  link: "https://www.paintello.uk/img/logo.png" // your logo URL
+                }
+              }
+            ]
+          },
+          {
+            type: "body",
+            parameters: [
+              { type: "text", text: req.body.name || "Client" },
+              { type: "text", text: cart.totalPrice.toString() + " DZD" }, // Subtotal
+              { type: "text", text: shippingFee === 0 ? "GRATUIT" : shippingFee.toString() + " DZD" }, // Shipping fee
+              { type: "text", text: finalTotalPrice.toString() + " DZD" }, // Total with shipping
+              { type: "text", text: shipping.delay }, // Delivery delay
+              { type: "text", text: `${req.body.address}, ${selectedcity}` }
+            ]
           }
         ]
-      },
-      {
-        type: "body",
-        parameters: [
-          { type: "text", text: req.body.name || "Client" },
-          { type: "text", text: cart.totalPrice.toString() },
-          { type: "text", text: `${req.body.address}, ${selectedcity}` },
-          
-        ]
       }
-    ]
-  }
-};
+    };
 
-  try {
-    // ✅ Send WhatsApp message
-    const response = await axios.post(
-      `https://graph.facebook.com/v19.0/${process.env.META_PHONE_ID}/messages`,
-      payload,
-      {
-        headers: {
-          Authorization: `Bearer ${process.env.META_WA_TOKEN}`,
-          'Content-Type': 'application/json'
+    try {
+      // ✅ Send WhatsApp message
+      const response = await axios.post(
+        `https://graph.facebook.com/v19.0/${process.env.META_PHONE_ID}/messages`,
+        payload,
+        {
+          headers: {
+            Authorization: `Bearer ${process.env.META_WA_TOKEN}`,
+            'Content-Type': 'application/json'
+          }
         }
-      }
-    );
-    console.log("✅ WhatsApp message sent:", response.data);
-  } catch (err) {
-    console.error("❌ WhatsApp error:", err.response?.data || err.message);
-  }
+      );
+      console.log("✅ WhatsApp message sent:", response.data);
+    } catch (err) {
+      console.error("❌ WhatsApp error:", err.response?.data || err.message);
+    }
 
     // ✅ OPTIONAL: Send email notification to admin
-    await sendAdminOrderEmail({
-      name: req.body.name,
-      numero: cleanNumero,
-      total: cart.totalPrice.toString(),
-      address: `${req.body.address}, ${selectedcity}`
-    });
+    // ✅ Update admin email with shipping info
+await sendAdminOrderEmail({
+  name: req.body.name,
+  numero: cleanNumero,
+  subtotal: cart.totalPrice.toString(),
+  shippingFee: shippingFee === 0 ? "FREE" : shippingFee.toString() + " DZD",
+  total: finalTotalPrice.toString(),
+  deliveryDelay: shipping.delay,
+  address: `${req.body.address}, ${selectedcity}`
+});
     
   // ✅ Clear cart after saving
     req.session.cart = null;
 
-    // ✅ Store confirmation data in session
+    // ✅ Store ALL confirmation data in session
     req.session.confirmationData = {
-      metaEventIdPurchase: eventIdPurchase,
-      user: req.user || {}, // Make sure user is passed
+      metaEventIdPurchase: generateEventId(),
+      user: req.user || {},
       name: req.body.name,
       numero: rawNumero,
       city: selectedcity,
       address: req.body.address,
       cartTotal: cart.totalPrice,
       deliveryDelay: shipping.delay,
-      shippingFee: shippingFee,
-      totalPrice: finalTotalPrice,
-      cartItems: cart.generateArray()
+      shippingFee: shippingFee, // This is the calculated shipping fee
+      totalPrice: finalTotalPrice, // This includes shipping
+      cartItems: cart.generateArray(),
+      // Add these for clarity in the confirmation page:
+      subtotal: cart.totalPrice,
+      isFreeShipping: cart.totalPrice >= freeShippingThreshold,
+      freeShippingThreshold: freeShippingThreshold
     };
 
     // ✅ Redirect to confirmation page
