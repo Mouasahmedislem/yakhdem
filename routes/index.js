@@ -1866,7 +1866,8 @@ console.log("📝 Tentative d’enregistrement :", order);
 try {
   const result = await order.save();
 
-    
+    const cityClean =
+  (req.body.city || "").toLowerCase().replace(/[0-9\-]/g, "").trim(); // remove digits or dashes 
     const user = req.user || {};
     const userData = {
       email: user.email,
@@ -1879,7 +1880,7 @@ try {
         fbc: req.cookies._fbc || undefined,
         fbp: req.cookies._fbp || undefined,
        country: req.body.country,
-       city: req.body.city
+       city: cityClean
     };
 
     const eventIdPurchase = generateEventId(); // Use a proper UUID generator
