@@ -1976,7 +1976,7 @@ await sendAdminOrderEmail({
 
     // ✅ Store ALL confirmation data in session
     req.session.confirmationData = {
-      metaEventIdPurchase: generateEventId(),
+      metaEventIdPurchase: eventIdPurchase,
       user: req.user || {},
       name: req.body.name,
       numero: rawNumero,
