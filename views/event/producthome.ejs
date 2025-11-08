@@ -83,20 +83,20 @@
 </head>
 <body class="bg-white text-gray-800 antialiased leading-relaxed">
 
-  <!-- Header (minimal, responsive) -->
+  <!-- Header (improved spacing) -->
   <header class="border-b border-gray-100 bg-white sticky top-0 z-40">
-    <div class="max-w-6xl mx-auto px-4 md:px-6 lg:px-8">
+    <div class="max-w-7xl mx-auto px-6 lg:px-8"> <!-- Increased max-width and padding -->
       <div class="flex items-center justify-between h-20">
-        <a href="/" class="flex items-center gap-3">
-          <img src="/img/logo.png" alt="Paintello" class="h-12 w-auto" />
-          <span class="hidden md:inline-block text-sm font-medium text-gray-700">Paintello Home</span>
+        <a href="/" class="flex items-center gap-4"> <!-- Increased gap -->
+          <img src="/img/logo.png" alt="Paintello" class="h-14 w-auto" /> <!-- Slightly larger logo -->
+          <span class="hidden md:inline-block text-base font-medium text-gray-700">Paintello Home</span> <!-- Larger text -->
         </a>
 
-        <nav class="flex items-center gap-4">
-          <a href="/shop" class="text-sm text-gray-600 hover:text-gray-900">Shop</a>
-          <a href="/track-login" class="text-sm text-gray-600 hover:text-gray-900">Track</a>
-          <a href="/user/signin" class="text-sm text-gray-600 hover:text-gray-900">Sign in</a>
-          <a href="/shop" class="relative inline-flex items-center px-3 py-2 rounded-full bg-gray-50 hover:bg-gray-100">
+        <nav class="flex items-center gap-6"> <!-- Increased gap -->
+          <a href="/shop" class="text-sm text-gray-600 hover:text-gray-900 transition-colors">Shop</a>
+          <a href="/track-login" class="text-sm text-gray-600 hover:text-gray-900 transition-colors">Track</a>
+          <a href="/user/signin" class="text-sm text-gray-600 hover:text-gray-900 transition-colors">Sign in</a>
+          <a href="/shop" class="relative inline-flex items-center px-4 py-2 rounded-full bg-gray-50 hover:bg-gray-100 transition-colors"> <!-- Increased padding -->
             <i class="fas fa-shopping-cart"></i>
             <% if (session.cart && session.cart.totalQty > 0) { %>
               <span class="ml-2 text-xs font-semibold text-gray-700">(<%= session.cart.totalQty %>)</span>
@@ -108,45 +108,40 @@
   </header>
 
   <!-- Main content -->
-  <main class="max-w-6xl mx-auto px-4 md:px-6 lg:px-8 py-10">
-    <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
+  <main class="max-w-7xl mx-auto px-6 lg:px-8 py-10"> <!-- Increased max-width -->
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-10"> <!-- Increased gap -->
 
-      <!-- LEFT: Images + 3D viewer column (col-span 7) -->
+      <!-- LEFT: Images column (col-span 7) -->
       <section class="lg:col-span-7 space-y-6">
 
-        <!-- Primary image + thumbnails -->
+        <!-- Primary image + thumbnails - IMPROVED LAYOUT -->
         <div class="bg-white rounded-2xl shadow-sm overflow-hidden">
-          <div class="grid grid-cols-1 lg:grid-cols-2 gap-4 p-4">
-            <div class="flex items-center justify-center">
-              <img id="mainImage" src="<%= producthome.image[0] %>" alt="<%= producthome.title %>" class="w-full h-[420px] object-cover rounded-lg" />
+          <div class="flex flex-col lg:flex-row gap-6 p-6"> <!-- Changed to flex layout -->
+            
+            <!-- Thumbnails column (left) -->
+            <div class="lg:w-24 flex lg:flex-col gap-3 order-2 lg:order-1 overflow-x-auto lg:overflow-visible"> <!-- Made thumbnails vertical on desktop -->
+              <% producthome.image.forEach((img, idx) => { %>
+                <button type="button" class="thumbnail shrink-0 rounded-lg border-2 border-transparent hover:border-[color:var(--accent)] p-1 bg-white transition-all" data-src="<%= img %>">
+                  <img src="<%= img %>" alt="thumb <%= idx %>" class="w-20 h-20 lg:w-full lg:h-20 object-cover rounded-md" />
+                </button>
+              <% }) %>
             </div>
-            <div class="flex flex-col gap-3">
-              <div class="flex-1 flex items-center justify-center rounded-lg overflow-hidden bg-gray-50">
-                <!-- 3D viewer placeholder / canvas -->
-                <% if (has3DModel) { %>
-                  <div id="modelViewer" class="w-full h-[420px] model-viewer-container"></div>
-                <% } else { %>
-                  <div class="p-6 text-center text-sm text-gray-500">No 3D preview available</div>
-                <% } %>
-              </div>
 
-              <!-- thumbnails row -->
-              <div class="flex gap-3 mt-3 overflow-x-auto py-2">
-                <% producthome.image.forEach((img, idx) => { %>
-                  <button type="button" class="thumbnail shrink-0 rounded-lg border border-gray-100 p-1 bg-white" data-src="<%= img %>">
-                    <img src="<%= img %>" alt="thumb <%= idx %>" class="w-24 h-20 object-cover rounded-md" />
-                  </button>
-                <% }) %>
+            <!-- Main image (right) -->
+            <div class="flex-1 order-1 lg:order-2">
+              <div class="flex items-center justify-center bg-gray-50 rounded-xl overflow-hidden">
+                <img id="mainImage" src="<%= producthome.image[0] %>" alt="<%= producthome.title %>" class="w-full h-[500px] object-cover cursor-zoom-in" />
               </div>
             </div>
+
           </div>
         </div>
 
-        <!-- Product gallery (optional larger carousel) -->
-        <div class="grid grid-cols-2 gap-4">
-          <% producthome.image.slice(0,4).forEach(img => { %>
-            <div class="rounded-lg overflow-hidden bg-white shadow-sm">
-              <img src="<%= img %>" class="w-full h-40 object-cover" />
+        <!-- Product gallery -->
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+          <% producthome.image.slice(0,4).forEach((img, idx) => { %>
+            <div class="rounded-lg overflow-hidden bg-white shadow-sm hover:shadow-md transition-shadow cursor-pointer">
+              <img src="<%= img %>" class="w-full h-32 md:h-40 object-cover hover:scale-105 transition-transform duration-300" />
             </div>
           <% }) %>
         </div>
@@ -155,7 +150,7 @@
       <!-- RIGHT: Product info and actions (col-span 5) -->
       <aside class="lg:col-span-5">
         <div class="bg-white rounded-2xl shadow-sm p-6 sticky top-24">
-          <div class="mb-3">
+          <div class="mb-4">
             <h1 class="text-2xl font-semibold text-gray-900"><%= producthome.title %></h1>
             <p class="mt-2 text-sm text-gray-600"><%= producthome.subtitle || '' %></p>
           </div>
@@ -169,51 +164,73 @@
 
           <p class="mt-4 text-sm text-gray-600">Free shipping over 5000 DA. Available in all wilayas.</p>
 
-          <!-- Add to cart form (preserve existing route) -->
+          <!-- Add to cart form -->
           <form id="addToCartForm" action="/add-to-cart-producthome/<%= producthome._id %>" method="GET" class="mt-6">
             <div class="flex items-center gap-3">
-              <label class="text-sm text-gray-700">Quantity</label>
+              <label class="text-sm text-gray-700 font-medium">Quantity</label>
               <div class="flex items-center border rounded-full overflow-hidden w-36">
-                <button type="button" id="qtyMinus" class="px-4 py-2 text-gray-700">-</button>
-                <input id="qtyInput" name="qty" value="1" class="w-12 text-center py-2 outline-none" />
-                <button type="button" id="qtyPlus" class="px-4 py-2 text-gray-700">+</button>
+                <button type="button" id="qtyMinus" class="px-4 py-2 text-gray-700 hover:bg-gray-50 transition-colors">-</button>
+                <input id="qtyInput" name="qty" value="1" class="w-12 text-center py-2 outline-none bg-transparent" />
+                <button type="button" id="qtyPlus" class="px-4 py-2 text-gray-700 hover:bg-gray-50 transition-colors">+</button>
               </div>
             </div>
 
             <div class="mt-6 flex flex-col gap-3">
-              <button id="addToCartBtn" type="submit" class="w-full py-3 rounded-full text-white font-semibold" style="background:var(--accent);">Add to cart</button>
-
-              <a href="/checkout" id="buyNowBtn" class="w-full inline-flex items-center justify-center py-3 rounded-full border border-gray-200">Buy it now</a>
+              <button id="addToCartBtn" type="submit" class="w-full py-3 rounded-full text-white font-semibold hover:opacity-90 transition-opacity" style="background:var(--accent);">Add to cart</button>
+              <a href="/checkout" id="buyNowBtn" class="w-full inline-flex items-center justify-center py-3 rounded-full border border-gray-200 hover:border-gray-300 transition-colors">Buy it now</a>
             </div>
           </form>
 
-          <!-- Tabs: Description and Info -->
-          <div class="mt-6">
-            <div class="flex gap-3 border-b border-gray-100">
-              <button data-tab="desc" class="tab-btn text-sm py-3 px-1 font-medium text-gray-800 border-b-2 border-transparent active">Description</button>
-              <button data-tab="info" class="tab-btn text-sm py-3 px-1 font-medium text-gray-600">Information</button>
+          <!-- Tabs: Description, Info, and 3D Viewer -->
+          <div class="mt-8">
+            <div class="flex gap-6 border-b border-gray-100">
+              <button data-tab="desc" class="tab-btn text-sm py-4 px-1 font-medium text-gray-800 border-b-2 border-transparent hover:text-gray-900 active">Description</button>
+              <button data-tab="info" class="tab-btn text-sm py-4 px-1 font-medium text-gray-600 hover:text-gray-900">Information</button>
+              <% if (has3DModel) { %>
+                <button data-tab="model3d" class="tab-btn text-sm py-4 px-1 font-medium text-gray-600 hover:text-gray-900">3D View</button>
+              <% } %>
             </div>
-            <div class="mt-4">
-              <div id="desc" class="tab-panel text-sm text-gray-700"><%= producthome.description %></div>
+            
+            <div class="mt-6">
+              <!-- Description Tab -->
+              <div id="desc" class="tab-panel text-sm text-gray-700 leading-relaxed">
+                <%= producthome.description %>
+              </div>
+
+              <!-- Information Tab -->
               <div id="info" class="tab-panel hidden text-sm text-gray-700">
-                <ul class="list-disc pl-5">
+                <ul class="space-y-2">
                   <% for (let key in producthome.details) { %>
-                    <li><strong><%= key %>:</strong> <%= producthome.details[key] %></li>
+                    <li class="flex border-b border-gray-100 py-2">
+                      <strong class="w-32 flex-shrink-0 text-gray-900"><%= key %>:</strong>
+                      <span class="flex-1"><%= producthome.details[key] %></span>
+                    </li>
                   <% } %>
                 </ul>
               </div>
+
+              <!-- 3D Viewer Tab - ONLY SHOWS WHEN has3DModel is true -->
+              <% if (has3DModel) { %>
+                <div id="model3d" class="tab-panel hidden">
+                  <div class="bg-gray-50 rounded-xl p-4">
+                    <div id="modelViewer" class="w-full h-96 rounded-lg overflow-hidden"></div>
+                    <p class="text-xs text-gray-500 text-center mt-3">Drag to rotate • Scroll to zoom</p>
+                  </div>
+                </div>
+              <% } %>
             </div>
           </div>
 
-          <!-- Share / Social (light) -->
-          <div class="mt-6 flex gap-3 items-center text-sm text-gray-500">
-            <div>Share:</div>
-            <a class="hover:text-gray-900" href="#">Facebook</a>
-            <a class="hover:text-gray-900" href="#">Pinterest</a>
+          <!-- Share / Social -->
+          <div class="mt-8 flex gap-3 items-center text-sm text-gray-500 pt-6 border-t border-gray-100">
+            <div class="font-medium">Share:</div>
+            <a class="hover:text-gray-900 transition-colors" href="#">Facebook</a>
+            <a class="hover:text-gray-900 transition-colors" href="#">Pinterest</a>
+            <a class="hover:text-gray-900 transition-colors" href="#">Instagram</a>
           </div>
         </div>
 
-        <!-- SEO / JSON-LD preserved below for bots -->
+        <!-- SEO / JSON-LD -->
         <script type="application/ld+json">
         {
           "@context": "https://schema.org/",
@@ -230,41 +247,82 @@
     </div>
   </main>
 
-  <!-- Footer (simple) -->
-  <footer class="border-t border-gray-100 bg-white">
-    <div class="max-w-6xl mx-auto px-4 py-8 text-sm text-gray-600">
+  <!-- Footer -->
+  <footer class="border-t border-gray-100 bg-white mt-16">
+    <div class="max-w-7xl mx-auto px-6 py-8 text-sm text-gray-600">
       © <%= new Date().getFullYear() %> Paintello — All rights reserved
     </div>
   </footer>
 
   <!-- Utility scripts -->
   <script>
-    // Safety: global error logger to console (helps debug Clarity issues)
     window.addEventListener('error', function(e){
       console.error('JS Error caught:', e.message, 'at', e.filename + ':' + e.lineno);
     });
   </script>
 
-  <!-- Small interaction scripts (defer to ensure DOM present) -->
+  <!-- Improved interaction scripts -->
   <script>
-    // Thumbnail -> main image
     document.addEventListener('DOMContentLoaded', function(){
-      document.querySelectorAll('.thumbnail').forEach(btn => {
+      // Improved thumbnail switching with active state
+      const mainImage = document.getElementById('mainImage');
+      const thumbnails = document.querySelectorAll('.thumbnail');
+      
+      thumbnails.forEach(btn => {
         btn.addEventListener('click', function(){
           const src = this.dataset.src;
-          const main = document.getElementById('mainImage');
-          if(main && src) main.src = src;
+          if(mainImage && src) {
+            mainImage.src = src;
+            // Update active state
+            thumbnails.forEach(t => t.classList.remove('border-[color:var(--accent)]', 'border-2'));
+            this.classList.add('border-[color:var(--accent)]', 'border-2');
+          }
         });
       });
 
-      // Tabs
+      // Gallery image click to set as main
+      document.querySelectorAll('.grid.grid-cols-2 img').forEach(img => {
+        img.addEventListener('click', function(){
+          const src = this.src;
+          if(mainImage && src) {
+            mainImage.src = src;
+            // Find and activate corresponding thumbnail
+            thumbnails.forEach(thumb => {
+              if(thumb.dataset.src === src) {
+                thumbnails.forEach(t => t.classList.remove('border-[color:var(--accent)]', 'border-2'));
+                thumb.classList.add('border-[color:var(--accent)]', 'border-2');
+              }
+            });
+          }
+        });
+      });
+
+      // Tabs - Improved with 3D model support
       document.querySelectorAll('.tab-btn').forEach(btn => {
         btn.addEventListener('click', function(){
-          document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('text-gray-900','active'));
-          document.querySelectorAll('.tab-panel').forEach(p=>p.classList.add('hidden'));
-          const target = this.dataset.tab || this.getAttribute('data-tab');
-          if(target) document.getElementById(target).classList.remove('hidden');
-          this.classList.add('text-gray-900','active');
+          // Update button states
+          document.querySelectorAll('.tab-btn').forEach(b => {
+            b.classList.remove('text-gray-900', 'border-b-2', 'border-[color:var(--accent)]', 'active');
+            b.classList.add('text-gray-600');
+          });
+          
+          // Hide all panels
+          document.querySelectorAll('.tab-panel').forEach(p => p.classList.add('hidden'));
+          
+          // Show target panel and activate button
+          const target = this.dataset.tab;
+          if(target) {
+            document.getElementById(target).classList.remove('hidden');
+            this.classList.add('text-gray-900', 'border-b-2', 'border-[color:var(--accent)]', 'active');
+            this.classList.remove('text-gray-600');
+            
+            // If 3D tab is activated and viewer exists, trigger resize
+            if(target === 'model3d' && window.viewerInitialized) {
+              setTimeout(() => {
+                window.dispatchEvent(new Event('resize'));
+              }, 100);
+            }
+          }
         });
       });
 
@@ -272,18 +330,21 @@
       const qtyInput = document.getElementById('qtyInput');
       const plus = document.getElementById('qtyPlus');
       const minus = document.getElementById('qtyMinus');
+      
       if(qtyInput){
         qtyInput.value = qtyInput.value || 1;
-        plus?.addEventListener('click', ()=> { qtyInput.value = Math.max(1, parseInt(qtyInput.value||1) + 1); });
-        minus?.addEventListener('click', ()=> { qtyInput.value = Math.max(1, parseInt(qtyInput.value||1) - 1); });
+        plus?.addEventListener('click', () => { 
+          qtyInput.value = Math.max(1, parseInt(qtyInput.value||1) + 1); 
+        });
+        minus?.addEventListener('click', () => { 
+          qtyInput.value = Math.max(1, parseInt(qtyInput.value||1) - 1); 
+        });
       }
 
-      // AddToCart tracking: ensure fbq exists and form submission proceeds
+      // AddToCart tracking
       const addForm = document.getElementById('addToCartForm');
-      const addBtn = document.getElementById('addToCartBtn');
       if(addForm){
         addForm.addEventListener('submit', function(e){
-          // Fire fbq safely
           try{
             if(window.fbq) {
               window.fbq('track', 'AddToCart', {
@@ -296,26 +357,19 @@
               }, { eventID: '<%= metaEventIdCart %>' });
             }
           }catch(err){ console.warn('fbq track AddToCart failed', err); }
-          // allow form to submit normally
         });
       }
-
-      // Minimal defensive check for Buy Now
-      const buyNow = document.getElementById('buyNowBtn');
-      if(buyNow){ buyNow.addEventListener('click', ()=>{ /* optionally add tracking */ }); }
 
     });
   </script>
 
-  <!-- 3D Viewer Initialization (deferred until Three.js loaded) -->
+  <!-- 3D Viewer Initialization - ONLY for products with 3D models -->
+  <% if (has3DModel) { %>
   <script>
-    // Initialize 3D viewer only when necessary and when scripts loaded
     function init3DViewer(stlFilePath, defaultColor, autoRotateEnabled){
       try{
-        // Basic safety checks
         if(!window.THREE || !document.getElementById('modelViewer')) return;
 
-        // Copy the robust viewer logic from your previous implementation with safe guards
         let container = document.getElementById('modelViewer');
         let scene = new THREE.Scene();
         scene.background = new THREE.Color(0xf8f9fa);
@@ -341,47 +395,69 @@
           const bbox = geometry.boundingBox;
           const center = new THREE.Vector3(); bbox.getCenter(center);
 
-          const material = new THREE.MeshPhongMaterial({ color: new THREE.Color(defaultColor || '#c9b59a'), shininess: 60 });
+          const material = new THREE.MeshPhongMaterial({ 
+            color: new THREE.Color(defaultColor || '#c9b59a'), 
+            shininess: 60,
+            specular: 0x222222
+          });
           const mesh = new THREE.Mesh(geometry, material);
 
           const group = new THREE.Group();
           mesh.position.set(-center.x, -center.y, -center.z);
           group.add(mesh);
 
-          const size = new THREE.Vector3(); bbox.getSize(size); const maxDim = Math.max(size.x,size.y,size.z);
+          const size = new THREE.Vector3(); bbox.getSize(size); 
+          const maxDim = Math.max(size.x, size.y, size.z);
           const scale = (1.8 / maxDim) || 1;
           group.scale.set(scale, scale, scale);
           scene.add(group);
 
-          controls.target.set(0,0,0); controls.update();
+          controls.target.set(0,0,0); 
+          controls.update();
+          
+          window.viewerInitialized = true;
+
         }, undefined, function(err){
           console.error('STL load error', err);
-          document.getElementById('modelViewer').innerHTML = '<div class="p-6 text-center text-sm text-gray-500">3D preview failed to load.</div>';
+          container.innerHTML = '<div class="flex items-center justify-center h-full text-sm text-gray-500">3D preview failed to load.</div>';
         });
 
-        window.addEventListener('resize', function(){
-          camera.aspect = container.clientWidth / container.clientHeight; camera.updateProjectionMatrix(); renderer.setSize(container.clientWidth, container.clientHeight);
-        });
+        function handleResize(){
+          if (container.parentElement && container.parentElement.classList.contains('hidden')) return;
+          
+          camera.aspect = container.clientWidth / container.clientHeight; 
+          camera.updateProjectionMatrix(); 
+          renderer.setSize(container.clientWidth, container.clientHeight);
+        }
 
-        (function animate(){ requestAnimationFrame(animate); controls.update(); renderer.render(scene, camera); })();
+        window.addEventListener('resize', handleResize);
+
+        (function animate(){ 
+          requestAnimationFrame(animate); 
+          controls.update(); 
+          renderer.render(scene, camera); 
+        })();
 
       }catch(e){ console.error('init3DViewer error', e); }
     }
 
-    // Defer initialization until Three.js available
+    // Initialize 3D viewer when DOM is ready
     document.addEventListener('DOMContentLoaded', function(){
       <% if (has3DModel) { %>
-        // small timeout to ensure loader script executed
         setTimeout(function(){
-          init3DViewer('<%= model3DSettings.stlFile %>', '<%= model3DSettings.defaultColor %>', <%= model3DSettings.autoRotate %>);
-        }, 300);
+          init3DViewer(
+            '<%= model3DSettings.stlFile %>', 
+            '<%= model3DSettings.defaultColor %>', 
+            <%= model3DSettings.autoRotate %>
+          );
+        }, 500);
       <% } %>
     });
   </script>
+  <% } %>
 
-  <!-- Include fontawesome for icons (defer) -->
+  <!-- Include fontawesome for icons -->
   <script src="https://kit.fontawesome.com/a2d9b6b9f4.js" crossorigin="anonymous" defer></script>
 
-  <!-- End body -->
 </body>
 </html>
