@@ -2295,77 +2295,84 @@ router.post('/submit-return', async (req, res) => {
 });
 
 router.get("/producthome/:id", async (req, res) => {
-  const producthome = await Producthome.findById(req.params.id);
-  const eventIdView = generateEventId(); // Use a proper UUID generator
-  const eventIdCart = generateEventId(); // prepare for AddToCart
+  try {
+    const producthome = await Producthome.findById(req.params.id);
+    
+    // ✅ Get paintello products for related items
+    const paintellos = await Paintello.find({}).limit(12); // Get 12 paintello products
+    
+    const eventIdView = generateEventId();
+    const eventIdCart = generateEventId();
 
-  // ✅ Use req.user directly — no fallback needed
-  console.log("✅ req.user", req.user); // debug
+    console.log("✅ req.user", req.user);
 
-  const userData = {
-    email: req.user?.email || undefined,
-    numero: req.user?.numero || undefined,
-    firstName: req.user?.firstName || undefined,
-    lastName: req.user?.lastName || undefined,
-    country: "algeria",
-    ip: req.headers["x-forwarded-for"]?.split(",")[0] || req.socket.remoteAddress,
-    userAgent: req.get("User-Agent"),
-        fbc: req.cookies._fbc || undefined,
-        fbp: req.cookies._fbp || undefined  
-  };
+    const userData = {
+      email: req.user?.email || undefined,
+      numero: req.user?.numero || undefined,
+      firstName: req.user?.firstName || undefined,
+      lastName: req.user?.lastName || undefined,
+      country: "algeria",
+      ip: req.headers["x-forwarded-for"]?.split(",")[0] || req.socket.remoteAddress,
+      userAgent: req.get("User-Agent"),
+      fbc: req.cookies._fbc || undefined,
+      fbp: req.cookies._fbp || undefined  
+    };
 
-  console.log("🔍 Raw userData before hashing:", userData);
+    console.log("🔍 Raw userData before hashing:", userData);
 
+    await sendMetaCAPIEvent({
+      eventName: "ViewContent",
+      eventId: eventIdView,
+      userData,
+      customData: {
+        content_name: producthome.title,
+        content_ids: [producthome.id],
+        contents: [{
+          id: producthome.id,
+          quantity: 1
+        }],
+        content_type: "product",
+        value: producthome.price,
+        currency: "DZD"
+      }
+    });
 
-  await sendMetaCAPIEvent({
-    eventName: "ViewContent",
-    eventId: eventIdView,
-    userData,
-    customData: {
-      content_name: producthome.title,
-      content_ids: [producthome.id],
-      contents: [{  // ← ADD THIS
-      id: producthome.id,
-      quantity: 1  // Default quantity for view
-      }],
-      content_type: "product",
-      value: producthome.price,
-      currency: "DZD"
+    const has3DModel = !!(producthome.stlFile);
+    const stlFile = producthome.stlFile;
+    
+    let defaultColor = '#8CAAE6';
+    if (producthome.model3D && producthome.model3D.defaultColor) {
+      defaultColor = producthome.model3D.defaultColor.startsWith('#') 
+        ? producthome.model3D.defaultColor 
+        : `#${producthome.model3D.defaultColor}`;
     }
-  });
+    
+    const model3DSettings = {
+      enabled: has3DModel,
+      stlFile: stlFile,
+      autoRotate: producthome.model3D?.autoRotate ?? true,
+      defaultColor: defaultColor
+    };
 
-// ... your existing userData and tracking code ...
+    console.log('🎨 FINAL COLOR:', defaultColor);
 
-  const has3DModel = !!(producthome.stlFile);
-  const stlFile = producthome.stlFile;
-  
-  // Get color from model3D or use default
-  let defaultColor = '#8CAAE6'; // Your desired blue
-  
-  if (producthome.model3D && producthome.model3D.defaultColor) {
-    // Ensure the color has # prefix
-    defaultColor = producthome.model3D.defaultColor.startsWith('#') 
-      ? producthome.model3D.defaultColor 
-      : `#${producthome.model3D.defaultColor}`;
+    // ✅ Render with paintellos data for related products
+    res.render("event/producthome", { 
+      producthome, 
+      paintellos, // Pass paintello products to the template
+      req,
+      metaEventIdView: eventIdView,
+      metaEventIdCart: eventIdCart,
+      has3DModel: has3DModel,
+      model3DSettings: model3DSettings,
+      user: req.user, // Make sure user is passed for template
+      login: req.isAuthenticated() // Add login status
+    });
+
+  } catch (error) {
+    console.error("Error in producthome route:", error);
+    res.status(500).send("Server Error");
   }
-  
-  const model3DSettings = {
-    enabled: has3DModel,
-    stlFile: stlFile,
-    autoRotate: producthome.model3D?.autoRotate ?? true,
-    defaultColor: defaultColor
-  };
-
-  console.log('🎨 FINAL COLOR:', defaultColor);
-
-  res.render("event/producthome", { 
-    producthome, 
-    req,
-    metaEventIdView: eventIdView,
-    metaEventIdCart: eventIdCart,
-    has3DModel: has3DModel,
-    model3DSettings: model3DSettings
-  });
 });
 
 // UUID v4 generator function - MOVE THIS OUTSIDE THE ROUTE
