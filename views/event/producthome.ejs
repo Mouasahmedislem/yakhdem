@@ -174,21 +174,27 @@
           <p class="mt-4 text-sm text-gray-600">Free shipping over 5000 DA. Available in all wilayas.</p>
 
           <!-- Add to cart form -->
-          <form id="addToCartForm" action="/add-to-cart-producthome/<%= producthome && producthome._id ? producthome._id : '' %>" method="GET" class="mt-6">
-            <div class="flex items-center gap-3">
-              <label class="text-sm text-gray-700 font-medium">Quantity</label>
-              <div class="flex items-center border rounded-full overflow-hidden w-36">
-                <button type="button" id="qtyMinus" class="px-4 py-2 text-gray-700 hover:bg-gray-50 transition-colors">-</button>
-                <input id="qtyInput" name="qty" value="1" class="w-12 text-center py-2 outline-none bg-transparent" />
-                <button type="button" id="qtyPlus" class="px-4 py-2 text-gray-700 hover:bg-gray-50 transition-colors">+</button>
-              </div>
-            </div>
+<form id="addToCartForm" action="/add-to-cart-producthome/<%= producthome._id %>" method="GET" class="mt-6">
+  <div class="flex items-center gap-3">
+    <label class="text-sm text-gray-700 font-medium">Quantity</label>
+    <div class="flex items-center border rounded-full overflow-hidden w-36">
+      <button type="button" id="qtyMinus" class="px-4 py-2 text-gray-700 hover:bg-gray-50 transition-colors">-</button>
+      <input id="qtyInput" name="qty" value="1" class="w-12 text-center py-2 outline-none bg-transparent" />
+      <button type="button" id="qtyPlus" class="px-4 py-2 text-gray-700 hover:bg-gray-50 transition-colors">+</button>
+    </div>
+  </div>
 
-            <div class="mt-6 flex flex-col gap-3">
-              <button id="addToCartBtn" type="submit" class="w-full py-3 rounded-full text-white font-semibold" style="background:var(--accent);">Add to cart</button>
-              <a href="/checkout" id="buyNowBtn" class="w-full inline-flex items-center justify-center py-3 rounded-full border border-gray-200 hover:border-gray-300 transition-colors">Buy it now</a>
-            </div>
-          </form>
+  <div class="mt-6 flex flex-col gap-3">
+    <button id="addToCartBtn" type="submit" class="w-full py-3 rounded-full text-white font-semibold hover:opacity-90 transition-opacity" style="background:var(--accent);">
+      Add to cart
+    </button>
+
+    <!-- Buy it now button - will add to cart AND go to checkout -->
+    <button id="buyNowBtn" type="button" class="w-full py-3 rounded-full border border-gray-200 hover:border-gray-300 transition-colors bg-white text-gray-800 font-semibold">
+      Buy it now
+    </button>
+  </div>
+</form>
 
           <!-- Tabs -->
           <div class="mt-8">
@@ -287,7 +293,7 @@
           // Filter out current product if it exists in paintellos
           const relatedProducts = paintellos.filter(p => {
             return !(producthome && producthome._id && p._id && producthome._id.toString() === p._id.toString());
-          }).slice(0, 8); // Limit to 8 products
+          }).slice(0, 12); // Limit to 8 products
         %>
         
         <% if (relatedProducts.length > 0) { %>
@@ -519,6 +525,73 @@
 
     }); // DOMContentLoaded end
   </script>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    // Buy Now functionality
+    const buyNowBtn = document.getElementById('buyNowBtn');
+    
+    if (buyNowBtn) {
+      buyNowBtn.addEventListener('click', async function(e) {
+        e.preventDefault();
+        
+        try {
+          // Show loading state
+          const originalText = buyNowBtn.innerHTML;
+          buyNowBtn.innerHTML = 'Adding to cart...';
+          buyNowBtn.disabled = true;
+          
+          // Get the quantity
+          const qtyInput = document.getElementById('qtyInput');
+          const quantity = qtyInput ? parseInt(qtyInput.value) || 1 : 1;
+          
+          // Get product ID
+          const productId = '<%= producthome._id %>';
+          
+          console.log('Buy Now: Adding product to cart:', productId, 'quantity:', quantity);
+          
+          // Add to cart via API call
+          const response = await fetch(`/add-to-cart-producthome/${productId}?qty=${quantity}&redirect=checkout`, {
+            method: 'GET',
+            headers: {
+              'Content-Type': 'application/json',
+            }
+          });
+          
+          if (response.ok) {
+            // Success - redirect to checkout
+            window.location.href = '/checkout';
+          } else {
+            throw new Error('Failed to add to cart');
+          }
+          
+        } catch (error) {
+          console.error('Buy Now error:', error);
+          // Reset button
+          buyNowBtn.innerHTML = 'Buy it now';
+          buyNowBtn.disabled = false;
+          // Show error message
+          alert('Sorry, there was an error adding the product to cart. Please try again.');
+        }
+      });
+    }
+
+    // Existing quantity controls
+    const qtyInput = document.getElementById('qtyInput');
+    const plus = document.getElementById('qtyPlus');
+    const minus = document.getElementById('qtyMinus');
+    
+    if (qtyInput) {
+      qtyInput.value = qtyInput.value || 1;
+      plus?.addEventListener('click', () => { 
+        qtyInput.value = Math.max(1, parseInt(qtyInput.value || 1) + 1); 
+      });
+      minus?.addEventListener('click', () => { 
+        qtyInput.value = Math.max(1, parseInt(qtyInput.value || 1) - 1); 
+      });
+    }
+  });
+</script> 
 
   <!-- 3D Viewer (robust) -->
   <% if (has3DModel) { %>
