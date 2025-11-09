@@ -2385,10 +2385,16 @@ function generateEventId() {
 
 router.get("/add-to-cart-producthome/:id", async function(req, res) {
   const producthomeId = req.params.id;
+  const quantity = parseInt(req.query.qty) || 1;
+  const redirectTo = req.query.redirect; // Get redirect parameter
+  
   const cart = new Cart(req.session.cart ? req.session.cart : {});
   const producthome = await Producthome.findById(producthomeId);
 
-  cart.add(producthome, producthome.id);
+  // Add product to cart with quantity
+  for (let i = 0; i < quantity; i++) {
+    cart.add(producthome, producthome.id);
+  }
   req.session.cart = cart;
 
   // ✅ User data from req.user
@@ -2401,13 +2407,12 @@ router.get("/add-to-cart-producthome/:id", async function(req, res) {
     country: "algeria",
     ip: req.headers["x-forwarded-for"]?.split(",")[0] || req.socket.remoteAddress,
     userAgent: req.get("User-Agent"),
-        fbc: req.cookies._fbc || undefined,
-        fbp: req.cookies._fbp || undefined  
+    fbc: req.cookies._fbc || undefined,
+    fbp: req.cookies._fbp || undefined  
   };
 
   // ✅ Unique event ID
-  const eventIdCart = generateEventId(); // Use a proper UUID generator
-
+  const eventIdCart = generateEventId();
 
   // ✅ Send CAPI event
   await sendMetaCAPIEvent({
@@ -2417,36 +2422,40 @@ router.get("/add-to-cart-producthome/:id", async function(req, res) {
     customData: {
       content_name: producthome.title,
       content_ids: [producthome.id],
-      contents: [{  // ← ADD THIS
-      id: producthome.id,
-      quantity: 1  // Default quantity for view
-    }],
+      contents: [{
+        id: producthome.id,
+        quantity: quantity
+      }],
       content_type: "product",
-      value: producthome.price, // Calculate total
+      value: producthome.price * quantity,
       currency: "DZD"
     }
-    // Change to real test code if needed
   });
-// Store the event ID in session for client-side tracking
+
+  // Store the event ID in session for client-side tracking
   req.session.metaEventIdCart = eventIdCart;
   req.session.metaEventData = {
     eventName: "AddToCart",
     productData: {
       content_name: producthome.title,
       content_ids: [producthome.id],
-      contents: [{  // ← ADD THIS
-      id: producthome.id,
-      quantity: 1  // Default quantity for view
-    }],
+      contents: [{
+        id: producthome.id,
+        quantity: quantity
+      }],
       content_type: "product",
-      value: producthome.price,
+      value: producthome.price * quantity,
       currency: "DZD"
     }
   };
-  res.redirect('/shop');
-});
 
- 
+  // Redirect based on parameter
+  if (redirectTo === 'checkout') {
+    res.redirect('/checkout');
+  } else {
+    res.redirect('/shop'); // Default redirect for normal "Add to cart"
+  }
+});
 
 router.get('/paintello', async (req, res) => {
   try {
