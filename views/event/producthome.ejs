@@ -164,7 +164,45 @@
     .model-viewer-container { min-height: 380px; }
     
     /* Lightbox full-screen styles */
-    .lightbox-backdrop { background: rgba(0,0,0,0.9); }
+    .lightbox-backdrop { 
+      background: rgba(0,0,0,0.9); 
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 1000;
+      display: none;
+      align-items: center;
+      justify-content: center;
+    }
+    
+    .lightbox-backdrop.active {
+      display: flex;
+    }
+    
+    .lightbox-image {
+      max-width: 90%;
+      max-height: 90%;
+      object-fit: contain;
+    }
+    
+    .lightbox-close {
+      position: absolute;
+      top: 20px;
+      right: 20px;
+      background: rgba(0,0,0,0.5);
+      color: white;
+      border: none;
+      border-radius: 50%;
+      width: 40px;
+      height: 40px;
+      font-size: 24px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
     
     /* Smooth scroll for horizontal carousel */
     .snap-x { scroll-snap-type: x mandatory; -webkit-overflow-scrolling: touch; }
@@ -280,9 +318,15 @@
       box-shadow: 0 6px 18px rgba(0, 0, 0, 0.1);
       transform: translateY(-2px);
     }
-:root {
-  --accent: #c9b59a; /* Soft beige (Zara-like) */
-}
+    
+    :root {
+      --accent: #c9b59a; /* Soft beige (Zara-like) */
+    }
+    
+    /* Thumbnail active state */
+    .thumbnail.active {
+      border-color: var(--accent) !important;
+    }
 
   </style>
 
@@ -437,7 +481,7 @@
             <div class="lg:w-24 flex lg:flex-col gap-3 order-2 lg:order-1 overflow-auto">
               <% if (producthome && Array.isArray(producthome.image)) { %>
                 <% producthome.image.forEach(function(img, idx) { %>
-                  <button type="button" class="thumbnail shrink-0 rounded-lg border-2 border-transparent hover:border-[color:var(--accent)] p-1 bg-white transition-all" data-src="<%= img %>" aria-label="Thumbnail <%= idx+1 %>">
+                  <button type="button" class="thumbnail shrink-0 rounded-lg border-2 border-transparent hover:border-[color:var(--accent)] p-1 bg-white transition-all <%= idx === 0 ? 'active border-[color:var(--accent)]' : '' %>" data-index="<%= idx %>" aria-label="Thumbnail <%= idx+1 %>">
                     <img src="<%= img %>" alt="thumb <%= idx+1 %>" class="w-20 h-20 lg:w-full lg:h-20 object-cover rounded-md" />
                   </button>
                 <% }); %>
@@ -453,7 +497,8 @@
       <% producthome.image.forEach(function(img, idx){ %>
         <img src="<%= img %>" 
              class="absolute inset-0 w-full h-full object-cover transition-opacity duration-700 ease-in-out <%= idx===0 ? 'opacity-100' : 'opacity-0' %> slider-img"
-             alt="image <%= idx+1 %>" />
+             alt="image <%= idx+1 %>" 
+             data-index="<%= idx %>" />
       <% }); %>
     <% } %>
 
@@ -473,12 +518,11 @@
   </div>
 </div>
 
-
         <!-- Gallery small grid -->
         <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
           <% if (producthome && Array.isArray(producthome.image)) { %>
             <% producthome.image.slice(0,4).forEach(function(img, idx){ %>
-              <div class="rounded-lg overflow-hidden bg-white shadow-sm hover:shadow-md transition-shadow cursor-pointer">
+              <div class="rounded-lg overflow-hidden bg-white shadow-sm hover:shadow-md transition-shadow cursor-pointer gallery-item" data-index="<%= idx %>">
                 <img src="<%= img %>" class="w-full h-32 md:h-40 object-cover hover:scale-105 transition-transform duration-300" alt="gallery <%= idx+1 %>"/>
               </div>
             <% }); %>
@@ -690,6 +734,12 @@
     <div class="max-w-7xl mx-auto px-6 py-8 text-sm text-gray-600">© <%= new Date().getFullYear() %> Paintello — All rights reserved</div>
   </footer>
 
+  <!-- Lightbox element -->
+  <div id="lightbox" class="lightbox-backdrop">
+    <button id="lightboxClose" class="lightbox-close">×</button>
+    <img id="lightboxImage" src="" alt="Full image" class="lightbox-image" />
+  </div>
+
   <!-- Global error handlers (helpful for Clarity) -->
   <script>
     window.addEventListener('error', function(e) {
@@ -701,82 +751,128 @@
   <!-- Interaction scripts (lightbox, thumbnails, tabs, qty, addToCart tracking) -->
   <script>
     document.addEventListener('DOMContentLoaded', function(){
-
-      // ---------- Lightbox full image viewer ----------
-      const lightbox = (function(){
-        // create elements
-        const backdrop = document.createElement('div');
-        backdrop.className = 'fixed inset-0 z-50 flex items-center justify-center lightbox-backdrop hidden';
-        backdrop.style.padding = '1rem';
-        backdrop.innerHTML = `
-          <div class="relative max-w-5xl w-full h-full flex items-center justify-center">
-            <button id="lightboxClose" class="absolute top-4 right-4 text-white text-3xl leading-none z-60" aria-label="Close">×</button>
-            <img id="lightboxImage" src="" alt="Full image" class="max-h-full max-w-full object-contain rounded-lg shadow-lg" />
-          </div>
-        `;
-        document.body.appendChild(backdrop);
-
-        const openBtn = document.getElementById('openLightboxBtn');
-        const mainImage = document.getElementById('mainImage');
-
-        function open(src) {
-          const imgEl = document.getElementById('lightboxImage');
-          imgEl.src = src || (mainImage ? mainImage.src : '');
-          backdrop.classList.remove('hidden');
-          backdrop.classList.add('flex');
-          document.documentElement.style.overflow = 'hidden';
-        }
-        function close() {
-          backdrop.classList.add('hidden');
-          backdrop.classList.remove('flex');
-          document.documentElement.style.overflow = '';
-        }
-
-        // events
-        backdrop.addEventListener('click', function(e){
-          if (e.target === backdrop) close();
-        });
-        backdrop.querySelector('#lightboxClose').addEventListener('click', close);
-
-        if (openBtn) openBtn.addEventListener('click', function(){ open(); });
-        if (mainImage) mainImage.addEventListener('click', function(){ open(); });
-
-        // allow ESC to close
-        document.addEventListener('keydown', function(e){ if (e.key === 'Escape') close(); });
-
-        return { open, close };
-      })();
-
-      // ---------- Thumbnail switching ----------
+      // ---------- Image Slider Functionality ----------
+      const slides = document.querySelectorAll('.slider-img');
+      const prev = document.getElementById('prevSlide');
+      const next = document.getElementById('nextSlide');
       const thumbnails = document.querySelectorAll('.thumbnail');
-      const mainImage = document.getElementById('mainImage');
-      thumbnails.forEach(btn => {
-        btn.addEventListener('click', function(){
-          const src = this.dataset.src;
-          if (mainImage && src) {
-            mainImage.src = src;
-            // set active border style
-            thumbnails.forEach(t => { t.classList.remove('!border-2'); t.classList.remove('!border-[color:var(--accent)]'); });
-            this.classList.add('!border-2');
-            this.classList.add('!border-[color:var(--accent)]');
-          }
+      const galleryItems = document.querySelectorAll('.gallery-item');
+      let currentSlide = 0;
+
+      function showSlide(index) {
+        // Hide all slides
+        slides.forEach(slide => {
+          slide.classList.remove('opacity-100');
+          slide.classList.add('opacity-0');
+        });
+        
+        // Show selected slide
+        slides[index].classList.remove('opacity-0');
+        slides[index].classList.add('opacity-100');
+        
+        // Update active thumbnail
+        thumbnails.forEach(thumb => {
+          thumb.classList.remove('active', 'border-[color:var(--accent)]');
+        });
+        
+        if (thumbnails[index]) {
+          thumbnails[index].classList.add('active', 'border-[color:var(--accent)]');
+        }
+        
+        currentSlide = index;
+      }
+
+      function nextSlide() {
+        let nextIndex = (currentSlide + 1) % slides.length;
+        showSlide(nextIndex);
+      }
+
+      function prevSlide() {
+        let prevIndex = (currentSlide - 1 + slides.length) % slides.length;
+        showSlide(prevIndex);
+      }
+
+      // Event listeners for slider arrows
+      if (prev) prev.addEventListener('click', prevSlide);
+      if (next) next.addEventListener('click', nextSlide);
+
+      // Event listeners for thumbnails
+      thumbnails.forEach(thumb => {
+        thumb.addEventListener('click', function() {
+          const index = parseInt(this.getAttribute('data-index'));
+          showSlide(index);
         });
       });
 
-      // gallery click to main
-      document.querySelectorAll('.grid img').forEach(img => {
-        img.addEventListener('click', function(){
-          const src = this.src;
-          if (mainImage && src) mainImage.src = src;
-          // mark thumbnail if matches
-          thumbnails.forEach(t => {
-            if (t.dataset.src === src) {
-              thumbnails.forEach(x=> { x.classList.remove('!border-2'); x.classList.remove('!border-[color:var(--accent)]'); });
-              t.classList.add('!border-2');
-              t.classList.add('!border-[color:var(--accent)]');
-            }
-          });
+      // Event listeners for gallery items
+      galleryItems.forEach(item => {
+        item.addEventListener('click', function() {
+          const index = parseInt(this.getAttribute('data-index'));
+          showSlide(index);
         });
+      });
+
+      // Touch swipe for mobile
+      const slider = document.getElementById('imageSlider');
+      let startX = 0, endX = 0;
+
+      if (slider) {
+        slider.addEventListener('touchstart', e => { 
+          startX = e.touches[0].clientX; 
+        });
+        
+        slider.addEventListener('touchmove', e => { 
+          endX = e.touches[0].clientX; 
+        });
+        
+        slider.addEventListener('touchend', () => {
+          const diff = endX - startX;
+          if (Math.abs(diff) > 50) { // swipe threshold
+            if (diff > 0) prevSlide(); 
+            else nextSlide();
+          }
+          startX = endX = 0;
+        });
+      }
+
+      // ---------- Lightbox Functionality ----------
+      const lightbox = document.getElementById('lightbox');
+      const lightboxImage = document.getElementById('lightboxImage');
+      const lightboxClose = document.getElementById('lightboxClose');
+      const openLightboxBtn = document.getElementById('openLightboxBtn');
+
+      function openLightbox() {
+        const currentImageSrc = slides[currentSlide].getAttribute('src');
+        lightboxImage.setAttribute('src', currentImageSrc);
+        lightbox.classList.add('active');
+        document.body.style.overflow = 'hidden';
+      }
+
+      function closeLightbox() {
+        lightbox.classList.remove('active');
+        document.body.style.overflow = '';
+      }
+
+      if (openLightboxBtn) {
+        openLightboxBtn.addEventListener('click', openLightbox);
+      }
+
+      if (lightboxClose) {
+        lightboxClose.addEventListener('click', closeLightbox);
+      }
+
+      // Close lightbox when clicking on backdrop
+      lightbox.addEventListener('click', function(e) {
+        if (e.target === lightbox) {
+          closeLightbox();
+        }
+      });
+
+      // Close lightbox with ESC key
+      document.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape' && lightbox.classList.contains('active')) {
+          closeLightbox();
+        }
       });
 
       // ---------- Tabs ----------
@@ -1052,49 +1148,6 @@ document.addEventListener('DOMContentLoaded', function() {
   });
 });
 </script>
-<script>
-document.addEventListener('DOMContentLoaded', function(){
-  const slides = document.querySelectorAll('.slider-img');
-  const prev = document.getElementById('prevSlide');
-  const next = document.getElementById('nextSlide');
-  const slider = document.getElementById('imageSlider');
-  let current = 0;
-  let startX = 0, endX = 0;
-
-  function showSlide(i){
-    slides.forEach((s, idx)=>{
-      s.classList.toggle('opacity-100', idx===i);
-      s.classList.toggle('opacity-0', idx!==i);
-    });
-  }
-
-  function nextSlide(){ current = (current + 1) % slides.length; showSlide(current); }
-  function prevSlide(){ current = (current - 1 + slides.length) % slides.length; showSlide(current); }
-
-  // Desktop arrows
-  prev?.addEventListener('click', prevSlide);
-  next?.addEventListener('click', nextSlide);
-
-  // --- Touch swipe logic ---
-  if(slider){
-    slider.addEventListener('touchstart', e => { startX = e.touches[0].clientX; });
-    slider.addEventListener('touchmove', e => { endX = e.touches[0].clientX; });
-    slider.addEventListener('touchend', () => {
-      const diff = endX - startX;
-      if(Math.abs(diff) > 50){ // swipe threshold
-        if(diff > 0) prevSlide(); else nextSlide();
-      }
-      startX = endX = 0;
-    });
-  }
-
-  // Optional: auto-hide arrows on mobile
-  if(window.innerWidth < 768){
-    prev?.classList.add('hidden');
-    next?.classList.add('hidden');
-  }
-});
-</script>
 
 <!-- FontAwesome icons -->
   <script src="https://kit.fontawesome.com/a2d9b6b9f4.js" crossorigin="anonymous" defer></script>
@@ -1115,31 +1168,6 @@ document.addEventListener('DOMContentLoaded', function(){
   }
 })();
 </script>
-<script>
-document.addEventListener('DOMContentLoaded', function(){
-  const slides = document.querySelectorAll('.slider-img');
-  const prev = document.getElementById('prevSlide');
-  const next = document.getElementById('nextSlide');
-  let current = 0;
-
-  function showSlide(i){
-    slides.forEach((s, idx)=>{
-      s.classList.toggle('opacity-100', idx===i);
-      s.classList.toggle('opacity-0', idx!==i);
-    });
-  }
-
-  prev && prev.addEventListener('click', ()=>{ 
-    current = (current - 1 + slides.length) % slides.length;
-    showSlide(current);
-  });
-  next && next.addEventListener('click', ()=>{ 
-    current = (current + 1) % slides.length;
-    showSlide(current);
-  });
-});
-</script>
 
 </body>
 </html>
-
