@@ -493,9 +493,25 @@
 
 
 
-  
+  <script>
+(function() {
+  function getParam(p) {
+    var match = window.location.search.match(new RegExp('[?&]' + p + '=([^&]+)'));
+    return match ? match[1] : null;
+  }
+
+  var fbclid = getParam('fbclid');
+  if (fbclid) {
+    var fbc = `fb.1.${Date.now()}.${fbclid}`;
+    document.cookie = `_fbc=${fbc}; path=/; max-age=31536000`; // Store for 1 year
+  }
+})();
+</script>
+
 
  <!-- Footer -->
   <footer class="border-t border-gray-100 bg-white mt-16">
     <div class="max-w-7xl mx-auto px-6 py-8 text-sm text-gray-600">© <%= new Date().getFullYear() %> Paintello — All rights reserved</div>
   </footer>
+</body>
+</html>
