@@ -10,6 +10,68 @@
   <!-- Tailwind (CDN for prototyping) -->
   <script src="https://cdn.tailwindcss.com"></script>
   <style>
+/* Reset default body margins */
+body, html {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  background-color: #fff;
+  overflow-x: hidden;
+}
+
+/* Hero video container */
+.hero-video {
+  position: relative;
+  width: 100%;
+  height: 100vh;
+  overflow: hidden;
+}
+
+/* Make sure video covers the whole area */
+.hero-video video {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  background-color: #000;
+}
+
+/* Optional dark overlay for text contrast */
+.hero-video .overlay {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  color: white;
+  text-align: center;
+  background: rgba(0, 0, 0, 0.25);
+}
+
+/* Title styling */
+.hero-video .overlay h1 {
+  font-size: 2rem;
+  margin: 0;
+}
+
+/* ✅ Fix gray gap on mobile Safari */
+@supports (-webkit-touch-callout: none) {
+  .hero-video {
+    height: -webkit-fill-available;
+  }
+}
+
+/* Small screen responsive text */
+@media (max-width: 768px) {
+  .hero-video .overlay h1 {
+    font-size: 1.5rem;
+    padding: 0 15px;
+  }
+}
+
     :root {
       --accent: #f4791f; /* Paintello orange as requested */
       --muted: #6b6b6b;
@@ -203,14 +265,14 @@
 </head>
 
 <body class="bg-white text-gray-800 antialiased">
-<section>
+<section class="hero-video">
  <!-- HERO SECTION (Paintello Home with Coat video and Paintello buttons) -->
 <div class="coat hero-container overlay">
 
   <div class="video-img-container">
     <!-- Mobile Video -->
     <div class="coat video-mobile">
-      <video playsinline loop autoplay muted preload="auto">
+    <video autoplay muted loop playsinline>
         <source src="//coatpaints.com/cdn/shop/videos/c/vp/8c29baaa62984b8a8836a41ecb2ca1ce/8c29baaa62984b8a8836a41ecb2ca1ce.SD-480p-1.2Mbps-48816727.mp4?v=0" type="video/mp4">
         <img src="//coatpaints.com/cdn/shop/files/preview_images/8c29baaa62984b8a8836a41ecb2ca1ce.thumbnail.0000000000_1000x.jpg?v=1749051609" alt="Paintello mobile preview">
       </video>
