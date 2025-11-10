@@ -202,7 +202,89 @@ right: 12px;
       margin: 10px 0;
     }
 
-  
+  /* === HERO SECTION STYLING (like Coat Paints) === */
+.coat.hero-container {
+  position: relative;
+  width: 100%;
+  height: 100vh;
+  overflow: hidden;
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+}
+
+.video-img-container {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+}
+
+.video-desktop video,
+.video-mobile video {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* Mobile/Desktop visibility */
+.video-desktop { display: none; }
+.video-mobile { display: block; }
+
+@media (min-width: 768px) {
+  .video-desktop { display: block; }
+  .video-mobile { display: none; }
+}
+
+.coat.hero-content {
+  position: relative;
+  z-index: 2;
+  padding: 2rem;
+  max-width: 700px;
+}
+
+.coat.hero-heading p {
+  font-size: 3rem;
+  margin: 0;
+  font-weight: 700;
+  text-transform: uppercase;
+  line-height: 1.1;
+}
+
+.coat.hero-subheading {
+  font-size: 1.2rem;
+  margin-top: 1rem;
+  font-weight: 300;
+  color: #f2f2f2;
+}
+
+.coat.btn--secondary {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: #fff;
+  color: #000;
+  padding: 0.8rem 1.5rem;
+  border-radius: 50px;
+  font-weight: 600;
+  transition: all 0.3s ease;
+  text-decoration: none;
+}
+
+.coat.btn--secondary:hover {
+  background: #000;
+  color: #fff;
+}
+
+.overlay::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: rgba(0,0,0,0.3);
+  z-index: 1;
+}
+
 </style>
 
 <script id='pixel-script-poptin' src='https://cdn.popt.in/pixel.js?id=1f8ed2afe3695' async='true'></script>
@@ -285,28 +367,50 @@ right: 12px;
       </div>
     </nav>
  
-<section class="view intro-2" style="background-image: url(https://live.staticflickr.com/65535/54782494219_fa1ee610c4.jpg); background-repeat: no-repeat; background-size: cover; background-position: center center;">
-      
+<!-- Hero Section with Video like Coat Paints -->
+<div class="coat hero-container overlay">
 
-        <div class="container h-100 d-flex justify-content-center align-items-center">
-          <div class="row h-100 d-flex justify-content-center align-items-center">
+  <div class="video-img-container">
+    <!-- Mobile Video -->
+    <div class="coat video-mobile">
+      <video playsinline loop autoplay muted preload="auto">
+        <source src="//coatpaints.com/cdn/shop/videos/c/vp/8c29baaa62984b8a8836a41ecb2ca1ce/8c29baaa62984b8a8836a41ecb2ca1ce.SD-480p-1.2Mbps-48816727.mp4?v=0" type="video/mp4">
+        <img src="//coatpaints.com/cdn/shop/files/preview_images/8c29baaa62984b8a8836a41ecb2ca1ce.thumbnail.0000000000_1000x.jpg?v=1749051609" alt="Paintello mobile preview">
+      </video>
+    </div>
 
-            <div class="col-md-10 col-lg-6 text-center text-md-center mt-5 pt-4 pt-md-0 mt-lg-0 mb-5 mb-md-0">
-             <div class="white-text">
-                <h1 class="h1-responsive font-weight-bold mt-sm-5 mb-4 wow fadeInLeft" data-wow-delay="0.3s">Transform Your Home with Color & Comfort</h1>
-                <hr class="hr-light wow fadeInLeft" data-wow-delay="0.3s">
- <a class="btn btn-white btn-rounded btn-lg orange-text font-weight-bold ml-lg-0 wow fadeInLeft" data-wow-delay="0.4s" href="/"><img src="/favicon/android-chrome-192x192.png" alt="Paintello Logo" style="max-height: 80px;"></a>
- <a class="btn btn-white btn-rounded btn-lg orange-text font-weight-bold ml-lg-0 wow fadeInLeft" data-wow-delay="0.4s" href="/paintello"><img src="/img/logo.png" alt="Paintello Logo" style="max-height: 80px;"></a>
-              </div>
+    <!-- Desktop Video -->
+    <div class="coat video-desktop">
+      <video playsinline loop autoplay muted preload="auto">
+        <source src="//coatpaints.com/cdn/shop/videos/c/vp/3617af9fd8254f5688fdeef051307a00/3617af9fd8254f5688fdeef051307a00.HD-720p-3.0Mbps-48816014.mp4?v=0" type="video/mp4">
+        <img src="//coatpaints.com/cdn/shop/files/preview_images/3617af9fd8254f5688fdeef051307a00.thumbnail.0000000000_2800x.jpg?v=1749051004" alt="Paintello desktop preview">
+      </video>
+    </div>
+  </div>
 
-            </div>
+  <div class="coat hero-content text-center text-white">
+    <h1 class="coat hero-heading"><p><em>This is</em></p></h1>
+    <h1 class="coat hero-heading"><p>THE PAINT</p></h1>
+    <p class="coat hero-subheading">
+      Sustainable paint with unrivalled coverage, made-to-order in tasteful shades. 
+      Get everything to decorate, delivered fast.
+    </p>
+    <div class="coat button-container mt-4">
+      <a class="coat btn--secondary" href="/collections/flat-matt">
+        <span>Explore colours</span>
+        <span class="slide-btn-svg">
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+            <path fill-rule="evenodd" clip-rule="evenodd"
+              d="M11.23 3.15649L15.2431 7.16963L15.7734 7.69996L15.2431 8.23029L11.23 12.2434L10.1693 11.1828L12.902 8.45005H0.666862V6.95005H12.9022L10.1693 4.21715L11.23 3.15649Z"
+              fill="currentColor"></path>
+          </svg>
+        </span>
+      </a>
+    </div>
+  </div>
 
-            
+</div>
 
-          </div>
-        </div>
-      
-    </section>
     
 <div class="mb-4"> 
  <div class="mb-4"> 
