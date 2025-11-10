@@ -202,25 +202,30 @@ right: 12px;
       margin: 10px 0;
     }
 
-  /* === HERO SECTION STYLING (like Coat Paints) === */
+ /* === HERO VIDEO SECTION (Smooth + Responsive) === */
 .coat.hero-container {
   position: relative;
   width: 100%;
-  height: 100vh;
-  overflow: hidden;
-  color: white;
+  min-height: 100vh; /* full viewport height */
   display: flex;
   align-items: center;
   justify-content: center;
+  color: white;
+  overflow: hidden;
   text-align: center;
+  margin: 0;
+  padding: 0;
 }
 
+/* Background video wrapper */
 .video-img-container {
   position: absolute;
   inset: 0;
   z-index: 0;
+  overflow: hidden;
 }
 
+/* Video responsiveness */
 .video-desktop video,
 .video-mobile video {
   width: 100%;
@@ -228,7 +233,7 @@ right: 12px;
   object-fit: cover;
 }
 
-/* Mobile/Desktop visibility */
+/* Mobile/Desktop switch */
 .video-desktop { display: none; }
 .video-mobile { display: block; }
 
@@ -237,37 +242,52 @@ right: 12px;
   .video-mobile { display: none; }
 }
 
+/* Overlay effect */
+.overlay::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: rgba(0,0,0,0.35);
+  z-index: 1;
+}
+
+/* Content area */
 .coat.hero-content {
   position: relative;
   z-index: 2;
-  padding: 2rem;
+  padding: 1rem;
   max-width: 700px;
 }
 
+/* Headings */
 .coat.hero-heading p {
-  font-size: 3rem;
+  font-size: clamp(2.2rem, 6vw, 3.8rem);
   margin: 0;
   font-weight: 700;
   text-transform: uppercase;
   line-height: 1.1;
 }
 
+/* Subtitle */
 .coat.hero-subheading {
-  font-size: 1.2rem;
+  font-size: clamp(1rem, 2.5vw, 1.3rem);
   margin-top: 1rem;
-  font-weight: 300;
   color: #f2f2f2;
+  font-weight: 300;
 }
 
+/* Button */
 .coat.btn--secondary {
   display: inline-flex;
   align-items: center;
   gap: 0.5rem;
-  background: #fff;
-  color: #000;
-  padding: 0.8rem 1.5rem;
-  border-radius: 50px;
+  background: #ffffff;
+  color: #000000;
+  padding: 0.9rem 1.8rem;
+  border-radius: 999px;
   font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
   transition: all 0.3s ease;
   text-decoration: none;
 }
@@ -277,30 +297,13 @@ right: 12px;
   color: #fff;
 }
 
-.overlay::before {
-  content: "";
-  position: absolute;
-  inset: 0;
-  background: rgba(0,0,0,0.3);
-  z-index: 1;
-}
-/* === Fix vertical spacing between hero and next section === */
-.coat.hero-container {
-  margin-bottom: 0 !important;
-  padding-bottom: 0 !important;
-}
-
-.video-img-container,
-.coat.hero-content {
-  margin-bottom: 0 !important;
-  padding-bottom: 0 !important;
-}
-
-/* Ensure next section starts right under hero */
-body > header + * {
+/* Ensure next section touches hero with no gap */
+header + main,
+.coat.hero-container + * {
   margin-top: 0 !important;
   padding-top: 0 !important;
 }
+
 
 </style>
 
@@ -384,7 +387,7 @@ body > header + * {
       </div>
     </nav>
  
-<!-- Hero Section with Video like Coat Paints -->
+<!-- HERO SECTION (Paintello version, based on Coat Paints) -->
 <div class="coat hero-container overlay">
 
   <div class="video-img-container">
@@ -425,8 +428,8 @@ body > header + * {
       </a>
     </div>
   </div>
-
 </div>
+
 
     
      
