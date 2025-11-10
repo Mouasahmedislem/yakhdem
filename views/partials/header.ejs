@@ -300,6 +300,22 @@ header + main,
     padding: 0 1rem;
   }
 }
+/* Fix mobile grey gap below video */
+:root {
+  --vh: 100%;
+}
+
+@media (max-width: 768px) {
+  :root {
+    --vh: 100vh;
+  }
+
+  .coat.hero-container {
+    min-height: calc(var(--vh, 1vh) * 100);
+    height: calc(var(--vh, 1vh) * 100);
+    overflow: hidden;
+  }
+}
 
 </style>
 
