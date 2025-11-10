@@ -271,7 +271,7 @@ body, html {
   <meta property="product:price:amount" content="<%= producthome && producthome.price ? producthome.price : '' %>" />
   <meta property="product:price:currency" content="DZD" />
 </head>
-<header>
+
 
     <!-- Navbar -->
     <nav class="navbar navbar-expand-lg navbar-light fixed-top scrolling-navbar white">
@@ -356,13 +356,14 @@ body, html {
            class="w-full h-auto block" />
     </div>
 
-   <!-- Mobile Video -->
-    <div class="coat video-mobile">
-    <video autoplay muted loop playsinline>
-        <source src="//coatpaints.com/cdn/shop/videos/c/vp/8c29baaa62984b8a8836a41ecb2ca1ce/8c29baaa62984b8a8836a41ecb2ca1ce.SD-480p-1.2Mbps-48816727.mp4?v=0" type="video/mp4">
-        <img src="//coatpaints.com/cdn/shop/files/preview_images/8c29baaa62984b8a8836a41ecb2ca1ce.thumbnail.0000000000_1000x.jpg?v=1749051609" alt="Paintello mobile preview">
+    <!-- Desktop Video -->
+    <div class="coat video-desktop">
+      <video playsinline loop autoplay muted preload="auto">
+        <source src="/uploads/Designsanstitre(2).mp4" type="video/mp4">
+        <img src="//coatpaints.com/cdn/shop/files/preview_images/3617af9fd8254f5688fdeef051307a00.thumbnail.0000000000_2800x.jpg?v=1749051004" alt="Paintello desktop preview">
       </video>
     </div>
+  </div>
 
 
   <div class="coat hero-content text-center text-white">
