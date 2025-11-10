@@ -10,6 +10,14 @@
   <!-- Tailwind (CDN for prototyping) -->
   <script src="https://cdn.tailwindcss.com"></script>
   <style>
+.video-mobile { display: none; }
+.video-desktop { display: block; }
+
+@media (max-width: 768px) {
+  .video-mobile { display: block; }
+  .video-desktop { display: none; }
+}
+
 /* Reset default body margins */
 body, html {
   margin: 0;
@@ -270,20 +278,18 @@ body, html {
 <div class="coat hero-container overlay">
 
   <div class="video-img-container">
-    <!-- Mobile Video -->
+    <!-- Mobile GIF -->
     <div class="coat video-mobile">
-    <video autoplay muted loop playsinline>
-        <source src="https://www.paintello.uk/uploads/painthome.gif" type="img/gif">
-        <img src="https://www.paintello.uk/uploads/painthome.gif" alt="Paintello mobile preview">
-      </video>
+      <img src="https://www.paintello.uk/uploads/painthome.gif" 
+           alt="Paintello mobile preview" 
+           class="w-full h-auto block" />
     </div>
 
-    <!-- Desktop Video -->
+    <!-- Desktop GIF -->
     <div class="coat video-desktop">
-      <video playsinline loop autoplay muted preload="auto">
-        <source src="https://www.paintello.uk/uploads/painthome.gif" type="video/gif">
-        <img src="https://www.paintello.uk/uploads/painthome.gif" alt="Paintello desktop preview">
-      </video>
+      <img src="https://www.paintello.uk/uploads/painthome.gif" 
+           alt="Paintello desktop preview" 
+           class="w-full h-auto block" />
     </div>
   </div>
 
@@ -310,8 +316,8 @@ body, html {
     </div>
   </div>
 </div>
-
 </section>
+
   <!-- Main content -->
   <main class="max-w-7xl mx-auto px-6 lg:px-8 py-10">
     <div class="grid grid-cols-1 lg:grid-cols-12 gap-10">
