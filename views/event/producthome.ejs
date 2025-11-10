@@ -296,59 +296,102 @@
 
 <body class="bg-white text-gray-800 antialiased">
   <!-- Navbar -->
-  <header>
-    <nav class="navbar navbar-expand-lg navbar-light bg-white fixed-top scrolling-navbar">
-      <div class="container">
-        <!-- LOGO -->
-        <a class="navbar-brand logo" href="/paintello">
-          <img src="/img/logo.png" alt="Paintello Home Logo" style="max-height: 80px;">
+  <nav class="scrolling-navbar fixed top-0 left-0 right-0 bg-white z-50 py-3">
+    <div class="container mx-auto px-4">
+      <div class="flex items-center justify-between">
+        <!-- Logo -->
+        <a href="/paintello" class="flex items-center">
+          <img src="/img/logo.png" alt="Paintello Home Logo" class="h-16 md:h-20 w-auto transition-transform duration-300 hover:scale-105">
         </a>
 
-        <!-- Mobile toggle button -->
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-          <span class="navbar-toggler-icon"></span>
+        <!-- Desktop Navigation -->
+        <div class="hidden md:flex items-center space-x-6">
+          <!-- Profile Dropdown -->
+          <div class="relative group">
+            <button class="flex items-center space-x-1 text-gray-700 hover:text-orange-500 transition-colors duration-200 p-2">
+              <i class="fas fa-user text-lg"></i>
+            </button>
+            
+            <!-- Dropdown Menu -->
+            <div class="absolute right-0 top-full mt-2 w-48 bg-white rounded-lg shadow-xl border border-gray-100 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 transform group-hover:translate-y-0 translate-y-2 z-50">
+              <% if (login){ %>
+                <a href="/user/profile" class="block px-4 py-3 text-sm text-gray-700 hover:bg-gray-50 hover:text-orange-500 transition-colors border-b border-gray-100">
+                  <i class="fas fa-user-circle mr-2"></i>Profile
+                </a>
+                <a href="/user/logout" class="block px-4 py-3 text-sm text-gray-700 hover:bg-gray-50 hover:text-orange-500 transition-colors">
+                  <i class="fas fa-sign-out-alt mr-2"></i>Logout
+                </a>
+              <% } else { %>
+                <a href="/user/signup" class="block px-4 py-3 text-sm text-gray-700 hover:bg-gray-50 hover:text-orange-500 transition-colors border-b border-gray-100">
+                  <i class="fas fa-user-plus mr-2"></i>Register
+                </a>
+                <a href="/user/signin" class="block px-4 py-3 text-sm text-gray-700 hover:bg-gray-50 hover:text-orange-500 transition-colors border-b border-gray-100">
+                  <i class="fas fa-sign-in-alt mr-2"></i>Sign In
+                </a>
+                <a href="/track-login" class="block px-4 py-3 text-sm text-gray-700 hover:bg-gray-50 hover:text-orange-500 transition-colors">
+                  <i class="fas fa-shipping-fast mr-2"></i>Track Order
+                </a>
+              <% } %>
+            </div>
+          </div>
+
+          <!-- Cart -->
+          <a href="/shop" class="relative text-gray-700 hover:text-orange-500 transition-colors duration-200 p-2">
+            <i class="fas fa-shopping-cart text-lg"></i>
+            <% if (session.cart && session.cart.totalQty > 0) { %>
+              <span class="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">
+                <%= session.cart.totalQty %>
+              </span>
+            <% } %>
+          </a>
+        </div>
+
+        <!-- Mobile menu button -->
+        <button id="mobileMenuButton" class="md:hidden text-gray-700 hover:text-orange-500 transition-colors p-2">
+          <i class="fas fa-bars text-xl"></i>
         </button>
+      </div>
 
-        <!-- Navbar links -->
-        <div class="collapse navbar-collapse" id="navbarNav">
-          <ul class="navbar-nav ms-auto nav-flex-icons">
-            <!-- PROFILE -->
-            <li class="nav-item dropdown">
-              <a class="nav-link dropdown-toggle" href="#" id="menu1" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                <i class="fas fa-user black-text"></i>
-              </a>
-              <div class="dropdown-menu dropdown-menu-end bootstrap-menu white scrollbar-default" aria-labelledby="menu1">
-                <% if (login){ %>
-                  <a class="dropdown-item" href="/user/profile">Profile</a>
-                  <a class="dropdown-item" href="/user/logout">Logout</a>
-                <% } else{ %>
-                  <a class="dropdown-item" href="/user/signup">Register</a>
-                  <a class="dropdown-item" href="/user/signin">Sign In</a>
-                  <a class="dropdown-item" href="/track-login">Track Order</a>
-                <% } %>
-              </div>
-            </li>
+      <!-- Mobile Navigation -->
+      <div id="mobileMenu" class="md:hidden hidden mt-4 pb-4 border-t border-gray-200">
+        <div class="flex flex-col space-y-4 pt-4">
+          <!-- Profile Links -->
+          <% if (login){ %>
+            <a href="/user/profile" class="flex items-center text-gray-700 hover:text-orange-500 transition-colors py-2">
+              <i class="fas fa-user-circle mr-3"></i>Profile
+            </a>
+            <a href="/user/logout" class="flex items-center text-gray-700 hover:text-orange-500 transition-colors py-2">
+              <i class="fas fa-sign-out-alt mr-3"></i>Logout
+            </a>
+          <% } else { %>
+            <a href="/user/signup" class="flex items-center text-gray-700 hover:text-orange-500 transition-colors py-2">
+              <i class="fas fa-user-plus mr-3"></i>Register
+            </a>
+            <a href="/user/signin" class="flex items-center text-gray-700 hover:text-orange-500 transition-colors py-2">
+              <i class="fas fa-sign-in-alt mr-3"></i>Sign In
+            </a>
+            <a href="/track-login" class="flex items-center text-gray-700 hover:text-orange-500 transition-colors py-2">
+              <i class="fas fa-shipping-fast mr-3"></i>Track Order
+            </a>
+          <% } %>
 
-            <!-- CART -->
-            <li class="nav-item mx-2 position-relative">
-              <a class="nav-link" href="/shop" title="Cart">
-                <i class="fas fa-shopping-cart"></i>
-                <% if (session.cart && session.cart.totalQty > 0) { %>
-                  <span class="badge badge-danger cart-badge"><%= session.cart.totalQty %></span>
-                <% } %>
-              </a>
-            </li>
-          </ul>
+          <!-- Cart for mobile -->
+          <a href="/shop" class="flex items-center text-gray-700 hover:text-orange-500 transition-colors py-2 relative">
+            <i class="fas fa-shopping-cart mr-3"></i>Shopping Cart
+            <% if (session.cart && session.cart.totalQty > 0) { %>
+              <span class="ml-2 bg-red-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">
+                <%= session.cart.totalQty %>
+              </span>
+            <% } %>
+          </a>
         </div>
       </div>
-    </nav>
-  </header>
+    </div>
+  </nav>
 
-  <!-- Your existing body content -->
+  <!-- Your hero section -->
   <section class="hero-video">
-    <!-- HERO SECTION (Paintello Home with Coat video and Paintello buttons) -->
     <div class="coat hero-container overlay">
-      <!-- Your hero content remains the same -->
       <div class="video-img-container">
         <!-- Mobile GIF -->
         <div class="coat video-mobile">
@@ -373,7 +416,6 @@
           Sustainable paint & décor — crafted in Algeria for homes that inspire.
         </p>
 
-        <!-- Paintello Buttons -->
         <div class="flex items-center justify-center gap-4 mt-6 fade-in delay-3">
           <a href="/"
              class="inline-flex items-center gap-3 bg-white border border-gray-200 rounded-lg py-3 px-4 hover:shadow-lg transition-all">
@@ -977,6 +1019,34 @@
         }, 8000);
       });
     })();
+  </script>
+ <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      const mobileMenuButton = document.getElementById('mobileMenuButton');
+      const mobileMenu = document.getElementById('mobileMenu');
+
+      if (mobileMenuButton && mobileMenu) {
+        mobileMenuButton.addEventListener('click', function() {
+          const isHidden = mobileMenu.classList.contains('hidden');
+          
+          if (isHidden) {
+            mobileMenu.classList.remove('hidden');
+            mobileMenuButton.innerHTML = '<i class="fas fa-times text-xl"></i>';
+          } else {
+            mobileMenu.classList.add('hidden');
+            mobileMenuButton.innerHTML = '<i class="fas fa-bars text-xl"></i>';
+          }
+        });
+      }
+
+      // Close mobile menu when clicking outside
+      document.addEventListener('click', function(event) {
+        if (!event.target.closest('#mobileMenu') && !event.target.closest('#mobileMenuButton')) {
+          mobileMenu.classList.add('hidden');
+          mobileMenuButton.innerHTML = '<i class="fas fa-bars text-xl"></i>';
+        }
+      });
+    });
   </script>
   <% } %>
 
