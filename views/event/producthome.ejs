@@ -1115,6 +1115,30 @@ document.addEventListener('DOMContentLoaded', function(){
   }
 })();
 </script>
+<script>
+document.addEventListener('DOMContentLoaded', function(){
+  const slides = document.querySelectorAll('.slider-img');
+  const prev = document.getElementById('prevSlide');
+  const next = document.getElementById('nextSlide');
+  let current = 0;
+
+  function showSlide(i){
+    slides.forEach((s, idx)=>{
+      s.classList.toggle('opacity-100', idx===i);
+      s.classList.toggle('opacity-0', idx!==i);
+    });
+  }
+
+  prev && prev.addEventListener('click', ()=>{ 
+    current = (current - 1 + slides.length) % slides.length;
+    showSlide(current);
+  });
+  next && next.addEventListener('click', ()=>{ 
+    current = (current + 1) % slides.length;
+    showSlide(current);
+  });
+});
+</script>
 
 </body>
 </html>
