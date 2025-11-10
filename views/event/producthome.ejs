@@ -21,6 +21,121 @@
     /* Smooth scroll for horizontal carousel */
     .snap-x { scroll-snap-type: x mandatory; -webkit-overflow-scrolling: touch; }
     .snap-child { scroll-snap-align: start; }
+
+/* ===== Paintello Hero Section (Based on Coat) ===== */
+
+.coat.hero-container {
+  position: relative;
+  width: 100%;
+  height: 100vh;
+  overflow: hidden;
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Video containers */
+.video-img-container {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+}
+
+.coat video {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.video-desktop { display: none; }
+.video-mobile { display: block; }
+
+@media (min-width: 768px) {
+  .video-desktop { display: block; }
+  .video-mobile { display: none; }
+}
+
+/* Overlay for readability */
+.coat.hero-container.overlay::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.35);
+  z-index: 2;
+}
+
+/* Content styles */
+.coat.hero-content {
+  position: relative;
+  z-index: 3;
+  text-align: center;
+  max-width: 750px;
+  padding: 0 1rem;
+}
+
+.coat.hero-heading p {
+  font-size: 2.5rem;
+  font-weight: 700;
+  letter-spacing: 2px;
+  margin: 0;
+}
+
+.coat.hero-subheading {
+  font-size: 1rem;
+  font-weight: 400;
+  line-height: 1.6;
+  margin-top: 1rem;
+  color: #f9f9f9;
+}
+
+@media (min-width: 768px) {
+  .coat.hero-heading p {
+    font-size: 3.5rem;
+  }
+  .coat.hero-subheading {
+    font-size: 1.2rem;
+  }
+}
+
+/* ===== Fade-in animation ===== */
+
+.fade-in {
+  opacity: 0;
+  transform: translateY(20px);
+  animation: fadeInUp 1s ease-out forwards;
+}
+
+.fade-in.delay-1 { animation-delay: 0.4s; }
+.fade-in.delay-2 { animation-delay: 0.8s; }
+.fade-in.delay-3 { animation-delay: 1.2s; }
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* ===== Button polish ===== */
+.coat.hero-content a {
+  background-color: #fff;
+  color: #222;
+  text-decoration: none;
+  font-weight: 500;
+  transition: all 0.3s ease;
+}
+
+.coat.hero-content a:hover {
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.1);
+  transform: translateY(-2px);
+}
+
+
   </style>
 
   <!-- THREE.js assets (deferred) -->
@@ -89,25 +204,51 @@
 
 <body class="bg-white text-gray-800 antialiased">
 
-  <!-- Banner (kept, modernized) -->
-  <section class="relative bg-cover bg-center" style="background-image: url('https://live.staticflickr.com/65535/54530748939_dda2a74c86.jpg');">
-    <div class="bg-gradient-to-b from-white/70 to-white/40">
-      <div class="max-w-7xl mx-auto px-6 py-20 text-center">
-        <h1 class="text-3xl md:text-4xl font-semibold text-gray-900 mb-4">Transform Your Home with Color & Comfort</h1>
-        <p class="text-gray-700 mb-6">Hand-picked décor & premium home fragrance — crafted for your space.</p>
-        <div class="flex items-center justify-center gap-4">
-          <a href="/" class="inline-flex items-center gap-3 bg-white border border-gray-200 rounded-lg py-3 px-4 hover:shadow-sm">
-            <img src="/favicon/android-chrome-192x192.png" alt="Paintello" class="h-10 w-10"/>
-            <span class="text-sm font-medium text-gray-800">Home</span>
-          </a>
-          <a href="/paintello" class="inline-flex items-center gap-3 bg-white border border-gray-200 rounded-lg py-3 px-4 hover:shadow-sm">
-            <img src="/img/logo.png" alt="Paintello" class="h-10 w-auto"/>
-            <span class="text-sm font-medium text-gray-800">Paintello</span>
-          </a>
-        </div>
-      </div>
+ <!-- HERO SECTION (Paintello Home with Coat video and Paintello buttons) -->
+<div class="coat hero-container overlay">
+
+  <div class="video-img-container">
+    <!-- Mobile Video -->
+    <div class="coat video-mobile">
+      <video playsinline loop autoplay muted preload="auto">
+        <source src="//coatpaints.com/cdn/shop/videos/c/vp/8c29baaa62984b8a8836a41ecb2ca1ce/8c29baaa62984b8a8836a41ecb2ca1ce.SD-480p-1.2Mbps-48816727.mp4?v=0" type="video/mp4">
+        <img src="//coatpaints.com/cdn/shop/files/preview_images/8c29baaa62984b8a8836a41ecb2ca1ce.thumbnail.0000000000_1000x.jpg?v=1749051609" alt="Paintello mobile preview">
+      </video>
     </div>
-  </section>
+
+    <!-- Desktop Video -->
+    <div class="coat video-desktop">
+      <video playsinline loop autoplay muted preload="auto">
+        <source src="//coatpaints.com/cdn/shop/videos/c/vp/3617af9fd8254f5688fdeef051307a00/3617af9fd8254f5688fdeef051307a00.HD-720p-3.0Mbps-48816014.mp4?v=0" type="video/mp4">
+        <img src="//coatpaints.com/cdn/shop/files/preview_images/3617af9fd8254f5688fdeef051307a00.thumbnail.0000000000_2800x.jpg?v=1749051004" alt="Paintello desktop preview">
+      </video>
+    </div>
+  </div>
+
+  <div class="coat hero-content text-center text-white">
+    <h1 class="coat hero-heading fade-in"><p><em>This is</em></p></h1>
+    <h1 class="coat hero-heading fade-in delay-1"><p>PAINTELLO HOME</p></h1>
+    <p class="coat hero-subheading fade-in delay-2">
+      Sustainable paint & décor — crafted in Algeria for homes that inspire.
+    </p>
+
+    <!-- Paintello Buttons -->
+    <div class="flex items-center justify-center gap-4 mt-6 fade-in delay-3">
+      <a href="/"
+         class="inline-flex items-center gap-3 bg-white border border-gray-200 rounded-lg py-3 px-4 hover:shadow-lg transition-all">
+        <img src="/favicon/android-chrome-192x192.png" alt="Paintello Home" class="h-10 w-10"/>
+        <span class="text-sm font-medium text-gray-800">Paintello Home</span>
+      </a>
+
+      <a href="/paintello"
+         class="inline-flex items-center gap-3 bg-white border border-gray-200 rounded-lg py-3 px-4 hover:shadow-lg transition-all">
+        <img src="/img/logo.png" alt="Paintello" class="h-10 w-auto"/>
+        <span class="text-sm font-medium text-gray-800">Paintello Paint</span>
+      </a>
+    </div>
+  </div>
+</div>
+
 
   <!-- Main content -->
   <main class="max-w-7xl mx-auto px-6 lg:px-8 py-10">
