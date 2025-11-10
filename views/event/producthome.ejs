@@ -10,6 +10,42 @@
   <!-- Tailwind (CDN for prototyping) -->
   <script src="https://cdn.tailwindcss.com"></script>
   <style>
+.logo {
+  font-size: 2.5rem;
+  font-weight: bold;
+  letter-spacing: 2px;
+}
+
+.banner {
+  width: 100%;
+  height: 80vh;
+  background-size: cover;
+  background-position: center;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.banner-text {
+  background: rgba(255, 255, 255, 0.85);
+  padding: 40px;
+  font-size: 2rem;
+  text-transform: uppercase;
+}
+
+.section {
+  padding: 60px 20px;
+  max-width: 1200px;
+  margin: auto;
+}
+
+
+.section-title {
+  font-size: 2rem;
+  margin-bottom: 40px;
+  text-align: center;
+}
+
 .video-mobile { display: none; }
 .video-desktop { display: block; }
 
@@ -273,13 +309,23 @@ body, html {
 </head>
 
 
-    <!-- Navbar -->
-    <nav class="navbar navbar-expand-lg navbar-light fixed-top scrolling-navbar white">
-      <div class="container">
-        <a class="navbar-brand font-weight-bold title" href="/">Paintello</a>
-        <!--Navigation icons-->
-        <ul class="nav navbar-nav nav-flex-icons ml-auto">
-          <li class="nav-item dropdown">
+   <header>
+    <nav class="navbar navbar-expand-lg navbar-light bg-white fixed-top scrolling-navbar">
+  <div class="container">
+
+    <!-- LOGO -->
+    <a class="logo" href="/paintello">
+      <img src="/img/logo.png" alt="Paintello Home Logo" style="max-height: 120px;">
+    </a>
+
+    
+
+    <!-- Navbar links -->
+  
+      <ul class="navbar-nav nav-flex-icons ml-auto ">
+
+        <!-- PROFILE -->
+       <li class="nav-item dropdown">
                        <a class="nav-link dropdown" id="menu1" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                         <i class="fas fa-user  black-text"></i>
                       </a>
@@ -287,6 +333,7 @@ body, html {
                         <% if (login){ %>
                           <a class="dropdown-item" href="/user/profile">profile</a>
                            <a class="dropdown-item" href="/user/logout">Logout</a>
+            
                            <% } else{ %>
                            <a class="dropdown-item" href="/user/signup">Register</a>
                            <a class="dropdown-item" href="/user/signin">Sing up</a>
@@ -294,55 +341,22 @@ body, html {
                            <% } %>
                  </div> 
           </li>
-          <li class="nav-item ">
-                      <a class="nav-link " id="menu2" href="/shop" role="button"  aria-haspopup="true" aria-expanded="false">
-                        <i class="fas fa-shopping-cart black-text"></i>
-                        <% if(session.cart){ %>
-                      <span class="mycounter"><%= session.cart.totalQty %></span>
-                      <% } %>
-                      </a>
-          </li>
-    
-        </ul>
-        
-        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarTogglerDemo02"
-          aria-controls="navbarTogglerDemo02" aria-expanded="false" aria-label="Toggle navigation">
-          <span class="navbar-toggler-icon"></span>
-          
-        </button>
-        
-        
-        <div class="collapse navbar-collapse" id="navbarTogglerDemo02">
-          <ul class="list-unstyled navbar-nav mr-auto">
-         
-            
-            <li class="nav-item ml-4">
-              <a class="nav-link title" href="/contact" data-offset="90">Nos Services</a>
-            </li>
-            <li class="nav-item ml-4">
-              <a class="nav-link title" href="/sale/clean" data-offset="90">interior paint</a>
-            </li>
-            <li class="nav-item ml-4">
-              <a class="nav-link title" href="/sale/furniteur" data-offset="90">Vinyl paint</a>
-            </li>
-            <li class="nav-item ml-4">
-              <a class="nav-link title" href="/sale/wow" data-offset="90">outils</a>
-            </li>
-            <li class="nav-item ml-4">
-              <a class="nav-link title" href="/track-login" data-offset="90">Returns</a>
-            </li>
-            
-          </ul>
-          
-          <!-- Social Icon  -->
-         
-              </div>
-      </div>
+
+        <!-- CART -->
+        <li class="nav-item mx-2 position-relative">
+          <a class="nav-link" href="/shop" title="Cart">
+            <i class="fas fa-shopping-cart"></i>
+            <% if (session.cart && session.cart.totalQty > 0) { %>
+              <span class="badge badge-danger cart-badge"><%= session.cart.totalQty %></span>
+            <% } %>
+          </a>
+        </li>
+
+      </ul>
+    </div>
   
-         
-      </div>
-      </div>
-    </nav>
+</nav>
+  </header>
 <body class="bg-white text-gray-800 antialiased">
 <section class="hero-video">
  <!-- HERO SECTION (Paintello Home with Coat video and Paintello buttons) -->
