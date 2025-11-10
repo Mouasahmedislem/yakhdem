@@ -209,43 +209,25 @@ right: 12px;
     .view {
       height: 100%;
     }
-    @media (min-width: 851px) and (max-width: 1440px) {
-      html,
-      body,
-      header,
-     
-     
-      .view {
-        height: 850px;
-      }
-    }
-    @media (min-width: 800px) and (max-width: 850px) {
-      html,
-      body,
-      header,
-      
-      
-      .view {
-        height: 1000px;
-      }
+   /* Make hero auto-fit screen height on all devices */
+html, body, header {
+  height: auto;
+  margin: 0;
+  padding: 0;
+}
 
-    }
-@media (min-width: 451px) and (max-width: 740px) {
-      html,
-      body,
-      header,
-      .view {
-        height: 1200px;
-      }
-    }
-    @media (max-width: 450px) {
-      html,
-      body,
-      header,
-      .view {
-        height: 1400px;
-      }
-  }
+/* Ensure hero video fills viewport height */
+.coat.hero-container {
+  min-height: 100vh;
+}
+
+/* Fix spacing below hero for all devices */
+header + main,
+.coat.hero-container + * {
+  margin-top: 0 !important;
+  padding-top: 0 !important;
+}
+
     .categories, .deals {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
@@ -364,6 +346,20 @@ header + main,
 .coat.hero-container + * {
   margin-top: 0 !important;
   padding-top: 0 !important;
+}
+@media (max-width: 768px) {
+  .coat.hero-container {
+    min-height: 90vh; /* slightly smaller for mobile nav space */
+  }
+
+  .coat.hero-heading p {
+    font-size: 2rem;
+  }
+
+  .coat.hero-subheading {
+    font-size: 0.95rem;
+    padding: 0 1rem;
+  }
 }
 
 
