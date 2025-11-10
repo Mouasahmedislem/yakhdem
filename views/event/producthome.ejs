@@ -1,24 +1,98 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Paintello Home - Enhanced Gallery</title>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="referrer" content="strict-origin-when-cross-origin">
+
+  <title><%= producthome && producthome.title ? producthome.title : 'Product' %> — Paintello Home</title>
+
+  <!-- Bootstrap CSS for navbar -->
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <!-- FontAwesome -->
   <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+
+  <!-- Tailwind (CDN for prototyping) -->
   <script src="https://cdn.tailwindcss.com"></script>
+
   <style>
-    :root {
-      --accent: #c9b59a;
+    /* Navbar Styles */
+    .scrolling-navbar {
+      transition: background 0.3s ease-in-out;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+      z-index: 1000;
     }
     
+    .navbar-light .navbar-nav .nav-link {
+      color: #333 !important;
+      font-weight: 500;
+    }
+    
+    .navbar-light .navbar-nav .nav-link:hover {
+      color: var(--accent) !important;
+    }
+    
+    .dropdown-menu {
+      border: none;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+      border-radius: 8px;
+    }
+    
+    .dropdown-item {
+      padding: 8px 16px;
+      color: #333;
+    }
+    
+    .dropdown-item:hover {
+      background-color: #f8f9fa;
+      color: var(--accent);
+    }
+    
+    .cart-badge {
+      position: absolute;
+      top: -5px;
+      right: -5px;
+      font-size: 0.7rem;
+      padding: 3px 6px;
+    }
+    
+    .logo img {
+      transition: transform 0.3s ease;
+    }
+    
+    .logo:hover img {
+      transform: scale(1.05);
+    }
+
+    /* Rest of your existing styles */
+    .video-mobile { display: none; }
+    .video-desktop { display: block; }
+
+    @media (max-width: 768px) {
+      .video-mobile { display: block; }
+      .video-desktop { display: none; }
+      
+      /* Mobile navbar adjustments */
+      .navbar-brand img {
+        max-height: 80px !important;
+      }
+    }
+
+    /* Reset default body margins */
+    body, html {
+      margin: 0;
+      padding: 0;
+      height: 100%;
+      background-color: #fff;
+      overflow-x: hidden;
+    }
+
+    /* Add padding to body to account for fixed navbar */
     body {
       padding-top: 80px;
-      background-color: #fff;
-      font-family: system-ui, -apple-system, sans-serif;
     }
-    
-    /* Hero Section */
+
+    /* Hero video container - adjust for navbar */
     .hero-video {
       position: relative;
       width: 100%;
@@ -26,7 +100,8 @@
       overflow: hidden;
       margin-top: -80px;
     }
-    
+
+    /* Make sure video covers the whole area */
     .hero-video video {
       position: absolute;
       top: 0;
@@ -34,8 +109,10 @@
       width: 100%;
       height: 100%;
       object-fit: cover;
+      background-color: #000;
     }
-    
+
+    /* Optional dark overlay for text contrast */
     .hero-video .overlay {
       position: absolute;
       inset: 0;
@@ -47,127 +124,102 @@
       text-align: center;
       background: rgba(0, 0, 0, 0.25);
     }
-    
-    /* Main Image Styling */
-    .main-image-container {
-      position: relative;
-      overflow: hidden;
-      border-radius: 12px;
-      cursor: pointer;
-      transition: transform 0.3s ease;
+
+    /* Title styling */
+    .hero-video .overlay h1 {
+      font-size: 2rem;
+      margin: 0;
+    }
+
+    /* ✅ Fix gray gap on mobile Safari */
+    @supports (-webkit-touch-callout: none) {
+      .hero-video {
+        height: -webkit-fill-available;
+      }
+    }
+
+    /* Small screen responsive text */
+    @media (max-width: 768px) {
+      .hero-video .overlay h1 {
+        font-size: 1.5rem;
+        padding: 0 15px;
+      }
+      
+      body {
+        padding-top: 70px;
+      }
+      
+      .hero-video {
+        height: calc(100vh - 70px);
+        margin-top: -70px;
+      }
+    }
+
+    :root {
+      --accent: #f4791f; /* Paintello orange as requested */
+      --muted: #6b6b6b;
     }
     
-    .main-image-container:hover {
-      transform: scale(1.01);
-    }
+    /* Avoid layout shift for 3D viewer canvas */
+    .model-viewer-container { min-height: 380px; }
     
-    .main-image {
-      width: 100%;
-      height: 600px;
-      object-fit: cover;
-      transition: opacity 0.5s ease;
-    }
-    
-    /* Thumbnails */
-    .thumbnail {
-      border: 2px solid transparent;
-      border-radius: 8px;
-      overflow: hidden;
-      transition: all 0.3s ease;
-      cursor: pointer;
-    }
-    
-    .thumbnail.active {
-      border-color: var(--accent);
-    }
-    
-    .thumbnail:hover {
-      border-color: var(--accent);
-      transform: translateY(-2px);
-    }
-    
-    .thumbnail img {
-      width: 100%;
-      height: 80px;
-      object-fit: cover;
-    }
-    
-    /* Gallery Grid */
-    .gallery-grid img {
-      transition: transform 0.3s ease;
-      cursor: pointer;
-    }
-    
-    .gallery-grid img:hover {
-      transform: scale(1.05);
-    }
-    
-    /* Lightbox */
-    .lightbox {
+    /* Enhanced Lightbox Styles */
+    .lightbox-backdrop { 
+      background: rgba(0,0,0,0.95); 
       position: fixed;
       top: 0;
       left: 0;
       width: 100%;
       height: 100%;
-      background: rgba(0, 0, 0, 0.95);
-      display: flex;
+      z-index: 9999;
+      display: none;
       align-items: center;
       justify-content: center;
-      z-index: 9999;
       opacity: 0;
-      visibility: hidden;
       transition: opacity 0.3s ease;
     }
     
-    .lightbox.active {
-      opacity: 1;
-      visibility: visible;
-    }
-    
-    .lightbox-content {
-      position: relative;
-      max-width: 90%;
-      max-height: 90%;
+    .lightbox-backdrop.active {
       display: flex;
-      align-items: center;
-      justify-content: center;
+      opacity: 1;
     }
     
     .lightbox-image {
-      max-width: 100%;
-      max-height: 90vh;
+      max-width: 90%;
+      max-height: 90%;
       object-fit: contain;
       border-radius: 8px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.3);
     }
     
     .lightbox-close {
       position: absolute;
       top: 20px;
       right: 20px;
-      background: rgba(0, 0, 0, 0.7);
+      background: rgba(0,0,0,0.7);
       color: white;
       border: none;
+      border-radius: 50%;
       width: 50px;
       height: 50px;
-      border-radius: 50%;
       font-size: 24px;
       cursor: pointer;
-      z-index: 10000;
       display: flex;
       align-items: center;
       justify-content: center;
       transition: background 0.3s ease;
+      z-index: 10000;
     }
     
     .lightbox-close:hover {
-      background: rgba(0, 0, 0, 0.9);
+      background: rgba(0,0,0,0.9);
     }
     
     .lightbox-nav {
       position: absolute;
       top: 50%;
       transform: translateY(-50%);
-      background: rgba(0, 0, 0, 0.7);
+      background: rgba(0,0,0,0.7);
       color: white;
       border: none;
       width: 60px;
@@ -183,7 +235,7 @@
     }
     
     .lightbox-nav:hover {
-      background: rgba(0, 0, 0, 0.9);
+      background: rgba(0,0,0,0.9);
     }
     
     .lightbox-prev {
@@ -194,115 +246,288 @@
       right: 20px;
     }
     
-    /* Product Info */
-    .product-info {
-      position: sticky;
-      top: 100px;
+    /* Smooth scroll for horizontal carousel */
+    .snap-x { scroll-snap-type: x mandatory; -webkit-overflow-scrolling: touch; }
+    .snap-child { scroll-snap-align: start; }
+
+    /* ===== Paintello Hero Section (Based on Coat) ===== */
+    .coat.hero-container {
+      position: relative;
+      width: 100%;
+      height: 100vh;
+      overflow: hidden;
+      color: white;
+      display: flex;
+      align-items: center;
+      justify-content: center;
     }
-    
-    /* Animation */
-    @keyframes fadeIn {
-      from { opacity: 0; }
-      to { opacity: 1; }
+
+    /* Video containers */
+    .video-img-container {
+      position: absolute;
+      inset: 0;
+      z-index: 1;
     }
-    
+
+    .coat video {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .video-desktop { display: none; }
+    .video-mobile { display: block; }
+
+    @media (min-width: 768px) {
+      .video-desktop { display: block; }
+      .video-mobile { display: none; }
+    }
+
+    /* Overlay for readability */
+    .coat.hero-container.overlay::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.35);
+      z-index: 2;
+    }
+
+    /* Content styles */
+    .coat.hero-content {
+      position: relative;
+      z-index: 3;
+      text-align: center;
+      max-width: 750px;
+      padding: 0 1rem;
+    }
+
+    .coat.hero-heading p {
+      font-size: 2.5rem;
+      font-weight: 700;
+      letter-spacing: 2px;
+      margin: 0;
+    }
+
+    .coat.hero-subheading {
+      font-size: 1rem;
+      font-weight: 400;
+      line-height: 1.6;
+      margin-top: 1rem;
+      color: #f9f9f9;
+    }
+
+    @media (min-width: 768px) {
+      .coat.hero-heading p {
+        font-size: 3.5rem;
+      }
+      .coat.hero-subheading {
+        font-size: 1.2rem;
+      }
+    }
+
+    /* ===== Fade-in animation ===== */
     .fade-in {
-      animation: fadeIn 0.5s ease forwards;
+      opacity: 0;
+      transform: translateY(20px);
+      animation: fadeInUp 1s ease-out forwards;
+    }
+
+    .fade-in.delay-1 { animation-delay: 0.4s; }
+    .fade-in.delay-2 { animation-delay: 0.8s; }
+    .fade-in.delay-3 { animation-delay: 1.2s; }
+
+    @keyframes fadeInUp {
+      from {
+        opacity: 0;
+        transform: translateY(30px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    /* ===== Button polish ===== */
+    .coat.hero-content a {
+      background-color: #fff;
+      color: #222;
+      text-decoration: none;
+      font-weight: 500;
+      transition: all 0.3s ease;
+    }
+
+    .coat.hero-content a:hover {
+      box-shadow: 0 6px 18px rgba(0, 0, 0, 0.1);
+      transform: translateY(-2px);
     }
     
-    /* Mobile Responsive */
-    @media (max-width: 768px) {
-      .main-image {
-        height: 400px;
-      }
-      
-      .lightbox-nav {
-        width: 50px;
-        height: 50px;
-        font-size: 20px;
-      }
-      
-      .lightbox-prev {
-        left: 10px;
-      }
-      
-      .lightbox-next {
-        right: 10px;
-      }
+    :root {
+      --accent: #c9b59a; /* Soft beige (Zara-like) */
     }
+    
+    /* Thumbnail active state */
+    .thumbnail.active {
+      border-color: var(--accent) !important;
+    }
+    
+    /* Larger main image */
+    #imageSlider {
+      height: 650px !important;
+      cursor: pointer;
+    }
+    
+    /* Swipe hint */
+    .swipe-hint {
+      position: absolute;
+      bottom: 20px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: rgba(0,0,0,0.7);
+      color: white;
+      padding: 8px 16px;
+      border-radius: 20px;
+      font-size: 12px;
+      opacity: 0;
+      transition: opacity 0.3s ease;
+      pointer-events: none;
+    }
+    
+    #imageSlider:hover .swipe-hint {
+      opacity: 1;
+    }
+
   </style>
+
+  <!-- Rest of your head content remains the same -->
+  <!-- THREE.js assets (deferred) -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js" defer></script>
+  <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/loaders/STLLoader.js" defer></script>
+  <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js" defer></script>
+
+  <!-- Crypto lib if required by other logic -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.1/crypto-js.min.js" defer></script>
+
+  <!-- Your existing meta pixel, clarity, GTM scripts... -->
 </head>
-<body>
-  <!-- Modern Navbar -->
-  <header class="fixed top-0 left-0 w-full z-50 bg-white/90 backdrop-blur border-b border-gray-100">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-      <div class="flex items-center justify-between h-20">
-        <!-- Logo -->
-        <img src="/img/logo.png" alt="Paintello Logo" class="h-24 md:h-28 w-auto transition-transform duration-300 group-hover:scale-105 drop-shadow-sm" />
 
-        <!-- Center: Nav links -->
-        <nav class="hidden md:flex items-center gap-8">
-          <a href="/" class="text-sm text-gray-600 hover:text-gray-900 transition">Home</a>
-          <a href="/shop" class="text-sm text-gray-600 hover:text-gray-900 transition">Shop</a>
-          <a href="/track-login" class="text-sm text-gray-600 hover:text-gray-900 transition">Track Order</a>
-        </nav>
+<body class="bg-white text-gray-800 antialiased">
+  <!-- ===================== MODERN NAVBAR ===================== -->
+<header class="fixed top-0 left-0 w-full z-50 bg-white/90 backdrop-blur border-b border-gray-100">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="flex items-center justify-between h-20">
+      
+      <!-- Left: Logo -->
+<img src="/img/logo.png" 
+     alt="Paintello Logo" 
+     class="h-24 md:h-28 w-auto transition-transform duration-300 group-hover:scale-105 drop-shadow-sm" />
 
-        <!-- Right: Icons -->
-        <div class="flex items-center gap-5">
-          <!-- Cart -->
-          <a href="/shop" class="relative flex items-center justify-center hover:opacity-80 transition" title="Cart">
-            <i class="fa-solid fa-bag-shopping text-gray-800 text-lg"></i>
+
+
+      <!-- Center: Nav links -->
+      <nav class="hidden md:flex items-center gap-8">
+        <a href="/" class="text-sm text-gray-600 hover:text-gray-900 transition">Home</a>
+        <a href="/shop" class="text-sm text-gray-600 hover:text-gray-900 transition">Shop</a>
+        <a href="/track-login" class="text-sm text-gray-600 hover:text-gray-900 transition">Track Order</a>
+      </nav>
+
+      <!-- Right: Icons -->
+      <div class="flex items-center gap-5">
+
+        <!-- Cart -->
+        <a href="/shop" class="relative flex items-center justify-center hover:opacity-80 transition" title="Cart">
+          <i class="fa-solid fa-bag-shopping text-gray-800 text-lg"></i>
+          <% if (session.cart && session.cart.totalQty > 0) { %>
             <span class="absolute -top-2 -right-2 bg-[color:var(--accent)] text-white text-[10px] font-semibold px-1.5 py-0.5 rounded-full">
-              2
+              <%= session.cart.totalQty %>
             </span>
-          </a>
+          <% } %>
+        </a>
 
-          <!-- Profile -->
-          <div class="relative">
-            <button id="userMenuBtn" class="flex items-center justify-center hover:opacity-80 transition focus:outline-none" title="Account">
-              <i class="fa-regular fa-user text-gray-800 text-lg"></i>
-            </button>
-          </div>
-
-          <!-- Mobile Menu Button -->
-          <button id="mobileMenuBtn" class="md:hidden flex items-center justify-center text-gray-800 text-xl">
-            <i class="fa-solid fa-bars"></i>
+        <!-- Profile dropdown -->
+        <div class="relative">
+          <button id="userMenuBtn" class="flex items-center justify-center hover:opacity-80 transition focus:outline-none" title="Account">
+            <i class="fa-regular fa-user text-gray-800 text-lg"></i>
           </button>
+
+          <!-- Dropdown -->
+          <div id="userDropdown" class="hidden absolute right-0 mt-3 w-44 bg-white rounded-lg shadow-lg border border-gray-100 py-2 z-50">
+            <% if (login) { %>
+              <a href="/user/profile" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-50">Profile</a>
+              <a href="/user/logout" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-50">Logout</a>
+            <% } else { %>
+              <a href="/user/signup" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-50">Register</a>
+              <a href="/user/signin" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-50">Sign in</a>
+              <a href="/track-login" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-50">Track Order</a>
+            <% } %>
+          </div>
         </div>
+
+        <!-- Mobile Menu Button -->
+        <button id="mobileMenuBtn" class="md:hidden flex items-center justify-center text-gray-800 text-xl">
+          <i class="fa-solid fa-bars"></i>
+        </button>
+
       </div>
     </div>
-  </header>
+  </div>
 
-  <!-- Hero Section -->
+  <!-- Mobile dropdown -->
+  <div id="mobileMenu" class="hidden md:hidden border-t border-gray-100 bg-white">
+    <div class="px-4 py-3 flex flex-col gap-2">
+      <a href="/" class="text-sm text-gray-700 hover:text-[color:var(--accent)] transition">Home</a>
+      <a href="/shop" class="text-sm text-gray-700 hover:text-[color:var(--accent)] transition">Shop</a>
+      <a href="/track-login" class="text-sm text-gray-700 hover:text-[color:var(--accent)] transition">Track Order</a>
+      <% if (login) { %>
+        <a href="/user/profile" class="text-sm text-gray-700 hover:text-[color:var(--accent)] transition">Profile</a>
+        <a href="/user/logout" class="text-sm text-gray-700 hover:text-[color:var(--accent)] transition">Logout</a>
+      <% } else { %>
+        <a href="/user/signup" class="text-sm text-gray-700 hover:text-[color:var(--accent)] transition">Register</a>
+        <a href="/user/signin" class="text-sm text-gray-700 hover:text-[color:var(--accent)] transition">Sign in</a>
+      <% } %>
+    </div>
+  </div>
+</header>
+<!-- ===================== /NAVBAR END ===================== -->
+
+  <!-- Your hero section and content -->
   <section class="hero-video">
+    <!-- Your existing hero content -->
     <div class="coat hero-container overlay">
       <div class="video-img-container">
+        <!-- Mobile GIF -->
+        <div class="coat video-mobile">
+          <img src="https://www.paintello.uk/uploads/painthome.gif" 
+               alt="Paintello mobile preview" 
+               class="w-full h-auto block" />
+        </div>
+
         <!-- Desktop Video -->
         <div class="coat video-desktop">
           <video playsinline loop autoplay muted preload="auto">
-            <source src="https://assets.codepen.io/3364143/7102.mp4" type="video/mp4">
+            <source src="/uploads/Designsanstitre(2).mp4" type="video/mp4">
+            <img src="//coatpaints.com/cdn/shop/files/preview_images/3617af9fd8254f5688fdeef051307a00.thumbnail.0000000000_2800x.jpg?v=1749051004" alt="Paintello desktop preview">
           </video>
         </div>
       </div>
 
       <div class="coat hero-content text-center text-white">
-        <h1 class="coat hero-heading"><p><em>This is</em></p></h1>
-        <h1 class="coat hero-heading"><p>PAINTELLO HOME</p></h1>
-        <p class="coat hero-subheading">
+        <h1 class="coat hero-heading fade-in"><p><em>This is</em></p></h1>
+        <h1 class="coat hero-heading fade-in delay-1"><p>PAINTELLO HOME</p></h1>
+        <p class="coat hero-subheading fade-in delay-2">
           Sustainable paint & décor — crafted in Algeria for homes that inspire.
         </p>
 
         <!-- Paintello Buttons -->
-        <div class="flex items-center justify-center gap-4 mt-6">
+        <div class="flex items-center justify-center gap-4 mt-6 fade-in delay-3">
           <a href="/"
              class="inline-flex items-center gap-3 bg-white border border-gray-200 rounded-lg py-3 px-4 hover:shadow-lg transition-all">
-            <img src="https://assets.codepen.io/3364143/71.jpg" alt="Paintello" class="h-10 w-10 rounded-full"/>
-            <span class="text-sm font-medium text-gray-800">Paintello</span>
+            <img src="/favicon/android-chrome-192x192.png" alt="Paintello " class="h-10 w-10"/>
+            <span class="text-sm font-medium text-gray-800">Paintello </span>
           </a>
 
           <a href="/paintello"
              class="inline-flex items-center gap-3 bg-white border border-gray-200 rounded-lg py-3 px-4 hover:shadow-lg transition-all">
-            <img src="https://assets.codepen.io/3364143/71.jpg" alt="Paintello Home" class="h-10 w-10 rounded-full"/>
+            <img src="/img/logo.png" alt="Paintello Home" class="h-10 w-auto"/>
             <span class="text-sm font-medium text-gray-800">Paintello Home</span>
           </a>
         </div>
@@ -310,371 +535,791 @@
     </div>
   </section>
 
-  <!-- Main Content -->
+  <!-- Main content -->
   <main class="max-w-7xl mx-auto px-6 lg:px-8 py-10">
     <div class="grid grid-cols-1 lg:grid-cols-12 gap-10">
-      <!-- Left: Images + Gallery -->
+
+      <!-- Left: Images + gallery -->
       <section class="lg:col-span-7 space-y-6">
-        <!-- Main Image with Swipe Area -->
+
+        <!-- Image + thumbnails layout -->
         <div class="bg-white rounded-2xl shadow-sm overflow-hidden p-4">
-          <div class="main-image-container" id="mainImageContainer">
-            <img src="https://assets.codepen.io/3364143/1.jpg" alt="Main product image" class="main-image" id="mainImage">
-            
-            <!-- Swipe Instructions -->
-            <div class="absolute bottom-4 left-1/2 transform -translate-x-1/2 bg-black/70 text-white text-xs py-1 px-3 rounded-full opacity-0 transition-opacity duration-300" id="swipeHint">
-              <i class="fas fa-arrows-left-right mr-1"></i> Swipe to navigate
+          <div class="flex flex-col lg:flex-row gap-6">
+            <!-- Thumbnails column -->
+            <div class="lg:w-24 flex lg:flex-col gap-3 order-2 lg:order-1 overflow-auto">
+              <% if (producthome && Array.isArray(producthome.image)) { %>
+                <% producthome.image.forEach(function(img, idx) { %>
+                  <button type="button" class="thumbnail shrink-0 rounded-lg border-2 border-transparent hover:border-[color:var(--accent)] p-1 bg-white transition-all <%= idx === 0 ? 'active border-[color:var(--accent)]' : '' %>" data-index="<%= idx %>" aria-label="Thumbnail <%= idx+1 %>">
+                    <img src="<%= img %>" alt="thumb <%= idx+1 %>" class="w-20 h-20 lg:w-full lg:h-20 object-cover rounded-md" />
+                  </button>
+                <% }); %>
+              <% } else { %>
+                <div class="text-sm text-gray-500">No images</div>
+              <% } %>
             </div>
-          </div>
-        </div>
 
-        <!-- Thumbnails -->
-        <div class="flex gap-3 overflow-x-auto py-2">
-          <div class="thumbnail active" data-index="0">
-            <img src="https://assets.codepen.io/3364143/1.jpg" alt="Thumbnail 1">
-          </div>
-          <div class="thumbnail" data-index="1">
-            <img src="https://assets.codepen.io/3364143/2.jpg" alt="Thumbnail 2">
-          </div>
-          <div class="thumbnail" data-index="2">
-            <img src="https://assets.codepen.io/3364143/3.jpg" alt="Thumbnail 3">
-          </div>
-          <div class="thumbnail" data-index="3">
-            <img src="https://assets.codepen.io/3364143/4.jpg" alt="Thumbnail 4">
-          </div>
-          <div class="thumbnail" data-index="4">
-            <img src="https://assets.codepen.io/3364143/5.jpg" alt="Thumbnail 5">
-          </div>
-        </div>
+            <!-- Main image slider -->
+<div class="flex-1 order-1 lg:order-2 relative">
+  <div id="imageSlider" class="relative bg-gray-50 rounded-xl overflow-hidden">
+    <% if (producthome && Array.isArray(producthome.image)) { %>
+      <% producthome.image.forEach(function(img, idx){ %>
+        <img src="<%= img %>" 
+             class="absolute inset-0 w-full h-full object-cover transition-opacity duration-700 ease-in-out <%= idx===0 ? 'opacity-100' : 'opacity-0' %> slider-img"
+             alt="image <%= idx+1 %>" 
+             data-index="<%= idx %>" />
+      <% }); %>
+    <% } %>
 
-        <!-- Gallery Grid -->
-        <div class="grid grid-cols-2 md:grid-cols-4 gap-4 gallery-grid">
-          <div class="rounded-lg overflow-hidden bg-white shadow-sm">
-            <img src="https://assets.codepen.io/3364143/1.jpg" alt="Gallery 1" class="w-full h-32 md:h-40 object-cover" data-index="0">
-          </div>
-          <div class="rounded-lg overflow-hidden bg-white shadow-sm">
-            <img src="https://assets.codepen.io/3364143/2.jpg" alt="Gallery 2" class="w-full h-32 md:h-40 object-cover" data-index="1">
-          </div>
-          <div class="rounded-lg overflow-hidden bg-white shadow-sm">
-            <img src="https://assets.codepen.io/3364143/3.jpg" alt="Gallery 3" class="w-full h-32 md:h-40 object-cover" data-index="2">
-          </div>
-          <div class="rounded-lg overflow-hidden bg-white shadow-sm">
-            <img src="https://assets.codepen.io/3364143/4.jpg" alt="Gallery 4" class="w-full h-32 md:h-40 object-cover" data-index="3">
-          </div>
+    <!-- Swipe hint -->
+    <div class="swipe-hint">
+      <i class="fas fa-arrows-left-right mr-2"></i>Swipe to navigate
+    </div>
+
+    <!-- Zara-style transparent arrows -->
+    <button id="prevSlide" class="absolute left-4 top-1/2 -translate-y-1/2 bg-black/30 hover:bg-black/50 text-white p-2 rounded-full hidden lg:flex">
+      <i class="fas fa-chevron-left"></i>
+    </button>
+    <button id="nextSlide" class="absolute right-4 top-1/2 -translate-y-1/2 bg-black/30 hover:bg-black/50 text-white p-2 rounded-full hidden lg:flex">
+      <i class="fas fa-chevron-right"></i>
+    </button>
+  </div>
+
+  <div class="mt-3 text-center">
+    <button id="openLightboxBtn" class="text-sm text-[color:var(--accent)] font-medium hover:underline">
+      View full image
+    </button>
+  </div>
+</div>
+
+        <!-- Gallery small grid -->
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+          <% if (producthome && Array.isArray(producthome.image)) { %>
+            <% producthome.image.slice(0,4).forEach(function(img, idx){ %>
+              <div class="rounded-lg overflow-hidden bg-white shadow-sm hover:shadow-md transition-shadow cursor-pointer gallery-item" data-index="<%= idx %>">
+                <img src="<%= img %>" class="w-full h-32 md:h-40 object-cover hover:scale-105 transition-transform duration-300" alt="gallery <%= idx+1 %>"/>
+              </div>
+            <% }); %>
+          <% } %>
         </div>
       </section>
 
-      <!-- Right: Product Info -->
+      <!-- Right: Product info -->
       <aside class="lg:col-span-5">
-        <div class="bg-white rounded-2xl shadow-sm p-6 product-info">
+        <div class="bg-white rounded-2xl shadow-sm p-6 sticky top-24">
           <div class="mb-4">
-            <h1 class="text-2xl font-semibold text-gray-900">Premium Wall Paint</h1>
-            <p class="mt-2 text-sm text-gray-600">Eco-friendly, durable finish for interior walls</p>
+            <h1 class="text-2xl font-semibold text-gray-900"><%= producthome && producthome.title ? producthome.title : '' %></h1>
+            <p class="mt-2 text-sm text-gray-600"><%= producthome && producthome.subtitle ? producthome.subtitle : '' %></p>
           </div>
 
           <div class="flex items-end gap-3 mt-4">
-            <div class="text-sm text-gray-400 line-through">4,500.00 DA</div>
-            <div class="text-2xl font-bold" style="color:var(--accent)">3,750.00 DA</div>
+            <% if (producthome && producthome.oldPrice && producthome.oldPrice > producthome.price) { %>
+              <div class="text-sm text-gray-400 line-through"><%= Number(producthome.oldPrice).toFixed(2) %> DA</div>
+            <% } %>
+            <div class="text-2xl font-bold" style="color:var(--accent)"><%= producthome && typeof producthome.price !== 'undefined' ? Number(producthome.price).toFixed(2) : '' %> DA</div>
           </div>
 
           <p class="mt-4 text-sm text-gray-600">Free shipping over 5000 DA. Available in all wilayas.</p>
 
           <!-- Add to cart form -->
-          <form id="addToCartForm" class="mt-6">
-            <div class="flex items-center gap-3">
-              <label class="text-sm text-gray-700 font-medium">Quantity</label>
-              <div class="flex items-center border rounded-full overflow-hidden w-36">
-                <button type="button" id="qtyMinus" class="px-4 py-2 text-gray-700 hover:bg-gray-50 transition-colors">-</button>
-                <input id="qtyInput" name="qty" value="1" class="w-12 text-center py-2 outline-none bg-transparent" />
-                <button type="button" id="qtyPlus" class="px-4 py-2 text-gray-700 hover:bg-gray-50 transition-colors">+</button>
-              </div>
-            </div>
+<form id="addToCartForm" action="/add-to-cart-producthome/<%= producthome._id %>" method="GET" class="mt-6">
+  <div class="flex items-center gap-3">
+    <label class="text-sm text-gray-700 font-medium">Quantity</label>
+    <div class="flex items-center border rounded-full overflow-hidden w-36">
+      <button type="button" id="qtyMinus" class="px-4 py-2 text-gray-700 hover:bg-gray-50 transition-colors">-</button>
+      <input id="qtyInput" name="qty" value="1" class="w-12 text-center py-2 outline-none bg-transparent" />
+      <button type="button" id="qtyPlus" class="px-4 py-2 text-gray-700 hover:bg-gray-50 transition-colors">+</button>
+    </div>
+  </div>
 
-            <div class="mt-6 flex flex-col gap-3">
-              <button type="submit" class="w-full py-3 rounded-full text-white font-semibold hover:opacity-90 transition-opacity" style="background:var(--accent);">
-                Add to cart
-              </button>
+  <div class="mt-6 flex flex-col gap-3">
+    <button id="addToCartBtn" type="submit" class="w-full py-3 rounded-full text-white font-semibold hover:opacity-90 transition-opacity" style="background:var(--accent);">
+      Add to cart
+    </button>
 
-              <button type="button" class="w-full py-3 rounded-full border border-gray-200 hover:border-gray-300 transition-colors bg-white text-gray-800 font-semibold">
-                Buy it now
-              </button>
-            </div>
-          </form>
+    <!-- Buy it now button - will add to cart AND go to checkout -->
+    <button id="buyNowBtn" type="button" class="w-full py-3 rounded-full border border-gray-200 hover:border-gray-300 transition-colors bg-white text-gray-800 font-semibold">
+      Buy it now
+    </button>
+  </div>
+</form>
 
           <!-- Tabs -->
           <div class="mt-8">
             <div class="flex gap-6 border-b border-gray-100">
               <button data-tab="desc" class="tab-btn text-sm py-4 px-1 font-medium text-gray-800 border-b-2 border-transparent active">Description</button>
               <button data-tab="info" class="tab-btn text-sm py-4 px-1 font-medium text-gray-600">Information</button>
+              <% if (has3DModel) { %>
+                <button data-tab="model3d" class="tab-btn text-sm py-4 px-1 font-medium text-gray-600">3D View</button>
+              <% } %>
+              <% if (producthome && producthome.videoId) { %>
+                <button data-tab="video" class="tab-btn text-sm py-4 px-1 font-medium text-gray-600">Video</button>
+              <% } %>
             </div>
 
             <div class="mt-6">
-              <div id="desc" class="tab-panel text-sm text-gray-700 leading-relaxed">
-                Our premium wall paint offers exceptional coverage and a beautiful matte finish. 
-                Formulated with eco-friendly ingredients, it's safe for your family and the environment. 
-                Easy to apply and quick to dry, it transforms any room with a professional look.
-              </div>
+              <div id="desc" class="tab-panel text-sm text-gray-700 leading-relaxed"><%= producthome && producthome.description ? producthome.description : '' %></div>
 
               <div id="info" class="tab-panel hidden text-sm text-gray-700">
                 <ul class="space-y-2">
-                  <li class="flex border-b border-gray-100 py-2">
-                    <strong class="w-32 text-gray-900">Coverage:</strong>
-                    <span class="flex-1">12 m² per liter</span>
-                  </li>
-                  <li class="flex border-b border-gray-100 py-2">
-                    <strong class="w-32 text-gray-900">Drying Time:</strong>
-                    <span class="flex-1">2 hours</span>
-                  </li>
-                  <li class="flex border-b border-gray-100 py-2">
-                    <strong class="w-32 text-gray-900">Finish:</strong>
-                    <span class="flex-1">Matte</span>
-                  </li>
-                  <li class="flex border-b border-gray-100 py-2">
-                    <strong class="w-32 text-gray-900">Color Options:</strong>
-                    <span class="flex-1">25+ colors available</span>
-                  </li>
+                  <% if (producthome && producthome.details) { for (let key in producthome.details) { %>
+                    <li class="flex border-b border-gray-100 py-2">
+                      <strong class="w-32 text-gray-900"><%= key %>:</strong>
+                      <span class="flex-1"><%= producthome.details[key] %></span>
+                    </li>
+                  <% } } %>
                 </ul>
               </div>
+
+              <% if (has3DModel) { %>
+                <div id="model3d" class="tab-panel hidden">
+                  <div class="bg-gray-50 rounded-xl p-4">
+                    <div id="modelViewer" class="model-viewer-container w-full h-96 rounded-lg overflow-hidden"></div>
+                    <p class="text-xs text-gray-500 text-center mt-3">Drag to rotate • Scroll to zoom</p>
+                  </div>
+                </div>
+              <% } %>
+
+              <% if (producthome && producthome.videoId) { %>
+                <div id="video" class="tab-panel hidden">
+                  <div class="bg-white rounded-lg p-2 shadow-sm">
+                    <div class="aspect-w-16 aspect-h-9">
+                      <iframe src="https://www.youtube.com/embed/<%= producthome.videoId %>?rel=0&playsinline=1" class="w-full h-64" frameborder="0" allow="accelerometer; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                    </div>
+                  </div>
+                </div>
+              <% } %>
+
             </div>
           </div>
+
+          <!-- Share -->
+          <div class="mt-8 flex gap-3 items-center text-sm text-gray-500 pt-6 border-t border-gray-100">
+            <div class="font-medium">Share:</div>
+            <a class="hover:text-gray-900" href="#">Facebook</a>
+            <a class="hover:text-gray-900" href="#">Pinterest</a>
+            <a class="hover:text-gray-900" href="#">Instagram</a>
+          </div>
         </div>
+
+        <!-- JSON-LD -->
+        <script type="application/ld+json">
+        {
+          "@context": "https://schema.org/",
+          "@type": "Product",
+          "name": "<%= producthome && producthome.title ? producthome.title : '' %>",
+          "image": "<%= (producthome && producthome.image && producthome.image[0]) ? producthome.image[0] : '' %>",
+          "description": "<%= producthome && producthome.description ? producthome.description : '' %>",
+          "sku": "<%= producthome && producthome._id ? producthome._id : '' %>",
+          "offers": { "@type": "Offer", "url": "https://<%= req.get('host') + req.originalUrl %>", "priceCurrency": "DZD", "price": "<%= producthome && producthome.price ? producthome.price : '' %>", "availability": "https://schema.org/InStock" }
+        }
+        </script>
       </aside>
     </div>
+
+   <!-- Suggested products (horizontal scroll carousel) -->
+<section class="mt-12">
+  <h2 class="text-xl font-semibold mb-4">You may also like</h2>
+  <div class="relative">
+    <!-- Arrows -->
+    <button id="prevRelated" class="absolute left-0 top-1/2 -translate-y-1/2 z-20 bg-white rounded-full shadow p-2 hidden md:block" aria-label="Previous">
+      <svg class="h-5 w-5 text-gray-700" viewBox="0 0 20 20" fill="currentColor">
+        <path fill-rule="evenodd" d="M12.707 14.707a1 1 0 01-1.414 0L6.586 10l4.707-4.707a1 1 0 011.414 1.414L9.414 10l3.293 3.293a1 1 0 010 1.414z" clip-rule="evenodd"/>
+      </svg>
+    </button>
+    <button id="nextRelated" class="absolute right-0 top-1/2 -translate-y-1/2 z-20 bg-white rounded-full shadow p-2 hidden md:block" aria-label="Next">
+      <svg class="h-5 w-5 text-gray-700" viewBox="0 0 20 20" fill="currentColor">
+        <path fill-rule="evenodd" d="M7.293 5.293a1 1 0 011.414 0L13.414 10l-4.707 4.707a1 1 0 01-1.414-1.414L10.586 10 7.293 6.707a1 1 0 010-1.414z" clip-rule="evenodd"/>
+      </svg>
+    </button>
+
+    <!-- Scroll container -->
+    <div id="relatedScroll" class="flex gap-4 overflow-x-auto snap-x py-2 px-2">
+      <!-- Render paintello products as related products -->
+      <% if (typeof paintellos !== 'undefined' && Array.isArray(paintellos) && paintellos.length > 0) { %>
+        <% 
+          // Filter out current product if it exists in paintellos
+          const relatedProducts = paintellos.filter(p => {
+            return !(producthome && producthome._id && p._id && producthome._id.toString() === p._id.toString());
+          }).slice(0, 12); // Limit to 8 products
+        %>
+        
+        <% if (relatedProducts.length > 0) { %>
+          <% relatedProducts.forEach(function(p) { %>
+            <div class="snap-child flex-none w-56 bg-white rounded-xl shadow-sm overflow-hidden hover:shadow-md transition-shadow duration-300">
+              <a href="<%= p.href || '/paintello/product/' + p._id %>" class="block group">
+                <div class="relative overflow-hidden">
+                  <img src="<%= (p.image && p.image[0]) ? p.image[0] : '/img/placeholder.png' %>" 
+                       alt="<%= p.title %>" 
+                       class="w-full h-36 object-cover group-hover:scale-105 transition-transform duration-300" />
+                  <% if (p.disponible && p.disponible.includes('Sale')) { %>
+                    <span class="absolute top-2 left-2 bg-red-500 text-white text-xs px-2 py-1 rounded">Sale</span>
+                  <% } %>
+                </div>
+                <div class="p-3">
+                  <div class="text-sm font-medium text-gray-900 truncate"><%= p.title %></div>
+                  <div class="flex items-center gap-2 mt-1">
+                    <div class="text-sm font-semibold text-[color:var(--accent)]">
+                      <%= p.price ? Number(p.price).toFixed(2) : '0.00' %> DA
+                    </div>
+                    <% if (p.oldPrice && p.oldPrice > p.price) { %>
+                      <div class="text-xs text-gray-500 line-through">
+                        <%= Number(p.oldPrice).toFixed(2) %> DA
+                      </div>
+                    <% } %>
+                  </div>
+                  <% if (p.disponible && !p.disponible.includes('Sale')) { %>
+                    <span class="inline-block mt-1 px-2 py-1 text-xs bg-blue-100 text-blue-800 rounded-full">
+                      <%= p.disponible %>
+                    </span>
+                  <% } %>
+                </div>
+              </a>
+            </div>
+          <% }); %>
+        <% } else { %>
+          <!-- Fallback if no related products found -->
+          <div class="w-full text-center py-8 text-gray-500">
+            Check out our other products
+          </div>
+        <% } %>
+      <% } else { %>
+        <!-- Placeholders when no paintello data available -->
+        <% for (let i=0; i<6; i++){ %>
+          <div class="snap-child flex-none w-56 bg-white rounded-xl shadow-sm overflow-hidden">
+            <a href="#" class="block">
+              <img src="/img/placeholder.png" alt="placeholder" class="w-full h-36 object-cover" />
+              <div class="p-3">
+                <div class="text-sm font-medium text-gray-900 truncate">Featured Product <%= i+1 %></div>
+                <div class="text-sm text-[color:var(--accent)] mt-1">199.99 DA</div>
+              </div>
+            </a>
+          </div>
+        <% } %>
+      <% } %>
+    </div>
+  </div>
+</section>
+
   </main>
 
-  <!-- Lightbox -->
-  <div class="lightbox" id="lightbox">
-    <button class="lightbox-close" id="lightboxClose">
+  <!-- Footer -->
+  <footer class="border-t border-gray-100 bg-white mt-16">
+    <div class="max-w-7xl mx-auto px-6 py-8 text-sm text-gray-600">© <%= new Date().getFullYear() %> Paintello — All rights reserved</div>
+  </footer>
+
+  <!-- Enhanced Lightbox element -->
+  <div id="lightbox" class="lightbox-backdrop">
+    <button id="lightboxClose" class="lightbox-close">
       <i class="fas fa-times"></i>
     </button>
     
-    <button class="lightbox-nav lightbox-prev" id="lightboxPrev">
+    <button id="lightboxPrev" class="lightbox-nav lightbox-prev">
       <i class="fas fa-chevron-left"></i>
     </button>
     
-    <button class="lightbox-nav lightbox-next" id="lightboxNext">
+    <button id="lightboxNext" class="lightbox-nav lightbox-next">
       <i class="fas fa-chevron-right"></i>
     </button>
     
     <div class="lightbox-content">
-      <img src="" alt="Lightbox image" class="lightbox-image" id="lightboxImage">
+      <img id="lightboxImage" src="" alt="Full image" class="lightbox-image" />
     </div>
   </div>
 
+  <!-- Global error handlers (helpful for Clarity) -->
   <script>
-    document.addEventListener('DOMContentLoaded', function() {
-      // Image data
-      const images = [
-        'https://assets.codepen.io/3364143/1.jpg',
-        'https://assets.codepen.io/3364143/2.jpg',
-        'https://assets.codepen.io/3364143/3.jpg',
-        'https://assets.codepen.io/3364143/4.jpg',
-        'https://assets.codepen.io/3364143/5.jpg'
-      ];
-      
-      let currentImageIndex = 0;
-      const mainImage = document.getElementById('mainImage');
-      const mainImageContainer = document.getElementById('mainImageContainer');
+    window.addEventListener('error', function(e) {
+      try { console.error('JS Error caught:', e.message, 'at', (e.filename || e.fileName) + ':' + (e.lineno || e.lineNumber), e.error); } catch (err) {}
+    });
+    window.addEventListener('unhandledrejection', function(e) { console.warn('Unhandled promise rejection', e.reason); });
+  </script>
+
+  <!-- Interaction scripts (lightbox, thumbnails, tabs, qty, addToCart tracking) -->
+  <script>
+    document.addEventListener('DOMContentLoaded', function(){
+      // ---------- Image Slider Functionality ----------
+      const slides = document.querySelectorAll('.slider-img');
+      const prev = document.getElementById('prevSlide');
+      const next = document.getElementById('nextSlide');
       const thumbnails = document.querySelectorAll('.thumbnail');
-      const galleryImages = document.querySelectorAll('.gallery-grid img');
+      const galleryItems = document.querySelectorAll('.gallery-item');
+      const imageSlider = document.getElementById('imageSlider');
+      let currentSlide = 0;
+
+      function showSlide(index) {
+        // Validate index
+        if (index < 0) index = slides.length - 1;
+        if (index >= slides.length) index = 0;
+        
+        // Hide all slides
+        slides.forEach(slide => {
+          slide.classList.remove('opacity-100');
+          slide.classList.add('opacity-0');
+        });
+        
+        // Show selected slide
+        slides[index].classList.remove('opacity-0');
+        slides[index].classList.add('opacity-100');
+        
+        // Update active thumbnail
+        thumbnails.forEach(thumb => {
+          thumb.classList.remove('active', 'border-[color:var(--accent)]');
+        });
+        
+        if (thumbnails[index]) {
+          thumbnails[index].classList.add('active', 'border-[color:var(--accent)]');
+        }
+        
+        currentSlide = index;
+      }
+
+      function nextSlide() {
+        let nextIndex = (currentSlide + 1) % slides.length;
+        showSlide(nextIndex);
+      }
+
+      function prevSlide() {
+        let prevIndex = (currentSlide - 1 + slides.length) % slides.length;
+        showSlide(prevIndex);
+      }
+
+      // Event listeners for slider arrows
+      if (prev) prev.addEventListener('click', prevSlide);
+      if (next) next.addEventListener('click', nextSlide);
+
+      // Event listeners for thumbnails
+      thumbnails.forEach(thumb => {
+        thumb.addEventListener('click', function() {
+          const index = parseInt(this.getAttribute('data-index'));
+          showSlide(index);
+        });
+      });
+
+      // Event listeners for gallery items
+      galleryItems.forEach(item => {
+        item.addEventListener('click', function() {
+          const index = parseInt(this.getAttribute('data-index'));
+          showSlide(index);
+        });
+      });
+
+      // ---------- Enhanced Lightbox Functionality ----------
       const lightbox = document.getElementById('lightbox');
       const lightboxImage = document.getElementById('lightboxImage');
       const lightboxClose = document.getElementById('lightboxClose');
       const lightboxPrev = document.getElementById('lightboxPrev');
       const lightboxNext = document.getElementById('lightboxNext');
-      const swipeHint = document.getElementById('swipeHint');
-      
-      // Show image by index
-      function showImage(index) {
-        // Validate index
-        if (index < 0) index = images.length - 1;
-        if (index >= images.length) index = 0;
-        
-        currentImageIndex = index;
-        
-        // Update main image with fade effect
-        mainImage.style.opacity = '0';
-        setTimeout(() => {
-          mainImage.src = images[index];
-          mainImage.style.opacity = '1';
-        }, 150);
-        
-        // Update active thumbnail
-        thumbnails.forEach(thumb => {
-          thumb.classList.remove('active');
-        });
-        thumbnails[index].classList.add('active');
-      }
-      
-      // Show next image
-      function nextImage() {
-        showImage(currentImageIndex + 1);
-      }
-      
-      // Show previous image
-      function prevImage() {
-        showImage(currentImageIndex - 1);
-      }
-      
-      // Open lightbox
+      const openLightboxBtn = document.getElementById('openLightboxBtn');
+
       function openLightbox() {
-        lightboxImage.src = images[currentImageIndex];
+        const currentImageSrc = slides[currentSlide].getAttribute('src');
+        lightboxImage.setAttribute('src', currentImageSrc);
         lightbox.classList.add('active');
         document.body.style.overflow = 'hidden';
       }
-      
-      // Close lightbox
+
       function closeLightbox() {
         lightbox.classList.remove('active');
         document.body.style.overflow = '';
       }
+
+      // Open lightbox when clicking main image
+      imageSlider.addEventListener('click', openLightbox);
       
-      // Thumbnail click events
-      thumbnails.forEach(thumb => {
-        thumb.addEventListener('click', function() {
-          const index = parseInt(this.getAttribute('data-index'));
-          showImage(index);
-        });
-      });
-      
-      // Gallery image click events
-      galleryImages.forEach(img => {
-        img.addEventListener('click', function() {
-          const index = parseInt(this.getAttribute('data-index'));
-          showImage(index);
-        });
-      });
-      
-      // Main image click to open lightbox
-      mainImageContainer.addEventListener('click', openLightbox);
-      
+      // Open lightbox when clicking "View full image" button
+      if (openLightboxBtn) {
+        openLightboxBtn.addEventListener('click', openLightbox);
+      }
+
       // Lightbox navigation
-      lightboxClose.addEventListener('click', closeLightbox);
-      lightboxPrev.addEventListener('click', prevImage);
-      lightboxNext.addEventListener('click', nextImage);
+      if (lightboxClose) {
+        lightboxClose.addEventListener('click', closeLightbox);
+      }
       
-      // Close lightbox when clicking on the backdrop (sides)
+      if (lightboxPrev) {
+        lightboxPrev.addEventListener('click', function() {
+          prevSlide();
+          updateLightboxImage();
+        });
+      }
+      
+      if (lightboxNext) {
+        lightboxNext.addEventListener('click', function() {
+          nextSlide();
+          updateLightboxImage();
+        });
+      }
+
+      function updateLightboxImage() {
+        const currentImageSrc = slides[currentSlide].getAttribute('src');
+        lightboxImage.setAttribute('src', currentImageSrc);
+      }
+
+      // Close lightbox when clicking on backdrop
       lightbox.addEventListener('click', function(e) {
         if (e.target === lightbox) {
           closeLightbox();
         }
       });
-      
-      // Keyboard navigation
+
+      // Close lightbox with ESC key
       document.addEventListener('keydown', function(e) {
-        if (lightbox.classList.contains('active')) {
-          if (e.key === 'Escape') {
-            closeLightbox();
-          } else if (e.key === 'ArrowLeft') {
-            prevImage();
+        if (e.key === 'Escape' && lightbox.classList.contains('active')) {
+          closeLightbox();
+        } else if (lightbox.classList.contains('active')) {
+          if (e.key === 'ArrowLeft') {
+            prevSlide();
+            updateLightboxImage();
           } else if (e.key === 'ArrowRight') {
-            nextImage();
+            nextSlide();
+            updateLightboxImage();
           }
         }
       });
-      
-      // Swipe functionality for main image
-      let startX = 0;
-      let endX = 0;
-      
-      mainImageContainer.addEventListener('touchstart', function(e) {
-        startX = e.touches[0].clientX;
-      });
-      
-      mainImageContainer.addEventListener('touchmove', function(e) {
-        endX = e.touches[0].clientX;
-      });
-      
-      mainImageContainer.addEventListener('touchend', function() {
-        const diffX = startX - endX;
+
+      // ---------- Swipe Functionality for Main Image ----------
+      let startX = 0, endX = 0;
+
+      if (imageSlider) {
+        imageSlider.addEventListener('touchstart', e => { 
+          startX = e.touches[0].clientX; 
+        });
         
-        if (Math.abs(diffX) > 50) { // Minimum swipe distance
-          if (diffX > 0) {
-            nextImage();
-          } else {
-            prevImage();
+        imageSlider.addEventListener('touchmove', e => { 
+          endX = e.touches[0].clientX; 
+        });
+        
+        imageSlider.addEventListener('touchend', () => {
+          const diff = endX - startX;
+          if (Math.abs(diff) > 50) { // swipe threshold
+            if (diff > 0) prevSlide(); 
+            else nextSlide();
           }
+          startX = endX = 0;
+        });
+        
+        // Mouse swipe for desktop
+        imageSlider.addEventListener('mousedown', function(e) {
+          startX = e.clientX;
+          document.addEventListener('mousemove', onMouseMove);
+          document.addEventListener('mouseup', onMouseUp);
+        });
+        
+        function onMouseMove(e) {
+          endX = e.clientX;
         }
         
-        startX = 0;
-        endX = 0;
-      });
-      
-      // Mouse swipe for desktop
-      mainImageContainer.addEventListener('mousedown', function(e) {
-        startX = e.clientX;
-        document.addEventListener('mousemove', onMouseMove);
-        document.addEventListener('mouseup', onMouseUp);
-      });
-      
-      function onMouseMove(e) {
-        endX = e.clientX;
-      }
-      
-      function onMouseUp() {
-        const diffX = startX - endX;
-        
-        if (Math.abs(diffX) > 50) { // Minimum swipe distance
-          if (diffX > 0) {
-            nextImage();
-          } else {
-            prevImage();
-          }
-        }
-        
-        document.removeEventListener('mousemove', onMouseMove);
-        document.removeEventListener('mouseup', onMouseUp);
-        startX = 0;
-        endX = 0;
-      }
-      
-      // Show swipe hint on hover
-      mainImageContainer.addEventListener('mouseenter', function() {
-        swipeHint.style.opacity = '1';
-      });
-      
-      mainImageContainer.addEventListener('mouseleave', function() {
-        swipeHint.style.opacity = '0';
-      });
-      
-      // Quantity controls
-      const qtyInput = document.getElementById('qtyInput');
-      const qtyPlus = document.getElementById('qtyPlus');
-      const qtyMinus = document.getElementById('qtyMinus');
-      
-      qtyPlus.addEventListener('click', function() {
-        qtyInput.value = parseInt(qtyInput.value) + 1;
-      });
-      
-      qtyMinus.addEventListener('click', function() {
-        if (parseInt(qtyInput.value) > 1) {
-          qtyInput.value = parseInt(qtyInput.value) - 1;
-        }
-      });
-      
-      // Tab functionality
-      const tabButtons = document.querySelectorAll('.tab-btn');
-      const tabPanels = document.querySelectorAll('.tab-panel');
-      
-      tabButtons.forEach(button => {
-        button.addEventListener('click', function() {
-          const target = this.getAttribute('data-tab');
+        function onMouseUp() {
+          const diff = startX - endX;
           
-          // Update active tab button
-          tabButtons.forEach(btn => {
-            btn.classList.remove('active', 'text-gray-800');
-            btn.classList.add('text-gray-600');
-          });
-          this.classList.add('active', 'text-gray-800');
-          this.classList.remove('text-gray-600');
+          if (Math.abs(diff) > 50) { // Minimum swipe distance
+            if (diff > 0) {
+              nextSlide();
+            } else {
+              prevSlide();
+            }
+          }
           
-          // Show target panel
-          tabPanels.forEach(panel => {
-            panel.classList.add('hidden');
-          });
-          document.getElementById(target).classList.remove('hidden');
+          document.removeEventListener('mousemove', onMouseMove);
+          document.removeEventListener('mouseup', onMouseUp);
+          startX = 0;
+          endX = 0;
+        }
+      }
+
+      // ---------- Tabs ----------
+      document.querySelectorAll('.tab-btn').forEach(btn => {
+        btn.addEventListener('click', function(){
+          const target = this.dataset.tab;
+          if (!target) return;
+          document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('text-gray-900', 'active'));
+          document.querySelectorAll('.tab-panel').forEach(p => p.classList.add('hidden'));
+          this.classList.add('text-gray-900', 'active');
+          const panel = document.getElementById(target);
+          if (panel) panel.classList.remove('hidden');
+
+          // trigger a resize if model viewer becomes visible
+          if (target === 'model3d') {
+            setTimeout(()=> window.dispatchEvent(new Event('resize')), 120);
+          }
         });
       });
-    });
+
+      // ---------- Quantity controls ----------
+      const qtyInput = document.getElementById('qtyInput');
+      const plus = document.getElementById('qtyPlus');
+      const minus = document.getElementById('qtyMinus');
+      if (qtyInput) {
+        qtyInput.value = qtyInput.value || 1;
+        plus && plus.addEventListener('click', () => qtyInput.value = Math.max(1, parseInt(qtyInput.value||1) + 1));
+        minus && minus.addEventListener('click', () => qtyInput.value = Math.max(1, parseInt(qtyInput.value||1) - 1));
+      }
+
+      // ---------- AddToCart tracking (safe) ----------
+      const addForm = document.getElementById('addToCartForm');
+      if (addForm) {
+        addForm.addEventListener('submit', function(e){
+          try {
+            if (window.fbq) {
+              window.fbq('track', 'AddToCart', {
+                content_name: '<%= producthome && producthome.title ? producthome.title : '' %>',
+                content_ids: ['<%= producthome && producthome._id ? producthome._id : '' %>'],
+                content_type: 'product',
+                value: <%= producthome && producthome.price ? producthome.price : 0 %>,
+                currency: 'DZD',
+                contents: [{ id: '<%= producthome && producthome._id ? producthome._id : '' %>', quantity: parseInt(document.getElementById('qtyInput').value||1), item_price: <%= producthome && producthome.price ? producthome.price : 0 %> }]
+              }, { eventID: '<%= typeof metaEventIdCart !== "undefined" ? metaEventIdCart : "" %>' });
+            }
+          } catch (err) { console.warn('fbq track AddToCart failed', err); }
+          // allow the form to proceed normally
+        });
+      }
+
+      // ---------- Related products carousel controls ----------
+      const relatedScroll = document.getElementById('relatedScroll');
+      const prevBtn = document.getElementById('prevRelated');
+      const nextBtn = document.getElementById('nextRelated');
+
+      function scrollRelated(delta) {
+        if (!relatedScroll) return;
+        relatedScroll.scrollBy({ left: delta, behavior: 'smooth' });
+      }
+      if (prevBtn) prevBtn.addEventListener('click', () => scrollRelated(-280));
+      if (nextBtn) nextBtn.addEventListener('click', () => scrollRelated(280));
+
+      // show/hide arrows based on width
+      function updateRelatedArrows() {
+        if (!relatedScroll) return;
+        if (relatedScroll.scrollWidth > relatedScroll.clientWidth) {
+          prevBtn && prevBtn.classList.remove('hidden');
+          nextBtn && nextBtn.classList.remove('hidden');
+        } else {
+          prevBtn && prevBtn.classList.add('hidden');
+          nextBtn && nextBtn.classList.add('hidden');
+        }
+      }
+      setTimeout(updateRelatedArrows, 300);
+      window.addEventListener('resize', updateRelatedArrows);
+
+    }); // DOMContentLoaded end
   </script>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    // Buy Now functionality
+    const buyNowBtn = document.getElementById('buyNowBtn');
+    
+    if (buyNowBtn) {
+      buyNowBtn.addEventListener('click', async function(e) {
+        e.preventDefault();
+        
+        try {
+          // Show loading state
+          const originalText = buyNowBtn.innerHTML;
+          buyNowBtn.innerHTML = 'Adding to cart...';
+          buyNowBtn.disabled = true;
+          
+          // Get the quantity
+          const qtyInput = document.getElementById('qtyInput');
+          const quantity = qtyInput ? parseInt(qtyInput.value) || 1 : 1;
+          
+          // Get product ID
+          const productId = '<%= producthome._id %>';
+          
+          console.log('Buy Now: Adding product to cart:', productId, 'quantity:', quantity);
+          
+          // Add to cart via API call
+          const response = await fetch(`/add-to-cart-producthome/${productId}?qty=${quantity}&redirect=checkout`, {
+            method: 'GET',
+            headers: {
+              'Content-Type': 'application/json',
+            }
+          });
+          
+          if (response.ok) {
+            // Success - redirect to checkout
+            window.location.href = '/checkout';
+          } else {
+            throw new Error('Failed to add to cart');
+          }
+          
+        } catch (error) {
+          console.error('Buy Now error:', error);
+          // Reset button
+          buyNowBtn.innerHTML = 'Buy it now';
+          buyNowBtn.disabled = false;
+          // Show error message
+          alert('Sorry, there was an error adding the product to cart. Please try again.');
+        }
+      });
+    }
+
+    // Existing quantity controls
+    const qtyInput = document.getElementById('qtyInput');
+    const plus = document.getElementById('qtyPlus');
+    const minus = document.getElementById('qtyMinus');
+    
+    if (qtyInput) {
+      qtyInput.value = qtyInput.value || 1;
+      plus?.addEventListener('click', () => { 
+        qtyInput.value = Math.max(1, parseInt(qtyInput.value || 1) + 1); 
+      });
+      minus?.addEventListener('click', () => { 
+        qtyInput.value = Math.max(1, parseInt(qtyInput.value || 1) - 1); 
+      });
+    }
+  });
+</script> 
+
+  <!-- 3D Viewer (robust) -->
+  <% if (has3DModel) { %>
+  <script>
+    (function(){
+      function waitForThree(cb, timeoutMs) {
+        const start = Date.now();
+        (function check() {
+          if (window.THREE && (window.THREE.STLLoader || window.STLLoader)) return cb();
+          if (Date.now() - start > (timeoutMs || 8000)) { console.warn('Three.js assets not available'); return; }
+          setTimeout(check, 80);
+        })();
+      }
+
+      function init3DViewer(stlFilePath, defaultColor, autoRotateEnabled) {
+        try {
+          const container = document.getElementById('modelViewer');
+          if (!container || !window.THREE) return;
+
+          // cleanup any previous canvas
+          container.innerHTML = '';
+          const scene = new THREE.Scene();
+          scene.background = new THREE.Color(0xf8f9fa);
+          const camera = new THREE.PerspectiveCamera(45, container.clientWidth / container.clientHeight, 0.1, 1000);
+          camera.position.set(0, 0, 5);
+
+          const renderer = new THREE.WebGLRenderer({ antialias:true, alpha:true });
+          renderer.setPixelRatio(window.devicePixelRatio || 1);
+          renderer.setSize(container.clientWidth, container.clientHeight);
+          container.appendChild(renderer.domElement);
+
+          const ambient = new THREE.AmbientLight(0xffffff, 0.7); scene.add(ambient);
+          const d1 = new THREE.DirectionalLight(0xffffff, 0.9); d1.position.set(10,10,5); scene.add(d1);
+          const d2 = new THREE.DirectionalLight(0xffffff, 0.4); d2.position.set(-5,5,-5); scene.add(d2);
+
+          const controls = new THREE.OrbitControls(camera, renderer.domElement);
+          controls.enableDamping = true; controls.dampingFactor = 0.05;
+          controls.autoRotate = !!autoRotateEnabled; controls.autoRotateSpeed = 1.0;
+
+          const LoaderClass = (typeof THREE.STLLoader !== 'undefined') ? THREE.STLLoader : (typeof STLLoader !== 'undefined' ? STLLoader : null);
+          if (!LoaderClass) {
+            container.innerHTML = '<div class="flex items-center justify-center h-full text-sm text-gray-500">3D preview not supported</div>';
+            return;
+          }
+          const loader = new LoaderClass();
+
+          loader.load(stlFilePath, function(geometry) {
+            try {
+              geometry.computeBoundingBox();
+              const bbox = geometry.boundingBox;
+              const center = new THREE.Vector3(); bbox.getCenter(center);
+
+              const material = new THREE.MeshPhongMaterial({ color: new THREE.Color(defaultColor || '#c9b59a'), shininess: 60, specular: 0x222222 });
+              const mesh = new THREE.Mesh(geometry, material);
+
+              const group = new THREE.Group();
+              mesh.position.set(-center.x, -center.y, -center.z);
+              group.add(mesh);
+
+              const size = new THREE.Vector3(); bbox.getSize(size);
+              const maxDim = Math.max(size.x, size.y, size.z);
+              const scale = (maxDim > 0 ? 1.8 / maxDim : 1);
+              group.scale.set(scale, scale, scale);
+              scene.add(group);
+
+              controls.target.set(0,0,0);
+              controls.update();
+              window.viewerInitialized = true;
+            } catch (err) {
+              console.error('3D geometry error', err);
+            }
+          }, undefined, function(err){
+            console.error('STL load error', err);
+            container.innerHTML = '<div class="flex items-center justify-center h-full text-sm text-gray-500">3D preview failed to load.</div>';
+          });
+
+          function handleResize() {
+            if (!container) return;
+            camera.aspect = container.clientWidth / container.clientHeight;
+            camera.updateProjectionMatrix();
+            renderer.setSize(container.clientWidth, container.clientHeight);
+          }
+          window.addEventListener('resize', handleResize);
+
+          (function animate(){
+            try {
+              requestAnimationFrame(animate);
+              controls.update();
+              renderer.render(scene, camera);
+            } catch(e) { console.error('render loop error', e); }
+          })();
+
+        } catch(e) { console.error('init3DViewer error', e); }
+      }
+
+      document.addEventListener('DOMContentLoaded', function(){
+        waitForThree(function(){ 
+          try {
+            init3DViewer('<%= model3DSettings && model3DSettings.stlFile ? model3DSettings.stlFile : '' %>', '<%= model3DSettings && model3DSettings.defaultColor ? model3DSettings.defaultColor : '#c9b59a' %>', <%= model3DSettings && typeof model3DSettings.autoRotate !== 'undefined' ? model3DSettings.autoRotate : false %>);
+          } catch(e) { console.error('init3DViewer call failed', e); }
+        }, 8000);
+      });
+    })();
+  </script>
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  const userBtn = document.getElementById('userMenuBtn');
+  const userMenu = document.getElementById('userDropdown');
+  const mobileBtn = document.getElementById('mobileMenuBtn');
+  const mobileMenu = document.getElementById('mobileMenu');
+
+  // Toggle user dropdown
+  userBtn?.addEventListener('click', (e) => {
+    e.stopPropagation();
+    userMenu.classList.toggle('hidden');
+  });
+
+  // Close dropdown when clicking outside
+  document.addEventListener('click', (e) => {
+    if (!userMenu?.contains(e.target) && !userBtn?.contains(e.target)) {
+      userMenu?.classList.add('hidden');
+    }
+  });
+
+  // Toggle mobile menu
+  mobileBtn?.addEventListener('click', () => {
+    mobileMenu.classList.toggle('hidden');
+  });
+});
+</script>
+
+<!-- FontAwesome icons -->
+  <script src="https://kit.fontawesome.com/a2d9b6b9f4.js" crossorigin="anonymous" defer></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+  <% } %>
+
+  <script>
+(function() {
+  function getParam(p) {
+    var match = window.location.search.match(new RegExp('[?&]' + p + '=([^&]+)'));
+    return match ? match[1] : null;
+  }
+
+  var fbclid = getParam('fbclid');
+  if (fbclid) {
+    var fbc = `fb.1.${Date.now()}.${fbclid}`;
+    document.cookie = `_fbc=${fbc}; path=/; max-age=31536000`; // Store for 1 year
+  }
+})();
+</script>
+
 </body>
 </html>
