@@ -284,6 +284,23 @@ right: 12px;
   background: rgba(0,0,0,0.3);
   z-index: 1;
 }
+/* === Fix vertical spacing between hero and next section === */
+.coat.hero-container {
+  margin-bottom: 0 !important;
+  padding-bottom: 0 !important;
+}
+
+.video-img-container,
+.coat.hero-content {
+  margin-bottom: 0 !important;
+  padding-bottom: 0 !important;
+}
+
+/* Ensure next section starts right under hero */
+body > header + * {
+  margin-top: 0 !important;
+  padding-top: 0 !important;
+}
 
 </style>
 
@@ -412,8 +429,6 @@ right: 12px;
 </div>
 
     
-<div class="mb-4"> 
- <div class="mb-4"> 
      
       
       
