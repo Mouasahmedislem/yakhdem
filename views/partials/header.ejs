@@ -23,31 +23,6 @@ s.parentNode.insertBefore(t,s)}(window, document,'script',
 
 // Create config object dynamically
 var pixelConfig = {};
-<!DOCTYPE html>
-<html lang="en">
-
-<head>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.1/crypto-js.min.js"></script>
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="referrer" content="strict-origin-when-cross-origin">
-<meta name="facebook-domain-verification" content="yb7g1gekm0w90kxdm7yjazn8df8ad0" />
-<!-- Meta Pixel Code -->
-<% if (process.env.FB_PIXEL_ID) { %>
-<!-- Facebook Pixel Code -->
-
-
-<script>
-!function(f,b,e,v,n,t,s)
-{if(f.fbq)return;n=f.fbq=function(){n.callMethod?
-n.callMethod.apply(n,arguments):n.queue.push(arguments)};
-if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
-n.queue=[];t=b.createElement(e);t.async=!0;
-t.src=v;s=b.getElementsByTagName(e)[0];
-s.parentNode.insertBefore(t,s)}(window, document,'script',
-'https://connect.facebook.net/en_US/fbevents.js');
-
-// Create config object dynamically
-var pixelConfig = {};
 
 // Only add parameters that have values
 <% if (user && user.email) { %> pixelConfig.em = '<%= user.email %>'; <% } %>
@@ -341,68 +316,7 @@ header + main,
     overflow: hidden;
   }
 }
-.colour-grid-surround {
-  padding: 3rem 1rem;
-  text-align: center;
-}
-.colour-grid-text {
-  margin-bottom: 2rem;
-}
-.colour-grid-text .intro-heading {
-  text-transform: capitalize;
-  font-family: "Playfair Display", serif;
-  font-weight: 400;
-  font-size: 2.5rem;
-  line-height: 1.2;
-  margin-bottom: 1rem;
-  color: #222;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-}
-.colour-grid-text p {
-  color: #555;
-  font-size: 1rem;
-  max-width: 500px;
-  margin: 0 auto;
-}
-.colour-grid-container {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 1.25rem;
-}
-.colour-grid-item-image img {
-  width: 100%;
-  border-radius: 12px 12px 0 0;
-  aspect-ratio: 1;
-  object-fit: cover;
-  transition: transform 0.4s ease;
-}
-.colour-grid-item:hover img {
-  transform: scale(1.05);
-}
-.room-label {
-  background: #111;
-  color: #fff;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  border-radius: 0 0 12px 12px;
-  padding: 0.75rem 1rem;
-  font-size: 1rem;
-}
-.room-label svg {
-  color: #fff;
-}
-@media (min-width: 768px) {
-  .colour-grid-container {
-    grid-template-columns: repeat(4, 1fr);
-  }
-  .colour-grid-text .intro-heading {
-    flex-direction: row;
-    gap: 0.5rem;
-  }
-}
+
 </style>
 
 <script id='pixel-script-poptin' src='https://cdn.popt.in/pixel.js?id=1f8ed2afe3695' async='true'></script>
