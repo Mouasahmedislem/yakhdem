@@ -280,6 +280,10 @@
       box-shadow: 0 6px 18px rgba(0, 0, 0, 0.1);
       transform: translateY(-2px);
     }
+:root {
+  --accent: #c9b59a; /* Soft beige (Zara-like) */
+}
+
   </style>
 
   <!-- Rest of your head content remains the same -->
@@ -295,52 +299,83 @@
 </head>
 
 <body class="bg-white text-gray-800 antialiased">
-   <nav class="navbar navbar-expand-lg navbar-light bg-white fixed-top scrolling-navbar">
-  <div class="container">
+  <!-- ===================== MODERN NAVBAR ===================== -->
+<header class="fixed top-0 left-0 w-full z-50 bg-white/90 backdrop-blur border-b border-gray-100">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="flex items-center justify-between h-20">
+      
+      <!-- Left: Logo -->
+      <a href="/paintello" class="flex items-center gap-3 group">
+        <img src="/img/logo.png" alt="Paintello Logo" class="h-12 w-auto transition-transform duration-300 group-hover:scale-105" />
+        <span class="text-base font-medium tracking-wide text-gray-700 hidden sm:block">Paintello Home</span>
+      </a>
 
-    <!-- LOGO -->
-    <a class="logo" href="/paintello">
-      <img src="/img/logo.png" alt="Paintello Home Logo" style="max-height: 120px;">
-    </a>
+      <!-- Center: Nav links -->
+      <nav class="hidden md:flex items-center gap-8">
+        <a href="/" class="text-sm text-gray-600 hover:text-gray-900 transition">Home</a>
+        <a href="/shop" class="text-sm text-gray-600 hover:text-gray-900 transition">Shop</a>
+        <a href="/track-login" class="text-sm text-gray-600 hover:text-gray-900 transition">Track Order</a>
+      </nav>
 
-    
+      <!-- Right: Icons -->
+      <div class="flex items-center gap-5">
 
-    <!-- Navbar links -->
-  
-      <ul class="navbar-nav nav-flex-icons ml-auto ">
+        <!-- Cart -->
+        <a href="/shop" class="relative flex items-center justify-center hover:opacity-80 transition" title="Cart">
+          <i class="fa-solid fa-bag-shopping text-gray-800 text-lg"></i>
+          <% if (session.cart && session.cart.totalQty > 0) { %>
+            <span class="absolute -top-2 -right-2 bg-[color:var(--accent)] text-white text-[10px] font-semibold px-1.5 py-0.5 rounded-full">
+              <%= session.cart.totalQty %>
+            </span>
+          <% } %>
+        </a>
 
-        <!-- PROFILE -->
-       <li class="nav-item dropdown">
-                       <a class="nav-link dropdown" id="menu1" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                        <i class="fas fa-user  black-text"></i>
-                      </a>
-                      <div class="dropdown-menu dropdown-menu-right bootstrap-menu  white scrollbar-default" aria-labelledby="menu1">
-                        <% if (login){ %>
-                          <a class="dropdown-item" href="/user/profile">profile</a>
-                           <a class="dropdown-item" href="/user/logout">Logout</a>
-            
-                           <% } else{ %>
-                           <a class="dropdown-item" href="/user/signup">Register</a>
-                           <a class="dropdown-item" href="/user/signin">Sing up</a>
-                           <a class="dropdown-item" href="/track-login">Track Order</a>
-                           <% } %>
-                 </div> 
-          </li>
+        <!-- Profile dropdown -->
+        <div class="relative">
+          <button id="userMenuBtn" class="flex items-center justify-center hover:opacity-80 transition focus:outline-none" title="Account">
+            <i class="fa-regular fa-user text-gray-800 text-lg"></i>
+          </button>
 
-        <!-- CART -->
-        <li class="nav-item mx-2 position-relative">
-          <a class="nav-link" href="/shop" title="Cart">
-            <i class="fas fa-shopping-cart"></i>
-            <% if (session.cart && session.cart.totalQty > 0) { %>
-              <span class="badge badge-danger cart-badge"><%= session.cart.totalQty %></span>
+          <!-- Dropdown -->
+          <div id="userDropdown" class="hidden absolute right-0 mt-3 w-44 bg-white rounded-lg shadow-lg border border-gray-100 py-2 z-50">
+            <% if (login) { %>
+              <a href="/user/profile" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-50">Profile</a>
+              <a href="/user/logout" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-50">Logout</a>
+            <% } else { %>
+              <a href="/user/signup" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-50">Register</a>
+              <a href="/user/signin" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-50">Sign in</a>
+              <a href="/track-login" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-50">Track Order</a>
             <% } %>
-          </a>
-        </li>
+          </div>
+        </div>
 
-      </ul>
+        <!-- Mobile Menu Button -->
+        <button id="mobileMenuBtn" class="md:hidden flex items-center justify-center text-gray-800 text-xl">
+          <i class="fa-solid fa-bars"></i>
+        </button>
+
+      </div>
     </div>
-  
-</nav>
+  </div>
+
+  <!-- Mobile dropdown -->
+  <div id="mobileMenu" class="hidden md:hidden border-t border-gray-100 bg-white">
+    <div class="px-4 py-3 flex flex-col gap-2">
+      <a href="/" class="text-sm text-gray-700 hover:text-[color:var(--accent)] transition">Home</a>
+      <a href="/shop" class="text-sm text-gray-700 hover:text-[color:var(--accent)] transition">Shop</a>
+      <a href="/track-login" class="text-sm text-gray-700 hover:text-[color:var(--accent)] transition">Track Order</a>
+      <% if (login) { %>
+        <a href="/user/profile" class="text-sm text-gray-700 hover:text-[color:var(--accent)] transition">Profile</a>
+        <a href="/user/logout" class="text-sm text-gray-700 hover:text-[color:var(--accent)] transition">Logout</a>
+      <% } else { %>
+        <a href="/user/signup" class="text-sm text-gray-700 hover:text-[color:var(--accent)] transition">Register</a>
+        <a href="/user/signin" class="text-sm text-gray-700 hover:text-[color:var(--accent)] transition">Sign in</a>
+      <% } %>
+    </div>
+  </div>
+</header>
+<!-- ===================== /NAVBAR END ===================== -->
+
   <!-- Your hero section and content -->
   <section class="hero-video">
     <!-- Your existing hero content -->
@@ -974,11 +1009,38 @@
       });
     })();
   </script>
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  const userBtn = document.getElementById('userMenuBtn');
+  const userMenu = document.getElementById('userDropdown');
+  const mobileBtn = document.getElementById('mobileMenuBtn');
+  const mobileMenu = document.getElementById('mobileMenu');
+
+  // Toggle user dropdown
+  userBtn?.addEventListener('click', (e) => {
+    e.stopPropagation();
+    userMenu.classList.toggle('hidden');
+  });
+
+  // Close dropdown when clicking outside
+  document.addEventListener('click', (e) => {
+    if (!userMenu?.contains(e.target) && !userBtn?.contains(e.target)) {
+      userMenu?.classList.add('hidden');
+    }
+  });
+
+  // Toggle mobile menu
+  mobileBtn?.addEventListener('click', () => {
+    mobileMenu.classList.toggle('hidden');
+  });
+});
+</script>
+<!-- FontAwesome icons -->
+  <script src="https://kit.fontawesome.com/a2d9b6b9f4.js" crossorigin="anonymous" defer></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
   <% } %>
 
-  <!-- FontAwesome icons -->
-  <script src="https://kit.fontawesome.com/a2d9b6b9f4.js" crossorigin="anonymous" defer></script>
+  
 </body>
 </html>
 
