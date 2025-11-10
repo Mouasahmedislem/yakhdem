@@ -155,14 +155,20 @@
   </footer>
 
   <!-- Scripts -->
-  <script>
+<script>
 document.addEventListener("DOMContentLoaded", () => {
   const increaseBtns = document.querySelectorAll(".btn-increase");
   const decreaseBtns = document.querySelectorAll(".btn-decrease");
 
   // Format price helper
-  function formatPrice(num) {
-    return new Intl.NumberFormat("fr-DZ").format(num) + " DA";
+  const formatPrice = (num) => new Intl.NumberFormat("fr-DZ").format(num) + " DA";
+
+  // Global total updater
+  function updateTotalsDisplay(totalPrice) {
+    const totalEl = document.getElementById("total-price");
+    const btnTotal = document.getElementById("btn-total");
+    if (totalEl) totalEl.innerText = formatPrice(totalPrice);
+    if (btnTotal) btnTotal.innerText = formatPrice(totalPrice);
   }
 
   // Update cart item quantity (frontend + backend sync)
@@ -178,13 +184,8 @@ document.addEventListener("DOMContentLoaded", () => {
         const subtotalEl = document.querySelector(`.product-subtotal[data-id="${productId}"]`);
         if (subtotalEl) subtotalEl.innerText = formatPrice(data.itemTotal);
 
-        // Update total price
-        const totalEl = document.getElementById("total-price");
-        if (totalEl) totalEl.innerText = formatPrice(data.totalPrice);
-
-        // Update button “Commander — total”
-        const btnTotal = document.getElementById("btn-total");
-        if (btnTotal) btnTotal.innerText = formatPrice(data.totalPrice);
+        // Update all totals (cart + button)
+        updateTotalsDisplay(data.totalPrice || 0);
       })
       .catch((err) => console.error("Update quantity error:", err));
   }
@@ -196,18 +197,22 @@ document.addEventListener("DOMContentLoaded", () => {
   decreaseBtns.forEach((btn) =>
     btn.addEventListener("click", () => updateQty(btn.dataset.id, "decrease"))
   );
-});
 
-// Meta Pixel checkout event
-function trackCheckout(totalPrice) {
-  if (window.fbq) {
-    fbq("track", "InitiateCheckout", {
-      value: totalPrice,
-      currency: "DZD",
+  // Meta Pixel checkout tracking
+  const checkoutBtn = document.querySelector('form[action="/checkout"] button');
+  if (checkoutBtn) {
+    checkoutBtn.addEventListener("click", function () {
+      const totalText = document.getElementById("total-price")?.innerText || "0";
+      const numericTotal = parseFloat(totalText.replace(/[^\d.]/g, "")) || 0;
+      if (window.fbq) {
+        fbq("track", "InitiateCheckout", { value: numericTotal, currency: "DZD" });
+      }
     });
   }
-}
+});
 </script>
+
+
 
 
   <!-- Tawk.to -->
