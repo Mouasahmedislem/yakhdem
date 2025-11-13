@@ -2228,18 +2228,24 @@ router.get('/track-order', async (req, res) => {
 });
 
 // Start Return Process
-// In your start-return route
-router.get('/start-return/:id', async (req, res) => {
+router.get('/start-return/:orderId', async (req, res) => {
     try {
-        const order = await Order.findById(req.params.id);
-        res.render('start-return', { 
+        const order = await Order.findById(req.params.orderId);
+        if (!order) {
+            req.flash('error', 'الطلب غير موجود');
+            return res.redirect('/track-order');
+        }
+        
+        res.render('event/start-return', { 
             order,
-            error: req.flash('error'),
-            success: req.flash('success')
+            title: 'طلب إرجاع المنتج',
+            error: req.flash('error')[0], // Add flash messages
+            success: req.flash('success')[0] // Add flash messages
         });
     } catch (err) {
-        console.error(err);
-        res.redirect('/track-login');
+        console.error('Error starting return:', err);
+        req.flash('error', 'خطأ في النظام');
+        res.redirect('/track-order');
     }
 });
 
