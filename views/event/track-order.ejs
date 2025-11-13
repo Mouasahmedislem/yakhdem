@@ -1,450 +1,270 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="fr">
 <head>
   <meta charset="UTF-8">
-  <title>Track Your Order</title>
+  <title>Suivi de Commande | Paintello</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<link rel="apple-touch-icon" sizes="180x180" href="/favicon/apple-touch-icon.png">
-<link rel="icon" type="image/png" sizes="32x32" href="/favicon/favicon-32x32.png">
-<link rel="icon" type="image/png" sizes="16x16" href="/favicon/favicon-16x16.png">
-<link rel="manifest" href="/favicon/site.webmanifest">  
-  <meta name="theme-color" content="#ffffff">  <link href='https://cdn.jsdelivr.net/npm/boxicons@2.0.5/css/boxicons.min.css' rel='stylesheet'>
-  <link rel="stylesheet" href="/assets/vendor/font-awesome/css/fontawesome-all.min.css">
-  <link rel="stylesheet" href="/assets/vendor/animate.css/animate.min.css">
-  <link rel="stylesheet" href="/assets/vendor/hs-megamenu/src/hs.megamenu.css">
-<!-- Bootstrap 4 CSS -->
-<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
-<!-- Font Awesome (optional for icons) -->
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
-
+  <link rel="apple-touch-icon" sizes="180x180" href="/favicon/apple-touch-icon.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/favicon/favicon-16x16.png">
+  <link rel="manifest" href="/favicon/site.webmanifest">  
+  <meta name="theme-color" content="#ffffff">
+  
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
   <!-- Font Awesome -->
-  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.11.2/css/all.css">
-  <!-- Bootstrap core CSS -->
-   <!-- Bootstrap core CSS -->
-  <link href="../../css/bootstrap.min.css" rel="stylesheet">
-  <!-- Material Design Bootstrap -->
-  <link href="../../css/mdb.min.css" rel="stylesheet">
-<!-- Add the slick-theme.css if you want default styling -->
-<link rel="stylesheet" type="text/css" href="//cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.css"/>
-<!-- Add the slick-theme.css if you want default styling -->
-<link rel="stylesheet" type="text/css" href="//cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick-theme.css"/>
-  <!-- Material Design Bootstrap -->
-  <link href="/css/mdb.min.css" rel="stylesheet">
-  <link href="/css/magiczoomplus.css" rel="stylesheet">
-  <link href="/css/zoomm.css" rel="stylesheet">
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  
   <style>
-    /* Fixed Logo Header */
-    #fixed-logo-header {
-      position: fixed;
-      top: 0;
-      width: 100%;
-      background-color: white;
-      padding: 10px 0;
-      text-align: center;
-      z-index: 9999;
-      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    body {
+      font-family: 'Helvetica Neue', Arial, sans-serif;
+      background-color: #f8f8f8;
     }
-
-    #fixed-logo-header img {
-      max-height: 60px;
+    
+    .zara-card {
+      background: white;
+      border-radius: 2px;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+      border: 1px solid #e5e5e5;
     }
-
-    /* Page content */
-    .content-with-logo {
-      margin-top: 100px;
-      max-width: 800px;
-      margin-left: auto;
-      margin-right: auto;
-      padding: 20px;
-      font-family: Arial, sans-serif;
+    
+    .zara-btn {
+      background: #000;
+      color: white;
+      border: 1px solid #000;
+      padding: 12px 24px;
+      font-size: 13px;
+      letter-spacing: 0.5px;
+      transition: all 0.3s ease;
+      text-transform: uppercase;
     }
-
-    h2 {
-      text-align: center;
-      margin-bottom: 20px;
-      color: #333;
+    
+    .zara-btn:hover {
+      background: #333;
     }
-
-    .order-card {
-      background: #fff;
-      border-radius: 10px;
-      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-      padding: 20px;
-      margin-bottom: 25px;
-      position: relative;
-      border-left: 4px solid #f4791f;
+    
+    .zara-btn-secondary {
+      background: transparent;
+      color: #000;
+      border: 1px solid #000;
     }
-
-    .order-info {
-      margin-bottom: 15px;
-    }
-
-    .order-info p {
-      margin: 8px 0;
-      color: #555;
-      font-size: 16px;
-    }
-
-    .order-info strong {
-      color: #333;
-      font-weight: 600;
-    }
-
-    .order-actions {
-      display: flex;
-      justify-content: space-between;
-      margin-top: 20px;
-      border-top: 1px solid #eee;
-      padding-top: 15px;
-    }
-
-    .btn {
-      padding: 10px 20px;
-      border-radius: 6px;
-      font-size: 15px;
-      font-weight: 600;
-      text-decoration: none;
-      text-align: center;
-      transition: all 0.3s;
-      cursor: pointer;
-      border: none;
-    }
-
-    .btn-primary {
-      background-color: #f4791f;
+    
+    .zara-btn-secondary:hover {
+      background: #000;
       color: white;
     }
-
-    .btn-primary:hover {
-      background-color: #e06a12;
-      transform: translateY(-2px);
+    
+    .status-badge {
+      background: #f8f8f8;
+      color: #666;
+      font-size: 11px;
+      letter-spacing: 0.5px;
+      padding: 4px 8px;
+      border-radius: 1px;
+      text-transform: uppercase;
     }
-
-    .btn-return {
-      background-color: #e74c3c;
-      color: white;
-    }
-
-    .btn-return:hover {
-      background-color: #c0392b;
-      transform: translateY(-2px);
-    }
-
-    .btn-secondary {
-      background-color: #3498db;
-      color: white;
-    }
-
-    .btn-secondary:hover {
-      background-color: #2980b9;
-      transform: translateY(-2px);
-    }
-
-    .cart-link {
-      text-align: center;
-      margin-top: 30px;
-    }
-
-    .cart-link a {
-      color: #f4791f;
-      text-decoration: none;
-      font-weight: 600;
-      font-size: 16px;
-    }
-
-    .cart-link a:hover {
-      text-decoration: underline;
-    }
-
-    .order-status {
-      position: absolute;
-      top: 20px;
-      right: 20px;
-      background: #f4791f;
-      color: white;
-      padding: 5px 10px;
-      border-radius: 4px;
-      font-size: 14px;
-      font-weight: bold;
-    }
-
-    .return-status {
-      margin-top: 15px;
-      padding: 10px;
-      background: #f8f9fa;
-      border-radius: 6px;
-      border-left: 3px solid #3498db;
-    }
-
-    .return-status p {
-      margin: 5px 0;
-      color: #555;
-    }
-
-    .status-pending {
-      color: #f39c12;
-    }
-
-    .status-approved {
-      color: #2ecc71;
-    }
-
-    .status-rejected {
-      color: #e74c3c;
-    }
-
-    .status-processed {
-      color: #3498db;
-    }
-
-    .no-orders {
-      text-align: center;
-      padding: 30px;
-      background: #f8f9fa;
-      border-radius: 10px;
-      color: #555;
-    }
-
-    .order-date {
-      font-size: 14px;
-      color: #888;
-      margin-bottom: 10px;
-    }
-
-    @media (max-width: 768px) {
-      .order-actions {
-        flex-direction: column;
-        gap: 10px;
-      }
-      
-      .btn {
-        width: 100%;
-      }
-    }
+    
+    .status-pending { background: #fff3cd; color: #856404; }
+    .status-approved { background: #d1edff; color: #004085; }
+    .status-rejected { background: #f8d7da; color: #721c24; }
+    .status-processed { background: #d4edda; color: #155724; }
   </style>
 </head>
-<body>
-  <header>
 
-    <!-- Navbar -->
-    <nav class="navbar navbar-expand-lg navbar-light fixed-top scrolling-navbar white">
-      <div class="container">
-        <a class="navbar-brand font-weight-bold title" href="/">Paintello</a>
-        <!--Navigation icons-->
-        <ul class="nav navbar-nav nav-flex-icons ml-auto">
-          <li class="nav-item dropdown">
-                       <a class="nav-link dropdown" id="menu1" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                        <i class="fas fa-user  black-text"></i>
-                      </a>
-                      <div class="dropdown-menu dropdown-menu-right bootstrap-menu  white scrollbar-default" aria-labelledby="menu1">
-                        <% if (login){ %>
-                          <a class="dropdown-item" href="/user/profile">profile</a>
-                           <a class="dropdown-item" href="/user/logout">Logout</a>
-                           <% } else{ %>
-                           <a class="dropdown-item" href="/user/signup">Register</a>
-                           <a class="dropdown-item" href="/user/signin">Sing up</a>
-                           <% } %>
-                 </div> 
-          </li>
-          <li class="nav-item ">
-                      <a class="nav-link " id="menu2" href="/shop" role="button"  aria-haspopup="true" aria-expanded="false">
-                        <i class="fas fa-shopping-cart black-text"></i>
-                        <% if(session.cart){ %>
-                      <span class="mycounter"><%= session.cart.totalQty %></span>
-                      <% } %>
-                      </a>
-          </li>
-    
-        </ul>
-        
-        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarTogglerDemo02"
-          aria-controls="navbarTogglerDemo02" aria-expanded="false" aria-label="Toggle navigation">
-          <span class="navbar-toggler-icon"></span>
-          
-        </button>
-        
-        
-        <div class="collapse navbar-collapse" id="navbarTogglerDemo02">
-          <ul class="list-unstyled navbar-nav mr-auto">
-         
-            
-            <li class="nav-item ml-4">
-              <a class="nav-link title" href="/sale/wow" data-offset="90">Nos Services</a>
-            </li>
-            <li class="nav-item ml-4">
-              <a class="nav-link title" href="/sale/clean" data-offset="90">interior paint</a>
-            </li>
-            <li class="nav-item ml-4">
-              <a class="nav-link title" href="/sale/furniteur" data-offset="90">Vinyl paint</a>
-            </li>
-            <li class="nav-item ml-4">
-              <a class="nav-link title" href="/sale/wow" data-offset="90">outils</a>
-            </li>
-            <li class="nav-item ml-4">
-             <a class="nav-link title" href="/track-login" data-offset="90">Returns</a>
-            </li>
-            
-          </ul>
-          
-          <!-- Social Icon  -->
-         
-              </div>
-      </div>
-  
-         
-      </div>
-      </div>
-    </nav>
-</header> 
-  <!-- Fixed Logo -->
-  <div id="fixed-logo-header">
-    <a href="/">
-      <img src="/favicon/android-chrome-192x192.png" alt="Paintello Logo">
-    </a>
-    <a href="/">
-      <img src="/img/logo.png" alt="Paintello Logo" style="max-height: 80px;">
-    </a>
-  </div>
+<body class="min-h-screen bg-white">
+  <!-- Minimal Header -->
+  <header class="border-b border-gray-200 bg-white">
+    <div class="max-w-7xl mx-auto px-6 py-4">
+      <div class="flex items-center justify-between">
+        <!-- Logo -->
+        <a href="/" class="flex items-center gap-4">
+          <img src="/favicon/android-chrome-192x192.png" alt="Paintello" class="h-8 w-8">
+          <img src="/img/logo.png" alt="Paintello Home" class="h-10 w-auto">
+        </a>
 
-  <!-- Content Area -->
-    <div class="content-with-logo">
-    <h2>تفاصيل الطلب</h2>
-    <% if (orders.length === 0) { %>
-      <div class="no-orders">
-        <p>No orders found for this number.</p>
-        <a href="/" class="btn btn-primary">Go to Shop</a>
-      </div>
-    <% } %>
+        <!-- Navigation -->
+        <nav class="hidden md:flex items-center gap-8">
+          <a href="/" class="text-sm text-gray-600 hover:text-gray-900 uppercase tracking-wide">Accueil</a>
+          <a href="/shop" class="text-sm text-gray-600 hover:text-gray-900 uppercase tracking-wide">Boutique</a>
+          <a href="/track-login" class="text-sm text-gray-900 font-medium uppercase tracking-wide border-b border-black">Suivi Commande</a>
+        </nav>
 
-     <% orders.forEach(order => { %>
-
-
-
-
-      <div class="order-card">
-
-
-        <div class="order-status">
-
-
-          Order #<%= order._id.toString().slice(-6).toUpperCase() %>
-
-
-        </div>
-
-
-        
-
-
-        <div class="order-date">
-
-
-          Ordered on: <%= order.createdAt.toLocaleDateString() %>
-
-
-        </div>
-
-
-        
-
-
-        <div class="order-info">
-
-
-          <p><strong>الاسم:</strong> <%= order.name %></p>
-
-
-          <p><strong>رقم الهاتف:</strong> <%= order.numero %></p>
-
-
-          <p><strong>الولاية:</strong> <%= order.city %></p>
-
-
-          <p><strong>العنوان:</strong> <%= order.address %></p>
-
-
-          <p><strong>المجموع:</strong> <%= order.cart.totalPrice %> دج</p>
-
-
-          <p><strong>Shipping Fee:</strong> <%= order.shippingFee %> دج</p>
-
-
-          <p><strong>Total with Shipping:</strong> <%= order.totalWithShipping %> دج</p>
-
-
-          <p><strong>Estimated Delivery:</strong> <%= order.deliveryDelay %></p>
-
-
-        </div>
-
-
-
-
-
-        <% if (order.returnRequest) { %>
-
-
-          <div class="return-status">
-
-
-            <p><strong>Return Status:</strong> 
-
-
-              <span class="status-<%= order.returnRequest.status %>">
-
-
-                <%= order.returnRequest.status.toUpperCase() %>
-
-
+        <!-- Icons -->
+        <div class="flex items-center gap-4">
+          <a href="/shop" class="relative text-gray-600 hover:text-gray-900">
+            <i class="fa-solid fa-bag-shopping text-lg"></i>
+            <% if (session.cart && session.cart.totalQty > 0) { %>
+              <span class="absolute -top-2 -right-2 bg-black text-white text-xs px-1.5 py-0.5 rounded-full">
+                <%= session.cart.totalQty %>
               </span>
-
-
-            </p>
-
-
-            <% if (order.returnRequest.status === 'approved') { %>
-
-
-              <p>Your return has been approved. Please follow the instructions sent to your email.</p>
-
-            <% } else if (order.returnRequest.status === 'rejected') { %>
-              <p>Your return request was rejected. Contact support for more information.</p>
             <% } %>
-            <p><strong>Reason:</strong> <%= {
-              'wrong_item': 'Wrong item received',
-              'defective': 'Item is defective/damaged',
-              'not_as_described': 'Item not as described',
-
-              'changed_mind': 'Changed my mind',
-
-              'other': 'Other reason'
-            }[order.returnRequest.reason] %></p>
-          </div>
-        <% } %>
-        <div class="order-actions">
-          <% if (!order.returnRequest) { %>
-            <a href="/start-return/<%= order._id %>" class="btn btn-return">Create Return</a>
-          <% } else if (order.returnRequest.status === 'pending') { %>
-            <button class="btn btn-secondary" disabled>Return Pending</button>
-          <% } %>
-          <a href="/" class="btn btn-primary">Continue Shopping</a>
+          </a>
+          
+          <a href="/user/profile" class="text-gray-600 hover:text-gray-900">
+            <i class="fa-regular fa-user text-lg"></i>
+          </a>
         </div>
       </div>
-    <% }) %>
-    <div class="cart-link">
-
-      <a href="/">Go to Shop</a>Add commentMore actions
-
     </div>
- </div>
+  </header>
 
+  <!-- Main Content -->
+  <main class="py-12">
+    <div class="max-w-4xl mx-auto px-6">
+      
+      <!-- Page Header -->
+      <div class="text-center mb-12">
+        <h1 class="text-2xl font-light tracking-wide uppercase mb-4">Détails de la commande</h1>
+        <p class="text-sm text-gray-600">Suivez l'état de vos commandes</p>
+      </div>
 
+      <!-- Orders List -->
+      <% if (orders.length === 0) { %>
+        <div class="zara-card p-12 text-center">
+          <div class="w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-6">
+            <i class="fas fa-search text-gray-400"></i>
+          </div>
+          <h2 class="text-lg font-light tracking-wide uppercase mb-4">Aucune commande trouvée</h2>
+          <p class="text-sm text-gray-600 mb-6">Aucune commande associée à ce numéro</p>
+          <a href="/" class="zara-btn-secondary inline-block text-sm">
+            Aller à la boutique
+          </a>
+        </div>
+      <% } %>
 
+      <!-- Orders -->
+      <% orders.forEach(order => { %>
+        <div class="zara-card p-8 mb-6">
+          <!-- Order Header -->
+          <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-6 pb-6 border-b border-gray-200">
+            <div class="flex items-center gap-4 mb-3 sm:mb-0">
+              <span class="status-badge">
+                Commande #<%= order._id.toString().slice(-6).toUpperCase() %>
+              </span>
+              <span class="status-badge bg-green-50 text-green-700">
+                En Transit
+              </span>
+            </div>
+            <div class="text-xs text-gray-500 uppercase tracking-wide">
+              Commandé le: <%= order.createdAt.toLocaleDateString('fr-FR') %>
+            </div>
+          </div>
+
+          <!-- Order Details -->
+          <div class="grid md:grid-cols-2 gap-8 mb-6">
+            <div class="space-y-4">
+              <div>
+                <p class="text-xs text-gray-500 uppercase tracking-wide mb-1">Nom</p>
+                <p class="text-sm"><%= order.name %></p>
+              </div>
+              <div>
+                <p class="text-xs text-gray-500 uppercase tracking-wide mb-1">Téléphone</p>
+                <p class="text-sm"><%= order.numero %></p>
+              </div>
+              <div>
+                <p class="text-xs text-gray-500 uppercase tracking-wide mb-1">Wilaya</p>
+                <p class="text-sm"><%= order.city %></p>
+              </div>
+              <div>
+                <p class="text-xs text-gray-500 uppercase tracking-wide mb-1">Adresse</p>
+                <p class="text-sm"><%= order.address %></p>
+              </div>
+            </div>
+            
+            <div class="space-y-4">
+              <div>
+                <p class="text-xs text-gray-500 uppercase tracking-wide mb-1">Total Articles</p>
+                <p class="text-sm font-medium"><%= order.cart.totalPrice %> DZD</p>
+              </div>
+              <div>
+                <p class="text-xs text-gray-500 uppercase tracking-wide mb-1">Frais de Livraison</p>
+                <p class="text-sm"><%= order.shippingFee %> DZD</p>
+              </div>
+              <div>
+                <p class="text-xs text-gray-500 uppercase tracking-wide mb-1">Total avec Livraison</p>
+                <p class="text-sm font-medium"><%= order.totalWithShipping %> DZD</p>
+              </div>
+              <div>
+                <p class="text-xs text-gray-500 uppercase tracking-wide mb-1">Livraison Estimée</p>
+                <p class="text-sm"><%= order.deliveryDelay %></p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Return Status -->
+          <% if (order.returnRequest) { %>
+            <div class="border-t border-gray-200 pt-6">
+              <div class="space-y-3">
+                <div class="flex items-center gap-3">
+                  <span class="status-badge status-<%= order.returnRequest.status %> uppercase">
+                    <%= order.returnRequest.status.toUpperCase() %>
+                  </span>
+                  <p class="text-sm text-gray-600">
+                    <% if (order.returnRequest.status === 'approved') { %>
+                      Retour approuvé - Suivez les instructions envoyées par email
+                    <% } else if (order.returnRequest.status === 'rejected') { %>
+                      Demande de retour refusée - Contactez le support
+                    <% } else if (order.returnRequest.status === 'processed') { %>
+                      Retour traité
+                    <% } else { %>
+                      Retour en attente de traitement
+                    <% } %>
+                  </p>
+                </div>
+                
+                <div>
+                  <p class="text-xs text-gray-500 uppercase tracking-wide mb-1">Raison du retour</p>
+                  <p class="text-sm">
+                    <%= {
+                      'wrong_item': 'Mauvais article reçu',
+                      'defective': 'Article défectueux/endommagé',
+                      'not_as_described': 'Article non conforme à la description',
+                      'changed_mind': 'Changement d\'avis',
+                      'other': 'Autre raison'
+                    }[order.returnRequest.reason] %>
+                  </p>
+                </div>
+              </div>
+            </div>
+          <% } %>
+
+          <!-- Actions -->
+          <div class="border-t border-gray-200 pt-6 flex flex-col sm:flex-row gap-3">
+            <% if (!order.returnRequest) { %>
+              <a href="/start-return/<%= order._id %>" 
+                 class="zara-btn-secondary text-sm text-center flex-1">
+                Créer un Retour
+              </a>
+            <% } else if (order.returnRequest.status === 'pending') { %>
+              <button class="zara-btn-secondary text-sm text-center flex-1 opacity-50 cursor-not-allowed">
+                Retour en Attente
+              </button>
+            <% } %>
+            <a href="/" 
+               class="zara-btn text-sm text-center flex-1">
+              Continuer les Achats
+            </a>
+          </div>
+        </div>
+      <% }) %>
+
+      <!-- Bottom Navigation -->
+      <div class="text-center mt-8">
+        <a href="/" class="zara-btn-secondary inline-block text-sm px-8">
+          Aller à la Boutique
+        </a>
+      </div>
+    </div>
+  </main>
+
+  <!-- Minimal Footer -->
+  <footer class="border-t border-gray-200 py-8">
+    <div class="max-w-7xl mx-auto px-6 text-center">
+      <p class="text-sm text-gray-600">© <%= new Date().getFullYear() %> Paintello</p>
+    </div>
+  </footer>
 </body>
-
 </html>
-
 
 
 
