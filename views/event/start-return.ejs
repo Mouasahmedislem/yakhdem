@@ -118,6 +118,17 @@
             margin-bottom: 16px;
             border-left: 4px solid #28a745;
         }
+        
+        .field-error {
+            border-color: #e74c3c !important;
+        }
+        
+        .error-text {
+            color: #e74c3c;
+            font-size: 11px;
+            margin-top: 4px;
+            display: none;
+        }
     </style>
 </head>
 
@@ -197,7 +208,7 @@
 
             <!-- Return Form -->
             <div class="zara-card p-8">
-                <form action="/submit-return" method="POST">
+                <form id="returnForm" action="/submit-return" method="POST">
                     <input type="hidden" name="orderId" value="<%= order._id %>">
                     
                     <!-- Reason for Return -->
@@ -213,6 +224,7 @@
                             <option value="changed_mind">Changement d'avis</option>
                             <option value="other">Autre raison</option>
                         </select>
+                        <div id="reasonError" class="error-text">Veuillez sélectionner une raison de retour</div>
                     </div>
                     
                     <!-- Refund Method -->
@@ -225,6 +237,7 @@
                             <option value="exchange">Échange contre un autre article</option>
                             <option value="ccp_refund">Remboursement CCP</option>
                         </select>
+                        <div id="methodError" class="error-text">Veuillez sélectionner une méthode de remboursement</div>
                     </div>
                     
                     <!-- Exchange Details -->
@@ -235,6 +248,7 @@
                         <input type="text" id="exchangeItem" name="exchangeItem" 
                                class="zara-input" 
                                placeholder="Nom ou référence du produit">
+                        <div id="exchangeError" class="error-text">Veuillez spécifier l'article souhaité en échange</div>
                     </div>
                     
                     <!-- CCP Details -->
@@ -247,6 +261,7 @@
                                placeholder="Votre numéro CCP à 12 chiffres"
                                pattern="[0-9]{12}"
                                title="12 chiffres requis">
+                        <div id="ccpError" class="error-text">Veuillez entrer un numéro CCP valide (12 chiffres)</div>
                     </div>
                     
                     <!-- Additional Notes -->
@@ -264,7 +279,7 @@
                         <a href="/track-login" class="zara-btn-secondary text-sm text-center flex-1">
                             Annuler
                         </a>
-                        <button type="submit" class="zara-btn text-sm flex-1">
+                        <button type="submit" class="zara-btn text-sm flex-1" id="submitBtn">
                             Soumettre la Demande
                         </button>
                     </div>
@@ -318,7 +333,10 @@
             const ccpDetails = document.getElementById('ccpDetails');
             const exchangeItem = document.getElementById('exchangeItem');
             const ccpNumber = document.getElementById('ccpNumber');
+            const form = document.getElementById('returnForm');
+            const submitBtn = document.getElementById('submitBtn');
 
+            // Toggle method-specific fields
             refundMethod.addEventListener('change', function() {
                 const method = this.value;
                 
@@ -326,53 +344,82 @@
                 exchangeDetails.classList.add('hidden');
                 ccpDetails.classList.add('hidden');
                 
-                // Remove required attributes
-                exchangeItem.removeAttribute('required');
-                ccpNumber.removeAttribute('required');
+                // Remove error states
+                exchangeItem.classList.remove('field-error');
+                ccpNumber.classList.remove('field-error');
+                document.getElementById('exchangeError').style.display = 'none';
+                document.getElementById('ccpError').style.display = 'none';
                 
-                // Show relevant section and set required
+                // Show relevant section
                 if (method === 'exchange') {
                     exchangeDetails.classList.remove('hidden');
-                    exchangeItem.setAttribute('required', 'required');
                 } else if (method === 'ccp_refund') {
                     ccpDetails.classList.remove('hidden');
-                    ccpNumber.setAttribute('required', 'required');
                 }
             });
 
-            // Client-side validation to prevent server errors
-            const form = document.querySelector('form');
-            form.addEventListener('submit', function(e) {
-                const method = refundMethod.value;
-                const reason = document.getElementById('reason').value;
-                
+            // Real-time validation
+            function validateForm() {
                 let isValid = true;
-                let errorMessage = '';
-
+                
+                // Reset all errors
+                document.querySelectorAll('.field-error').forEach(el => el.classList.remove('field-error'));
+                document.querySelectorAll('.error-text').forEach(el => el.style.display = 'none');
+                
+                // Validate reason
+                const reason = document.getElementById('reason').value;
                 if (!reason) {
+                    document.getElementById('reason').classList.add('field-error');
+                    document.getElementById('reasonError').style.display = 'block';
                     isValid = false;
-                    errorMessage = 'Veuillez sélectionner une raison de retour';
-                } else if (!method) {
+                }
+                
+                // Validate method
+                const method = refundMethod.value;
+                if (!method) {
+                    refundMethod.classList.add('field-error');
+                    document.getElementById('methodError').style.display = 'block';
                     isValid = false;
-                    errorMessage = 'Veuillez sélectionner une méthode de remboursement';
-                } else if (method === 'exchange' && !exchangeItem.value.trim()) {
+                }
+                
+                // Validate method-specific fields
+                if (method === 'exchange' && !exchangeItem.value.trim()) {
+                    exchangeItem.classList.add('field-error');
+                    document.getElementById('exchangeError').style.display = 'block';
                     isValid = false;
-                    errorMessage = 'Veuillez spécifier l\'article souhaité en échange';
-                } else if (method === 'ccp_refund') {
+                }
+                
+                if (method === 'ccp_refund') {
                     if (!ccpNumber.value.trim()) {
+                        ccpNumber.classList.add('field-error');
+                        document.getElementById('ccpError').style.display = 'block';
                         isValid = false;
-                        errorMessage = 'Veuillez entrer votre numéro CCP';
                     } else if (!/^\d{12}$/.test(ccpNumber.value)) {
+                        ccpNumber.classList.add('field-error');
+                        document.getElementById('ccpError').textContent = 'Le numéro CCP doit contenir exactement 12 chiffres';
+                        document.getElementById('ccpError').style.display = 'block';
                         isValid = false;
-                        errorMessage = 'Le numéro CCP doit contenir exactement 12 chiffres';
                     }
                 }
+                
+                return isValid;
+            }
 
-                if (!isValid) {
+            // Form submission
+            form.addEventListener('submit', function(e) {
+                if (!validateForm()) {
                     e.preventDefault();
-                    alert(errorMessage);
-                    return false;
+                    // Scroll to first error
+                    const firstError = document.querySelector('.field-error');
+                    if (firstError) {
+                        firstError.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                    }
                 }
+            });
+
+            // Real-time validation on input change
+            form.addEventListener('input', function() {
+                validateForm();
             });
         });
     </script>
