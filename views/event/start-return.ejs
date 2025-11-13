@@ -45,6 +45,12 @@
             background: #333;
         }
         
+        .zara-btn:disabled {
+            background: #ccc;
+            border-color: #ccc;
+            cursor: not-allowed;
+        }
+        
         .zara-btn-secondary {
             background: transparent;
             color: #000;
@@ -128,6 +134,11 @@
             font-size: 11px;
             margin-top: 4px;
             display: none;
+        }
+        
+        .loading {
+            opacity: 0.6;
+            pointer-events: none;
         }
     </style>
 </head>
@@ -280,7 +291,10 @@
                             Annuler
                         </a>
                         <button type="submit" class="zara-btn text-sm flex-1" id="submitBtn">
-                            Soumettre la Demande
+                            <span id="submitText">Soumettre la Demande</span>
+                            <span id="loadingSpinner" class="hidden">
+                                <i class="fas fa-spinner fa-spin mr-2"></i> Traitement...
+                            </span>
                         </button>
                     </div>
                 </form>
@@ -335,6 +349,10 @@
             const ccpNumber = document.getElementById('ccpNumber');
             const form = document.getElementById('returnForm');
             const submitBtn = document.getElementById('submitBtn');
+            const submitText = document.getElementById('submitText');
+            const loadingSpinner = document.getElementById('loadingSpinner');
+
+            let isFormValid = false;
 
             // Toggle method-specific fields
             refundMethod.addEventListener('change', function() {
@@ -356,6 +374,8 @@
                 } else if (method === 'ccp_refund') {
                     ccpDetails.classList.remove('hidden');
                 }
+                
+                validateForm();
             });
 
             // Real-time validation
@@ -402,6 +422,8 @@
                     }
                 }
                 
+                isFormValid = isValid;
+                submitBtn.disabled = !isValid;
                 return isValid;
             }
 
@@ -414,13 +436,22 @@
                     if (firstError) {
                         firstError.scrollIntoView({ behavior: 'smooth', block: 'center' });
                     }
+                    return;
                 }
+
+                // Show loading state
+                submitText.classList.add('hidden');
+                loadingSpinner.classList.remove('hidden');
+                submitBtn.disabled = true;
             });
 
             // Real-time validation on input change
             form.addEventListener('input', function() {
                 validateForm();
             });
+
+            // Initial validation
+            validateForm();
         });
     </script>
 </body>
