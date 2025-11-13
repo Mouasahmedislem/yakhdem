@@ -465,7 +465,42 @@
       font-weight: 500;
       color: #333;
     }
+/* Ensure tabs container is scrollable on mobile */
+.flex.gap-6.border-b.border-gray-100 {
+    overflow-x: auto;
+    white-space: nowrap;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+}
 
+.flex.gap-6.border-b.border-gray-100::-webkit-scrollbar {
+    display: none;
+}
+
+/* Ensure tab buttons don't shrink and are properly visible */
+.tab-btn {
+    flex-shrink: 0;
+    min-width: max-content;
+    display: block !important; /* Force display */
+}
+
+/* Mobile-specific video styling */
+@media (max-width: 768px) {
+    #video .aspect-w-16 {
+        position: relative;
+        padding-bottom: 56.25%; /* 16:9 aspect ratio */
+        height: 0;
+    }
+    
+    #video iframe {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+    }
+}
   </style>
 
   <!-- Rest of your head content remains the same -->
@@ -1172,23 +1207,72 @@
         }
       }
 
-      // ---------- Tabs ----------
-      document.querySelectorAll('.tab-btn').forEach(btn => {
+    // ---------- Tabs ----------
+function initializeTabs() {
+    const tabButtons = document.querySelectorAll('.tab-btn');
+    
+    tabButtons.forEach(btn => {
+        // Remove any existing listeners to prevent duplicates
+        btn.replaceWith(btn.cloneNode(true));
+    });
+    
+    // Get fresh references
+    const freshTabButtons = document.querySelectorAll('.tab-btn');
+    
+    freshTabButtons.forEach(btn => {
         btn.addEventListener('click', function(){
-          const target = this.dataset.tab;
-          if (!target) return;
-          document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('text-gray-900', 'active'));
-          document.querySelectorAll('.tab-panel').forEach(p => p.classList.add('hidden'));
-          this.classList.add('text-gray-900', 'active');
-          const panel = document.getElementById(target);
-          if (panel) panel.classList.remove('hidden');
+            const target = this.dataset.tab;
+            if (!target) return;
+            
+            // Update button states
+            freshTabButtons.forEach(b => {
+                b.classList.remove('text-gray-900', 'active', 'border-[color:var(--accent)]');
+                b.classList.add('text-gray-600', 'border-transparent');
+            });
+            
+            // Hide all panels
+            document.querySelectorAll('.tab-panel').forEach(p => {
+                p.classList.add('hidden');
+            });
+            
+            // Activate clicked button
+            this.classList.add('text-gray-900', 'active', 'border-[color:var(--accent)]');
+            this.classList.remove('text-gray-600', 'border-transparent');
+            
+            // Show target panel
+            const panel = document.getElementById(target);
+            if (panel) {
+                panel.classList.remove('hidden');
+                
+                // Special handling for mobile video
+                if (target === 'video' && window.innerWidth < 768) {
+                    const iframe = panel.querySelector('iframe');
+                    if (iframe) {
+                        iframe.style.minHeight = '250px';
+                    }
+                }
+            }
 
-          // trigger a resize if model viewer becomes visible
-          if (target === 'model3d') {
-            setTimeout(()=> window.dispatchEvent(new Event('resize')), 120);
-          }
+            // trigger a resize if model viewer becomes visible
+            if (target === 'model3d') {
+                setTimeout(() => window.dispatchEvent(new Event('resize')), 120);
+            }
         });
-      });
+    });
+    
+    // Debug: Log available tabs
+    console.log('Available tabs:', Array.from(freshTabButtons).map(btn => btn.dataset.tab));
+}
+
+// Initialize tabs when DOM is ready
+document.addEventListener('DOMContentLoaded', initializeTabs);
+
+// Re-initialize tabs if content is loaded dynamically
+if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initializeTabs);
+} else {
+    initializeTabs();
+}
 
       // ---------- Quantity controls ----------
       const qtyInput = document.getElementById('qtyInput');
