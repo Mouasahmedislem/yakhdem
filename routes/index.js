@@ -2250,6 +2250,7 @@ router.get('/start-return/:orderId', async (req, res) => {
 });
 
 // Submit Return Request
+// Submit Return Request
 router.post('/submit-return', async (req, res) => {
     try {
         const { orderId, reason, refundMethod, exchangeItem, ccpNumber, notes } = req.body;
@@ -2257,18 +2258,18 @@ router.post('/submit-return', async (req, res) => {
         // Validate required fields
         if (!orderId || !reason || !refundMethod) {
             req.flash('error', 'جميع الحقول المطلوبة يجب ملؤها');
-            return res.redirect('back');
+            return res.redirect(`/start-return/${orderId}`);
         }
 
         // Validate refund method specific fields
         if (refundMethod === 'exchange' && !exchangeItem) {
             req.flash('error', 'يجب تحديد المنتج البديل');
-            return res.redirect('back');
+            return res.redirect(`/start-return/${orderId}`);
         }
 
         if (refundMethod === 'ccp_refund' && !ccpNumber) {
             req.flash('error', 'يجب إدخال رقم الحساب البريدي');
-            return res.redirect('back');
+            return res.redirect(`/start-return/${orderId}`);
         }
 
         const returnRequest = new ReturnRequest({
@@ -2287,12 +2288,12 @@ router.post('/submit-return', async (req, res) => {
         await Order.findByIdAndUpdate(orderId, { returnRequest: returnRequest._id });
 
         req.flash('success', 'تم إرسال طلب الإرجاع بنجاح');
-        res.redirect('/track-order');
+        res.redirect('/track-login');
 
     } catch (err) {
         console.error('Return submission error:', err);
         req.flash('error', 'فشل في تقديم طلب الإرجاع');
-        res.redirect('back');
+        res.redirect(`/start-return/${req.body.orderId}`);
     }
 });
 
