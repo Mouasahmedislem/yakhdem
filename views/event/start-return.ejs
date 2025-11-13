@@ -100,6 +100,24 @@
             border-radius: 1px;
             text-transform: uppercase;
         }
+        
+        .error-message {
+            background: #f8d7da;
+            color: #721c24;
+            padding: 12px;
+            border-radius: 2px;
+            margin-bottom: 16px;
+            border-left: 4px solid #e74c3c;
+        }
+        
+        .success-message {
+            background: #d4edda;
+            color: #155724;
+            padding: 12px;
+            border-radius: 2px;
+            margin-bottom: 16px;
+            border-left: 4px solid #28a745;
+        }
     </style>
 </head>
 
@@ -143,6 +161,21 @@
     <!-- Main Content -->
     <main class="py-12">
         <div class="max-w-2xl mx-auto px-6">
+            <!-- Flash Messages -->
+            <% if (typeof error !== 'undefined' && error) { %>
+                <div class="error-message mb-8">
+                    <i class="fas fa-exclamation-circle mr-2"></i>
+                    <%= error %>
+                </div>
+            <% } %>
+            
+            <% if (typeof success !== 'undefined' && success) { %>
+                <div class="success-message mb-8">
+                    <i class="fas fa-check-circle mr-2"></i>
+                    <%= success %>
+                </div>
+            <% } %>
+
             <!-- Page Header -->
             <div class="text-center mb-8">
                 <h1 class="text-2xl font-light tracking-wide uppercase mb-4">Demande de Retour</h1>
@@ -170,14 +203,14 @@
                     <!-- Reason for Return -->
                     <div class="mb-6">
                         <label for="reason" class="block text-xs text-gray-500 uppercase tracking-wide mb-3">
-                            Raison du Retour
+                            Raison du Retour *
                         </label>
                         <select id="reason" name="reason" class="zara-select" required>
                             <option value="">Sélectionnez une raison</option>
                             <option value="wrong_item">Mauvais article reçu</option>
                             <option value="defective">Article défectueux/endommagé</option>
                             <option value="not_as_described">Article non conforme à la description</option>
-                            
+                            <option value="changed_mind">Changement d'avis</option>
                             <option value="other">Autre raison</option>
                         </select>
                     </div>
@@ -185,7 +218,7 @@
                     <!-- Refund Method -->
                     <div class="mb-6">
                         <label for="refundMethod" class="block text-xs text-gray-500 uppercase tracking-wide mb-3">
-                            Méthode de Remboursement
+                            Méthode de Remboursement *
                         </label>
                         <select id="refundMethod" name="refundMethod" class="zara-select" required>
                             <option value="">Sélectionnez une méthode</option>
@@ -197,7 +230,7 @@
                     <!-- Exchange Details -->
                     <div class="mb-6 hidden" id="exchangeDetails">
                         <label for="exchangeItem" class="block text-xs text-gray-500 uppercase tracking-wide mb-3">
-                            Article souhaité en échange
+                            Article souhaité en échange *
                         </label>
                         <input type="text" id="exchangeItem" name="exchangeItem" 
                                class="zara-input" 
@@ -207,11 +240,13 @@
                     <!-- CCP Details -->
                     <div class="mb-6 hidden" id="ccpDetails">
                         <label for="ccpNumber" class="block text-xs text-gray-500 uppercase tracking-wide mb-3">
-                            Numéro de Compte CCP
+                            Numéro de Compte CCP *
                         </label>
                         <input type="text" id="ccpNumber" name="ccpNumber" 
                                class="zara-input" 
-                               placeholder="Votre numéro CCP à 12 chiffres">
+                               placeholder="Votre numéro CCP à 12 chiffres"
+                               pattern="[0-9]{12}"
+                               title="12 chiffres requis">
                     </div>
                     
                     <!-- Additional Notes -->
@@ -281,6 +316,8 @@
             const refundMethod = document.getElementById('refundMethod');
             const exchangeDetails = document.getElementById('exchangeDetails');
             const ccpDetails = document.getElementById('ccpDetails');
+            const exchangeItem = document.getElementById('exchangeItem');
+            const ccpNumber = document.getElementById('ccpNumber');
 
             refundMethod.addEventListener('change', function() {
                 const method = this.value;
@@ -289,48 +326,52 @@
                 exchangeDetails.classList.add('hidden');
                 ccpDetails.classList.add('hidden');
                 
-                // Show relevant section
+                // Remove required attributes
+                exchangeItem.removeAttribute('required');
+                ccpNumber.removeAttribute('required');
+                
+                // Show relevant section and set required
                 if (method === 'exchange') {
                     exchangeDetails.classList.remove('hidden');
+                    exchangeItem.setAttribute('required', 'required');
                 } else if (method === 'ccp_refund') {
                     ccpDetails.classList.remove('hidden');
+                    ccpNumber.setAttribute('required', 'required');
                 }
             });
 
-            // Form validation
+            // Client-side validation
             const form = document.querySelector('form');
             form.addEventListener('submit', function(e) {
                 const method = refundMethod.value;
                 const reason = document.getElementById('reason').value;
                 
+                let isValid = true;
+                let errorMessage = '';
+
                 if (!reason) {
-                    e.preventDefault();
-                    alert('Veuillez sélectionner une raison de retour');
-                    return;
-                }
-                
-                if (!method) {
-                    e.preventDefault();
-                    alert('Veuillez sélectionner une méthode de remboursement');
-                    return;
-                }
-                
-                if (method === 'exchange') {
-                    const exchangeItem = document.getElementById('exchangeItem').value;
-                    if (!exchangeItem.trim()) {
-                        e.preventDefault();
-                        alert('Veuillez spécifier l\'article souhaité en échange');
-                        return;
+                    isValid = false;
+                    errorMessage = 'Veuillez sélectionner une raison de retour';
+                } else if (!method) {
+                    isValid = false;
+                    errorMessage = 'Veuillez sélectionner une méthode de remboursement';
+                } else if (method === 'exchange' && !exchangeItem.value.trim()) {
+                    isValid = false;
+                    errorMessage = 'Veuillez spécifier l\'article souhaité en échange';
+                } else if (method === 'ccp_refund') {
+                    if (!ccpNumber.value.trim()) {
+                        isValid = false;
+                        errorMessage = 'Veuillez entrer votre numéro CCP';
+                    } else if (!/^\d{12}$/.test(ccpNumber.value)) {
+                        isValid = false;
+                        errorMessage = 'Le numéro CCP doit contenir exactement 12 chiffres';
                     }
                 }
-                
-                if (method === 'ccp_refund') {
-                    const ccpNumber = document.getElementById('ccpNumber').value;
-                    if (!ccpNumber.trim() || !/^\d{12}$/.test(ccpNumber)) {
-                        e.preventDefault();
-                        alert('Veuillez entrer un numéro CCP valide (12 chiffres)');
-                        return;
-                    }
+
+                if (!isValid) {
+                    e.preventDefault();
+                    alert(errorMessage);
+                    return false;
                 }
             });
         });
