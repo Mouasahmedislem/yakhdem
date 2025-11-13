@@ -691,13 +691,13 @@
           <div id="green_message" class="flex-div-wrapper">
             <div class="flex-div">
               <span style="margin-right: 14px; margin-left: 3px;" class="green-dot"></span>
-              <span style="color:#2c9814;" class="text">In Stock, dispatched same day</span>
+              <span style="color:#2c9814;" class="text">En stock, expédié le jour même</span>
             </div>
             <div class="flex-div2">
               <svg width="18" height="18" style="width: 18px; height: 18px; margin-right: 5px; margin-left: 2px;" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 512">
                 <path d="M48 0C21.5 0 0 21.5 0 48V368c0 26.5 21.5 48 48 48H64c0 53 43 96 96 96s96-43 96-96H384c0 53 43 96 96 96s96-43 96-96h32c17.7 0 32-14.3 32-32s-14.3-32-32-32V288 256 237.3c0-17-6.7-33.3-18.7-45.3L512 114.7c-12-12-28.3-18.7-45.3-18.7H416V48c0-26.5-21.5-48-48-48H48zM416 160h50.7L544 237.3V256H416V160zM112 416a48 48 0 1 1 96 0 48 48 0 1 1 -96 0zm368-48a48 48 0 1 1 0 96 48 48 0 1 1 0-96z"></path>
               </svg>
-              <span class="devFreeShip">Free shipping on all WILAYAS <span id="devCountry"></span> orders</span>
+              <span class="devFreeShip">Livraison gratuite offerte dans toutes les WILAYAS à partir de 5000 DA d'achat <span id="devCountry"></span> orders</span>
             </div>
           </div>
 
@@ -728,58 +728,113 @@
           <div class="guarantee-section">
             <div class="main">
               <img src="https://cdn.shopify.com/s/files/1/0508/9266/9116/files/12.jpg?v=1723026470" class="icnt">
-              <p>4 Day Money Back Guarantee</p>
+              <p>Garantie de Remboursement de 4 Jours</p>
             </div>
           </div>
 
           <!-- Tabs -->
-          <div class="mt-8">
-            <div class="flex gap-6 border-b border-gray-100">
-              <button data-tab="desc" class="tab-btn text-sm py-4 px-1 font-medium text-gray-800 border-b-2 border-transparent active">Description</button>
-              <button data-tab="info" class="tab-btn text-sm py-4 px-1 font-medium text-gray-600">Information</button>
-              <% if (has3DModel) { %>
-                <button data-tab="model3d" class="tab-btn text-sm py-4 px-1 font-medium text-gray-600">3D View</button>
-              <% } %>
-              <% if (producthome && producthome.videoId) { %>
-                <button data-tab="video" class="tab-btn text-sm py-4 px-1 font-medium text-gray-600">Video</button>
-              <% } %>
-            </div>
+<div class="mt-8">
+  <div class="flex gap-6 border-b border-gray-100">
+    <% if (has3DModel) { %>
+      <button data-tab="model3d" class="tab-btn text-sm py-4 px-1 font-medium text-gray-800 border-b-2 border-transparent active">3D View</button>
+    <% } %>
+    <button data-tab="desc" class="tab-btn text-sm py-4 px-1 font-medium text-gray-600">Description</button>
+    <button data-tab="shipping" class="tab-btn text-sm py-4 px-1 font-medium text-gray-600">Livraison</button>
+    <button data-tab="guarantee" class="tab-btn text-sm py-4 px-1 font-medium text-gray-600">Notre Garantie</button>
+    <button data-tab="info" class="tab-btn text-sm py-4 px-1 font-medium text-gray-600">Information</button>
+    <% if (producthome && producthome.videoId) { %>
+      <button data-tab="video" class="tab-btn text-sm py-4 px-1 font-medium text-gray-600">Video</button>
+    <% } %>
+  </div>
 
-            <div class="mt-6">
-              <div id="desc" class="tab-panel text-sm text-gray-700 leading-relaxed"><%= producthome && producthome.description ? producthome.description : '' %></div>
+  <div class="mt-6">
+    <!-- 3D Model Tab (Now First) -->
+    <% if (has3DModel) { %>
+      <div id="model3d" class="tab-panel">
+        <div class="bg-gray-50 rounded-xl p-4">
+          <div id="modelViewer" class="model-viewer-container w-full h-96 rounded-lg overflow-hidden"></div>
+          <p class="text-xs text-gray-500 text-center mt-3">Drag to rotate • Scroll to zoom</p>
+        </div>
+      </div>
+    <% } %>
 
-              <div id="info" class="tab-panel hidden text-sm text-gray-700">
-                <ul class="space-y-2">
-                  <% if (producthome && producthome.details) { for (let key in producthome.details) { %>
-                    <li class="flex border-b border-gray-100 py-2">
-                      <strong class="w-32 text-gray-900"><%= key %>:</strong>
-                      <span class="flex-1"><%= producthome.details[key] %></span>
-                    </li>
-                  <% } } %>
-                </ul>
-              </div>
+    <!-- Description Tab -->
+    <div id="desc" class="tab-panel hidden text-sm text-gray-700 leading-relaxed">
+      <%= producthome && producthome.description ? producthome.description : '' %>
+    </div>
 
-              <% if (has3DModel) { %>
-                <div id="model3d" class="tab-panel hidden">
-                  <div class="bg-gray-50 rounded-xl p-4">
-                    <div id="modelViewer" class="model-viewer-container w-full h-96 rounded-lg overflow-hidden"></div>
-                    <p class="text-xs text-gray-500 text-center mt-3">Drag to rotate • Scroll to zoom</p>
-                  </div>
-                </div>
-              <% } %>
+    <!-- Shipping Tab (French) -->
+    <div id="shipping" class="tab-panel hidden text-sm text-gray-700 leading-relaxed">
+      <p><strong>Options de Livraison :</strong></p>
+      <p class="mt-2">Nous proposons une livraison standard et express suivie sur toutes les commandes.</p>
+      
+      <p class="mt-4"><strong>Livraison Express Gratuite :</strong></p>
+      <p class="mt-2">La livraison express gratuite est automatiquement appliquée à la caisse lorsque votre commande est éligible.</p>
+      
+      <p class="mt-4"><strong>Délai d'Expédition :</strong></p>
+      <p class="mt-2">Toutes les commandes sont expédiées le même jour.</p>
+      
+      <div class="mt-6 p-4 bg-blue-50 rounded-lg">
+        <p class="font-medium text-blue-800">Délais de Livraison Estimés :</p>
+        <ul class="mt-2 space-y-1 text-blue-700">
+          <li>• Livraison Standard : 3-5 jours ouvrables</li>
+          <li>• Livraison Express : 1-2 jours ouvrables</li>
+          <li>• Livraison Internationale : 7-14 jours ouvrables</li>
+        </ul>
+      </div>
+    </div>
 
-              <% if (producthome && producthome.videoId) { %>
-                <div id="video" class="tab-panel hidden">
-                  <div class="bg-white rounded-lg p-2 shadow-sm">
-                    <div class="aspect-w-16 aspect-h-9">
-                      <iframe src="https://www.youtube.com/embed/<%= producthome.videoId %>?rel=0&playsinline=1" class="w-full h-64" frameborder="0" allow="accelerometer; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
-                    </div>
-                  </div>
-                </div>
-              <% } %>
+    <!-- Guarantee Tab (French) -->
+    <div id="guarantee" class="tab-panel hidden text-sm text-gray-700 leading-relaxed">
+      <div class="p-4 bg-green-50 rounded-lg border border-green-200">
+        <p class="font-semibold text-green-800">Garantie de Satisfaction 100%</p>
+        <p class="mt-1 text-green-700">Garantie de satisfaction à 100% ou remboursement. Sans poser de questions.</p>
+      </div>
+      
+      <p class="mt-4"><strong>Notre Promesse :</strong></p>
+      <p class="mt-2">Nous sommes tellement sûrs que vous allez adorer vos articles de Silhouette Vases que nous offrons une garantie de remboursement de 4 jours.</p>
+      
+      <p class="mt-4"><strong>Comment Ça Marche :</strong></p>
+      <p class="mt-2">Si vous n'êtes pas entièrement satisfait de votre achat, contactez-nous simplement dans les 4 jours suivant la réception de votre commande pour initier un retour.</p>
+      
+      <p class="mt-4"><strong>Assurance Qualité :</strong></p>
+      <p class="mt-2">Chaque produit subit des contrôles de qualité rigoureux avant l'expédition. Nous garantissons l'artisanat et la durabilité de nos articles.</p>
+      
+      <div class="mt-6 p-4 bg-amber-50 rounded-lg">
+        <p class="font-medium text-amber-800">Politique de Retour :</p>
+        <ul class="mt-2 space-y-1 text-amber-700">
+          <li>• Garantie de remboursement de 4 jours</li>
+          <li>• Sans poser de questions</li>
+          <li>• Remboursement intégral sur le mode de paiement d'origine</li>
+          <li>• L'article doit être dans son état d'origine</li>
+        </ul>
+      </div>
+    </div>
 
-            </div>
+    <!-- Information Tab -->
+    <div id="info" class="tab-panel hidden text-sm text-gray-700">
+      <ul class="space-y-2">
+        <% if (producthome && producthome.details) { for (let key in producthome.details) { %>
+          <li class="flex border-b border-gray-100 py-2">
+            <strong class="w-32 text-gray-900"><%= key %>:</strong>
+            <span class="flex-1"><%= producthome.details[key] %></span>
+          </li>
+        <% } } %>
+      </ul>
+    </div>
+
+    <!-- Video Tab -->
+    <% if (producthome && producthome.videoId) { %>
+      <div id="video" class="tab-panel hidden">
+        <div class="bg-white rounded-lg p-2 shadow-sm">
+          <div class="aspect-w-16 aspect-h-9">
+            <iframe src="https://www.youtube.com/embed/<%= producthome.videoId %>?rel=0&playsinline=1" class="w-full h-64" frameborder="0" allow="accelerometer; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
           </div>
+        </div>
+      </div>
+    <% } %>
+  </div>
+</div>
 
           <!-- Share -->
           <div class="mt-8 flex gap-3 items-center text-sm text-gray-500 pt-6 border-t border-gray-100">
@@ -1243,20 +1298,33 @@
       });
     }
 
-    // Existing quantity controls
-    const qtyInput = document.getElementById('qtyInput');
-    const plus = document.getElementById('qtyPlus');
-    const minus = document.getElementById('qtyMinus');
+   // Fixed quantity controls
+const qtyInput = document.getElementById('qtyInput');
+const plus = document.getElementById('qtyPlus');
+const minus = document.getElementById('qtyMinus');
+
+if (qtyInput) {
+    // Set initial value
+    qtyInput.value = qtyInput.value || 1;
     
-    if (qtyInput) {
-      qtyInput.value = qtyInput.value || 1;
-      plus?.addEventListener('click', () => { 
-        qtyInput.value = Math.max(1, parseInt(qtyInput.value || 1) + 1); 
-      });
-      minus?.addEventListener('click', () => { 
-        qtyInput.value = Math.max(1, parseInt(qtyInput.value || 1) - 1); 
-      });
-    }
+    // Remove any existing event listeners first (optional but safe)
+    plus?.replaceWith(plus.cloneNode(true));
+    minus?.replaceWith(minus.cloneNode(true));
+    
+    // Get fresh references after clone
+    const freshPlus = document.getElementById('qtyPlus');
+    const freshMinus = document.getElementById('qtyMinus');
+    const freshQtyInput = document.getElementById('qtyInput');
+    
+    // Add event listeners once
+    freshPlus?.addEventListener('click', () => { 
+        freshQtyInput.value = parseInt(freshQtyInput.value || 1) + 1;
+    });
+    
+    freshMinus?.addEventListener('click', () => { 
+        freshQtyInput.value = Math.max(1, parseInt(freshQtyInput.value || 1) - 1);
+    });
+}
   });
 </script> 
 
