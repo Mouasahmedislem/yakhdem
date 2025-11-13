@@ -118,142 +118,196 @@
         <p class="text-sm text-gray-600">Suivez l'état de vos commandes</p>
       </div>
 
-      <!-- Orders List -->
-      <% if (orders.length === 0) { %>
-        <div class="zara-card p-12 text-center">
+      <!-- Check if orders is defined and has content -->
+      <% if (typeof orders === 'undefined') { %>
+        <!-- Tracking Form for Initial Page Load -->
+        <div class="zara-card p-12 text-center max-w-md mx-auto">
+          <div class="mb-8">
+            <h2 class="text-xl font-light tracking-wide mb-4">SUIVRE VOTRE COMMANDE</h2>
+            <p class="text-sm text-gray-600">Entrez votre numéro de téléphone</p>
+          </div>
+
+          <form action="/track-login" method="POST">
+            <div class="mb-6">
+              <input 
+                type="tel" 
+                name="numero" 
+                placeholder="Exemple: 0551234567" 
+                required 
+                pattern="0[5-7][0-9]{8}"
+                title="Veuillez entrer un numéro de téléphone algérien valide"
+                class="w-full px-4 py-3 border border-gray-300 text-sm focus:outline-none focus:border-black transition-colors"
+              />
+            </div>
+            
+            <button type="submit" class="zara-btn w-full text-sm uppercase tracking-wide">
+              Suivre la Commande
+            </button>
+          </form>
+        </div>
+
+        <div class="text-center mt-8">
+          <p class="text-sm text-gray-600">
+            Pas de numéro de commande ? 
+            <a href="/contact" class="text-black underline hover:no-underline">Contactez le support</a>
+          </p>
+        </div>
+
+      <% } else if (orders.length === 0) { %>
+        <!-- No Orders Found -->
+        <div class="zara-card p-12 text-center max-w-md mx-auto">
           <div class="w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-6">
             <i class="fas fa-search text-gray-400"></i>
           </div>
           <h2 class="text-lg font-light tracking-wide uppercase mb-4">Aucune commande trouvée</h2>
-          <p class="text-sm text-gray-600 mb-6">Aucune commande associée à ce numéro</p>
+          <p class="text-sm text-gray-600 mb-6">Aucune commande associée à ce numéro de téléphone</p>
+          
+          <!-- Show the form again to try another number -->
+          <form action="/track-login" method="POST" class="mb-6">
+            <div class="mb-4">
+              <input 
+                type="tel" 
+                name="numero" 
+                placeholder="Essayer un autre numéro" 
+                required 
+                pattern="0[5-7][0-9]{8}"
+                class="w-full px-4 py-3 border border-gray-300 text-sm focus:outline-none focus:border-black transition-colors"
+              />
+            </div>
+            <button type="submit" class="zara-btn w-full text-sm uppercase tracking-wide">
+              Essayer à Nouveau
+            </button>
+          </form>
+          
           <a href="/" class="zara-btn-secondary inline-block text-sm">
             Aller à la boutique
           </a>
         </div>
-      <% } %>
 
-      <!-- Orders -->
-      <% orders.forEach(order => { %>
-        <div class="zara-card p-8 mb-6">
-          <!-- Order Header -->
-          <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-6 pb-6 border-b border-gray-200">
-            <div class="flex items-center gap-4 mb-3 sm:mb-0">
-              <span class="status-badge">
-                Commande #<%= order._id.toString().slice(-6).toUpperCase() %>
-              </span>
-              <span class="status-badge bg-green-50 text-green-700">
-                En Transit
-              </span>
+      <% } else { %>
+        <!-- Orders Found - Display Orders -->
+        <% orders.forEach(order => { %>
+          <div class="zara-card p-8 mb-6">
+            <!-- Order Header -->
+            <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-6 pb-6 border-b border-gray-200">
+              <div class="flex items-center gap-4 mb-3 sm:mb-0">
+                <span class="status-badge">
+                  Commande #<%= order._id.toString().slice(-6).toUpperCase() %>
+                </span>
+                <span class="status-badge bg-green-50 text-green-700">
+                  En Transit
+                </span>
+              </div>
+              <div class="text-xs text-gray-500 uppercase tracking-wide">
+                Commandé le: <%= order.createdAt.toLocaleDateString('fr-FR') %>
+              </div>
             </div>
-            <div class="text-xs text-gray-500 uppercase tracking-wide">
-              Commandé le: <%= order.createdAt.toLocaleDateString('fr-FR') %>
-            </div>
-          </div>
 
-          <!-- Order Details -->
-          <div class="grid md:grid-cols-2 gap-8 mb-6">
-            <div class="space-y-4">
-              <div>
-                <p class="text-xs text-gray-500 uppercase tracking-wide mb-1">Nom</p>
-                <p class="text-sm"><%= order.name %></p>
-              </div>
-              <div>
-                <p class="text-xs text-gray-500 uppercase tracking-wide mb-1">Téléphone</p>
-                <p class="text-sm"><%= order.numero %></p>
-              </div>
-              <div>
-                <p class="text-xs text-gray-500 uppercase tracking-wide mb-1">Wilaya</p>
-                <p class="text-sm"><%= order.city %></p>
-              </div>
-              <div>
-                <p class="text-xs text-gray-500 uppercase tracking-wide mb-1">Adresse</p>
-                <p class="text-sm"><%= order.address %></p>
-              </div>
-            </div>
-            
-            <div class="space-y-4">
-              <div>
-                <p class="text-xs text-gray-500 uppercase tracking-wide mb-1">Total Articles</p>
-                <p class="text-sm font-medium"><%= order.cart.totalPrice %> DZD</p>
-              </div>
-              <div>
-                <p class="text-xs text-gray-500 uppercase tracking-wide mb-1">Frais de Livraison</p>
-                <p class="text-sm"><%= order.shippingFee %> DZD</p>
-              </div>
-              <div>
-                <p class="text-xs text-gray-500 uppercase tracking-wide mb-1">Total avec Livraison</p>
-                <p class="text-sm font-medium"><%= order.totalWithShipping %> DZD</p>
-              </div>
-              <div>
-                <p class="text-xs text-gray-500 uppercase tracking-wide mb-1">Livraison Estimée</p>
-                <p class="text-sm"><%= order.deliveryDelay %></p>
-              </div>
-            </div>
-          </div>
-
-          <!-- Return Status -->
-          <% if (order.returnRequest) { %>
-            <div class="border-t border-gray-200 pt-6">
-              <div class="space-y-3">
-                <div class="flex items-center gap-3">
-                  <span class="status-badge status-<%= order.returnRequest.status %> uppercase">
-                    <%= order.returnRequest.status.toUpperCase() %>
-                  </span>
-                  <p class="text-sm text-gray-600">
-                    <% if (order.returnRequest.status === 'approved') { %>
-                      Retour approuvé - Suivez les instructions envoyées par email
-                    <% } else if (order.returnRequest.status === 'rejected') { %>
-                      Demande de retour refusée - Contactez le support
-                    <% } else if (order.returnRequest.status === 'processed') { %>
-                      Retour traité
-                    <% } else { %>
-                      Retour en attente de traitement
-                    <% } %>
-                  </p>
-                </div>
-                
+            <!-- Order Details -->
+            <div class="grid md:grid-cols-2 gap-8 mb-6">
+              <div class="space-y-4">
                 <div>
-                  <p class="text-xs text-gray-500 uppercase tracking-wide mb-1">Raison du retour</p>
-                  <p class="text-sm">
-                    <%= {
-                      'wrong_item': 'Mauvais article reçu',
-                      'defective': 'Article défectueux/endommagé',
-                      'not_as_described': 'Article non conforme à la description',
-                      'changed_mind': 'Changement d\'avis',
-                      'other': 'Autre raison'
-                    }[order.returnRequest.reason] %>
-                  </p>
+                  <p class="text-xs text-gray-500 uppercase tracking-wide mb-1">Nom</p>
+                  <p class="text-sm"><%= order.name %></p>
+                </div>
+                <div>
+                  <p class="text-xs text-gray-500 uppercase tracking-wide mb-1">Téléphone</p>
+                  <p class="text-sm"><%= order.numero %></p>
+                </div>
+                <div>
+                  <p class="text-xs text-gray-500 uppercase tracking-wide mb-1">Wilaya</p>
+                  <p class="text-sm"><%= order.city %></p>
+                </div>
+                <div>
+                  <p class="text-xs text-gray-500 uppercase tracking-wide mb-1">Adresse</p>
+                  <p class="text-sm"><%= order.address %></p>
+                </div>
+              </div>
+              
+              <div class="space-y-4">
+                <div>
+                  <p class="text-xs text-gray-500 uppercase tracking-wide mb-1">Total Articles</p>
+                  <p class="text-sm font-medium"><%= order.cart.totalPrice %> DZD</p>
+                </div>
+                <div>
+                  <p class="text-xs text-gray-500 uppercase tracking-wide mb-1">Frais de Livraison</p>
+                  <p class="text-sm"><%= order.shippingFee %> DZD</p>
+                </div>
+                <div>
+                  <p class="text-xs text-gray-500 uppercase tracking-wide mb-1">Total avec Livraison</p>
+                  <p class="text-sm font-medium"><%= order.totalWithShipping %> DZD</p>
+                </div>
+                <div>
+                  <p class="text-xs text-gray-500 uppercase tracking-wide mb-1">Livraison Estimée</p>
+                  <p class="text-sm"><%= order.deliveryDelay %></p>
                 </div>
               </div>
             </div>
-          <% } %>
 
-          <!-- Actions -->
-          <div class="border-t border-gray-200 pt-6 flex flex-col sm:flex-row gap-3">
-            <% if (!order.returnRequest) { %>
-              <a href="/start-return/<%= order._id %>" 
-                 class="zara-btn-secondary text-sm text-center flex-1">
-                Créer un Retour
-              </a>
-            <% } else if (order.returnRequest.status === 'pending') { %>
-              <button class="zara-btn-secondary text-sm text-center flex-1 opacity-50 cursor-not-allowed">
-                Retour en Attente
-              </button>
+            <!-- Return Status -->
+            <% if (order.returnRequest) { %>
+              <div class="border-t border-gray-200 pt-6">
+                <div class="space-y-3">
+                  <div class="flex items-center gap-3">
+                    <span class="status-badge status-<%= order.returnRequest.status %> uppercase">
+                      <%= order.returnRequest.status.toUpperCase() %>
+                    </span>
+                    <p class="text-sm text-gray-600">
+                      <% if (order.returnRequest.status === 'approved') { %>
+                        Retour approuvé - Suivez les instructions envoyées par email
+                      <% } else if (order.returnRequest.status === 'rejected') { %>
+                        Demande de retour refusée - Contactez le support
+                      <% } else if (order.returnRequest.status === 'processed') { %>
+                        Retour traité
+                      <% } else { %>
+                        Retour en attente de traitement
+                      <% } %>
+                    </p>
+                  </div>
+                  
+                  <div>
+                    <p class="text-xs text-gray-500 uppercase tracking-wide mb-1">Raison du retour</p>
+                    <p class="text-sm">
+                      <%= {
+                        'wrong_item': 'Mauvais article reçu',
+                        'defective': 'Article défectueux/endommagé',
+                        'not_as_described': 'Article non conforme à la description',
+                        'changed_mind': 'Changement d\'avis',
+                        'other': 'Autre raison'
+                      }[order.returnRequest.reason] %>
+                    </p>
+                  </div>
+                </div>
+              </div>
             <% } %>
-            <a href="/" 
-               class="zara-btn text-sm text-center flex-1">
-              Continuer les Achats
-            </a>
-          </div>
-        </div>
-      <% }) %>
 
-      <!-- Bottom Navigation -->
-      <div class="text-center mt-8">
-        <a href="/" class="zara-btn-secondary inline-block text-sm px-8">
-          Aller à la Boutique
-        </a>
-      </div>
+            <!-- Actions -->
+            <div class="border-t border-gray-200 pt-6 flex flex-col sm:flex-row gap-3">
+              <% if (!order.returnRequest) { %>
+                <a href="/start-return/<%= order._id %>" 
+                   class="zara-btn-secondary text-sm text-center flex-1">
+                  Créer un Retour
+                </a>
+              <% } else if (order.returnRequest.status === 'pending') { %>
+                <button class="zara-btn-secondary text-sm text-center flex-1 opacity-50 cursor-not-allowed">
+                  Retour en Attente
+                </button>
+              <% } %>
+              <a href="/" 
+                 class="zara-btn text-sm text-center flex-1">
+                Continuer les Achats
+              </a>
+            </div>
+          </div>
+        <% }) %>
+
+        <!-- Bottom Navigation -->
+        <div class="text-center mt-8">
+          <a href="/" class="zara-btn-secondary inline-block text-sm px-8">
+            Aller à la Boutique
+          </a>
+        </div>
+      <% } %>
     </div>
   </main>
 
@@ -265,8 +319,6 @@
   </footer>
 </body>
 </html>
-
-
 
 
 
