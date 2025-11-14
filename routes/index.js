@@ -2166,9 +2166,52 @@ router.get("/contact", function(req, res){
 // Track Login Page
 // Track Login Page
 router.get("/track-login", function(req, res){
+    // Helper functions
+    const getStatusText = (status) => {
+        const statusMap = {
+            'pending': 'En Attente',
+            'confirmed': 'Confirmée',
+            'processing': 'En Préparation',
+            'ready_for_pickup': 'Prête à Expédier',
+            'shipped': 'Expédiée',
+            'out_for_delivery': 'En Livraison',
+            'delivered': 'Livrée',
+            'cancelled': 'Annulée',
+            'refunded': 'Remboursée',
+            'on_hold': 'En Attente'
+        };
+        return statusMap[status] || status;
+    };
+
+    const getReturnStatusText = (status) => {
+        const statusMap = {
+            'none': 'Aucun',
+            'requested': 'Demandé',
+            'approved': 'Approuvé',
+            'rejected': 'Rejeté',
+            'processing': 'En Cours',
+            'completed': 'Terminé'
+        };
+        return statusMap[status] || status;
+    };
+
+    const getPaymentStatusText = (status) => {
+        const statusMap = {
+            'pending': 'En Attente',
+            'paid': 'Payé',
+            'failed': 'Échoué',
+            'refunded': 'Remboursé',
+            'partially_refunded': 'Partiellement Remboursé'
+        };
+        return statusMap[status] || 'En Attente';
+    };
+
     res.render("event/track-login", {
         error: req.flash('error')[0],
-        success: req.flash('success')[0]
+        success: req.flash('success')[0],
+        getStatusText,
+        getReturnStatusText,
+        getPaymentStatusText
     });
 });
 // Process Track Login
@@ -2186,18 +2229,97 @@ router.post('/track-login', async (req, res) => {
                                 .sort({ createdAt: -1 })
                                 .populate('returnRequest');
         
+        // Helper functions
+        const getStatusText = (status) => {
+            const statusMap = {
+                'pending': 'En Attente',
+                'confirmed': 'Confirmée',
+                'processing': 'En Préparation',
+                'ready_for_pickup': 'Prête à Expédier',
+                'shipped': 'Expédiée',
+                'out_for_delivery': 'En Livraison',
+                'delivered': 'Livrée',
+                'cancelled': 'Annulée',
+                'refunded': 'Remboursée',
+                'on_hold': 'En Attente'
+            };
+            return statusMap[status] || status;
+        };
+
+        const getReturnStatusText = (status) => {
+            const statusMap = {
+                'none': 'Aucun',
+                'requested': 'Demandé',
+                'approved': 'Approuvé',
+                'rejected': 'Rejeté',
+                'processing': 'En Cours',
+                'completed': 'Terminé'
+            };
+            return statusMap[status] || status;
+        };
+
+        const getPaymentStatusText = (status) => {
+            const statusMap = {
+                'pending': 'En Attente',
+                'paid': 'Payé',
+                'failed': 'Échoué',
+                'refunded': 'Remboursé',
+                'partially_refunded': 'Partiellement Remboursé'
+            };
+            return statusMap[status] || 'En Attente';
+        };
+
+        const getProgressWidth = (status) => {
+            const progressMap = {
+                'pending': 10,
+                'confirmed': 30,
+                'processing': 50,
+                'ready_for_pickup': 60,
+                'shipped': 75,
+                'out_for_delivery': 90,
+                'delivered': 100,
+                'cancelled': 100,
+                'refunded': 100,
+                'on_hold': 10
+            };
+            return progressMap[status] || 10;
+        };
+
+        const getTimelineStatus = (currentStatus, checkStatus) => {
+            const statusOrder = ['pending', 'confirmed', 'processing', 'shipped', 'delivered'];
+            const currentIndex = statusOrder.indexOf(currentStatus);
+            const checkIndex = statusOrder.indexOf(checkStatus);
+            
+            if (checkIndex < currentIndex) return 'completed';
+            if (checkIndex === currentIndex) return 'active';
+            return '';
+        };
+
         if (orders.length === 0) {
             req.flash('error', 'لا توجد طلبات مرتبطة بهذا الرقم');
             return res.render('event/track-order', {
+                orders: [],
                 phoneNumber: numero,
-                error: 'لا توجد طلبات مرتبطة بهذا الرقم'
+                error: req.flash('error')[0],
+                getStatusText,
+                getReturnStatusText,
+                getPaymentStatusText,
+                getProgressWidth,
+                getTimelineStatus
             });
         }
 
         req.session.trackingUser = numero;
         res.render('event/track-order', { 
             orders,
-            phoneNumber: numero 
+            phoneNumber: numero,
+            success: req.flash('success')[0],
+            error: req.flash('error')[0],
+            getStatusText,
+            getReturnStatusText,
+            getPaymentStatusText,
+            getProgressWidth,
+            getTimelineStatus
         });
 
     } catch (err) {
