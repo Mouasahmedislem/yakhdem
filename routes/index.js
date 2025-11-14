@@ -2219,7 +2219,13 @@ router.get('/track-order', async (req, res) => {
                               options: { strictPopulate: false } // Bypass the check
                             });
     
-    res.render('event/track-order', { orders });
+    res.render('event/track-order', { orders,
+  phoneNumber: numero,
+  success: req.flash('success')[0],
+  error: req.flash('error')[0],
+  getStatusText,
+  getReturnStatusText,
+  getPaymentStatusText });
   } catch (err) {
     console.error('Error fetching orders:', err);
     req.flash('error', 'Error loading your orders');
@@ -2309,7 +2315,8 @@ router.post('/submit-return', async (req, res) => {
 
         // Update the order with the return request reference
         await Order.findByIdAndUpdate(orderId, { 
-            returnRequest: returnRequest._id 
+            returnRequest: returnRequest._id,
+          returnStatus: 'requested' // Add this line
         });
         console.log('✅ Order updated with return request');
 
@@ -2591,7 +2598,45 @@ router.post('/webhook', async (req, res) => {
 });
 
 
+// Add these helper functions to your route file
+function getStatusText(status) {
+  const statusMap = {
+    'pending': 'En Attente',
+    'confirmed': 'Confirmée',
+    'processing': 'En Préparation',
+    'ready_for_pickup': 'Prête à Expédier',
+    'shipped': 'Expédiée',
+    'out_for_delivery': 'En Livraison',
+    'delivered': 'Livrée',
+    'cancelled': 'Annulée',
+    'refunded': 'Remboursée',
+    'on_hold': 'En Attente'
+  };
+  return statusMap[status] || status;
+}
 
+function getReturnStatusText(status) {
+  const statusMap = {
+    'none': 'Aucun',
+    'requested': 'Demandé',
+    'approved': 'Approuvé',
+    'rejected': 'Rejeté',
+    'processing': 'En Cours',
+    'completed': 'Terminé'
+  };
+  return statusMap[status] || status;
+}
+
+function getPaymentStatusText(status) {
+  const statusMap = {
+    'pending': 'En Attente',
+    'paid': 'Payé',
+    'failed': 'Échoué',
+    'refunded': 'Remboursé',
+    'partially_refunded': 'Partiellement Remboursé'
+  };
+  return statusMap[status] || 'En Attente';
+}
 
     
 module.exports = router
