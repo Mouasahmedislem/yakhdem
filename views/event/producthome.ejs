@@ -618,7 +618,11 @@
   fbq('track', 'PageView');
 
   // Track ViewContent with server-side event ID
-  setTimeout(function() {
+setTimeout(function() {
+  if (typeof fbq !== 'undefined') {
+    // ✅ Same Event ID as CAPI
+    const serverEventId = '<%= metaEventIdView %>';
+    
     fbq('track', 'ViewContent', {
       content_name: '<%= producthome.title.replace(/'/g, "\\'") %>',
       content_ids: ['<%= producthome._id %>'],
@@ -631,9 +635,12 @@
         item_price: <%= producthome.price %>
       }]
     }, {
-      eventID: '<%= metaEventIdView %>'
+      eventID: serverEventId // ✅ Same ID as CAPI
     });
-  }, 500);
+    
+    console.log('🎯 ViewContent Event ID:', serverEventId);
+  }
+}, 500);
   </script>
   <noscript>
     <img height="1" width="1" style="display:none" 
@@ -1434,18 +1441,19 @@ if (document.readyState === 'loading') {
     initializeTabs();
 }
 
-      // ---------- Enhanced AddToCart tracking ----------
+  // ---------- Enhanced AddToCart tracking ----------
 const addForm = document.getElementById('addToCartForm');
 if (addForm) {
   addForm.addEventListener('submit', function(e){
-    // Prevent default form submission since we're using GET
     e.preventDefault();
     
     const quantity = parseInt(document.getElementById('qtyInput').value || 1);
     
     try {
-      // Track AddToCart with Meta Pixel
       if (window.fbq) {
+        // ✅ Use the SAME event ID that was pre-generated
+        const serverEventId = '<%= metaEventIdCart %>';
+        
         window.fbq('track', 'AddToCart', {
           content_name: '<%= producthome.title.replace(/'/g, "\\'") %>',
           content_ids: ['<%= producthome._id %>'],
@@ -1458,20 +1466,21 @@ if (addForm) {
             item_price: <%= producthome.price %>
           }]
         }, { 
-          eventID: '<%= typeof metaEventIdCart !== "undefined" ? metaEventIdCart : "" %>'
+          eventID: serverEventId // ✅ Same ID as CAPI
         });
+
+        console.log('🎯 Pixel AddToCart Event ID:', serverEventId);
       }
     } catch (err) { 
       console.warn('fbq track AddToCart failed', err); 
     }
     
-    // Submit the form programmatically after tracking
+    // Submit the form
     const productId = '<%= producthome._id %>';
     window.location.href = `/add-to-cart-producthome/${productId}?qty=${quantity}`;
   });
 }
-
-// ---------- Buy Now functionality avec tracking ----------
+// ---------- Buy Now functionality SANS Event ID ----------
 const buyNowBtn = document.getElementById('buyNowBtn');
 if (buyNowBtn) {
   buyNowBtn.addEventListener('click', async function(e) {
@@ -1487,24 +1496,10 @@ if (buyNowBtn) {
       const qtyInput = document.getElementById('qtyInput');
       const quantity = qtyInput ? parseInt(qtyInput.value) || 1 : 1;
       
-      // Track InitiateCheckout
+      // ✅ Track ONLY AddToCart avec le même Event ID que CAPI
       if (window.fbq) {
-        window.fbq('track', 'InitiateCheckout', {
-          content_name: '<%= producthome.title.replace(/'/g, "\\'") %>',
-          content_ids: ['<%= producthome._id %>'],
-          content_type: 'product',
-          value: <%= producthome.price %> * quantity,
-          currency: 'DZD',
-          contents: [{
-            id: '<%= producthome._id %>',
-            quantity: quantity,
-            item_price: <%= producthome.price %>
-          }]
-        }, {
-          eventID: '<%= typeof metaEventIdCart !== "undefined" ? metaEventIdCart : "" %>'
-        });
+        const serverEventId = '<%= metaEventIdCart %>';
         
-        // Also track AddToCart for Buy Now
         window.fbq('track', 'AddToCart', {
           content_name: '<%= producthome.title.replace(/'/g, "\\'") %>',
           content_ids: ['<%= producthome._id %>'],
@@ -1517,8 +1512,25 @@ if (buyNowBtn) {
             item_price: <%= producthome.price %>
           }]
         }, {
-          eventID: '<%= typeof metaEventIdCart !== "undefined" ? metaEventIdCart : "" %>'
+          eventID: serverEventId // ✅ Même ID que CAPI
         });
+
+        console.log('🎯 Buy Now - AddToCart Event ID:', serverEventId);
+        
+        // ✅ InitiateCheckout SANS Event ID (Meta génère automatiquement)
+        window.fbq('track', 'InitiateCheckout', {
+          content_name: '<%= producthome.title.replace(/'/g, "\\'") %>',
+          content_ids: ['<%= producthome._id %>'],
+          content_type: 'product',
+          value: <%= producthome.price %> * quantity,
+          currency: 'DZD',
+          contents: [{
+            id: '<%= producthome._id %>',
+            quantity: quantity,
+            item_price: <%= producthome.price %>
+          }]
+        });
+        // ❌ PAS de eventID pour InitiateCheckout - Meta le génère
       }
       
       // Add to cart and redirect to checkout
