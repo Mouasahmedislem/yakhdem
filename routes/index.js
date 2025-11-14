@@ -1912,9 +1912,7 @@ try {
 });
     req.session.cart = null;
 
-   // ✅ Clean the phone number
-  const rawNumero = req.body.numero;
-  const cleanNumero = '213' + rawNumero.replace(/^0+/, '').replace(/\D/g, ''); 
+  
 
  // ✅ Prepare WhatsApp message payload with shipping info
     const payload = {
