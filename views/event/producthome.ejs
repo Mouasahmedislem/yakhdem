@@ -6,7 +6,41 @@
   <meta name="referrer" content="strict-origin-when-cross-origin">
 
   <title><%= producthome && producthome.title ? producthome.title : 'Product' %> — Paintello Home</title>
-
+<script>
+// Enhanced FBP ensuring script
+(function() {
+  function getCookie(name) {
+    const value = `; ${document.cookie}`;
+    const parts = value.split(`; ${name}=`);
+    if (parts.length === 2) return parts.pop().split(';').shift();
+  }
+  
+  function generateFBP() {
+    const timestamp = Math.floor(Date.now() / 1000);
+    const random = Math.random().toString(36).substring(2, 15);
+    return `fb.1.${timestamp}.${random}`;
+  }
+  
+  function setFBP() {
+    let fbp = getCookie('_fbp');
+    
+    if (!fbp) {
+      fbp = generateFBP();
+      const domain = window.location.hostname;
+      // Set cookie for root domain
+      document.cookie = `_fbp=${fbp}; path=/; max-age=31536000; domain=.${domain}`;
+      console.log('✅ FBP cookie created for CAPI:', fbp);
+    } else {
+      console.log('✅ FBP cookie exists:', fbp);
+    }
+    
+    return fbp;
+  }
+  
+  // Execute immediately
+  setFBP();
+})();
+</script>
   <!-- Bootstrap CSS for navbar -->
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
   <!-- FontAwesome -->
@@ -439,32 +473,67 @@
       font-weight: 500;
     }
 
-    .guarantee-section {
-      margin-top: 1.5rem;
-      padding: 1rem;
-      background-color: #f8f9fa;
-      border-radius: 8px;
-      border-left: 4px solid var(--accent);
-    }
+    /* ===== GUARANTEE SECTION ENHANCEMENTS ===== */
+.guarantee-section {
+  margin-top: 1.5rem;
+  padding: 1rem;
+  background-color: #f8f9fa;
+  border-radius: 8px;
+  border-left: 4px solid var(--accent);
+}
 
-    .guarantee-section .main {
-      display: flex;
-      align-items: center;
-      gap: 0.75rem;
-    }
+.guarantee-section .main {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+}
 
-    .guarantee-section .icnt {
-      width: 24px;
-      height: 24px;
-      object-fit: contain;
-    }
+.guarantee-section .icnt {
+  width: 24px;
+  height: 24px;
+  object-fit: contain;
+}
 
-    .guarantee-section p {
-      margin: 0;
-      font-size: 0.875rem;
-      font-weight: 500;
-      color: #333;
-    }
+.guarantee-section p {
+  margin: 0;
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: #333;
+}
+
+.learn-more-link {
+  color: var(--accent, #c9b59a);
+  text-decoration: none;
+  font-size: 0.8rem;
+  font-weight: 500;
+  margin-left: auto;
+  padding: 4px 12px;
+  border: 1px solid var(--accent, #c9b59a);
+  border-radius: 4px;
+  transition: all 0.3s ease;
+  white-space: nowrap;
+}
+
+.learn-more-link:hover {
+  background-color: var(--accent, #c9b59a);
+  color: white;
+  text-decoration: none;
+}
+
+/* Mobile responsiveness for guarantee section */
+@media (max-width: 768px) {
+  .guarantee-section .main {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.5rem;
+  }
+  
+  .learn-more-link {
+    margin-left: 0;
+    align-self: flex-end;
+  }
+}
 /* Enhanced tab styles */
 .flex.gap-6.border-b.border-gray-100 {
   overflow-x: auto;
@@ -559,6 +628,67 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.1/crypto-js.min.js" defer></script>
 
   <!-- Your existing meta pixel, clarity, GTM scripts... -->
+ <!-- ✅ META PIXEL - APRÈS le script FBP -->
+  <% if (process.env.FB_PIXEL_ID) { %>
+  <!-- Facebook Pixel Code -->
+  <script>
+  !function(f,b,e,v,n,t,s)
+  {if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+  n.callMethod.apply(n,arguments):n.queue.push(arguments)};
+  if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
+  n.queue=[];t=b.createElement(e);t.async=!0;
+  t.src=v;s=b.getElementsByTagName(e)[0];
+  s.parentNode.insertBefore(t,s)}(window, document,'script',
+  'https://connect.facebook.net/en_US/fbevents.js');
+
+  // Initialize pixel
+  fbq('init', '<%= process.env.FB_PIXEL_ID %>', {
+    <% if (user && user.email) { %>em: '<%= user.email %>',<% } %>
+    <% if (user && user.firstName) { %>fn: '<%= user.firstName %>',<% } %>
+    <% if (user && user.lastName) { %>ln: '<%= user.lastName %>',<% } %>
+    <% if (user && user.numero) { %>ph: '<%= user.numero %>',<% } %>
+  });
+
+  fbq('track', 'PageView');
+
+  // Track ViewContent with server-side event ID
+  setTimeout(function() {
+    fbq('track', 'ViewContent', {
+      content_name: '<%= producthome.title.replace(/'/g, "\\'") %>',
+      content_ids: ['<%= producthome._id %>'],
+      content_type: 'product',
+      value: <%= producthome.price %>,
+      currency: 'DZD',
+      contents: [{
+        id: '<%= producthome._id %>',
+        quantity: 1,
+        item_price: <%= producthome.price %>
+      }]
+    }, {
+      eventID: '<%= metaEventIdView %>'
+    });
+  }, 500);
+  </script>
+  <noscript>
+    <img height="1" width="1" style="display:none" 
+         src="https://www.facebook.com/tr?id=<%= process.env.FB_PIXEL_ID %>&ev=PageView&noscript=1"/>
+  </noscript>
+  <% } %>
+
+<script type="text/javascript">
+    (function(c,l,a,r,i,t,y){
+        c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};
+        t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;
+        y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);
+    })(window, document, "clarity", "script", "t8r0mi7k1l");
+</script>
+
+ <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+  new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+  j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+  'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+  })(window,document,'script','dataLayer','GTM-K8PWQM45');</script>
+
 </head>
 
 <body class="bg-white text-gray-800 antialiased">
@@ -807,12 +937,13 @@
 </form>
 
           <!-- ===== GUARANTEE SECTION ===== -->
-          <div class="guarantee-section">
-            <div class="main">
-              <img src="https://cdn.shopify.com/s/files/1/0508/9266/9116/files/12.jpg?v=1723026470" class="icnt">
-              <p>Garantie de Remboursement de 4 Jours</p>
-            </div>
-          </div>
+<div class="guarantee-section">
+  <div class="main">
+    <img src="https://cdn.shopify.com/s/files/1/0508/9266/9116/files/12.jpg?v=1723026470" class="icnt">
+    <p>Garantie de Remboursement de 4 Jours</p>
+    <a href="/track-login" class="learn-more-link">En savoir plus</a>
+  </div>
+</div>
 
 <!-- Tabs -->
 <div class="mt-8">
@@ -895,7 +1026,7 @@
       
       <p class="mt-4"><strong>Comment Ça Marche :</strong></p>
       <p class="mt-2">Si vous n'êtes pas entièrement satisfait de votre achat, contactez-nous simplement dans les 4 jours suivant la réception de votre commande pour initier un retour.</p>
-      
+      <a href="/pages/track" class="learn-more-link">En savoir plus</a>
       <p class="mt-4"><strong>Assurance Qualité :</strong></p>
       <p class="mt-2">Chaque produit subit des contrôles de qualité rigoureux avant l'expédition. Nous garantissons l'artisanat et la durabilité de nos articles.</p>
       
@@ -1337,35 +1468,136 @@ if (document.readyState === 'loading') {
     initializeTabs();
 }
 
-      // ---------- Quantity controls ----------
-      const qtyInput = document.getElementById('qtyInput');
-      const plus = document.getElementById('qtyPlus');
-      const minus = document.getElementById('qtyMinus');
-      if (qtyInput) {
-        qtyInput.value = qtyInput.value || 1;
-        plus && plus.addEventListener('click', () => qtyInput.value = Math.max(1, parseInt(qtyInput.value||1) + 1));
-        minus && minus.addEventListener('click', () => qtyInput.value = Math.max(1, parseInt(qtyInput.value||1) - 1));
-      }
-
-      // ---------- AddToCart tracking (safe) ----------
-      const addForm = document.getElementById('addToCartForm');
-      if (addForm) {
-        addForm.addEventListener('submit', function(e){
-          try {
-            if (window.fbq) {
-              window.fbq('track', 'AddToCart', {
-                content_name: '<%= producthome && producthome.title ? producthome.title : '' %>',
-                content_ids: ['<%= producthome && producthome._id ? producthome._id : '' %>'],
-                content_type: 'product',
-                value: <%= producthome && producthome.price ? producthome.price : 0 %>,
-                currency: 'DZD',
-                contents: [{ id: '<%= producthome && producthome._id ? producthome._id : '' %>', quantity: parseInt(document.getElementById('qtyInput').value||1), item_price: <%= producthome && producthome.price ? producthome.price : 0 %> }]
-              }, { eventID: '<%= typeof metaEventIdCart !== "undefined" ? metaEventIdCart : "" %>' });
-            }
-          } catch (err) { console.warn('fbq track AddToCart failed', err); }
-          // allow the form to proceed normally
+      // ---------- Enhanced AddToCart tracking ----------
+const addForm = document.getElementById('addToCartForm');
+if (addForm) {
+  addForm.addEventListener('submit', function(e){
+    // Prevent default form submission since we're using GET
+    e.preventDefault();
+    
+    const quantity = parseInt(document.getElementById('qtyInput').value || 1);
+    
+    try {
+      // Track AddToCart with Meta Pixel
+      if (window.fbq) {
+        window.fbq('track', 'AddToCart', {
+          content_name: '<%= producthome.title.replace(/'/g, "\\'") %>',
+          content_ids: ['<%= producthome._id %>'],
+          content_type: 'product',
+          value: <%= producthome.price %> * quantity,
+          currency: 'DZD',
+          contents: [{
+            id: '<%= producthome._id %>',
+            quantity: quantity,
+            item_price: <%= producthome.price %>
+          }]
+        }, { 
+          eventID: '<%= typeof metaEventIdCart !== "undefined" ? metaEventIdCart : "" %>'
         });
       }
+    } catch (err) { 
+      console.warn('fbq track AddToCart failed', err); 
+    }
+    
+    // Submit the form programmatically after tracking
+    const productId = '<%= producthome._id %>';
+    window.location.href = `/add-to-cart-producthome/${productId}?qty=${quantity}`;
+  });
+}
+
+// ---------- Buy Now functionality avec tracking ----------
+const buyNowBtn = document.getElementById('buyNowBtn');
+if (buyNowBtn) {
+  buyNowBtn.addEventListener('click', async function(e) {
+    e.preventDefault();
+    
+    try {
+      // Show loading state
+      const originalText = buyNowBtn.innerHTML;
+      buyNowBtn.innerHTML = 'Adding to cart...';
+      buyNowBtn.disabled = true;
+      
+      // Get the quantity
+      const qtyInput = document.getElementById('qtyInput');
+      const quantity = qtyInput ? parseInt(qtyInput.value) || 1 : 1;
+      
+      // Track InitiateCheckout
+      if (window.fbq) {
+        window.fbq('track', 'InitiateCheckout', {
+          content_name: '<%= producthome.title.replace(/'/g, "\\'") %>',
+          content_ids: ['<%= producthome._id %>'],
+          content_type: 'product',
+          value: <%= producthome.price %> * quantity,
+          currency: 'DZD',
+          contents: [{
+            id: '<%= producthome._id %>',
+            quantity: quantity,
+            item_price: <%= producthome.price %>
+          }]
+        }, {
+          eventID: '<%= typeof metaEventIdCart !== "undefined" ? metaEventIdCart : "" %>'
+        });
+        
+        // Also track AddToCart for Buy Now
+        window.fbq('track', 'AddToCart', {
+          content_name: '<%= producthome.title.replace(/'/g, "\\'") %>',
+          content_ids: ['<%= producthome._id %>'],
+          content_type: 'product',
+          value: <%= producthome.price %> * quantity,
+          currency: 'DZD',
+          contents: [{
+            id: '<%= producthome._id %>',
+            quantity: quantity,
+            item_price: <%= producthome.price %>
+          }]
+        }, {
+          eventID: '<%= typeof metaEventIdCart !== "undefined" ? metaEventIdCart : "" %>'
+        });
+      }
+      
+      // Add to cart and redirect to checkout
+      const productId = '<%= producthome._id %>';
+      const response = await fetch(`/add-to-cart-producthome/${productId}?qty=${quantity}&redirect=checkout`);
+      
+      if (response.ok) {
+        // Success - redirect to checkout
+        window.location.href = '/checkout';
+      } else {
+        throw new Error('Failed to add to cart');
+      }
+      
+    } catch (error) {
+      console.error('Buy Now error:', error);
+      buyNowBtn.innerHTML = 'Buy it now';
+      buyNowBtn.disabled = false;
+      alert('Sorry, there was an error adding the product to cart. Please try again.');
+    }
+  });
+}
+
+// ---------- Enhanced Quantity Controls ----------
+const qtyInput = document.getElementById('qtyInput');
+const plus = document.getElementById('qtyPlus');
+const minus = document.getElementById('qtyMinus');
+
+if (qtyInput) {
+  // Set initial value
+  qtyInput.value = qtyInput.value || 1;
+  
+  // Quantity plus
+  if (plus) {
+    plus.addEventListener('click', () => { 
+      qtyInput.value = parseInt(qtyInput.value || 1) + 1;
+    });
+  }
+  
+  // Quantity minus
+  if (minus) {
+    minus.addEventListener('click', () => { 
+      qtyInput.value = Math.max(1, parseInt(qtyInput.value || 1) - 1);
+    });
+  }
+}
 
       // ---------- Related products carousel controls ----------
       const relatedScroll = document.getElementById('relatedScroll');
@@ -1392,89 +1624,12 @@ if (document.readyState === 'loading') {
       }
       setTimeout(updateRelatedArrows, 300);
       window.addEventListener('resize', updateRelatedArrows);
-
+ 
     }); // DOMContentLoaded end
   </script>
 
-<script>
-  document.addEventListener('DOMContentLoaded', function() {
-    // Buy Now functionality
-    const buyNowBtn = document.getElementById('buyNowBtn');
-    
-    if (buyNowBtn) {
-      buyNowBtn.addEventListener('click', async function(e) {
-        e.preventDefault();
-        
-        try {
-          // Show loading state
-          const originalText = buyNowBtn.innerHTML;
-          buyNowBtn.innerHTML = 'Adding to cart...';
-          buyNowBtn.disabled = true;
-          
-          // Get the quantity
-          const qtyInput = document.getElementById('qtyInput');
-          const quantity = qtyInput ? parseInt(qtyInput.value) || 1 : 1;
-          
-          // Get product ID
-          const productId = '<%= producthome._id %>';
-          
-          console.log('Buy Now: Adding product to cart:', productId, 'quantity:', quantity);
-          
-          // Add to cart via API call
-          const response = await fetch(`/add-to-cart-producthome/${productId}?qty=${quantity}&redirect=checkout`, {
-            method: 'GET',
-            headers: {
-              'Content-Type': 'application/json',
-            }
-          });
-          
-          if (response.ok) {
-            // Success - redirect to checkout
-            window.location.href = '/checkout';
-          } else {
-            throw new Error('Failed to add to cart');
-          }
-          
-        } catch (error) {
-          console.error('Buy Now error:', error);
-          // Reset button
-          buyNowBtn.innerHTML = 'Buy it now';
-          buyNowBtn.disabled = false;
-          // Show error message
-          alert('Sorry, there was an error adding the product to cart. Please try again.');
-        }
-      });
-    }
 
-   // Fixed quantity controls
-const qtyInput = document.getElementById('qtyInput');
-const plus = document.getElementById('qtyPlus');
-const minus = document.getElementById('qtyMinus');
-
-if (qtyInput) {
-    // Set initial value
-    qtyInput.value = qtyInput.value || 1;
-    
-    // Remove any existing event listeners first (optional but safe)
-    plus?.replaceWith(plus.cloneNode(true));
-    minus?.replaceWith(minus.cloneNode(true));
-    
-    // Get fresh references after clone
-    const freshPlus = document.getElementById('qtyPlus');
-    const freshMinus = document.getElementById('qtyMinus');
-    const freshQtyInput = document.getElementById('qtyInput');
-    
-    // Add event listeners once
-    freshPlus?.addEventListener('click', () => { 
-        freshQtyInput.value = parseInt(freshQtyInput.value || 1) + 1;
-    });
-    
-    freshMinus?.addEventListener('click', () => { 
-        freshQtyInput.value = Math.max(1, parseInt(freshQtyInput.value || 1) - 1);
-    });
-}
-  });
-</script> 
+   
 
   <!-- 3D Viewer (robust) -->
   <% if (has3DModel) { %>
@@ -1611,20 +1766,7 @@ document.addEventListener('DOMContentLoaded', function() {
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
   <% } %>
 
-  <script>
-(function() {
-  function getParam(p) {
-    var match = window.location.search.match(new RegExp('[?&]' + p + '=([^&]+)'));
-    return match ? match[1] : null;
-  }
 
-  var fbclid = getParam('fbclid');
-  if (fbclid) {
-    var fbc = `fb.1.${Date.now()}.${fbclid}`;
-    document.cookie = `_fbc=${fbc}; path=/; max-age=31536000`; // Store for 1 year
-  }
-})();
-</script>
 <script>
 // Enhanced Tabs with Scroll Detection
 function initializeTabs() {
