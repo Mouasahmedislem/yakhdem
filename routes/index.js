@@ -2471,26 +2471,24 @@ function generateEventId() {
     return v.toString(16);
   });
 }
-
-// Product Home Route
+// Product Home Route - SYNC Event IDs
 router.get("/producthome/:id", async (req, res) => {
   try {
     const producthome = await Producthome.findById(req.params.id);
     const paintellos = await Paintello.find({}).limit(12);
 
+    // ✅ Generate ONE event ID for ViewContent (CAPI + Pixel)
     const eventIdView = generateEventId();
+    
+    // ✅ Pre-generate AddToCart event ID for future use
     const eventIdCart = generateEventId();
 
-    // ✅ Optimized userData structure
     const userData = {
-      // 🔴 CRITICAL - Always available
       ip: req.headers["x-forwarded-for"]?.split(",")[0] || req.socket.remoteAddress,
       userAgent: req.get("User-Agent"),
       fbc: req.cookies._fbc,
       fbp: req.cookies._fbp,
       country: "algeria",
-      
-      // ✅ User data - Only if logged in
       email: req.user?.email,
       numero: req.user?.numero,
       firstName: req.user?.firstName,
@@ -2500,13 +2498,15 @@ router.get("/producthome/:id", async (req, res) => {
     console.log("🔍 UserData for ViewContent:", {
       hasUser: !!req.user,
       hasFBP: !!userData.fbp,
-      hasFBC: !!userData.fbc
+      hasFBC: !!userData.fbc,
+      eventIdView: eventIdView,
+      eventIdCart: eventIdCart
     });
 
-    // Send ViewContent event
+    // ✅ Send CAPI ViewContent with the event ID
     await sendMetaCAPIEvent({
       eventName: "ViewContent",
-      eventId: eventIdView,
+      eventId: eventIdView, // Same ID for CAPI
       userData,
       customData: {
         content_name: producthome.title,
@@ -2522,6 +2522,9 @@ router.get("/producthome/:id", async (req, res) => {
       },
       eventSourceUrl: `https://${req.get('host')}${req.originalUrl}`
     });
+
+    // ✅ Store AddToCart event ID in session for future use
+    req.session.preGeneratedEventIdCart = eventIdCart;
 
     const has3DModel = !!(producthome.stlFile);
     const stlFile = producthome.stlFile;
@@ -2540,13 +2543,13 @@ router.get("/producthome/:id", async (req, res) => {
       defaultColor: defaultColor
     };
 
-    // Render template
+    // Render template with BOTH event IDs
     res.render("event/producthome", { 
       producthome, 
       paintellos,
       req,
-      metaEventIdView: eventIdView,
-      metaEventIdCart: eventIdCart,
+      metaEventIdView: eventIdView, // For Pixel ViewContent
+      metaEventIdCart: eventIdCart, // For Pixel AddToCart
       has3DModel: has3DModel,
       model3DSettings: model3DSettings,
       user: req.user,
@@ -2559,7 +2562,7 @@ router.get("/producthome/:id", async (req, res) => {
   }
 });
 
-// Add to Cart Route
+// Add to Cart Route - USE SAME Event ID
 router.get("/add-to-cart-producthome/:id", async function(req, res) {
   const producthomeId = req.params.id;
   const quantity = parseInt(req.query.qty) || 1;
@@ -2577,27 +2580,31 @@ router.get("/add-to-cart-producthome/:id", async function(req, res) {
   // ✅ User data
   const user = req.user || {};
   const userData = {
-    // Critical data
     ip: req.headers["x-forwarded-for"]?.split(",")[0] || req.socket.remoteAddress,
     userAgent: req.get("User-Agent"),
     fbc: req.cookies._fbc,
     fbp: req.cookies._fbp,
     country: "algeria",
-    
-    // User data if available
     email: user.email,
     numero: user.numero,
     firstName: user.firstName,
     lastName: user.lastName,
   };
 
-  // Generate event ID
-  const eventIdCart = generateEventId();
+  // ✅ Use the SAME event ID that was pre-generated
+  const eventIdCart = req.session.preGeneratedEventIdCart || generateEventId();
 
-  // Send AddToCart event
+  console.log("🎯 AddToCart Event ID Sync:", {
+    eventId: eventIdCart,
+    source: req.session.preGeneratedEventIdCart ? "Pre-generated" : "New",
+    quantity: quantity,
+    value: producthome.price * quantity
+  });
+
+  // ✅ Send CAPI event with SAME event ID
   await sendMetaCAPIEvent({
     eventName: "AddToCart",
-    eventId: eventIdCart,
+    eventId: eventIdCart, // Same ID as Pixel
     userData,
     customData: {
       content_name: producthome.title,
@@ -2614,8 +2621,8 @@ router.get("/add-to-cart-producthome/:id", async function(req, res) {
     eventSourceUrl: `https://${req.get('host')}${req.originalUrl}`
   });
 
-  // Store for client-side tracking
-  req.session.metaEventIdCart = eventIdCart;
+  // Clear the pre-generated ID after use
+  delete req.session.preGeneratedEventIdCart;
 
   // Redirect
   if (redirectTo === 'checkout') {
@@ -2625,60 +2632,6 @@ router.get("/add-to-cart-producthome/:id", async function(req, res) {
   }
 });
 
-// Purchase Route (Example for checkout completion)
-router.post("/complete-purchase", async (req, res) => {
-  try {
-    const { orderData, shippingAddress } = req.body;
-    
-    // ✅ Complete user data with REAL shipping information
-    const userData = {
-      // Critical data
-      ip: req.headers["x-forwarded-for"]?.split(",")[0] || req.socket.remoteAddress,
-      userAgent: req.get("User-Agent"),
-      fbc: req.cookies._fbc,
-      fbp: req.cookies._fbp,
-      country: "algeria",
-      
-      // Customer data
-      email: orderData.email,
-      numero: orderData.phone,
-      firstName: orderData.firstName,
-      lastName: orderData.lastName,
-      
-      // ✅ REAL geographic data from shipping
-      city: shippingAddress.city,
-      state: shippingAddress.state,
-    };
-
-    const eventIdPurchase = generateEventId();
-
-    // Send Purchase event
-    await sendMetaCAPIEvent({
-      eventName: "Purchase",
-      eventId: eventIdPurchase,
-      userData,
-      customData: {
-        value: orderData.totalAmount,
-        currency: "DZD",
-        content_ids: orderData.items.map(item => item.productId),
-        contents: orderData.items.map(item => ({
-          id: item.productId,
-          quantity: item.quantity,
-          item_price: item.price
-        })),
-        content_type: "product"
-      },
-      eventSourceUrl: `https://${req.get('host')}/checkout`
-    });
-
-    // Process order and respond
-    res.json({ success: true, orderId: orderData.id });
-
-  } catch (error) {
-    console.error("Purchase error:", error);
-    res.status(500).json({ error: "Purchase failed" });
-  }
-});
 
 router.get('/paintello', async (req, res) => {
   try {
