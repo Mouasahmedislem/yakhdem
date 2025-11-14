@@ -7,16 +7,72 @@
 
   <!-- Tailwind CDN -->
   <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Font Awesome -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  
   <style>
-    :root {
-      --accent: #f4791f;
-    }
     body {
-      background-color: #fafafa;
+      font-family: 'Helvetica Neue', Arial, sans-serif;
+      background-color: #f8f8f8;
     }
-    .glass {
-      backdrop-filter: blur(10px);
-      background: rgba(255, 255, 255, 0.8);
+    
+    .zara-card {
+      background: white;
+      border-radius: 2px;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+      border: 1px solid #e5e5e5;
+    }
+    
+    .zara-btn {
+      background: #000;
+      color: white;
+      border: 1px solid #000;
+      padding: 12px 24px;
+      font-size: 13px;
+      letter-spacing: 0.5px;
+      transition: all 0.3s ease;
+      text-transform: uppercase;
+    }
+    
+    .zara-btn:hover {
+      background: #333;
+    }
+    
+    .zara-btn-secondary {
+      background: transparent;
+      color: #000;
+      border: 1px solid #000;
+    }
+    
+    .zara-btn-secondary:hover {
+      background: #000;
+      color: white;
+    }
+    
+    .quantity-btn {
+      width: 32px;
+      height: 32px;
+      border: 1px solid #e5e5e5;
+      background: white;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+    
+    .quantity-btn:hover {
+      background: #f8f8f8;
+    }
+    
+    .quantity-input {
+      width: 40px;
+      height: 32px;
+      border: 1px solid #e5e5e5;
+      border-left: none;
+      border-right: none;
+      text-align: center;
+      font-size: 13px;
     }
   </style>
 
@@ -42,6 +98,7 @@
     fbq('track', 'PageView');
   </script>
   <% } %>
+  
   <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
   new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
   j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
@@ -57,178 +114,291 @@
   </script>
 </head>
 
-<body class="font-sans text-gray-800 antialiased">
-
-  <!-- Modern Navbar -->
-  <header class="border-b border-gray-100 bg-white/80 backdrop-blur-md sticky top-0 z-40">
-    <div class="max-w-7xl mx-auto px-6 lg:px-8">
-      <div class="flex items-center justify-between h-20">
+<body class="min-h-screen bg-white">
+  <!-- Minimal Header -->
+  <header class="border-b border-gray-200 bg-white">
+    <div class="max-w-7xl mx-auto px-6 py-4">
+      <div class="flex items-center justify-between">
+        <!-- Logo -->
         <a href="/" class="flex items-center gap-4">
-          <img src="/img/logo.png" alt="Paintello" class="h-16 w-auto" />
-          <span class="text-lg font-medium text-gray-700 hidden sm:block">Paintello Home</span>
+          <img src="/favicon/android-chrome-192x192.png" alt="Paintello" class="h-8 w-8">
+          <img src="/img/logo.png" alt="Paintello Home" class="h-10 w-auto">
         </a>
-        <nav class="flex items-center gap-6">
-          <a href="/shop" class="text-sm text-gray-600 hover:text-gray-900">Shop</a>
-          <a href="/track-login" class="text-sm text-gray-600 hover:text-gray-900">Returns</a>
-          <a href="/user/signin" class="text-sm text-gray-600 hover:text-gray-900">Sign in</a>
-          <a href="/shop" class="relative inline-flex items-center px-4 py-2 rounded-full bg-gray-50 hover:bg-gray-100">
-            <i class="fas fa-shopping-cart"></i>
+
+        <!-- Navigation -->
+        <nav class="hidden md:flex items-center gap-8">
+          <a href="/" class="text-sm text-gray-600 hover:text-gray-900 uppercase tracking-wide">Accueil</a>
+          <a href="/shop" class="text-sm text-gray-600 hover:text-gray-900 uppercase tracking-wide">Boutique</a>
+          <a href="/track-login" class="text-sm text-gray-600 hover:text-gray-900 uppercase tracking-wide">Suivi</a>
+        </nav>
+
+        <!-- Icons -->
+        <div class="flex items-center gap-4">
+          <a href="/shop" class="relative text-gray-600 hover:text-gray-900">
+            <i class="fa-solid fa-bag-shopping text-lg"></i>
             <% if (session.cart && session.cart.totalQty > 0) { %>
-              <span class="ml-2 text-xs font-semibold text-gray-700">(<%= session.cart.totalQty %>)</span>
+              <span class="absolute -top-2 -right-2 bg-black text-white text-xs px-1.5 py-0.5 rounded-full">
+                <%= session.cart.totalQty %>
+              </span>
             <% } %>
           </a>
-        </nav>
+          
+          <a href="/user/profile" class="text-gray-600 hover:text-gray-900">
+            <i class="fa-regular fa-user text-lg"></i>
+          </a>
+        </div>
       </div>
     </div>
   </header>
 
   <!-- Main Content -->
-  <main class="max-w-7xl mx-auto px-6 lg:px-8 py-10">
-    <% if (products && products.length > 0) { %>
-    <div class="grid grid-cols-1 lg:grid-cols-12 gap-10">
-      <!-- LEFT: Cart items -->
-      <section class="lg:col-span-8 space-y-6">
-        <div class="glass rounded-2xl shadow-sm p-6">
-          <h2 class="text-xl font-semibold mb-6">Votre panier (<%= session.cart.totalQty %> articles)</h2>
-          
-          <% products.forEach(function(product){ %>
-          <div class="flex flex-col sm:flex-row items-center justify-between border-b border-gray-100 pb-4 mb-4">
-            <div class="flex items-center gap-4 w-full sm:w-auto">
-              <img src="<%= product.item.image %>" alt="<%= product.item.title %>" class="w-28 h-28 object-cover rounded-lg shadow-sm">
-              <div>
-                <h3 class="font-medium text-gray-900"><%= product.item.title %></h3>
-                <p class="text-sm text-gray-500 mt-1"><%= product.item.description?.slice(0, 60) || '' %></p>
-              </div>
-            </div>
-            <div class="flex flex-col sm:flex-row items-center gap-4 mt-4 sm:mt-0">
-              <div class="flex items-center border rounded-full overflow-hidden">
-                <button class="px-3 py-1 text-gray-700 hover:bg-gray-100 btn-decrease" data-id="<%= product.item._id %>">−</button>
-                <span class="px-4 item-qty text-gray-800" data-id="<%= product.item._id %>"><%= product.qty %></span>
-                <button class="px-3 py-1 text-gray-700 hover:bg-gray-100 btn-increase" data-id="<%= product.item._id %>">+</button>
-              </div>
-              <div class="text-lg font-semibold text-[color:var(--accent)] product-subtotal" data-id="<%= product.item._id %>">
-                <%= product.price %> DA
-              </div>
-            </div>
-          </div>
-          <% }); %>
-        </div>
-
-        <div class="glass rounded-2xl shadow-sm p-6 text-sm text-gray-600">
-          Livraison estimée : <strong>1 à 4 jours</strong>
-        </div>
-      </section>
-
-      <!-- RIGHT: Summary -->
-      <aside class="lg:col-span-4">
-        <div class="glass rounded-2xl shadow-sm p-6 sticky top-24">
-          <h3 class="text-lg font-semibold mb-4">Résumé</h3>
-          <div class="flex justify-between text-sm border-b border-gray-100 pb-2 mb-3">
-            <span>Total temporaire</span>
-            <span id="total-price" class="font-medium"><%= totalPrice %> DA</span>
-          </div>
-
-          <form method="GET" action="/checkout" class="flex flex-col gap-3">
-            <button type="submit" class="w-full py-3 rounded-full text-white font-semibold hover:opacity-90 transition-opacity" style="background:var(--accent);" onclick="trackCheckout(<%= totalPrice %>)">
-              Commander 
-            </button>
-            <a href="tel:0791679611" class="w-full inline-flex justify-center items-center py-3 rounded-full border border-gray-200 hover:border-gray-300">
-              <i class="fas fa-phone-alt text-[color:var(--accent)] mr-2"></i> Appeler
-            </a>
-          </form>
-        </div>
-      </aside>
-    </div>
-    <% } else { %>
-      <div class="text-center py-20">
-        <h2 class="text-2xl font-semibold mb-4">Votre panier est vide</h2>
-        <a href="/" class="inline-block bg-[color:var(--accent)] text-white px-6 py-3 rounded-full hover:opacity-90 transition">Retourner à la boutique</a>
+  <main class="py-12">
+    <div class="max-w-6xl mx-auto px-6">
+      
+      <!-- Page Header -->
+      <div class="text-center mb-12">
+        <h1 class="text-3xl font-light tracking-wide uppercase mb-4">Votre Panier</h1>
+        <p class="text-sm text-gray-600">Révisez vos articles avant de finaliser votre commande</p>
       </div>
-    <% } %>
+
+      <% if (products && products.length > 0) { %>
+      <div class="grid lg:grid-cols-3 gap-12">
+        <!-- Cart Items -->
+        <div class="lg:col-span-2">
+          <div class="zara-card p-8">
+            <div class="flex items-center justify-between mb-8 pb-6 border-b border-gray-200">
+              <h2 class="text-sm font-medium uppercase tracking-wide">
+                Votre Sélection (<%= session.cart.totalQty %> articles)
+              </h2>
+              <span class="text-xs text-gray-500 uppercase tracking-wide">
+                Total: <span id="total-price" class="font-medium"><%= totalPrice %> DA</span>
+              </span>
+            </div>
+
+            <div class="space-y-8">
+              <% products.forEach(function(product){ %>
+              <div class="flex flex-col sm:flex-row gap-6 pb-8 border-b border-gray-100 last:border-b-0">
+                <!-- Product Image -->
+                <div class="flex-shrink-0">
+                  <img src="<%= product.item.image %>" alt="<%= product.item.title %>" 
+                       class="w-24 h-24 object-cover">
+                </div>
+
+                <!-- Product Details -->
+                <div class="flex-grow">
+                  <h3 class="text-sm font-medium mb-2"><%= product.item.title %></h3>
+                  <p class="text-xs text-gray-600 mb-4 leading-relaxed">
+                    <%= product.item.description?.slice(0, 80) || 'Produit de qualité supérieure' %>...
+                  </p>
+                  
+                  <!-- Quantity Controls -->
+                  <div class="flex items-center gap-4">
+                    <div class="flex items-center">
+                      <button class="quantity-btn btn-decrease" data-id="<%= product.item._id %>">
+                        <i class="fas fa-minus text-xs"></i>
+                      </button>
+                      <input type="text" value="<%= product.qty %>" readonly 
+                             class="quantity-input item-qty" data-id="<%= product.item._id %>">
+                      <button class="quantity-btn btn-increase" data-id="<%= product.item._id %>">
+                        <i class="fas fa-plus text-xs"></i>
+                      </button>
+                    </div>
+                    
+                    <span class="text-sm font-medium product-subtotal" data-id="<%= product.item._id %>">
+                      <%= product.price %> DA
+                    </span>
+                  </div>
+                </div>
+
+                <!-- Remove Button -->
+                <div class="flex sm:flex-col sm:items-end justify-between">
+                  <button class="text-gray-400 hover:text-gray-600 transition-colors remove-item" 
+                          data-id="<%= product.item._id %>">
+                    <i class="fas fa-times text-sm"></i>
+                  </button>
+                </div>
+              </div>
+              <% }); %>
+            </div>
+          </div>
+
+          <!-- Shipping Info -->
+          <div class="zara-card p-6 mt-6 text-center">
+            <div class="flex items-center justify-center gap-3 mb-3">
+              <div class="w-8 h-8 bg-gray-100 rounded-full flex items-center justify-center">
+                <i class="fas fa-truck text-gray-600 text-xs"></i>
+              </div>
+              <h3 class="text-sm font-medium uppercase tracking-wide">Livraison & Retours</h3>
+            </div>
+            <p class="text-xs text-gray-600 leading-relaxed">
+              Livraison sous 2-4 jours ouvrables • Retours acceptés sous 4 jours • Paiement à la livraison
+            </p>
+          </div>
+        </div>
+
+        <!-- Order Summary -->
+        <div class="lg:col-span-1">
+          <div class="zara-card p-8 sticky top-8">
+            <h3 class="text-sm font-medium uppercase tracking-wide mb-6 border-b border-gray-200 pb-3">
+              Récapitulatif
+            </h3>
+            
+            <div class="space-y-4 mb-6">
+              <div class="flex justify-between items-center">
+                <span class="text-xs text-gray-600 uppercase tracking-wide">Sous-total</span>
+                <span class="text-sm font-medium"><%= totalPrice %> DA</span>
+              </div>
+              <div class="flex justify-between items-center">
+                <span class="text-xs text-gray-600 uppercase tracking-wide">Livraison</span>
+                <span class="text-sm text-green-600">Gratuite</span>
+              </div>
+            </div>
+            
+            <div class="border-t border-gray-200 pt-4 mb-6">
+              <div class="flex justify-between items-center">
+                <span class="text-sm font-medium uppercase tracking-wide">Total</span>
+                <span class="text-lg font-medium" id="btn-total"><%= totalPrice %> DA</span>
+              </div>
+            </div>
+
+            <div class="space-y-3">
+              <form method="GET" action="/checkout">
+                <button type="submit" class="zara-btn w-full text-center">
+                  <i class="fas fa-lock mr-2"></i>Procéder au Paiement
+                </button>
+              </form>
+              
+              <a href="tel:0791679611" class="zara-btn-secondary text-sm inline-block w-full text-center">
+                <i class="fas fa-phone mr-2"></i>Appeler le Support
+              </a>
+            </div>
+
+            <!-- Security & Payment Info -->
+            <div class="mt-6 pt-6 border-t border-gray-100">
+              <div class="flex items-center justify-center gap-4 mb-3">
+                <div class="text-xs text-gray-500">
+                  <i class="fas fa-lock mr-1"></i> Paiement sécurisé
+                </div>
+                <div class="text-xs text-gray-500">
+                  <i class="fas fa-truck mr-1"></i> Livraison garantie
+                </div>
+              </div>
+              <p class="text-xs text-gray-500 text-center">
+                Paiement à la livraison  disponible
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <% } else { %>
+        <!-- Empty Cart -->
+        <div class="zara-card p-12 text-center max-w-md mx-auto">
+          <div class="w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-6">
+            <i class="fas fa-shopping-bag text-gray-400"></i>
+          </div>
+          <h2 class="text-lg font-light tracking-wide uppercase mb-4">Panier Vide</h2>
+          <p class="text-sm text-gray-600 mb-6">Votre panier est actuellement vide</p>
+          <a href="/paintello" class="zara-btn inline-block text-sm">
+            <i class="fas fa-bag-shopping mr-2"></i>Découvrir la Boutique
+          </a>
+        </div>
+      <% } %>
+    </div>
   </main>
 
-  <!-- Footer -->
-  <footer class="border-t border-gray-100 bg-white mt-16">
-    <div class="max-w-7xl mx-auto px-6 py-8 text-sm text-gray-600">
-      © <%= new Date().getFullYear() %> Paintello — Tous droits réservés
+  <!-- Minimal Footer -->
+  <footer class="border-t border-gray-200 py-8">
+    <div class="max-w-7xl mx-auto px-6 text-center">
+      <p class="text-sm text-gray-600">© <%= new Date().getFullYear() %> Paintello</p>
     </div>
   </footer>
 
   <!-- Scripts -->
-<script>
-document.addEventListener("DOMContentLoaded", () => {
-  const increaseBtns = document.querySelectorAll(".btn-increase");
-  const decreaseBtns = document.querySelectorAll(".btn-decrease");
+  <script>
+    document.addEventListener("DOMContentLoaded", () => {
+      const increaseBtns = document.querySelectorAll(".btn-increase");
+      const decreaseBtns = document.querySelectorAll(".btn-decrease");
+      const removeBtns = document.querySelectorAll(".remove-item");
 
-  // Format price helper
-  const formatPrice = (num) => new Intl.NumberFormat("fr-DZ").format(num) + " DA";
+      // Format price helper
+      const formatPrice = (num) => new Intl.NumberFormat("fr-DZ").format(num) + " DA";
 
-  // Global total updater
-  function updateTotalsDisplay(totalPrice) {
-    const totalEl = document.getElementById("total-price");
-    const btnTotal = document.getElementById("btn-total");
-    if (totalEl) totalEl.innerText = formatPrice(totalPrice);
-    if (btnTotal) btnTotal.innerText = formatPrice(totalPrice);
-  }
+      // Global total updater
+      function updateTotalsDisplay(totalPrice) {
+        const totalEl = document.getElementById("total-price");
+        const btnTotal = document.getElementById("btn-total");
+        if (totalEl) totalEl.innerText = formatPrice(totalPrice);
+        if (btnTotal) btnTotal.innerText = formatPrice(totalPrice);
+      }
 
-  // Update cart item quantity (frontend + backend sync)
-  function updateQty(productId, action) {
-    fetch(`/cart/${action}/${productId}`, { method: "POST" })
-      .then((res) => res.json())
-      .then((data) => {
-        // Update item quantity
-        const qtyEl = document.querySelector(`.item-qty[data-id="${productId}"]`);
-        if (qtyEl) qtyEl.innerText = data.qty;
+      // Update cart item quantity (frontend + backend sync)
+      function updateQty(productId, action) {
+        fetch(`/cart/${action}/${productId}`, { method: "POST" })
+          .then((res) => res.json())
+          .then((data) => {
+            // Update item quantity
+            const qtyEl = document.querySelector(`.item-qty[data-id="${productId}"]`);
+            if (qtyEl) qtyEl.value = data.qty;
 
-        // Update item subtotal
-        const subtotalEl = document.querySelector(`.product-subtotal[data-id="${productId}"]`);
-        if (subtotalEl) subtotalEl.innerText = formatPrice(data.itemTotal);
+            // Update item subtotal
+            const subtotalEl = document.querySelector(`.product-subtotal[data-id="${productId}"]`);
+            if (subtotalEl) subtotalEl.innerText = formatPrice(data.itemTotal);
 
-        // Update all totals (cart + button)
-        updateTotalsDisplay(data.totalPrice || 0);
-      })
-      .catch((err) => console.error("Update quantity error:", err));
-  }
+            // Update all totals (cart + button)
+            updateTotalsDisplay(data.totalPrice || 0);
+          })
+          .catch((err) => console.error("Update quantity error:", err));
+      }
 
-  // Attach listeners
-  increaseBtns.forEach((btn) =>
-    btn.addEventListener("click", () => updateQty(btn.dataset.id, "increase"))
-  );
-  decreaseBtns.forEach((btn) =>
-    btn.addEventListener("click", () => updateQty(btn.dataset.id, "decrease"))
-  );
+      // Remove item from cart
+      function removeItem(productId) {
+        fetch(`/cart/remove/${productId}`, { method: "POST" })
+          .then((res) => res.json())
+          .then((data) => {
+            // Reload page to reflect changes
+            window.location.reload();
+          })
+          .catch((err) => console.error("Remove item error:", err));
+      }
 
-  // Meta Pixel checkout tracking
-  const checkoutBtn = document.querySelector('form[action="/checkout"] button');
-  if (checkoutBtn) {
-    checkoutBtn.addEventListener("click", function () {
-      const totalText = document.getElementById("total-price")?.innerText || "0";
-      const numericTotal = parseFloat(totalText.replace(/[^\d.]/g, "")) || 0;
-      if (window.fbq) {
-        fbq("track", "InitiateCheckout", { value: numericTotal, currency: "DZD" });
+      // Attach listeners
+      increaseBtns.forEach((btn) =>
+        btn.addEventListener("click", () => updateQty(btn.dataset.id, "increase"))
+      );
+      decreaseBtns.forEach((btn) =>
+        btn.addEventListener("click", () => updateQty(btn.dataset.id, "decrease"))
+      );
+      removeBtns.forEach((btn) =>
+        btn.addEventListener("click", () => removeItem(btn.dataset.id))
+      );
+
+      // Meta Pixel checkout tracking
+      const checkoutBtn = document.querySelector('form[action="/checkout"] button');
+      if (checkoutBtn) {
+        checkoutBtn.addEventListener("click", function () {
+          const totalText = document.getElementById("total-price")?.innerText || "0";
+          const numericTotal = parseFloat(totalText.replace(/[^\d.]/g, "")) || 0;
+          if (window.fbq) {
+            fbq("track", "InitiateCheckout", { value: numericTotal, currency: "DZD" });
+          }
+        });
       }
     });
-  }
-});
-</script>
-
-
-
+  </script>
 
   <!-- Tawk.to -->
   <script type="text/javascript">
-  var Tawk_API=Tawk_API||{}, Tawk_LoadStart=new Date();
-  (function(){
-  var s1=document.createElement("script"),s0=document.getElementsByTagName("script")[0];
-  s1.async=true;
-  s1.src='https://embed.tawk.to/682625d0a2b6be190d3ada7e/1irag7e08';
-  s1.charset='UTF-8';
-  s1.setAttribute('crossorigin','*');
-  s0.parentNode.insertBefore(s1,s0);
-  })();
+    var Tawk_API=Tawk_API||{}, Tawk_LoadStart=new Date();
+    (function(){
+      var s1=document.createElement("script"),s0=document.getElementsByTagName("script")[0];
+      s1.async=true;
+      s1.src='https://embed.tawk.to/682625d0a2b6be190d3ada7e/1irag7e08';
+      s1.charset='UTF-8';
+      s1.setAttribute('crossorigin','*');
+      s0.parentNode.insertBefore(s1,s0);
+    })();
   </script>
-
-  <script src="https://kit.fontawesome.com/a2d9b6b9f4.js" crossorigin="anonymous" defer></script>
 </body>
 </html>
 
