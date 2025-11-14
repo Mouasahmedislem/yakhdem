@@ -7,13 +7,55 @@
 
   <!-- Tailwind CDN -->
   <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Font Awesome -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  
   <style>
-    :root { --accent: #f4791f; }
-    body { background: #faf9f7; color: #222; }
-    .glass { background: rgba(255,255,255,0.85); backdrop-filter: blur(6px); }
-    .input { @apply w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-200; }
-    .label { @apply text-sm font-medium text-gray-700 mb-1; }
-    .small { font-size: . nine rem; color: #6b7280; }
+    body {
+      font-family: 'Helvetica Neue', Arial, sans-serif;
+      background-color: #f8f8f8;
+    }
+    
+    .zara-card {
+      background: white;
+      border-radius: 2px;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+      border: 1px solid #e5e5e5;
+    }
+    
+    .zara-btn {
+      background: #000;
+      color: white;
+      border: 1px solid #000;
+      padding: 12px 24px;
+      font-size: 13px;
+      letter-spacing: 0.5px;
+      transition: all 0.3s ease;
+      text-transform: uppercase;
+    }
+    
+    .zara-btn:hover {
+      background: #333;
+    }
+    
+    .zara-btn-secondary {
+      background: transparent;
+      color: #000;
+      border: 1px solid #000;
+    }
+    
+    .zara-btn-secondary:hover {
+      background: #000;
+      color: white;
+    }
+    
+    .input {
+      @apply w-full px-4 py-3 border border-gray-300 rounded-none focus:outline-none focus:border-black text-sm;
+    }
+    
+    .label {
+      @apply text-xs font-medium text-gray-700 mb-2 uppercase tracking-wide;
+    }
   </style>
 
   <!-- Crypto lib (used elsewhere) -->
@@ -62,178 +104,232 @@
   })(window,document,'script','dataLayer','GTM-K8PWQM45');</script>
 
 </head>
-<body class="antialiased">
+<body class="min-h-screen bg-white">
 
-  <!-- Header: Two logos side-by-side -->
-  <header class="bg-white/80 sticky top-0 z-40 border-b border-gray-100">
-    <div class="max-w-7xl mx-auto px-6 lg:px-8">
-      <div class="flex items-center justify-between h-20">
+  <!-- Minimal Header -->
+  <header class="border-b border-gray-200 bg-white">
+    <div class="max-w-7xl mx-auto px-6 py-4">
+      <div class="flex items-center justify-between">
+        <!-- Logo -->
+        <a href="/" class="flex items-center gap-4">
+          <img src="/favicon/android-chrome-192x192.png" alt="Paintello" class="h-8 w-8">
+          <img src="/img/logo.png" alt="Paintello Home" class="h-10 w-auto">
+        </a>
+
+        <!-- Navigation -->
+        <nav class="hidden md:flex items-center gap-8">
+          <a href="/" class="text-sm text-gray-600 hover:text-gray-900 uppercase tracking-wide">Accueil</a>
+          <a href="/shop" class="text-sm text-gray-600 hover:text-gray-900 uppercase tracking-wide">Boutique</a>
+          <a href="/track-login" class="text-sm text-gray-600 hover:text-gray-900 uppercase tracking-wide">Suivi</a>
+        </nav>
+
+        <!-- Icons -->
         <div class="flex items-center gap-4">
-          <a href="/" class="flex items-center gap-3">
-            <img src="/favicon/android-chrome-192x192.png" alt="Paintello icon" class="h-12 w-auto" />
+          <a href="/shop" class="relative text-gray-600 hover:text-gray-900">
+            <i class="fa-solid fa-bag-shopping text-lg"></i>
+            <% if (session.cart && session.cart.totalQty > 0) { %>
+              <span class="absolute -top-2 -right-2 bg-black text-white text-xs px-1.5 py-0.5 rounded-full">
+                <%= session.cart.totalQty %>
+              </span>
+            <% } %>
           </a>
-          <a href="/paintello" class="flex items-center gap-3">
-            <img src="/img/logo.png" alt="Paintello logo" class="h-20 md:h-24 w-auto" />
+          
+          <a href="/user/profile" class="text-gray-600 hover:text-gray-900">
+            <i class="fa-regular fa-user text-lg"></i>
           </a>
         </div>
-
-        <nav class="flex items-center gap-4">
-          <a href="/" class="text-sm text-gray-600 hover:text-gray-900">Home</a>
-          <a href="/shop" class="text-sm text-gray-600 hover:text-gray-900">Shop</a>
-          <a href="/track-login" class="text-sm text-gray-600 hover:text-gray-900">Track</a>
-        </nav>
       </div>
     </div>
   </header>
 
-  <!-- Main container -->
-  <main class="max-w-4xl mx-auto px-6 py-10">
+  <!-- Main Content -->
+  <main class="py-12">
+    <div class="max-w-4xl mx-auto px-6">
+      
+      <!-- Page Header -->
+      <div class="text-center mb-12">
+        <h1 class="text-3xl font-light tracking-wide uppercase mb-4">Finaliser votre commande</h1>
+        <p class="text-sm text-gray-600 max-w-2xl mx-auto leading-relaxed">
+          Remplissez vos coordonnées. Les frais de livraison et le délai estimé sont calculés automatiquement.
+        </p>
+      </div>
 
-    <div class="glass rounded-2xl shadow p-6">
-      <h1 class="text-2xl font-semibold text-gray-900 mb-2">Checkout — Algérie</h1>
-      <p class="text-sm text-gray-500 mb-6">Remplissez vos coordonnées. Les frais de livraison et le délai estimé sont calculés automatiquement.</p>
+      <!-- Checkout Form -->
+      <div class="grid md:grid-cols-3 gap-12">
+        <!-- Left Column - Form -->
+        <div class="md:col-span-2">
+          <div class="zara-card p-8">
+            <form id="checkoutForm" action="/checkout" method="POST" class="space-y-8">
+              
+              <!-- Personal Information -->
+              <div>
+                <h3 class="text-sm font-medium uppercase tracking-wide mb-6 border-b pb-2">Informations personnelles</h3>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <!-- Full name -->
+                  <div>
+                    <label class="label" for="name">Nom complet</label>
+                    <input required type="text" id="name" name="name" value="<%= user && user.firstName ? user.firstName + (user.lastName ? ' ' + user.lastName : '') : '' %>" class="input" placeholder="Prénom Nom">
+                  </div>
 
-      <!-- Checkout form -->
-      <form id="checkoutForm" action="/checkout" method="POST" class="grid grid-cols-1 gap-6">
+                  <!-- Phone -->
+                  <div>
+                    <label class="label" for="numero">Téléphone</label>
+                    <input required type="tel" id="numero" name="numero" pattern="0[5-7][0-9]{8}" placeholder="e.g. 0551234567" value="<%= user && user.numero ? user.numero : '' %>" class="input">
+                    <p class="text-xs text-gray-500 mt-2">Format : 0xx xxxxxxx</p>
+                  </div>
+                </div>
+              </div>
 
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <!-- First Name -->
-          <div>
-            <label class="label" for="firstName">Prénom</label>
-            <input required type="text" id="firstName" name="firstName" value="<%= user && user.firstName ? user.firstName : '' %>" class="input" placeholder="Votre prénom">
-          </div>
+              <!-- Address -->
+              <div>
+                <h3 class="text-sm font-medium uppercase tracking-wide mb-6 border-b pb-2">Adresse de livraison</h3>
+                
+                <!-- Address -->
+                <div class="mb-6">
+                  <label class="label" for="address">Adresse complète</label>
+                  <input required type="text" id="address" name="address" placeholder="Rue, n°, immeuble..." class="input" value="<%= typeof address !== 'undefined' ? address : '' %>">
+                </div>
 
-          <!-- Last Name -->
-          <div>
-            <label class="label" for="lastName">Nom</label>
-            <input required type="text" id="lastName" name="lastName" value="<%= user && user.lastName ? user.lastName : '' %>" class="input" placeholder="Votre nom">
-          </div>
-        </div>
+                <!-- Wilaya & Commune -->
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div>
+                    <label class="label" for="city">Wilaya (province)</label>
+                    <select id="city" name="city" required class="input">
+                      <option value="">Sélectionnez votre wilaya</option>
+                      <option value="adrar">Adrar</option>
+                      <option value="chlef">Chlef</option>
+                      <option value="laghouat">Laghouat</option>
+                      <option value="oum el bouaghi">Oum El Bouaghi</option>
+                      <option value="batna">Batna</option>
+                      <option value="bejaia">Bejaia</option>
+                      <option value="biskra">Biskra</option>
+                      <option value="bechar">Bechar</option>
+                      <option value="blida">Blida</option>
+                      <option value="bouira">Bouira</option>
+                      <option value="tamanrasset">Tamanrasset</option>
+                      <option value="tebessa">Tebessa</option>
+                      <option value="tlemcen">Tlemcen</option>
+                      <option value="tiaret">Tiaret</option>
+                      <option value="tizi ouzou">Tizi Ouzou</option>
+                      <option value="algiers">Algiers</option>
+                      <option value="djelfa">Djelfa</option>
+                      <option value="jijel">Jijel</option>
+                      <option value="setif">Setif</option>
+                      <option value="saida">Saida</option>
+                      <option value="skikda">Skikda</option>
+                      <option value="sidi belabbes">Sidi Belabbes</option>
+                      <option value="guelma">Guelma</option>
+                      <option value="constantine">Constantine</option>
+                      <option value="mostaganem">Mostaganem</option>
+                      <option value="msila">M'sila</option>
+                      <option value="mascara">Mascara</option>
+                      <option value="ouargla">Ouargla</option>
+                      <option value="oran">Oran</option>
+                      <option value="el bayadh">El Bayadh</option>
+                      <option value="bordj bou arreridj">Bordj Bou Arreridj</option>
+                      <option value="boumerdes">Boumerdes</option>
+                      <option value="el taref">El Taref</option>
+                      <option value="tindouf">Tindouf</option>
+                      <option value="tissemsilt">Tissemsilt</option>
+                      <option value="el oued">El Oued</option>
+                      <option value="khenchela">Khenchela</option>
+                      <option value="souk ahras">Souk Ahras</option>
+                      <option value="tipaza">Tipaza</option>
+                      <option value="mila">Mila</option>
+                      <option value="ain defla">Ain Defla</option>
+                      <option value="naama">Naama</option>
+                      <option value="ain temouchent">Ain Temouchent</option>
+                      <option value="ghardaia">Ghardaia</option>
+                      <option value="relizane">Relizane</option>
+                      <option value="el mghair">El M'ghair</option>
+                      <option value="el menia">El Menia</option>
+                      <option value="ouled djellal">Ouled Djellal</option>
+                      <option value="beni abbes">Beni Abbes</option>
+                      <option value="timimoun">Timimoun</option>
+                      <option value="touggourt">Touggourt</option>
+                      <option value="djanet">Djanet</option>
+                      <option value="in salah">In Salah</option>
+                      <option value="in guezzam">In Guezzam</option>
+                    </select>
+                  </div>
 
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <!-- Phone -->
-          <div>
-            <label class="label" for="numero">Téléphone</label>
-            <input required type="tel" id="numero" name="numero" pattern="0[5-7][0-9]{8}" placeholder="e.g. 0551234567" value="<%= user && user.numero ? user.numero : '' %>" class="input">
-            <p class="text-xs text-gray-500 mt-1">Format : 0xx xxxxxxx</p>
-          </div>
-        </div>
+                  <div>
+                    <label class="label" for="commune">Commune</label>
+                    <select id="commune" name="commune" required class="input">
+                      <option value="">Sélectionnez d'abord la wilaya</option>
+                    </select>
+                  </div>
+                </div>
+              </div>
 
-        <!-- Address -->
-        <div>
-          <label class="label" for="address">Adresse complète</label>
-          <input required type="text" id="address" name="address" placeholder="Rue, n°, immeuble..." class="input" value="<%= typeof address !== 'undefined' ? address : '' %>">
-        </div>
-
-        <!-- Wilaya & Commune -->
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <div>
-            <label class="label" for="city">Wilaya (province)</label>
-            <select id="city" name="city" required class="input">
-              <option value="">Sélectionnez votre wilaya</option>
-              <option value="adrar">Adrar</option>
-              <option value="chlef">Chlef</option>
-              <option value="laghouat">Laghouat</option>
-              <option value="oum el bouaghi">Oum El Bouaghi</option>
-              <option value="batna">Batna</option>
-              <option value="bejaia">Bejaia</option>
-              <option value="biskra">Biskra</option>
-              <option value="bechar">Bechar</option>
-              <option value="blida">Blida</option>
-              <option value="bouira">Bouira</option>
-              <option value="tamanrasset">Tamanrasset</option>
-              <option value="tebessa">Tebessa</option>
-              <option value="tlemcen">Tlemcen</option>
-              <option value="tiaret">Tiaret</option>
-              <option value="tizi ouzou">Tizi Ouzou</option>
-              <option value="algiers">Algiers</option>
-              <option value="djelfa">Djelfa</option>
-              <option value="jijel">Jijel</option>
-              <option value="setif">Setif</option>
-              <option value="saida">Saida</option>
-              <option value="skikda">Skikda</option>
-              <option value="sidi belabbes">Sidi Belabbes</option>
-              <option value="guelma">Guelma</option>
-              <option value="constantine">Constantine</option>
-              <option value="mostaganem">Mostaganem</option>
-              <option value="msila">M'sila</option>
-              <option value="mascara">Mascara</option>
-              <option value="ouargla">Ouargla</option>
-              <option value="oran">Oran</option>
-              <option value="el bayadh">El Bayadh</option>
-              <option value="bordj bou arreridj">Bordj Bou Arreridj</option>
-              <option value="boumerdes">Boumerdes</option>
-              <option value="el taref">El Taref</option>
-              <option value="tindouf">Tindouf</option>
-              <option value="tissemsilt">Tissemsilt</option>
-              <option value="el oued">El Oued</option>
-              <option value="khenchela">Khenchela</option>
-              <option value="souk ahras">Souk Ahras</option>
-              <option value="tipaza">Tipaza</option>
-              <option value="mila">Mila</option>
-              <option value="ain defla">Ain Defla</option>
-              <option value="naama">Naama</option>
-              <option value="ain temouchent">Ain Temouchent</option>
-              <option value="ghardaia">Ghardaia</option>
-              <option value="relizane">Relizane</option>
-              <option value="el mghair">El M'ghair</option>
-              <option value="el menia">El Menia</option>
-              <option value="ouled djellal">Ouled Djellal</option>
-              <option value="beni abbes">Beni Abbes</option>
-              <option value="timimoun">Timimoun</option>
-              <option value="touggourt">Touggourt</option>
-              <option value="djanet">Djanet</option>
-              <option value="in salah">In Salah</option>
-              <option value="in guezzam">In Guezzam</option>
-            </select>
-          </div>
-
-          <div>
-            <label class="label" for="commune">Commune</label>
-            <select id="commune" name="commune" required class="input">
-              <option value="">Sélectionnez d'abord la wilaya</option>
-            </select>
-          </div>
-        </div>
-
-        <!-- Hidden fields for shipping -->
-        <input type="hidden" id="shippingFee" name="shippingFee" value="0">
-        <input type="hidden" id="deliveryDelay" name="deliveryDelay" value="">
-        <input type="hidden" id="totalPriceFinal" name="totalPriceFinal" value="<%= totalPrice %>">
-
-        <!-- Order summary row -->
-        <div class="bg-gray-50 border border-gray-100 rounded-lg p-4 space-y-3">
-          <div class="flex justify-between items-center">
-            <div class="text-sm text-gray-600">Total produits</div>
-            <div class="text-lg font-semibold text-[color:var(--accent)]" id="baseTotal"><%= totalPrice %> DA</div>
-          </div>
-          <div class="flex justify-between items-center">
-            <div class="text-sm text-gray-600">Frais de livraison</div>
-            <div class="text-sm text-gray-700" id="shippingDisplay">—</div>
-          </div>
-          <div class="flex justify-between items-center">
-            <div class="text-sm text-gray-600">Délai estimé</div>
-            <div class="text-sm text-gray-700" id="delayDisplay">—</div>
-          </div>
-          <div class="flex justify-between items-center pt-2 border-t border-gray-100">
-            <div class="text-sm font-medium">Total à payer</div>
-            <div class="text-xl font-bold text-[color:var(--accent)]" id="totalDisplay"><%= totalPrice %> DA</div>
-          </div>
-
-          <div class="flex gap-3 mt-3">
-            <button id="placeOrderBtn" type="submit" class="flex-1 py-3 rounded-lg bg-[color:var(--accent)] text-white font-semibold hover:opacity-95">Passer la commande — <span id="btn-total"><%= totalPrice %> DA</span></button>
-            <a href="tel:0791679611" class="px-4 py-3 rounded-lg border border-gray-200 inline-flex items-center gap-2 text-gray-700">
-              <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-[color:var(--accent)]" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5h2l2 7-1 2a11 11 0 005 5l2-1 7 2v-2a16 16 0 00-16-16z"/></svg>
-              Appeler
-            </a>
+              <!-- Hidden fields for shipping -->
+              <input type="hidden" id="shippingFee" name="shippingFee" value="0">
+              <input type="hidden" id="deliveryDelay" name="deliveryDelay" value="">
+              <input type="hidden" id="totalPriceFinal" name="totalPriceFinal" value="<%= totalPrice %>">
+            </form>
           </div>
         </div>
 
-      </form>
+        <!-- Right Column - Order Summary -->
+        <div class="md:col-span-1">
+          <div class="zara-card p-8 sticky top-8">
+            <h3 class="text-sm font-medium uppercase tracking-wide mb-6 border-b pb-2">Résumé de la commande</h3>
+            
+            <div class="space-y-4 mb-6">
+              <div class="flex justify-between items-center">
+                <div class="text-xs text-gray-600 uppercase tracking-wide">Total produits</div>
+                <div class="text-sm font-medium" id="baseTotal"><%= totalPrice %> DA</div>
+              </div>
+              <div class="flex justify-between items-center">
+                <div class="text-xs text-gray-600 uppercase tracking-wide">Frais de livraison</div>
+                <div class="text-sm text-gray-700" id="shippingDisplay">—</div>
+              </div>
+              <div class="flex justify-between items-center">
+                <div class="text-xs text-gray-600 uppercase tracking-wide">Délai estimé</div>
+                <div class="text-xs text-gray-700" id="delayDisplay">—</div>
+              </div>
+            </div>
+            
+            <div class="border-t border-gray-200 pt-4 mb-6">
+              <div class="flex justify-between items-center">
+                <div class="text-sm font-medium uppercase tracking-wide">Total à payer</div>
+                <div class="text-lg font-medium" id="totalDisplay"><%= totalPrice %> DA</div>
+              </div>
+            </div>
+
+            <div class="space-y-3">
+              <button id="placeOrderBtn" type="submit" form="checkoutForm" class="zara-btn w-full text-center">
+                <i class="fas fa-lock mr-2"></i>Passer la commande — <span id="btn-total"><%= totalPrice %> DA</span>
+              </button>
+              
+              <a href="tel:0791679611" class="zara-btn-secondary text-sm inline-block w-full text-center">
+                <i class="fas fa-phone mr-2"></i>Appeler le support
+              </a>
+            </div>
+
+            <!-- Security & Payment Info -->
+            <div class="mt-6 pt-6 border-t border-gray-100">
+              <div class="flex items-center justify-center gap-4 mb-4">
+                <div class="text-xs text-gray-500">
+                  <i class="fas fa-lock mr-1"></i> Paiement sécurisé
+                </div>
+                <div class="text-xs text-gray-500">
+                  <i class="fas fa-truck mr-1"></i> Livraison garantie
+                </div>
+              </div>
+              <p class="text-xs text-gray-500 text-center">
+                Paiement à la livraison (CCP) disponible dans toutes les wilayas
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Support Info -->
+      <div class="mt-12 text-center">
+        <p class="text-sm text-gray-600">Besoin d'aide ? Contactez-nous au <a href="tel:0791679611" class="text-black underline">079 167 9611</a></p>
+      </div>
     </div>
-
-    <p class="text-center text-sm text-gray-500 mt-6">Besoin d'aide ? Contactez-nous au <a href="tel:0791679611" class="text-[color:var(--accent)]">079 167 9611</a></p>
-
   </main>
 
   <!-- Footer include preserved -->
@@ -540,4 +636,3 @@ const shippingData = {
 
 </body>
 </html>
- 
