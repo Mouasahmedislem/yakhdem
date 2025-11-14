@@ -379,7 +379,7 @@
 
             <!-- Actions -->
             <div class="border-t border-gray-200 pt-6 flex flex-col sm:flex-row gap-3">
-              <% if (!order.returnRequest && order.status === 'delivered' && order.canReturn) { %>
+              <% if (!order.returnRequest && order.status === 'delivered' ) { %>
                 <a href="/start-return/<%= order._id %>" 
                    class="zara-btn-secondary text-sm text-center flex-1">
                   Demander un Retour
