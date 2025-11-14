@@ -97,12 +97,20 @@
       <form id="checkoutForm" action="/checkout" method="POST" class="grid grid-cols-1 gap-6">
 
         <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <!-- Full name -->
+          <!-- First Name -->
           <div>
-            <label class="label" for="name">Nom complet</label>
-            <input required type="text" id="name" name="name" value="<%= user && user.firstName ? user.firstName + (user.lastName ? ' ' + user.lastName : '') : '' %>" class="input" placeholder="Prénom Nom">
+            <label class="label" for="firstName">Prénom</label>
+            <input required type="text" id="firstName" name="firstName" value="<%= user && user.firstName ? user.firstName : '' %>" class="input" placeholder="Votre prénom">
           </div>
 
+          <!-- Last Name -->
+          <div>
+            <label class="label" for="lastName">Nom</label>
+            <input required type="text" id="lastName" name="lastName" value="<%= user && user.lastName ? user.lastName : '' %>" class="input" placeholder="Votre nom">
+          </div>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
           <!-- Phone -->
           <div>
             <label class="label" for="numero">Téléphone</label>
@@ -532,5 +540,4 @@ const shippingData = {
 
 </body>
 </html>
-
  
