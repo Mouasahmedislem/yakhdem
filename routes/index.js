@@ -2164,13 +2164,13 @@ router.get("/contact", function(req, res){
 });
 
 // Track Login Page
+// Track Login Page
 router.get("/track-login", function(req, res){
-    
-    
-        res.render("event/track-login");
-    
+    res.render("event/track-login", {
+        error: req.flash('error')[0],
+        success: req.flash('success')[0]
+    });
 });
-
 // Process Track Login
 router.post('/track-login', async (req, res) => {
     const { numero } = req.body;
