@@ -162,31 +162,36 @@
             <form id="checkoutForm" action="/checkout" method="POST" class="space-y-8">
               
               <!-- Personal Information -->
-              <div>
-                <h3 class="text-sm font-medium uppercase tracking-wide mb-6 border-b pb-2">Informations personnelles</h3>
-               <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-  <!-- First Name -->
-  <div>
-    <label class="label" for="firstName">Prénom</label>
-    <input required type="text" id="firstName" name="firstName" value="<%= user && user.firstName ? user.firstName : '' %>" class="input" placeholder="Votre prénom">
+<div>
+  <h3 class="text-sm font-medium uppercase tracking-wide mb-6 border-b pb-2">Informations personnelles</h3>
+  
+  <!-- Hidden fields for backend compatibility -->
+  <input type="hidden" id="fullName" name="name" value="">
+  <input type="hidden" name="country" value="Algeria">
+  
+  <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+    <!-- First Name -->
+    <div>
+      <label class="label" for="firstName">Prénom</label>
+      <input required type="text" id="firstName" name="firstName" value="<%= user && user.firstName ? user.firstName : '' %>" class="input" placeholder="Votre prénom">
+    </div>
+
+    <!-- Last Name -->
+    <div>
+      <label class="label" for="lastName">Nom</label>
+      <input required type="text" id="lastName" name="lastName" value="<%= user && user.lastName ? user.lastName : '' %>" class="input" placeholder="Votre nom">
+    </div>
   </div>
 
-  <!-- Last Name -->
-  <div>
-    <label class="label" for="lastName">Nom</label>
-    <input required type="text" id="lastName" name="lastName" value="<%= user && user.lastName ? user.lastName : '' %>" class="input" placeholder="Votre nom">
+  <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
+    <!-- Phone -->
+    <div>
+      <label class="label" for="numero">Téléphone</label>
+      <input required type="tel" id="numero" name="numero" pattern="0[5-7][0-9]{8}" placeholder="e.g. 0551234567" value="<%= user && user.numero ? user.numero : '' %>" class="input">
+      <p class="text-xs text-gray-500 mt-2">Format : 0xx xxxxxxx</p>
+    </div>
   </div>
 </div>
-
-<div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-  <!-- Phone -->
-  <div>
-    <label class="label" for="numero">Téléphone</label>
-    <input required type="tel" id="numero" name="numero" pattern="0[5-7][0-9]{8}" placeholder="e.g. 0551234567" value="<%= user && user.numero ? user.numero : '' %>" class="input">
-    <p class="text-xs text-gray-500 mt-2">Format : 0xx xxxxxxx</p>
-  </div>
-</div>
-              </div>
 
               <!-- Address -->
               <div>
@@ -600,6 +605,12 @@ const shippingData = {
       // Initialize if server preselected a wilaya (attempt to match server-side city variable)
       (function initFromServer() {
         try {
+// Combine first and last name for the hidden field before form submission
+form.addEventListener('submit', function(e){
+  // Combine first and last name
+  const firstName = document.getElementById('firstName').value;
+  const lastName = document.getElementById('lastName').value;
+  document.getElementById('fullName').value = `${firstName} ${lastName}`.trim();
           <% if (typeof city !== 'undefined' && city) { %>
             const serverCity = '<%= (city || '').toString().toLowerCase() %>';
             // set city select if found
