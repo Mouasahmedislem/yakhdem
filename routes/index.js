@@ -2464,32 +2464,46 @@ router.post('/submit-return', async (req, res) => {
     }
 });
 
+// UUID v4 generator function
+function generateEventId() {
+  return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
+    const r = Math.random() * 16 | 0, v = c == 'x' ? r : (r & 0x3 | 0x8);
+    return v.toString(16);
+  });
+}
+
+// Product Home Route
 router.get("/producthome/:id", async (req, res) => {
   try {
     const producthome = await Producthome.findById(req.params.id);
-    
-    // ✅ Get paintello products for related items
-    const paintellos = await Paintello.find({}).limit(12); // Get 12 paintello products
-    
+    const paintellos = await Paintello.find({}).limit(12);
+
     const eventIdView = generateEventId();
     const eventIdCart = generateEventId();
 
-    console.log("✅ req.user", req.user);
-
+    // ✅ Optimized userData structure
     const userData = {
-      email: req.user?.email || undefined,
-      numero: req.user?.numero || undefined,
-      firstName: req.user?.firstName || undefined,
-      lastName: req.user?.lastName || undefined,
-      country: "algeria",
+      // 🔴 CRITICAL - Always available
       ip: req.headers["x-forwarded-for"]?.split(",")[0] || req.socket.remoteAddress,
       userAgent: req.get("User-Agent"),
-      fbc: req.cookies._fbc || undefined,
-      fbp: req.cookies._fbp || undefined  
+      fbc: req.cookies._fbc,
+      fbp: req.cookies._fbp,
+      country: "algeria",
+      
+      // ✅ User data - Only if logged in
+      email: req.user?.email,
+      numero: req.user?.numero,
+      firstName: req.user?.firstName,
+      lastName: req.user?.lastName,
     };
 
-    console.log("🔍 Raw userData before hashing:", userData);
+    console.log("🔍 UserData for ViewContent:", {
+      hasUser: !!req.user,
+      hasFBP: !!userData.fbp,
+      hasFBC: !!userData.fbc
+    });
 
+    // Send ViewContent event
     await sendMetaCAPIEvent({
       eventName: "ViewContent",
       eventId: eventIdView,
@@ -2499,12 +2513,14 @@ router.get("/producthome/:id", async (req, res) => {
         content_ids: [producthome.id],
         contents: [{
           id: producthome.id,
-          quantity: 1
+          quantity: 1,
+          item_price: producthome.price
         }],
         content_type: "product",
         value: producthome.price,
         currency: "DZD"
-      }
+      },
+      eventSourceUrl: `https://${req.get('host')}${req.originalUrl}`
     });
 
     const has3DModel = !!(producthome.stlFile);
@@ -2524,19 +2540,17 @@ router.get("/producthome/:id", async (req, res) => {
       defaultColor: defaultColor
     };
 
-    console.log('🎨 FINAL COLOR:', defaultColor);
-
-    // ✅ Render with paintellos data for related products
+    // Render template
     res.render("event/producthome", { 
       producthome, 
-      paintellos, // Pass paintello products to the template
+      paintellos,
       req,
       metaEventIdView: eventIdView,
       metaEventIdCart: eventIdCart,
       has3DModel: has3DModel,
       model3DSettings: model3DSettings,
-      user: req.user, // Make sure user is passed for template
-      login: req.isAuthenticated() // Add login status
+      user: req.user,
+      login: req.isAuthenticated()
     });
 
   } catch (error) {
@@ -2545,46 +2559,42 @@ router.get("/producthome/:id", async (req, res) => {
   }
 });
 
-// UUID v4 generator function - MOVE THIS OUTSIDE THE ROUTE
-function generateEventId() {
-  return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
-    const r = Math.random() * 16 | 0, v = c == 'x' ? r : (r & 0x3 | 0x8);
-    return v.toString(16);
-  });
-}
-
+// Add to Cart Route
 router.get("/add-to-cart-producthome/:id", async function(req, res) {
   const producthomeId = req.params.id;
   const quantity = parseInt(req.query.qty) || 1;
-  const redirectTo = req.query.redirect; // Get redirect parameter
+  const redirectTo = req.query.redirect;
   
   const cart = new Cart(req.session.cart ? req.session.cart : {});
   const producthome = await Producthome.findById(producthomeId);
 
-  // Add product to cart with quantity
+  // Add product to cart
   for (let i = 0; i < quantity; i++) {
     cart.add(producthome, producthome.id);
   }
   req.session.cart = cart;
 
-  // ✅ User data from req.user
+  // ✅ User data
   const user = req.user || {};
   const userData = {
+    // Critical data
+    ip: req.headers["x-forwarded-for"]?.split(",")[0] || req.socket.remoteAddress,
+    userAgent: req.get("User-Agent"),
+    fbc: req.cookies._fbc,
+    fbp: req.cookies._fbp,
+    country: "algeria",
+    
+    // User data if available
     email: user.email,
     numero: user.numero,
     firstName: user.firstName,
     lastName: user.lastName,
-    country: "algeria",
-    ip: req.headers["x-forwarded-for"]?.split(",")[0] || req.socket.remoteAddress,
-    userAgent: req.get("User-Agent"),
-    fbc: req.cookies._fbc || undefined,
-    fbp: req.cookies._fbp || undefined  
   };
 
-  // ✅ Unique event ID
+  // Generate event ID
   const eventIdCart = generateEventId();
 
-  // ✅ Send CAPI event
+  // Send AddToCart event
   await sendMetaCAPIEvent({
     eventName: "AddToCart",
     eventId: eventIdCart,
@@ -2594,36 +2604,79 @@ router.get("/add-to-cart-producthome/:id", async function(req, res) {
       content_ids: [producthome.id],
       contents: [{
         id: producthome.id,
-        quantity: quantity
+        quantity: quantity,
+        item_price: producthome.price
       }],
       content_type: "product",
       value: producthome.price * quantity,
       currency: "DZD"
-    }
+    },
+    eventSourceUrl: `https://${req.get('host')}${req.originalUrl}`
   });
 
-  // Store the event ID in session for client-side tracking
+  // Store for client-side tracking
   req.session.metaEventIdCart = eventIdCart;
-  req.session.metaEventData = {
-    eventName: "AddToCart",
-    productData: {
-      content_name: producthome.title,
-      content_ids: [producthome.id],
-      contents: [{
-        id: producthome.id,
-        quantity: quantity
-      }],
-      content_type: "product",
-      value: producthome.price * quantity,
-      currency: "DZD"
-    }
-  };
 
-  // Redirect based on parameter
+  // Redirect
   if (redirectTo === 'checkout') {
     res.redirect('/checkout');
   } else {
-    res.redirect('/shop'); // Default redirect for normal "Add to cart"
+    res.redirect('/shop');
+  }
+});
+
+// Purchase Route (Example for checkout completion)
+router.post("/complete-purchase", async (req, res) => {
+  try {
+    const { orderData, shippingAddress } = req.body;
+    
+    // ✅ Complete user data with REAL shipping information
+    const userData = {
+      // Critical data
+      ip: req.headers["x-forwarded-for"]?.split(",")[0] || req.socket.remoteAddress,
+      userAgent: req.get("User-Agent"),
+      fbc: req.cookies._fbc,
+      fbp: req.cookies._fbp,
+      country: "algeria",
+      
+      // Customer data
+      email: orderData.email,
+      numero: orderData.phone,
+      firstName: orderData.firstName,
+      lastName: orderData.lastName,
+      
+      // ✅ REAL geographic data from shipping
+      city: shippingAddress.city,
+      state: shippingAddress.state,
+    };
+
+    const eventIdPurchase = generateEventId();
+
+    // Send Purchase event
+    await sendMetaCAPIEvent({
+      eventName: "Purchase",
+      eventId: eventIdPurchase,
+      userData,
+      customData: {
+        value: orderData.totalAmount,
+        currency: "DZD",
+        content_ids: orderData.items.map(item => item.productId),
+        contents: orderData.items.map(item => ({
+          id: item.productId,
+          quantity: item.quantity,
+          item_price: item.price
+        })),
+        content_type: "product"
+      },
+      eventSourceUrl: `https://${req.get('host')}/checkout`
+    });
+
+    // Process order and respond
+    res.json({ success: true, orderId: orderData.id });
+
+  } catch (error) {
+    console.error("Purchase error:", error);
+    res.status(500).json({ error: "Purchase failed" });
   }
 });
 
