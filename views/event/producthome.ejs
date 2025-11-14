@@ -6,41 +6,7 @@
   <meta name="referrer" content="strict-origin-when-cross-origin">
 
   <title><%= producthome && producthome.title ? producthome.title : 'Product' %> — Paintello Home</title>
-<script>
-// Enhanced FBP ensuring script
-(function() {
-  function getCookie(name) {
-    const value = `; ${document.cookie}`;
-    const parts = value.split(`; ${name}=`);
-    if (parts.length === 2) return parts.pop().split(';').shift();
-  }
-  
-  function generateFBP() {
-    const timestamp = Math.floor(Date.now() / 1000);
-    const random = Math.random().toString(36).substring(2, 15);
-    return `fb.1.${timestamp}.${random}`;
-  }
-  
-  function setFBP() {
-    let fbp = getCookie('_fbp');
-    
-    if (!fbp) {
-      fbp = generateFBP();
-      const domain = window.location.hostname;
-      // Set cookie for root domain
-      document.cookie = `_fbp=${fbp}; path=/; max-age=31536000; domain=.${domain}`;
-      console.log('✅ FBP cookie created for CAPI:', fbp);
-    } else {
-      console.log('✅ FBP cookie exists:', fbp);
-    }
-    
-    return fbp;
-  }
-  
-  // Execute immediately
-  setFBP();
-})();
-</script>
+
   <!-- Bootstrap CSS for navbar -->
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
   <!-- FontAwesome -->
