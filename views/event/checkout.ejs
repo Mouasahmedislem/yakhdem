@@ -164,20 +164,28 @@
               <!-- Personal Information -->
               <div>
                 <h3 class="text-sm font-medium uppercase tracking-wide mb-6 border-b pb-2">Informations personnelles</h3>
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  <!-- Full name -->
-                  <div>
-                    <label class="label" for="name">Nom complet</label>
-                    <input required type="text" id="name" name="name" value="<%= user && user.firstName ? user.firstName + (user.lastName ? ' ' + user.lastName : '') : '' %>" class="input" placeholder="Prénom Nom">
-                  </div>
+               <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+  <!-- First Name -->
+  <div>
+    <label class="label" for="firstName">Prénom</label>
+    <input required type="text" id="firstName" name="firstName" value="<%= user && user.firstName ? user.firstName : '' %>" class="input" placeholder="Votre prénom">
+  </div>
 
-                  <!-- Phone -->
-                  <div>
-                    <label class="label" for="numero">Téléphone</label>
-                    <input required type="tel" id="numero" name="numero" pattern="0[5-7][0-9]{8}" placeholder="e.g. 0551234567" value="<%= user && user.numero ? user.numero : '' %>" class="input">
-                    <p class="text-xs text-gray-500 mt-2">Format : 0xx xxxxxxx</p>
-                  </div>
-                </div>
+  <!-- Last Name -->
+  <div>
+    <label class="label" for="lastName">Nom</label>
+    <input required type="text" id="lastName" name="lastName" value="<%= user && user.lastName ? user.lastName : '' %>" class="input" placeholder="Votre nom">
+  </div>
+</div>
+
+<div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+  <!-- Phone -->
+  <div>
+    <label class="label" for="numero">Téléphone</label>
+    <input required type="tel" id="numero" name="numero" pattern="0[5-7][0-9]{8}" placeholder="e.g. 0551234567" value="<%= user && user.numero ? user.numero : '' %>" class="input">
+    <p class="text-xs text-gray-500 mt-2">Format : 0xx xxxxxxx</p>
+  </div>
+</div>
               </div>
 
               <!-- Address -->
