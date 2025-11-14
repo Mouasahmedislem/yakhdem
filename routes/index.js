@@ -1850,14 +1850,16 @@ router.get("/", async function(req, res) {
   const shippingFee = cart.totalPrice >= freeShippingThreshold ? 0 : shipping.fee;
   const finalTotalPrice = cart.totalPrice + shippingFee;
   const rawNumero = req.body.numero || (req.user ? req.user.numero : undefined);
+  const cleanNumero = '213' + numeroRaw.replace(/^0+/, '').replace(/\D/g, '');     
   const order = new Order({
     user: req.user,
     cart: cart,
     address: req.body.address,
-    name: req.body.name,
+     firstName: req.body.firstName,
+      lastName: req.body.lastName,
     country: req.body.country,
     city: selectedcity,
-    numero: rawNumero,
+    numero: cleanNumero,
     shippingFee: shippingFee,
     deliveryDelay: shipping.delay,
     totalWithShipping: finalTotalPrice
@@ -1871,7 +1873,7 @@ try {
     const user = req.user || {};
     const userData = {
       email: user.email,
-      numero: rawNumero,
+      numero: cleanNumero,
       firstName: user.firstName,
       lastName: user.lastName,
       country: "algeria",
@@ -1905,7 +1907,7 @@ try {
 
    // ✅ Clean the phone number
   const numeroRaw = req.body.numero;
-  const cleanNumero = '213' + numeroRaw.replace(/^0+/, '').replace(/\D/g, '');
+  const cleanNumero = '213' + numeroRaw.replace(/^0+/, '').replace(/\D/g, ''); 
 
  // ✅ Prepare WhatsApp message payload with shipping info
     const payload = {
@@ -1930,7 +1932,7 @@ try {
           {
             type: "body",
             parameters: [
-              { type: "text", text: req.body.name || "Client" },
+              { type: "text", text: req.body.firstName || "Client" },
               { type: "text", text: cart.totalPrice.toString() + " DZD" }, // Subtotal
               { type: "text", text: shippingFee === 0 ? "GRATUIT" : shippingFee.toString() + " DZD" }, // Shipping fee
               { type: "text", text: finalTotalPrice.toString() + " DZD" }, // Total with shipping
@@ -1962,7 +1964,7 @@ try {
     // ✅ OPTIONAL: Send email notification to admin
     // ✅ Update admin email with shipping info
 await sendAdminOrderEmail({
-  name: req.body.name,
+  name: req.body.firstName,
   numero: cleanNumero,
   subtotal: cart.totalPrice.toString(),
   shippingFee: shippingFee === 0 ? "FREE" : shippingFee.toString() + " DZD",
@@ -1978,8 +1980,9 @@ await sendAdminOrderEmail({
     req.session.confirmationData = {
       metaEventIdPurchase: eventIdPurchase,
       user: req.user || {},
-      name: req.body.name,
-      numero: rawNumero,
+     firstName: req.body.firstName,
+      lastName: req.body.lastName, 
+      numero: cleanNumero,
       city: selectedcity,
       address: req.body.address,
       cartTotal: cart.totalPrice,
