@@ -2172,9 +2172,19 @@ router.get("/contact", function(req, res){
 });
 
 // Track Login Page
-// Track Login Page
-router.get("/track-login", function(req, res){
-    // Helper functions
+// Track Order Page
+router.get('/track-order', async (req, res) => {
+  if (!req.session.trackingUser) return res.redirect('/track-login');
+
+  try {
+    const orders = await Order.find({ numero: req.session.trackingUser })
+                            .sort({ createdAt: -1 })
+                            .populate({
+                              path: 'returnRequest',
+                              options: { strictPopulate: false }
+                            });
+    
+    // Helper functions (same as above)
     const getStatusText = (status) => {
         const statusMap = {
             'pending': 'En Attente',
@@ -2214,13 +2224,48 @@ router.get("/track-login", function(req, res){
         return statusMap[status] || 'En Attente';
     };
 
-    res.render("event/track-login", {
-        error: req.flash('error')[0],
+    const getProgressWidth = (status) => {
+        const progressMap = {
+            'pending': 10,
+            'confirmed': 30,
+            'processing': 50,
+            'ready_for_pickup': 60,
+            'shipped': 75,
+            'out_for_delivery': 90,
+            'delivered': 100,
+            'cancelled': 100,
+            'refunded': 100,
+            'on_hold': 10
+        };
+        return progressMap[status] || 10;
+    };
+
+    const getTimelineStatus = (currentStatus, checkStatus) => {
+        const statusOrder = ['pending', 'confirmed', 'processing', 'shipped', 'delivered'];
+        const currentIndex = statusOrder.indexOf(currentStatus);
+        const checkIndex = statusOrder.indexOf(checkStatus);
+        
+        if (checkIndex < currentIndex) return 'completed';
+        if (checkIndex === currentIndex) return 'active';
+        return '';
+    };
+
+    res.render('event/track-order', { 
+        orders,
+        phoneNumber: req.session.trackingUser,
         success: req.flash('success')[0],
+        error: req.flash('error')[0],
         getStatusText,
         getReturnStatusText,
-        getPaymentStatusText
+        getPaymentStatusText,
+        getProgressWidth,
+        getTimelineStatus
     });
+  } catch (err) {
+    console.error('Error fetching orders:', err);
+    req.flash('error', 'Error loading your orders');
+    res.redirect('/track-login');
+  }
 });
 // Process Track Login
 router.post('/track-login', async (req, res) => {
@@ -2336,33 +2381,6 @@ router.post('/track-login', async (req, res) => {
         res.redirect('/track-login');
     }
 });
-
-// Track Order Page
-router.get('/track-order', async (req, res) => {
-  if (!req.session.trackingUser) return res.redirect('/track-login');
-
-  try {
-    const orders = await Order.find({ numero: req.session.trackingUser })
-                            .sort({ createdAt: -1 })
-                            .populate({
-                              path: 'returnRequest',
-                              options: { strictPopulate: false } // Bypass the check
-                            });
-    
-    res.render('event/track-order', { orders,
-  phoneNumber: numero,
-  success: req.flash('success')[0],
-  error: req.flash('error')[0],
-  getStatusText,
-  getReturnStatusText,
-  getPaymentStatusText });
-  } catch (err) {
-    console.error('Error fetching orders:', err);
-    req.flash('error', 'Error loading your orders');
-    res.redirect('/track-login');
-  }
-});
-
 // Start Return Process
 // Start Return Process
 router.get('/start-return/:orderId', async (req, res) => {
