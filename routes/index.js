@@ -2223,7 +2223,7 @@ router.get("/track-login", function(req, res){
 });
 // Process Track Login
 router.post('/track-login', async (req, res) => {
-    const { numero } = req.body;
+     let { numero } = req.body;
     
     // Validate Algerian phone number
     if (!/^0[5-7][0-9]{8}$/.test(numero)) {
@@ -2231,8 +2231,11 @@ router.post('/track-login', async (req, res) => {
         return res.redirect('/track-login');
     }
 
+    // Convert client number (0551234567) to database format (213551234567)
+    const cleanNumero = '213' + numero.replace(/^0+/, '').replace(/\D/g, '');
+    
     try {
-        const orders = await Order.find({ numero })
+        const orders = await Order.find({ numero: cleanNumero })
                                 .sort({ createdAt: -1 })
                                 .populate('returnRequest');
         
