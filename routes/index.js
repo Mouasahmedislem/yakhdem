@@ -1715,7 +1715,14 @@ router.get("/", async function(req, res) {
 
           
      router.post('/checkout', async function(req, res) {
-
+console.log("📨 Received form data:", {
+    firstName: req.body.firstName,
+    lastName: req.body.lastName,
+    country: req.body.country,
+    city: req.body.city,
+    address: req.body.address,
+    numero: req.body.numero
+  });
   if (!req.session.cart) {
     return res.redirect('event/shop', { products: null });
   }
@@ -1876,7 +1883,7 @@ try {
       numero: cleanNumero,
       firstName: user.firstName,
       lastName: user.lastName,
-      country: "algeria",
+      country: req.body.country,
       ip: req.headers["x-forwarded-for"]?.split(",")[0] || req.socket.remoteAddress,
       userAgent: req.get("User-Agent"),
         fbc: req.cookies._fbc || undefined,
