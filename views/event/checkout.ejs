@@ -166,7 +166,7 @@
   <h3 class="text-sm font-medium uppercase tracking-wide mb-6 border-b pb-2">Informations personnelles</h3>
   
   <!-- Hidden fields for backend compatibility -->
-  <input type="hidden" id="fullName" name="name" value="">
+
   <input type="hidden" name="country" value="Algeria">
   
   <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -605,12 +605,7 @@ const shippingData = {
       // Initialize if server preselected a wilaya (attempt to match server-side city variable)
       (function initFromServer() {
         try {
-// Combine first and last name for the hidden field before form submission
-form.addEventListener('submit', function(e){
-  // Combine first and last name
-  const firstName = document.getElementById('firstName').value;
-  const lastName = document.getElementById('lastName').value;
-  document.getElementById('fullName').value = `${firstName} ${lastName}`.trim();
+
           <% if (typeof city !== 'undefined' && city) { %>
             const serverCity = '<%= (city || '').toString().toLowerCase() %>';
             // set city select if found
@@ -638,6 +633,10 @@ form.addEventListener('submit', function(e){
       const form = document.getElementById('checkoutForm');
       form.addEventListener('submit', function(e){
         // Validate required fields client-side (just a safety)
+ // Combine first and last name for the hidden field
+        const firstName = document.getElementById('firstName').value;
+        const lastName = document.getElementById('lastName').value;
+        document.getElementById('fullName').value = `${firstName} ${lastName}`.trim();
         if (!citySelect.value || !communeSelect.value) {
           e.preventDefault();
           alert('Veuillez sélectionner votre wilaya et votre commune.');
