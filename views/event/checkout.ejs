@@ -166,7 +166,7 @@
   <h3 class="text-sm font-medium uppercase tracking-wide mb-6 border-b pb-2">Informations personnelles</h3>
   
   <!-- Hidden fields for backend compatibility -->
-
+<input type="hidden" id="fullName" name="name" value="">
   <input type="hidden" name="country" value="Algeria">
   
   <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -348,7 +348,7 @@
   <!-- Footer include preserved -->
   <%- include ("../partials/footer") %>
 
-  <!-- SCRIPT: shipping & communes logic -->
+   <!-- SCRIPT: shipping & communes logic -->
   <script>
     (function(){
       const FREE_SHIPPING_THRESHOLD = 5000;
@@ -363,6 +363,7 @@
       const shippingFeeInput = document.getElementById('shippingFee');
       const deliveryDelayInput = document.getElementById('deliveryDelay');
       const totalPriceFinalInput = document.getElementById('totalPriceFinal');
+      const form = document.getElementById('checkoutForm');
 
       // Keep base total displayed
       baseTotalEl.innerText = formatPrice(basePrice);
@@ -516,7 +517,7 @@ const shippingData = {
 };
 
 
-      // Helper: format price with thousand separator
+       // Helper: format price with thousand separator
       function formatPrice(n) {
         try {
           return new Intl.NumberFormat('fr-DZ').format(Number(n)) + ' DA';
@@ -602,10 +603,41 @@ const shippingData = {
         // Optionally, we could adjust shipping slightly by commune — currently not implemented.
       });
 
+      // Form submit: combine names and ensure hidden totals are set
+      form.addEventListener('submit', function(e){
+        // Combine first and last name for the hidden field
+        const firstName = document.getElementById('firstName').value;
+        const lastName = document.getElementById('lastName').value;
+        const fullName = `${firstName} ${lastName}`.trim();
+        document.getElementById('fullName').value = fullName;
+        
+        console.log('Combining names:', firstName, lastName, '->', fullName);
+        
+        // Validate required fields client-side (just a safety)
+        if (!firstName || !lastName) {
+          e.preventDefault();
+          alert('Veuillez remplir votre prénom et nom.');
+          return false;
+        }
+        
+        if (!citySelect.value || !communeSelect.value) {
+          e.preventDefault();
+          alert('Veuillez sélectionner votre wilaya et votre commune.');
+          return false;
+        }
+        
+        // Ensure hidden inputs reflect current values
+        shippingFeeInput.value = shippingFeeInput.value || 0;
+        deliveryDelayInput.value = deliveryDelayInput.value || '';
+        totalPriceFinalInput.value = totalPriceFinalInput.value || basePrice;
+        
+        console.log('Final form data - name:', document.getElementById('fullName').value);
+        console.log('Final form data - country:', document.querySelector('input[name="country"]').value);
+      });
+
       // Initialize if server preselected a wilaya (attempt to match server-side city variable)
       (function initFromServer() {
         try {
-
           <% if (typeof city !== 'undefined' && city) { %>
             const serverCity = '<%= (city || '').toString().toLowerCase() %>';
             // set city select if found
@@ -628,26 +660,6 @@ const shippingData = {
           <% } %>
         } catch(e) {}
       })();
-
-      // Form submit: ensure hidden totals are set (final guard)
-      const form = document.getElementById('checkoutForm');
-      form.addEventListener('submit', function(e){
-        // Validate required fields client-side (just a safety)
- // Combine first and last name for the hidden field
-        const firstName = document.getElementById('firstName').value;
-        const lastName = document.getElementById('lastName').value;
-        document.getElementById('fullName').value = `${firstName} ${lastName}`.trim();
-        if (!citySelect.value || !communeSelect.value) {
-          e.preventDefault();
-          alert('Veuillez sélectionner votre wilaya et votre commune.');
-          return false;
-        }
-        // Ensure hidden inputs reflect current values
-        shippingFeeInput.value = shippingFeeInput.value || 0;
-        deliveryDelayInput.value = deliveryDelayInput.value || '';
-        totalPriceFinalInput.value = totalPriceFinalInput.value || basePrice;
-        // allow submit to continue
-      });
 
     })();
   </script>
