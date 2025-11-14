@@ -55,8 +55,6 @@
     }
     
     .status-badge {
-      background: #f8f8f8;
-      color: #666;
       font-size: 11px;
       letter-spacing: 0.5px;
       padding: 4px 8px;
@@ -64,10 +62,27 @@
       text-transform: uppercase;
     }
     
+    /* Status Colors */
     .status-pending { background: #fff3cd; color: #856404; }
-    .status-approved { background: #d1edff; color: #004085; }
-    .status-rejected { background: #f8d7da; color: #721c24; }
-    .status-processed { background: #d4edda; color: #155724; }
+    .status-confirmed { background: #cce7ff; color: #004085; }
+    .status-processing { background: #d1ecf1; color: #0c5460; }
+    .status-ready_for_pickup { background: #d1f7c4; color: #155724; }
+    .status-shipped { background: #e2e3ff; color: #383d41; }
+    .status-out_for_delivery { background: #fff3cd; color: #856404; }
+    .status-delivered { background: #d4edda; color: #155724; }
+    .status-cancelled { background: #f8d7da; color: #721c24; }
+    .status-refunded { background: #e2e3e5; color: #383d41; }
+    .status-on_hold { background: #fff3cd; color: #856404; }
+    
+    .return-status-requested { background: #fff3cd; color: #856404; }
+    .return-status-approved { background: #d4edda; color: #155724; }
+    .return-status-rejected { background: #f8d7da; color: #721c24; }
+    .return-status-processing { background: #cce7ff; color: #004085; }
+    .return-status-completed { background: #e2e3e5; color: #383d41; }
+    
+    .payment-status-paid { background: #d4edda; color: #155724; }
+    .payment-status-pending { background: #fff3cd; color: #856404; }
+    .payment-status-failed { background: #f8d7da; color: #721c24; }
     
     .error-message {
       background: #f8d7da;
@@ -85,6 +100,61 @@
       border-radius: 2px;
       margin-bottom: 16px;
       border-left: 4px solid #28a745;
+    }
+    
+    /* Progress Bar */
+    .progress-container {
+      background: #f8f9fa;
+      border-radius: 10px;
+      height: 6px;
+      margin: 15px 0;
+    }
+    
+    .progress-bar {
+      height: 100%;
+      border-radius: 10px;
+      background: #000;
+      transition: width 0.3s ease;
+    }
+    
+    /* Timeline */
+    .timeline {
+      position: relative;
+      padding-left: 20px;
+    }
+    
+    .timeline::before {
+      content: '';
+      position: absolute;
+      left: 7px;
+      top: 0;
+      bottom: 0;
+      width: 2px;
+      background: #e5e5e5;
+    }
+    
+    .timeline-item {
+      position: relative;
+      margin-bottom: 15px;
+    }
+    
+    .timeline-item::before {
+      content: '';
+      position: absolute;
+      left: -20px;
+      top: 5px;
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      background: #e5e5e5;
+    }
+    
+    .timeline-item.active::before {
+      background: #000;
+    }
+    
+    .timeline-item.completed::before {
+      background: #28a745;
     }
   </style>
 </head>
@@ -130,21 +200,28 @@
   <main class="py-12">
     <div class="max-w-4xl mx-auto px-6">
       
-      <!-- Page Header -->
-      <div class="text-center mb-12">
-        <h1 class="text-2xl font-light tracking-wide uppercase mb-4">Détails de la commande</h1>
-        <p class="text-sm text-gray-600">Suivez l'état de vos commandes</p>
-      </div>
-
       <!-- Flash Messages -->
       <% if (typeof error !== 'undefined' && error) { %>
-        <div class="error-message max-w-md mx-auto mb-8">
+        <div class="error-message">
           <i class="fas fa-exclamation-circle mr-2"></i>
           <%= error %>
         </div>
       <% } %>
+      
+      <% if (typeof success !== 'undefined' && success) { %>
+        <div class="success-message">
+          <i class="fas fa-check-circle mr-2"></i>
+          <%= success %>
+        </div>
+      <% } %>
 
-      <!-- Orders Section -->
+      <!-- Page Header -->
+      <div class="text-center mb-12">
+        <h1 class="text-2xl font-light tracking-wide uppercase mb-4">Suivi de Commande</h1>
+        <p class="text-sm text-gray-600">Suivez l'état de vos commandes en temps réel</p>
+      </div>
+
+      <!-- Orders List -->
       <% if (typeof orders !== 'undefined' && orders && orders.length > 0) { %>
         <div class="text-center mb-8">
           <h2 class="text-xl font-light tracking-wide uppercase">Vos Commandes</h2>
@@ -152,15 +229,23 @@
         </div>
 
         <% orders.forEach(order => { %>
-          <div class="zara-card p-8 mb-6">
+          <div class="zara-card p-8 mb-8">
             <!-- Order Header -->
             <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-6 pb-6 border-b border-gray-200">
               <div class="flex items-center gap-4 mb-3 sm:mb-0">
                 <span class="status-badge">
                   Commande #<%= order._id.toString().slice(-6).toUpperCase() %>
                 </span>
-                <span class="status-badge bg-green-50 text-green-700">
-                  En Transit
+                <span class="status-badge status-<%= order.status %>">
+                  <%= getStatusText(order.status) %>
+                </span>
+                <% if (order.returnStatus && order.returnStatus !== 'none') { %>
+                  <span class="status-badge return-status-<%= order.returnStatus %>">
+                    Retour: <%= getReturnStatusText(order.returnStatus) %>
+                  </span>
+                <% } %>
+                <span class="status-badge payment-status-<%= order.paymentStatus || 'pending' %>">
+                  Paiement: <%= getPaymentStatusText(order.paymentStatus) %>
                 </span>
               </div>
               <div class="text-xs text-gray-500 uppercase tracking-wide">
@@ -168,11 +253,42 @@
               </div>
             </div>
 
+            <!-- Order Progress -->
+            <div class="mb-6">
+              <div class="flex justify-between text-xs text-gray-500 mb-2">
+                <span>Commandé</span>
+                <span>Confirmé</span>
+                <span>Expédié</span>
+                <span>Livré</span>
+              </div>
+              <div class="progress-container">
+                <div class="progress-bar" style="width: <%= getProgressWidth(order.status) %>%;"></div>
+              </div>
+            </div>
+
+            <!-- Order Timeline -->
+            <div class="mb-6">
+              <h3 class="text-sm font-medium uppercase tracking-wide mb-4">Historique du Statut</h3>
+              <div class="timeline">
+                <% const statuses = ['pending', 'confirmed', 'processing', 'shipped', 'delivered']; %>
+                <% statuses.forEach((status, index) => { %>
+                  <div class="timeline-item <%= getTimelineStatus(order.status, status) %>">
+                    <div class="text-xs <%= getTimelineStatus(order.status, status) === 'completed' ? 'text-green-600' : getTimelineStatus(order.status, status) === 'active' ? 'text-black font-medium' : 'text-gray-400' %>">
+                      <%= getStatusText(status) %>
+                      <% if (getTimelineStatus(order.status, status) === 'completed') { %>
+                        <i class="fas fa-check ml-1 text-green-500"></i>
+                      <% } %>
+                    </div>
+                  </div>
+                <% }); %>
+              </div>
+            </div>
+
             <!-- Order Details -->
             <div class="grid md:grid-cols-2 gap-8 mb-6">
               <div class="space-y-4">
                 <div>
-                  <p class="text-xs text-gray-500 uppercase tracking-wide mb-1">Nom</p>
+                  <p class="text-xs text-gray-500 uppercase tracking-wide mb-1">Client</p>
                   <p class="text-sm"><%= order.name %></p>
                 </div>
                 <div>
@@ -196,25 +312,38 @@
                 </div>
                 <div>
                   <p class="text-xs text-gray-500 uppercase tracking-wide mb-1">Frais de Livraison</p>
-                  <p class="text-sm"><%= order.shippingFee %> DZD</p>
+                  <p class="text-sm"><%= order.shippingFee || 0 %> DZD</p>
                 </div>
                 <div>
                   <p class="text-xs text-gray-500 uppercase tracking-wide mb-1">Total avec Livraison</p>
-                  <p class="text-sm font-medium"><%= order.totalWithShipping %> DZD</p>
+                  <p class="text-sm font-medium"><%= order.totalWithShipping || order.cart.totalPrice %> DZD</p>
                 </div>
-                <div>
-                  <p class="text-xs text-gray-500 uppercase tracking-wide mb-1">Livraison Estimée</p>
-                  <p class="text-sm"><%= order.deliveryDelay %></p>
-                </div>
+                <% if (order.trackingNumber) { %>
+                  <div>
+                    <p class="text-xs text-gray-500 uppercase tracking-wide mb-1">Numéro de Suivi</p>
+                    <p class="text-sm font-medium"><%= order.trackingNumber %></p>
+                  </div>
+                <% } %>
+                <% if (order.estimatedDelivery) { %>
+                  <div>
+                    <p class="text-xs text-gray-500 uppercase tracking-wide mb-1">Livraison Estimée</p>
+                    <p class="text-sm"><%= new Date(order.estimatedDelivery).toLocaleDateString('fr-FR') %></p>
+                  </div>
+                <% } else if (order.deliveryDelay) { %>
+                  <div>
+                    <p class="text-xs text-gray-500 uppercase tracking-wide mb-1">Délai de Livraison</p>
+                    <p class="text-sm"><%= order.deliveryDelay %></p>
+                  </div>
+                <% } %>
               </div>
             </div>
 
             <!-- Return Status -->
             <% if (order.returnRequest) { %>
-              <div class="border-t border-gray-200 pt-6">
+              <div class="border-t border-gray-200 pt-6 mb-6">
                 <div class="space-y-3">
                   <div class="flex items-center gap-3">
-                    <span class="status-badge status-<%= order.returnRequest.status %> uppercase">
+                    <span class="status-badge return-status-<%= order.returnRequest.status %> uppercase">
                       <%= order.returnRequest.status.toUpperCase() %>
                     </span>
                     <p class="text-sm text-gray-600">
@@ -222,8 +351,10 @@
                         Retour approuvé - Suivez les instructions envoyées par email
                       <% } else if (order.returnRequest.status === 'rejected') { %>
                         Demande de retour refusée - Contactez le support
-                      <% } else if (order.returnRequest.status === 'processed') { %>
-                        Retour traité
+                      <% } else if (order.returnRequest.status === 'processing') { %>
+                        Retour en cours de traitement
+                      <% } else if (order.returnRequest.status === 'completed') { %>
+                        Retour traité et terminé
                       <% } else { %>
                         Retour en attente de traitement
                       <% } %>
@@ -248,16 +379,20 @@
 
             <!-- Actions -->
             <div class="border-t border-gray-200 pt-6 flex flex-col sm:flex-row gap-3">
-              <% if (!order.returnRequest) { %>
+              <% if (!order.returnRequest && order.status === 'delivered' && order.canReturn) { %>
                 <a href="/start-return/<%= order._id %>" 
                    class="zara-btn-secondary text-sm text-center flex-1">
-                  Créer un Retour
+                  Demander un Retour
                 </a>
-              <% } else if (order.returnRequest.status === 'pending') { %>
+              <% } else if (order.returnRequest && order.returnRequest.status === 'pending') { %>
                 <button class="zara-btn-secondary text-sm text-center flex-1 opacity-50 cursor-not-allowed">
                   Retour en Attente
                 </button>
               <% } %>
+              <a href="/contact?order=<%= order._id %>" 
+                 class="zara-btn-secondary text-sm text-center flex-1">
+                Support Client
+              </a>
               <a href="/" 
                  class="zara-btn text-sm text-center flex-1">
                 Continuer les Achats
@@ -274,7 +409,7 @@
         </div>
 
       <% } else { %>
-        <!-- No Orders Found - Show Form Again -->
+        <!-- No Orders Found -->
         <div class="zara-card p-12 text-center max-w-md mx-auto">
           <div class="w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-6">
             <i class="fas fa-search text-gray-400"></i>
@@ -332,6 +467,74 @@
       <p class="text-sm text-gray-600">© <%= new Date().getFullYear() %> Paintello</p>
     </div>
   </footer>
+
+  <script>
+    // Helper functions for status display
+    function getStatusText(status) {
+      const statusMap = {
+        'pending': 'En Attente',
+        'confirmed': 'Confirmée',
+        'processing': 'En Préparation',
+        'ready_for_pickup': 'Prête à Expédier',
+        'shipped': 'Expédiée',
+        'out_for_delivery': 'En Livraison',
+        'delivered': 'Livrée',
+        'cancelled': 'Annulée',
+        'refunded': 'Remboursée',
+        'on_hold': 'En Attente'
+      };
+      return statusMap[status] || status;
+    }
+
+    function getReturnStatusText(status) {
+      const statusMap = {
+        'none': 'Aucun',
+        'requested': 'Demandé',
+        'approved': 'Approuvé',
+        'rejected': 'Rejeté',
+        'processing': 'En Cours',
+        'completed': 'Terminé'
+      };
+      return statusMap[status] || status;
+    }
+
+    function getPaymentStatusText(status) {
+      const statusMap = {
+        'pending': 'En Attente',
+        'paid': 'Payé',
+        'failed': 'Échoué',
+        'refunded': 'Remboursé',
+        'partially_refunded': 'Partiellement Remboursé'
+      };
+      return statusMap[status] || 'En Attente';
+    }
+
+    function getProgressWidth(status) {
+      const progressMap = {
+        'pending': 10,
+        'confirmed': 30,
+        'processing': 50,
+        'ready_for_pickup': 60,
+        'shipped': 75,
+        'out_for_delivery': 90,
+        'delivered': 100,
+        'cancelled': 100,
+        'refunded': 100,
+        'on_hold': 10
+      };
+      return progressMap[status] || 10;
+    }
+
+    function getTimelineStatus(currentStatus, checkStatus) {
+      const statusOrder = ['pending', 'confirmed', 'processing', 'shipped', 'delivered'];
+      const currentIndex = statusOrder.indexOf(currentStatus);
+      const checkIndex = statusOrder.indexOf(checkStatus);
+      
+      if (checkIndex < currentIndex) return 'completed';
+      if (checkIndex === currentIndex) return 'active';
+      return '';
+    }
+  </script>
 </body>
 </html>
 
