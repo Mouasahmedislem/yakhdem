@@ -2228,71 +2228,109 @@ router.get('/track-order', async (req, res) => {
 });
 
 // Start Return Process
+// Start Return Process
 router.get('/start-return/:orderId', async (req, res) => {
     try {
         const order = await Order.findById(req.params.orderId);
         if (!order) {
             req.flash('error', 'الطلب غير موجود');
-            return res.redirect('/track-order');
+            return res.redirect('/track-login');
         }
         
         res.render('event/start-return', { 
             order,
             title: 'طلب إرجاع المنتج',
-            error: req.flash('error')[0], // Add flash messages
-            success: req.flash('success')[0] // Add flash messages
+            error: req.flash('error')[0],
+            success: req.flash('success')[0]
         });
     } catch (err) {
         console.error('Error starting return:', err);
         req.flash('error', 'خطأ في النظام');
-        res.redirect('/track-order');
+        res.redirect('/track-login');
     }
 });
 
 // Submit Return Request
-// Submit Return Request
 router.post('/submit-return', async (req, res) => {
     try {
+        console.log('=== SUBMIT RETURN REQUEST START ===');
+        console.log('Request body:', req.body);
+        
         const { orderId, reason, refundMethod, exchangeItem, ccpNumber, notes } = req.body;
         
         // Validate required fields
         if (!orderId || !reason || !refundMethod) {
+            console.log('❌ Validation failed - missing required fields');
             req.flash('error', 'جميع الحقول المطلوبة يجب ملؤها');
             return res.redirect(`/start-return/${orderId}`);
         }
 
         // Validate refund method specific fields
         if (refundMethod === 'exchange' && !exchangeItem) {
+            console.log('❌ Validation failed - missing exchange item');
             req.flash('error', 'يجب تحديد المنتج البديل');
             return res.redirect(`/start-return/${orderId}`);
         }
 
         if (refundMethod === 'ccp_refund' && !ccpNumber) {
+            console.log('❌ Validation failed - missing CCP number');
             req.flash('error', 'يجب إدخال رقم الحساب البريدي');
             return res.redirect(`/start-return/${orderId}`);
         }
 
+        console.log('✅ All validations passed');
+
+        // Get the order to extract the phone number (numero)
+        const order = await Order.findById(orderId);
+        if (!order) {
+            console.log('❌ Order not found');
+            req.flash('error', 'الطلب غير موجود');
+            return res.redirect('/track-login');
+        }
+
+        console.log('Found order:', order.numero);
+
+        // Create return request with all required fields
         const returnRequest = new ReturnRequest({
             orderId,
+            numero: order.numero, // Add the required numero field from the order
             reason,
             refundMethod,
-            exchangeItem,
-            ccpNumber,
+            exchangeItem: refundMethod === 'exchange' ? exchangeItem : undefined,
+            ccpNumber: refundMethod === 'ccp_refund' ? ccpNumber : undefined,
             notes,
             status: 'pending'
         });
 
+        console.log('Return request object:', returnRequest);
+        
         await returnRequest.save();
+        console.log('✅ Return request saved with ID:', returnRequest._id);
 
-        // Update the order
-        await Order.findByIdAndUpdate(orderId, { returnRequest: returnRequest._id });
+        // Update the order with the return request reference
+        await Order.findByIdAndUpdate(orderId, { 
+            returnRequest: returnRequest._id 
+        });
+        console.log('✅ Order updated with return request');
 
         req.flash('success', 'تم إرسال طلب الإرجاع بنجاح');
+        console.log('=== SUBMIT RETURN REQUEST SUCCESS ===');
         res.redirect('/track-login');
 
     } catch (err) {
-        console.error('Return submission error:', err);
-        req.flash('error', 'فشل في تقديم طلب الإرجاع');
+        console.error('❌ Return submission error:', err);
+        console.error('Error message:', err.message);
+        console.error('Error stack:', err.stack);
+        
+        // More specific error messages
+        if (err.name === 'ValidationError') {
+            req.flash('error', 'خطأ في البيانات المقدمة: ' + Object.values(err.errors).map(e => e.message).join(', '));
+        } else if (err.name === 'CastError') {
+            req.flash('error', 'خطأ في معرف الطلب');
+        } else {
+            req.flash('error', 'فشل في تقديم طلب الإرجاع');
+        }
+        
         res.redirect(`/start-return/${req.body.orderId}`);
     }
 });
