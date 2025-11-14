@@ -21,22 +21,16 @@ t.src=v;s=b.getElementsByTagName(e)[0];
 s.parentNode.insertBefore(t,s)}(window, document,'script',
 'https://connect.facebook.net/en_US/fbevents.js');
 
-// Create config object dynamically
-var pixelConfig = {};
+  // Initialize pixel
+  fbq('init', '<%= process.env.FB_PIXEL_ID %>', {
+    <% if (user && user.email) { %>em: '<%= user.email %>',<% } %>
+    <% if (user && user.firstName) { %>fn: '<%= user.firstName %>',<% } %>
+    <% if (user && user.lastName) { %>ln: '<%= user.lastName %>',<% } %>
+    <% if (user && user.numero) { %>ph: '<%= user.numero %>',<% } %>
+  });
 
-// Only add parameters that have values
-<% if (user && user.email) { %> pixelConfig.em = '<%= user.email %>'; <% } %>
-<% if (user && user.firstName) { %> pixelConfig.fn = '<%= user.firstName %>'; <% } %>
-<% if (user && user.lastName) { %> pixelConfig.ln = '<%= user.lastName %>'; <% } %>
-<% if (user && user.numero) { %> pixelConfig.ph = '<%= user.numero %>'; <% } %>
-<% if (user && user._id) { %> pixelConfig.external_id = '<%= user._id %>'; <% } %>
+  fbq('track', 'PageView');
 
-// Initialize with dynamic config
-fbq('init', '<%= process.env.FB_PIXEL_ID %>', pixelConfig);
-fbq('track', 'PageView', {
-eventID: '<%= eventId %>'
-  }
-);
 </script>
 <noscript>
   <img height="1" width="1" style="display:none" 
@@ -45,23 +39,19 @@ eventID: '<%= eventId %>'
 <!-- End Facebook Pixel Code -->
 <% } %>
 
-<!-- End Meta Pixel Code -->
-
-<!-- Google Tag Manager -->
-<script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
-new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
-j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
-'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
-})(window,document,'script','dataLayer','GTM-K8PWQM45');</script>
-<!-- End Google Tag Manager -->
-
-<script type="text/javascript">
+<<script type="text/javascript">
     (function(c,l,a,r,i,t,y){
         c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};
         t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;
         y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);
     })(window, document, "clarity", "script", "t8r0mi7k1l");
 </script>
+
+ <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+  new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+  j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+  'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+  })(window,document,'script','dataLayer','GTM-K8PWQM45');</script>
 
 <link href='http://fonts.googleapis.com/css?family=Roboto' rel='stylesheet' type='text/css'>
   <meta name="facebook-domain-verification" content="plfly5a8dktgdy17nvv2h8zsrpc9g5" />
