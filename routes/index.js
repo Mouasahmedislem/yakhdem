@@ -1850,7 +1850,7 @@ router.get("/", async function(req, res) {
   const shippingFee = cart.totalPrice >= freeShippingThreshold ? 0 : shipping.fee;
   const finalTotalPrice = cart.totalPrice + shippingFee;
   const rawNumero = req.body.numero || (req.user ? req.user.numero : undefined);
-  const cleanNumero = '213' + numeroRaw.replace(/^0+/, '').replace(/\D/g, '');     
+  const cleanNumero = '213' + rawNumero.replace(/^0+/, '').replace(/\D/g, '');     
   const order = new Order({
     user: req.user,
     cart: cart,
@@ -1906,8 +1906,8 @@ try {
     req.session.cart = null;
 
    // ✅ Clean the phone number
-  const numeroRaw = req.body.numero;
-  const cleanNumero = '213' + numeroRaw.replace(/^0+/, '').replace(/\D/g, ''); 
+  const rawNumero = req.body.numero;
+  const cleanNumero = '213' + rawNumero.replace(/^0+/, '').replace(/\D/g, ''); 
 
  // ✅ Prepare WhatsApp message payload with shipping info
     const payload = {
