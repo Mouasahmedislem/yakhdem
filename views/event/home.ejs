@@ -1,573 +1,513 @@
-<%- include ("../partials/header") %>.
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="referrer" content="strict-origin-when-cross-origin">
 
-<main>
+  <title><%= producthome && producthome.title ? producthome.title : 'Product' %> — Paintello Home</title>
 
-<% if (successMsg) { %>
-  <div class="alert alert-success"><%= successMsg %></div>
-<% } %>
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Font Awesome -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
-<!-- Navigation & Intro -->
-  <!-- sale content -->
- 
-      <div class="colour-grid-surround">
-  <div class="colour-grid-text">
-    <h2 class="intro-heading">
-      <span>Discover Tasteful</span>
-      <span>Colours</span>
-    </h2>
-    <p class="coat">
-      Find the perfect tone for every mood — crafted to complement your home beautifully.
-    </p>
-  </div>
+  <style>
+    body {
+      font-family: 'Helvetica Neue', Arial, sans-serif;
+      background-color: #f8f8f8;
+    }
+    
+    .zara-card {
+      background: white;
+      border-radius: 2px;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+      border: 1px solid #e5e5e5;
+    }
+    
+    .zara-btn {
+      background: #000;
+      color: white;
+      border: 1px solid #000;
+      padding: 12px 24px;
+      font-size: 13px;
+      letter-spacing: 0.5px;
+      transition: all 0.3s ease;
+      text-transform: uppercase;
+    }
+    
+    .zara-btn:hover {
+      background: #333;
+    }
+    
+    .zara-btn-secondary {
+      background: transparent;
+      color: #000;
+      border: 1px solid #000;
+    }
+    
+    .zara-btn-secondary:hover {
+      background: #000;
+      color: white;
+    }
 
-  <div class="colour-grid-container">
+    /* Hero Video Styles */
+    .hero-video {
+      position: relative;
+      width: 100%;
+      height: 100vh;
+      overflow: hidden;
+    }
 
-    <a href="/coulors/neutral" title="Neutrals Colours">
-      <div class="colour-grid-item text-below">
-        <div class="colour-grid-item-image">
-          <img src="//coatpaints.com/cdn/shop/files/COAT_2025NewColourShoot_Jojo_sWhite_DalstonChat_5-ProductImage_de1fc913-74dc-47f5-b795-6bcc8d555b0f_600x600.jpg">
-        </div>
-      </div>
-      <div class="room-label">
-        <span>Neutrals</span>
-        <span class="slide-btn-svg">
-          <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <path fill-rule="evenodd" clip-rule="evenodd"
-              d="M11.23 3.15649L15.2431 7.16963L15.7734 7.69996L15.2431 8.23029L11.23 12.2434L10.1693 11.1828L12.902 8.45005H0.666862V6.95005H12.9022L10.1693 4.21715L11.23 3.15649Z"
-              fill="currentColor"></path>
-          </svg>
-        </span>
-      </div>
-    </a>
+    .hero-video video {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      background-color: #000;
+    }
 
-    <a href="/coulors/greens" title="Greens Colours">
-      <div class="colour-grid-item text-below">
-        <div class="colour-grid-item-image">
-          <img src="//coatpaints.com/cdn/shop/files/COAT_Stacey_Dooley_Room_and_Paint_Pouring_-_Large_10_600x600.jpg" alt="Greens" class="grid-item-image">
-        </div>
-      </div>
-      <div class="room-label">
-        <span>Greens</span>
-        <span class="slide-btn-svg">
-          <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <path fill-rule="evenodd" clip-rule="evenodd"
-              d="M11.23 3.15649L15.2431 7.16963L15.7734 7.69996L15.2431 8.23029L11.23 12.2434L10.1693 11.1828L12.902 8.45005H0.666862V6.95005H12.9022L10.1693 4.21715L11.23 3.15649Z"
-              fill="currentColor"></path>
-          </svg>
-        </span>
-      </div>
-    </a>
+    .hero-overlay {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+      color: white;
+      text-align: center;
+      background: rgba(0, 0, 0, 0.25);
+    }
 
-    <a href="/coulors/blue" title="Blues Colours">
-      <div class="colour-grid-item text-below">
-        <div class="colour-grid-item-image">
-          <img src="//coatpaints.com/cdn/shop/files/blues_600x600.png?v=1747066148" alt="Blues" class="grid-item-image">
-        </div>
-      </div>
-      <div class="room-label">
-        <span>Blues</span>
-        <span class="slide-btn-svg">
-          <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <path fill-rule="evenodd" clip-rule="evenodd"
-              d="M11.23 3.15649L15.2431 7.16963L15.7734 7.69996L15.2431 8.23029L11.23 12.2434L10.1693 11.1828L12.902 8.45005H0.666862V6.95005H12.9022L10.1693 4.21715L11.23 3.15649Z"
-              fill="currentColor"></path>
-          </svg>
-        </span>
-      </div>
-    </a>
+    .video-desktop { display: none; }
+    .video-mobile { display: block; }
 
-    <a href="/coulors/pink" title="Pinks Colours">
-      <div class="colour-grid-item text-below">
-        <div class="colour-grid-item-image">
-          <img src="//coatpaints.com/cdn/shop/files/COAT_HOUSE_NINE_PIGLET_-_Product_Image_600x600.jpg" alt="Pinks" class="grid-item-image">
-        </div>
-      </div>
-      <div class="room-label">
-        <span>Pinks</span>
-        <span class="slide-btn-svg">
-          <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <path fill-rule="evenodd" clip-rule="evenodd"
-              d="M11.23 3.15649L15.2431 7.16963L15.7734 7.69996L15.2431 8.23029L11.23 12.2434L10.1693 11.1828L12.902 8.45005H0.666862V6.95005H12.9022L10.1693 4.21715L11.23 3.15649Z"
-              fill="currentColor"></path>
-          </svg>
-        </span>
-      </div>
-    </a>
+    @media (min-width: 768px) {
+      .video-desktop { display: block; }
+      .video-mobile { display: none; }
+    }
 
-    <a href="/coulors/yellowv2" title="Yellows Colours">
-      <div class="colour-grid-item text-below">
-        <div class="colour-grid-item-image">
-          <img src="//coatpaints.com/cdn/shop/files/COAT_2025_New_Colour_Shoot_Nap_Time_Arctic_Roll_1_-_Medium_bc767ea5-6058-4fe4-b552-7c0f5929da9c_600x600.jpg" alt="Yellows" class="grid-item-image">
-        </div>
-      </div>
-      <div class="room-label">
-        <span>Yellows</span>
-        <span class="slide-btn-svg">
-          <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <path fill-rule="evenodd" clip-rule="evenodd"
-              d="M11.23 3.15649L15.2431 7.16963L15.7734 7.69996L15.2431 8.23029L11.23 12.2434L10.1693 11.1828L12.902 8.45005H0.666862V6.95005H12.9022L10.1693 4.21715L11.23 3.15649Z"
-              fill="currentColor"></path>
-          </svg>
-        </span>
-      </div>
-    </a>
+    /* Color Grid Styles */
+    .colour-grid-container {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 2rem;
+      padding: 2rem 0;
+    }
 
-    <a href="/coulors/grey" title="Greys Colours">
-      <div class="colour-grid-item text-below">
-        <div class="colour-grid-item-image">
-          <img src="//coatpaints.com/cdn/shop/files/COAT_2025_New_Colour_Shoot_Rooted_Brasserie_Brown_3_-_Medium_835e53ea-8f75-4ae5-87f8-d05d630846ef_600x600.jpg" alt="Greys" class="grid-item-image">
-        </div>
-      </div>
-      <div class="room-label">
-        <span>Greys</span>
-        <span class="slide-btn-svg">
-          <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <path fill-rule="evenodd" clip-rule="evenodd"
-              d="M11.23 3.15649L15.2431 7.16963L15.7734 7.69996L15.2431 8.23029L11.23 12.2434L10.1693 11.1828L12.902 8.45005H0.666862V6.95005H12.9022L10.1693 4.21715L11.23 3.15649Z"
-              fill="currentColor"></path>
-          </svg>
-        </span>
-      </div>
-    </a>
+    .colour-grid-item {
+      position: relative;
+      overflow: hidden;
+      transition: transform 0.3s ease;
+    }
 
-  </div>
-</div>
-  <!-- Navigation & Intro -->
-<hr class="mt-4">
-<div class="container bm-container-md">	
-      <a class="d-block h-100 overflow-hidden bm-img-link" href="/paintello" target="_self">
-        <picture>
-            <img alt="New Wallpaper now in store at B&amp;M." class="w-100 bm-lazyload ls-is-cached lazyloaded"  src="https://live.staticflickr.com/65535/54530845375_805d1da7f5.jpg">
-          </picture>
-      </a>
-      </div>	
+    .colour-grid-item:hover {
+      transform: translateY(-5px);
+    }
 
-       
-  <!-- sale content -->
-<hr class="mt-4">
-<!-- Section: Features v.4 -->
-      <section id="features" class="text-center my-5">
+    .colour-grid-item img {
+      width: 100%;
+      height: 300px;
+      object-fit: cover;
+      transition: transform 0.3s ease;
+    }
 
-        <!-- Section heading -->
-        <h2 class="title font-weight-bold my-5 wow fadeIn" data-wow-delay="0.2s">
-          <strong>Our Service</strong>
-        </h2>
-</section>
+    .colour-grid-item:hover img {
+      transform: scale(1.05);
+    }
 
- <div class="container bm-container-md">	
-      <a class="d-block h-100 overflow-hidden bm-img-link" href="/power" target="_self">
-        <picture>
-            <img alt="New Wallpaper now in store at B&amp;M." class="w-100 bm-lazyload ls-is-cached lazyloaded"  src="https://s3.gifyu.com/images/bSimU.png">
-          </picture>
-      </a>
-      </div>	
-<hr class="mt-4">
- 
-<!-- Navigation & Intro -->
-  <!-- sale content -->
-      <hr class="mt-4">
-       <div class="bm-page">
-          <div class="container">
-              <div class="row">
-              <div class="order-lg-last">
-              <div class="mb-4 mb-lg-5 bm-content">
+    .room-label {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 1rem 0;
+      font-size: 13px;
+      letter-spacing: 0.5px;
+      text-transform: uppercase;
+      border-bottom: 1px solid #e5e5e5;
+    }
 
-  <h2 class="text-center text-uppercase">Sale</h2>
-  <ul class="row justify-content-center list-unstyled mb-4">
-   
+    /* Fade-in animation */
+    .fade-in {
+      opacity: 0;
+      transform: translateY(20px);
+      animation: fadeInUp 1s ease-out forwards;
+    }
 
-  <li class="col-6 col-sm-4 col-md-3">
-  <a class="d-block mt-4 text-center text-dark" href="/sale/clean">
-  <div class="mb-1 px-2">
-  <img  class="border img-fluid rounded bm-lazyload lazyloaded" data-src="//cdn.bmstores.co.uk/images/dmCategory/thumbnailImageResponsive/wallpaper5.jpg" width="160" height="160" src="https://live.staticflickr.com/65535/54484395216_e110327224.jpg">
-  </div>
-  <h2 class="h6 mb-0">Satiné Paint</h2>
-  </a>
-  </li>
+    .fade-in.delay-1 { animation-delay: 0.4s; }
+    .fade-in.delay-2 { animation-delay: 0.8s; }
+    .fade-in.delay-3 { animation-delay: 1.2s; }
 
-  <li class="col-6 col-sm-4 col-md-3">
-  <a class="d-block mt-4 text-center text-dark" href="/sale/furniteur">
-  <div class="mb-1 px-2">
-  <img  class="border img-fluid rounded bm-lazyload lazyloaded" data-src="//cdn.bmstores.co.uk/images/dmCategory/thumbnailImageResponsive/wallpaper5.jpg" width="160" height="160" src="https://live.staticflickr.com/65535/54484751175_41c6dd91d8.jpg">
-  </div>
-  <h2 class="h6 mb-0">Vinyl Paint</h2>
-  </a>
-  </li>
+    @keyframes fadeInUp {
+      from {
+        opacity: 0;
+        transform: translateY(30px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
 
-  <li class="col-6 col-sm-4 col-md-3">
-  <a class="d-block mt-4 text-center text-dark" href="/sale/rug">
-  <div class="mb-1 px-2">
-  <img  class="border img-fluid rounded bm-lazyload lazyloaded" data-src="//cdn.bmstores.co.uk/images/dmCategory/thumbnailImageResponsive/wallpaper5.jpg" width="160" height="160" src="https://live.staticflickr.com/65535/54484598224_b88ac10983.jpg">
-  </div>
-  <h2 class="h6 mb-0">Onecoat Matt Paint</h2>
-  </a>
-  </li>
+    /* Section spacing */
+    .section-spacing {
+      padding: 4rem 0;
+    }
 
-  <li class="col-6 col-sm-4 col-md-3">
-  <a class="d-block mt-4 text-center text-dark" href="/sale/cuisin">
-  <div class="mb-1 px-2">
-  <img  class="border img-fluid rounded bm-lazyload lazyloaded" data-src="//cdn.bmstores.co.uk/images/dmCategory/thumbnailImageResponsive/wallpaper5.jpg" width="160" height="160" src="https://live.staticflickr.com/65535/54484395221_896db824f8.jpg">
-  </div>
-  <h2 class="h6 mb-0">My Fixature</h2>
-  </a>
-  </li>
+    /* Product grid */
+    .product-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+      gap: 2rem;
+      padding: 2rem 0;
+    }
 
-  <li class="col-6 col-sm-4 col-md-3">
-  <a class="d-block mt-4 text-center text-dark" href="/sale/coat">
-  <div class="mb-1 px-2">
-  <img  class="border img-fluid rounded bm-lazyload lazyloaded" data-src="//cdn.bmstores.co.uk/images/dmCategory/thumbnailImageResponsive/wallpaper5.jpg" width="160" height="160" src="https://live.staticflickr.com/65535/54484751190_bcae07662f.jpg">
-  </div>
-  <h2 class="h6 mb-0">Paintello's MAC</h2>
-  </a>
-  </li>
+    .product-card {
+      text-align: center;
+      transition: transform 0.3s ease;
+    }
 
-  <li class="col-6 col-sm-4 col-md-3">
-  <a class="d-block mt-4 text-center text-dark" href="/wow">
-  <div class="mb-1 px-2">
-  <img  class="border img-fluid rounded bm-lazyload lazyloaded" data-src="//cdn.bmstores.co.uk/images/dmCategory/thumbnailImageResponsive/wallpaper5.jpg" width="160" height="160" src="https://live.staticflickr.com/65535/54485036715_df1a8141a4.jpg">
-  </div>
-  <h2 class="h6 mb-0">Paintello's Tile paint</h2>
-  </a>
-  </li>
+    .product-card:hover {
+      transform: translateY(-5px);
+    }
 
-  <li class="col-6 col-sm-4 col-md-3">
-  <a class="d-block mt-4 text-center text-dark" href="/sale/sample">
-  <div class="mb-1 px-2">
-  <img  class="border img-fluid rounded bm-lazyload lazyloaded" data-src="//cdn.bmstores.co.uk/images/dmCategory/thumbnailImageResponsive/wallpaper5.jpg" width="160" height="160" src="https://live.staticflickr.com/65535/54424106620_55363280c4_c.jpg">
-  </div>
-  <h2 class="h6 mb-0">Samples</h2>
-  </a>
-  </li>
+    .product-card img {
+      width: 100%;
+      height: 200px;
+      object-fit: cover;
+      margin-bottom: 1rem;
+    }
 
- 
-  
-</ul></div></div></div></div></div>
- <!-- Navigation & Intro -->
+    .product-card h3 {
+      font-size: 13px;
+      letter-spacing: 0.5px;
+      text-transform: uppercase;
+      margin: 0;
+    }
+  </style>
 
+  <!-- Meta Pixel, GTM, Clarity Scripts -->
+  <% if (process.env.FB_PIXEL_ID) { %>
+  <script>
+    !function(f,b,e,v,n,t,s)
+    {if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+    n.callMethod.apply(n,arguments):n.queue.push(arguments)};
+    if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
+    n.queue=[];t=b.createElement(e);t.async=!0;
+    t.src=v;s=b.getElementsByTagName(e)[0];
+    s.parentNode.insertBefore(t,s)}(window,document,'script',
+    'https://connect.facebook.net/en_US/fbevents.js');
 
-<hr class="mt-4">
+    var pixelConfig = {};
+    <% if (user && user.email) { %> pixelConfig.em = '<%= user.email %>'; <% } %>
+    <% if (user && user.firstName) { %> pixelConfig.fn = '<%= user.firstName %>'; <% } %>
+    <% if (user && user.lastName) { %> pixelConfig.ln = '<%= user.lastName %>'; <% } %>
+    <% if (user && user.numero) { %> pixelConfig.ph = '<%= user.numero %>'; <% } %>
+    <% if (user && user._id) { %> pixelConfig.external_id = '<%= user._id %>'; <% } %>
 
-<!-- Section: About 1 -->
-      <section id="about" class="mt-5 mb-5 py-3 wow fadeIn" data-wow-delay="0.2s">
+    fbq('init', '<%= process.env.FB_PIXEL_ID %>', pixelConfig);
+    fbq('track', 'PageView');
+  </script>
+  <% } %>
 
-        <!-- Grid row -->
-        <div class="row pt-2 mt-lg-5">
+  <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+  new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+  j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+  'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+  })(window,document,'script','dataLayer','GTM-K8PWQM45');</script>
 
-          <!-- Grid column -->
-          <div class="col-lg-6 col-md-12 mb-3 wow fadeIn" data-wow-delay="0.4s">
-            <!-- Image -->
-        <a class="d-block h-100 overflow-hidden bm-img-link" href="/sale/tool" target="_self">
-        <picture>
-            <img  src=https://images.prismic.io/johnstones-paint/Z2qXLZbqstJ98z9-_BRAWL-PROJ606-PPG-JSRRetainerMAY2023-01.Intuitive16x9-v2.00_00_10_02.Still010.png?auto=format%2Ccompress&rect=0%2C350%2C1920%2C726&w=2220&h=840" class="img-fluid rounded" alt="My photo" >
-          </picture>
-<!-- Secion heading -->
-            <h2 class="mb-5 title font-weight-bold wow fadeIn" data-wow-delay="0.2s" href="/sale/tool"  >
-              <strong>Paint Tools</strong> 
-            </h2>
+  <script type="text/javascript">
+    (function(c,l,a,r,i,t,y){
+      c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};
+      t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;
+      y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);
+    })(window, document, "clarity", "script", "t8r0mi7k1l");
+  </script>
+</head>
 
-            <!-- Description -->
-            <p align="justify" class="grey-text">هنا لمساعدتك مع نصائح مفيدة على البدء في مشروع الطلاء الخاص بك، بدءًا من الأسئلة الشائعة وحتى قوائم التحقق من الأدوات..</p>
-            
-      </a>
+<body class="min-h-screen bg-white">
+  <!-- Minimal Header -->
+  <header class="border-b border-gray-200 bg-white fixed top-0 left-0 w-full z-50">
+    <div class="max-w-7xl mx-auto px-6 py-4">
+      <div class="flex items-center justify-between">
+        <!-- Logo -->
+        <a href="/" class="flex items-center gap-4">
+          <img src="/favicon/android-chrome-192x192.png" alt="Paintello" class="h-8 w-8">
+          <img src="/img/logo.png" alt="Paintello Home" class="h-10 w-auto">
+        </a>
+
+        <!-- Navigation -->
+        <nav class="hidden md:flex items-center gap-8">
+          <a href="/" class="text-sm text-gray-600 hover:text-gray-900 uppercase tracking-wide">Accueil</a>
+          <a href="/shop" class="text-sm text-gray-600 hover:text-gray-900 uppercase tracking-wide">Boutique</a>
+          <a href="/track-login" class="text-sm text-gray-600 hover:text-gray-900 uppercase tracking-wide">Suivi</a>
+        </nav>
+
+        <!-- Icons -->
+        <div class="flex items-center gap-4">
+          <a href="/shop" class="relative text-gray-600 hover:text-gray-900">
+            <i class="fa-solid fa-bag-shopping text-lg"></i>
+            <% if (session.cart && session.cart.totalQty > 0) { %>
+              <span class="absolute -top-2 -right-2 bg-black text-white text-xs px-1.5 py-0.5 rounded-full">
+                <%= session.cart.totalQty %>
+              </span>
+            <% } %>
+          </a>
           
-          
-</div>
+          <a href="/user/profile" class="text-gray-600 hover:text-gray-900">
+            <i class="fa-regular fa-user text-lg"></i>
+          </a>
         </div>
-        <!-- Grid row -->
+      </div>
+    </div>
+  </header>
 
-      </section>
-      <!-- Section: About 1 -->
+  <!-- Hero Video Section -->
+  <section class="hero-video mt-20">
+    <!-- Mobile Video -->
+    <div class="video-mobile">
+      <video playsinline loop autoplay muted preload="auto">
+        <source src="//coatpaints.com/cdn/shop/videos/c/vp/8c29baaa62984b8a8836a41ecb2ca1ce/8c29baaa62984b8a8836a41ecb2ca1ce.SD-480p-1.2Mbps-48816727.mp4?v=0" type="video/mp4">
+      </video>
+    </div>
 
- 
+    <!-- Desktop Video -->
+    <div class="video-desktop">
+      <video playsinline loop autoplay muted preload="auto">
+        <source src="//coatpaints.com/cdn/shop/videos/c/vp/3617af9fd8254f5688fdeef051307a00/3617af9fd8254f5688fdeef051307a00.HD-720p-3.0Mbps-48816014.mp4?v=0" type="video/mp4">
+      </video>
+    </div>
 
-  <!-- sale content -->
-      <hr class="mt-4">
-       <div class="bm-page">
-          <div class="container">
-              <div class="row">
-              <div class="order-lg-last">
-              <div class="mb-4 mb-lg-5 bm-content">
+    <div class="hero-overlay">
+      <div class="max-w-4xl mx-auto px-6">
+        <h1 class="text-4xl md:text-6xl font-light tracking-wide mb-6 fade-in">
+          <em>This is</em>
+        </h1>
+        <h1 class="text-4xl md:text-6xl font-light tracking-wide mb-8 fade-in delay-1">
+          PAINTELLO HOME
+        </h1>
+        <p class="text-lg md:text-xl text-gray-200 mb-8 fade-in delay-2 max-w-2xl mx-auto">
+          Sustainable paint & décor — crafted in Algeria for homes that inspire.
+        </p>
 
-  <h2 class="text-center text-uppercase">Shop by room</h2>
-  <ul class="row justify-content-center list-unstyled mb-4">
-
-<li class="col-6 col-sm-4 col-md-3">
-  <a class="d-block mt-4 text-center text-dark" href="/pink/6856cd8203d002f2019026dd">
-  <div class="mb-1 px-2">
-  <img  class="border img-fluid rounded bm-lazyload lazyloaded" data-src="//cdn.bmstores.co.uk/images/dmCategory/thumbnailImageResponsive/wallpaper5.jpg" width="160" height="160" src="https://live.staticflickr.com/65535/54483207460_1e36b3f486.jpg">
-  </div>
-  <h2 class="h6 mb-0">SAPLINGPINK_300P</h2>
-  </a>
-  </li>
-<li class="col-6 col-sm-4 col-md-3">
-  <a class="d-block mt-4 text-center text-dark" href="/yelloow/6856cee603d002f2019026e6">
-  <div class="mb-1 px-2">
-  <img  class="border img-fluid rounded bm-lazyload lazyloaded" data-src="//cdn.bmstores.co.uk/images/dmCategory/thumbnailImageResponsive/wallpaper5.jpg" width="160" height="160" src="https://live.staticflickr.com/65535/54483123844_144752d2a2.jpg">
-  </div>
-  <h2 class="h6 mb-0">LITTELYELLOW_164--P</h2>
-  </a>
-  </li>
-<li class="col-6 col-sm-4 col-md-3">
-  <a class="d-block mt-4 text-center text-dark" href="/pink/6856cdd203d002f2019026df">
-  <div class="mb-1 px-2">
-  <img  class="border img-fluid rounded bm-lazyload lazyloaded" data-src="//cdn.bmstores.co.uk/images/dmCategory/thumbnailImageResponsive/wallpaper5.jpg" width="160" height="160" src="https://live.staticflickr.com/65535/54483127673_8c66470154.jpg">
-  </div>
-  <h2 class="h6 mb-0">PONPONETTPINK_136P</h2>
-  </a>
-  </li>
-<li class="col-6 col-sm-4 col-md-3">
-  <a class="d-block mt-4 text-center text-dark" href="/pink/6856ce2803d002f2019026e1">
-  <div class="mb-1 px-2">
-  <img  class="border img-fluid rounded bm-lazyload lazyloaded" data-src="//cdn.bmstores.co.uk/images/dmCategory/thumbnailImageResponsive/wallpaper5.jpg" width="160" height="160" src="https://live.staticflickr.com/65535/54483127778_b9467fd333.jpg">
-  </div>
-  <h2 class="h6 mb-0">LITEELPINK_134P</h2>
-  </a>
-  </li>
-<li class="col-6 col-sm-4 col-md-3">
-  <a class="d-block mt-4 text-center text-dark" href="/neutral/6856cf9503d002f2019026eb">
-  <div class="mb-1 px-2">
-  <img  class="border img-fluid rounded bm-lazyload lazyloaded" data-src="//cdn.bmstores.co.uk/images/dmCategory/thumbnailImageResponsive/wallpaper5.jpg" width="160" height="160" src="https://live.staticflickr.com/65535/54484155241_e080721a64.jpg">
-  </div>
-  <h2 class="h6 mb-0">ROMAIN_1066P</h2>
-  </a>
-  </li>
-<li class="col-6 col-sm-4 col-md-3">
-  <a class="d-block mt-4 text-center text-dark" href="neutral/6856cfde03d002f2019026ed">
-  <div class="mb-1 px-2">
-  <img  class="border img-fluid rounded bm-lazyload lazyloaded" data-src="//cdn.bmstores.co.uk/images/dmCategory/thumbnailImageResponsive/wallpaper5.jpg" width="160" height="160" src="https://live.staticflickr.com/65535/54484348774_499e68bec8.jpg" >
-  </div>
-  <h2 class="h6 mb-0">RAMIE_1068P</h2>
-  </a>
-  </li>
-<li class="col-6 col-sm-4 col-md-3">
-  <a class="d-block mt-4 text-center text-dark" href="/neutral/6856dda903d002f201902713">
-  <div class="mb-1 px-2">
-  <img  class="border img-fluid rounded bm-lazyload lazyloaded" data-src="//cdn.bmstores.co.uk/images/dmCategory/thumbnailImageResponsive/wallpaper5.jpg" width="160" height="160" src="https://live.staticflickr.com/65535/54484348799_e2d846208c.jpg" >
-  </div>
-  <h2 class="h6 mb-0">PRINT_1062P</h2>
-  </a>
-  </li>
-<li class="col-6 col-sm-4 col-md-3">
-  <a class="d-block mt-4 text-center text-dark" href="/neutral/6856dd1403d002f20190270f">
-  <div class="mb-1 px-2">
-  <img  class="border img-fluid rounded bm-lazyload lazyloaded" data-src="//cdn.bmstores.co.uk/images/dmCategory/thumbnailImageResponsive/wallpaper5.jpg" width="160" height="160" src= "https://live.staticflickr.com/65535/54484155506_d4ef44d858.jpg">
-  </div>
-  <h2 class="h6 mb-0">SANDLIGHT_972P</h2>
-  </a>
-  </li>
-<li class="col-6 col-sm-4 col-md-3">
-  <a class="d-block mt-4 text-center text-dark" href="/neutral/6856dcd203d002f20190270d">
-  <div class="mb-1 px-2">
-  <img  class="border img-fluid rounded bm-lazyload lazyloaded" data-src="//cdn.bmstores.co.uk/images/dmCategory/thumbnailImageResponsive/wallpaper5.jpg" width="160" height="160" src="https://live.staticflickr.com/65535/54484512515_ff20889f4b.jpg" >
-  </div>
-  <h2 class="h6 mb-0">ZINNIA_1078P</h2>
-  </a>
-  </li>
-<li class="col-6 col-sm-4 col-md-3">
-  <a class="d-block mt-4 text-center text-dark" href="/yelloow/6856cf3603d002f2019026e8">
-  <div class="mb-1 px-2">
-  <img  class="border img-fluid rounded bm-lazyload lazyloaded" data-src="//cdn.bmstores.co.uk/images/dmCategory/thumbnailImageResponsive/wallpaper5.jpg" width="160" height="160" src=//live.staticflickr.com/65535/54483209243_232f00611a.jpg" >
-  </div>
-  <h2 class="h6 mb-0">COOLYELLOW_174-P</h2>
-  </a>
-  </li>
-<li class="col-6 col-sm-4 col-md-3">
-  <a class="d-block mt-4 text-center text-dark" href="/blue/6856aff84a3d222983fe7688">
-  <div class="mb-1 px-2">
-  <img  class="border img-fluid rounded bm-lazyload lazyloaded" data-src="//cdn.bmstores.co.uk/images/dmCategory/thumbnailImageResponsive/wallpaper5.jpg" width="160" height="160" src="https://live.staticflickr.com/65535/54481135987_b23529b174.jpg" >
-  </div>
-  <h2 class="h6 mb-0">BLUEDROP_756P</h2>
-  </a>
-  </li>
-<li class="col-6 col-sm-4 col-md-3">
-  <a class="d-block mt-4 text-center text-dark" href="/blue/6856b93e4a3d222983fe768e">
-  <div class="mb-1 px-2">
-  <img  class="border img-fluid rounded bm-lazyload lazyloaded" data-src="//cdn.bmstores.co.uk/images/dmCategory/thumbnailImageResponsive/wallpaper5.jpg" width="160" height="160" src= "https://live.staticflickr.com/65535/54482180389_5e8774ddf9.jpg" >
-  </div>
-  <h2 class="h6 mb-0">COOLMORA_744P</h2>
-  </a>
-  </li>
-<li class="col-6 col-sm-4 col-md-3">
-  <a class="d-block mt-4 text-center text-dark" href="/green/6856c88203d002f2019026bf">
-  <div class="mb-1 px-2">
-  <img  class="border img-fluid rounded bm-lazyload lazyloaded" data-src="//cdn.bmstores.co.uk/images/dmCategory/thumbnailImageResponsive/wallpaper5.jpg" width="160" height="160" src="https://live.staticflickr.com/65535/54481290707_f73e099c43.jpg" >
-  </div>
-  <h2 class="h6 mb-0">FRESHOGREEN_758P</h2>
-  </a>
-  </li>
-<li class="col-6 col-sm-4 col-md-3">
-  <a class="d-block mt-4 text-center text-dark" href="/green/6856c8e603d002f2019026c1">
-  <div class="mb-1 px-2">
-  <img  class="border img-fluid rounded bm-lazyload lazyloaded" data-src="//cdn.bmstores.co.uk/images/dmCategory/thumbnailImageResponsive/wallpaper5.jpg" width="160" height="160" src="https://live.staticflickr.com/65535/54482500420_d33a1c9c1f.jpg" >
-  </div>
-  <h2 class="h6 mb-0">DROPGREEN_176P</h2>
-  </a>
-  </li>
-<li class="col-6 col-sm-4 col-md-3">
-  <a class="d-block mt-4 text-center text-dark" href="/green/6856c94b03d002f2019026c3">
-  <div class="mb-1 px-2">
-  <img  class="border img-fluid rounded bm-lazyload lazyloaded" data-src="//cdn.bmstores.co.uk/images/dmCategory/thumbnailImageResponsive/wallpaper5.jpg" width="160" height="160" src="https://live.staticflickr.com/65535/54482135126_bdc1a068c5.jpg" >
-  </div>
-  <h2 class="h6 mb-0">BRIGDE_1188P</h2>
-  </a>
-  </li>
-<li class="col-6 col-sm-4 col-md-3">
-  <a class="d-block mt-4 text-center text-dark" href="/green/6856c9ab03d002f2019026c5">
-  <div class="mb-1 px-2">
-  <img  class="border img-fluid rounded bm-lazyload lazyloaded" data-src="//cdn.bmstores.co.uk/images/dmCategory/thumbnailImageResponsive/wallpaper5.jpg" width="160" height="160" src= "https://live.staticflickr.com/65535/54482500685_f25f402b5b.jpg">
-  </div>
-  <h2 class="h6 mb-0">BLUSHGREEN_152P</h2>
-  </a>
-  </li>
-<li class="col-6 col-sm-4 col-md-3">
-  <a class="d-block mt-4 text-center text-dark" href="/green/6856ca0c03d002f2019026c7">
-  <div class="mb-1 px-2">
-  <img  class="border img-fluid rounded bm-lazyload lazyloaded" data-src="//cdn.bmstores.co.uk/images/dmCategory/thumbnailImageResponsive/wallpaper5.jpg" width="160" height="160" src= "https://live.staticflickr.com/65535/54482135326_76287a4b39.jpg">
-  </div>
-  <h2 class="h6 mb-0">SAPLINGGREEN_750P</h2>
-  </a>
-  </li>
-<li class="col-6 col-sm-4 col-md-3">
-  <a class="d-block mt-4 text-center text-dark" href="/green/6856cafa03d002f2019026cd">
-  <div class="mb-1 px-2">
-  <img  class="border img-fluid rounded bm-lazyload lazyloaded" data-src="//cdn.bmstores.co.uk/images/dmCategory/thumbnailImageResponsive/wallpaper5.jpg" width="160" height="160" src= "https://live.staticflickr.com/65535/54482500350_19c6cfc28d.jpg" >
-  </div>
-  <h2 class="h6 mb-0">GARDEN_1198P</h2>
-  </a>
-  </li>
-<li class="col-6 col-sm-4 col-md-3">
-  <a class="d-block mt-4 text-center text-dark" href="/blue/6856b9eb4a3d222983fe7692">
-  <div class="mb-1 px-2">
-  <img  class="border img-fluid rounded bm-lazyload lazyloaded" data-src="//cdn.bmstores.co.uk/images/dmCategory/thumbnailImageResponsive/wallpaper5.jpg" width="160" height="160" src= "https://live.staticflickr.com/65535/54481135862_0261d66c2a.jpg">
-  </div>
-  <h2 class="h6 mb-0">TWEEDIA_752P</h2>
-  </a>
-  </li>
-<li class="col-6 col-sm-4 col-md-3">
-  <a class="d-block mt-4 text-center text-dark" href="/blue/6856b9a24a3d222983fe7690">
-  <div class="mb-1 px-2">
-  <img  class="border img-fluid rounded bm-lazyload lazyloaded" data-src="//cdn.bmstores.co.uk/images/dmCategory/thumbnailImageResponsive/wallpaper5.jpg" width="160" height="160" src= "https://live.staticflickr.com/65535/54482263638_167c17c6e5.jpg">
-  </div>
-  <h2 class="h6 mb-0">FRESHOBLUE_742P</h2>
-  </a>
-  </li>
-
-
-</ul></div></div></div></div></div>
-
-
- <!-- Section: About 1 -->
-      <section id="about" class="mt-5 mb-5 py-3 wow fadeIn" data-wow-delay="0.2s">
-
-        <!-- Grid row -->
-        <div class="row pt-2 mt-lg-5">
-
-          <!-- Grid column -->
-          <div class="col-lg-6 col-md-12 mb-3 wow fadeIn" data-wow-delay="0.4s">
-            <!-- Image -->
-            <img src="https://images.prismic.io/johnstones-paint/ZvqoRLVsGrYSwJEi_Dyrup_Bedroom01.tif?auto=format%2Ccompress&rect=0%2C1003%2C6000%2C2270&w=2220&h=840" class="img-fluid rounded" alt="My photo">
-          </div>
-          <!-- Grid column -->
-
-          <!-- Grid column -->
-          <div class="col-lg-6 ml-auto col-md-12 wow fadeIn" data-wow-delay="0.4s">
-
-            <!-- Secion heading -->
-            <h2 class="mb-5 title font-weight-bold wow fadeIn" data-wow-delay="0.2s">
-              <strong>Paint Colour Trends</strong>
-            </h2>
-
-            <!-- Description -->
-            <p align="justify" class="grey-text">تصفح قصص اتجاهاتنا للحصول على الإلهام حول كيفية استخدام الألوان والجمع بينها لإنشاء غرف ذات شخصية..</p>
-            
-          </div>
-          <!-- Grid column -->
-
+        <!-- Brand Buttons -->
+        <div class="flex flex-col sm:flex-row items-center justify-center gap-4 fade-in delay-3">
+          <a href="/" class="zara-btn-secondary text-sm">
+            <i class="fas fa-paint-roller mr-2"></i>Paintello
+          </a>
+          <a href="/paintello" class="zara-btn text-sm">
+            <i class="fas fa-home mr-2"></i>Paintello Home
+          </a>
         </div>
-        <!-- Grid row -->
+      </div>
+    </div>
+  </section>
 
-      </section>
-      <!-- Section: About 1 -->
- 
-<!-- Section: Features v.4 -->
-      <section id="features" class="text-center my-5">
+  <!-- Main Content -->
+  <main class="max-w-7xl mx-auto px-6">
+    <!-- Color Discovery Section -->
+    <section class="section-spacing">
+      <div class="text-center mb-12">
+        <h2 class="text-2xl font-light tracking-wide uppercase mb-4">Discover Tasteful Colours</h2>
+        <p class="text-sm text-gray-600 max-w-2xl mx-auto">
+          Find the perfect tone for every mood — crafted to complement your home beautifully.
+        </p>
+      </div>
 
-        <!-- Section heading -->
-        <h2 class="title font-weight-bold my-5 wow fadeIn" data-wow-delay="0.2s">
-          <strong>Awesome features</strong>
-        </h2>
-
-        <!-- Section description -->
-        <p class="grey-text w-responsive mx-auto mb-5 wow fadeIn" data-wow-delay="0.2s">
-          Lorem ipsum dolor sit amet, consectetur adipisicing elit. Laborum quas, eos officia maiores ipsam ipsum
-          dolores reiciendis
-          ad voluptas, animi obcaecati adipisci sapiente mollitia.</p>
-
-        <!-- Grid row -->
-        <div class="row wow fadeIn" data-wow-delay="0.2s">
-
-          <!-- Grid column -->
-          <div class="col-lg-4 text-center">
-            <div class="icon-area">
-              <div class="circle-icon">
-               <i class="fas fa-brush"></i>
-              </div>
-              <br>
-              <h5 class="dark-grey-text font-weight-bold mt-2">Interior Paint</h5>
-              <div class="mt-1">
-                <p class="mx-3 grey-text">تُصمم دهاناتنا الداخلية خصيصًا للجدران والأسقف والأسطح الداخلية. اختر دهانات الجدران والأسقف لإنشاء مجموعات ألوان فريدة، أو اترك انطباعًا مميزًا من خلال الجدران والأسقف المميزة. هل تبحث عن شيء أكثر متانة؟ لدينا دهانات للمطبخ والحمامات وطلاء قابل للغسل لتناسب متطلباتك المحددة. اختر من بين أكثر من 2000 لون واعثر على الطلاء المثالي لك اليوم..</p>
-              </div>
+      <div class="colour-grid-container">
+        <!-- Neutral Colors -->
+        <a href="/coulors/neutral" class="group">
+          <div class="zara-card">
+            <div class="colour-grid-item">
+              <img src="//coatpaints.com/cdn/shop/files/COAT_2025NewColourShoot_Jojo_sWhite_DalstonChat_5-ProductImage_de1fc913-74dc-47f5-b795-6bcc8d555b0f_600x600.jpg" 
+                   alt="Neutral Colors" class="group-hover:scale-105 transition-transform duration-300">
+            </div>
+            <div class="room-label">
+              <span>Neutrals</span>
+              <i class="fas fa-arrow-right text-xs"></i>
             </div>
           </div>
-          <!-- Grid column -->
+        </a>
 
-          <!-- Grid column -->
-          <div class="col-lg-4 text-center">
-            <div class="icon-area">
-              <div class="circle-icon">
-                <i class="fas fa-fill-drip"></i>
-              </div>
-              <br>
-              <h5 class="dark-grey-text font-weight-bold mt-2">Facade Paint</h5>
-              <div class="mt-1">
-                <p class="mx-3 grey-text">جهّز حديقتك بمجموعة الدهانات الخارجية لدينا. أضف الحياة إلى سقيفة منزلك بمجموعة ألوان الحدائق لدينا، أو استكشف مجموعتنا من الدهانات الخارجية لأسوارك وبواباتك وغيرها من الأسطح الخارجية. هل تبحث عن طلاء الجزء الخارجي من منزلك؟ استكشف البناء الأملس وأضف أسلوبًا إبداعيًا إلى الخارج..</p>
-              </div>
+        <!-- Green Colors -->
+        <a href="/coulors/greens" class="group">
+          <div class="zara-card">
+            <div class="colour-grid-item">
+              <img src="//coatpaints.com/cdn/shop/files/COAT_Stacey_Dooley_Room_and_Paint_Pouring_-_Large_10_600x600.jpg" 
+                   alt="Green Colors" class="group-hover:scale-105 transition-transform duration-300">
+            </div>
+            <div class="room-label">
+              <span>Greens</span>
+              <i class="fas fa-arrow-right text-xs"></i>
             </div>
           </div>
-          <!-- Grid column -->
+        </a>
 
-          <!-- Grid column -->
-          <div class="col-lg-4 text-center mb-4">
-            <div class="icon-area">
-              <div class="circle-icon">
-                <i class="fas fa-paint-roller" href="/sale/tool"></i>
-              </div>
-              <br>
-              <h5 class="dark-grey-text font-weight-bold mt-2">Paint Tools</h5>
-              <div class="mt-1">
-                <p class="mx-3 grey-text">سلسلة من المعلومات والتلميحات والنصائح المفيدة لمساعدتك على البدء في مشروع الطلاء الخاص بك، بدءًا من الأسئلة الشائعة وحتى قوائم التحقق من الأدوات..</p>
-              </div>
+        <!-- Blue Colors -->
+        <a href="/coulors/blue" class="group">
+          <div class="zara-card">
+            <div class="colour-grid-item">
+              <img src="//coatpaints.com/cdn/shop/files/blues_600x600.png?v=1747066148" 
+                   alt="Blue Colors" class="group-hover:scale-105 transition-transform duration-300">
+            </div>
+            <div class="room-label">
+              <span>Blues</span>
+              <i class="fas fa-arrow-right text-xs"></i>
             </div>
           </div>
-          <!-- Grid column -->
+        </a>
+
+        <!-- Pink Colors -->
+        <a href="/coulors/pink" class="group">
+          <div class="zara-card">
+            <div class="colour-grid-item">
+              <img src="//coatpaints.com/cdn/shop/files/COAT_HOUSE_NINE_PIGLET_-_Product_Image_600x600.jpg" 
+                   alt="Pink Colors" class="group-hover:scale-105 transition-transform duration-300">
+            </div>
+            <div class="room-label">
+              <span>Pinks</span>
+              <i class="fas fa-arrow-right text-xs"></i>
+            </div>
+          </div>
+        </a>
+      </div>
+    </section>
+
+    <!-- Promotional Banner -->
+    <section class="section-spacing">
+      <div class="zara-card overflow-hidden">
+        <a href="/paintello" class="block">
+          <img src="https://live.staticflickr.com/65535/54530845375_805d1da7f5.jpg" 
+               alt="New Collection" class="w-full h-64 md:h-96 object-cover hover:scale-105 transition-transform duration-500">
+        </a>
+      </div>
+    </section>
+
+    <!-- Shop by Room Section -->
+    <section class="section-spacing">
+      <div class="text-center mb-12">
+        <h2 class="text-2xl font-light tracking-wide uppercase mb-4">Shop by Room</h2>
+        <p class="text-sm text-gray-600">Discover our curated collection for every space</p>
+      </div>
+
+      <div class="product-grid">
+        <!-- Product 1 -->
+        <a href="/pink/6856cd8203d002f2019026dd" class="product-card group">
+          <div class="zara-card p-4 h-full">
+            <img src="https://live.staticflickr.com/65535/54483207460_1e36b3f486.jpg" 
+                 alt="SAPLINGPINK_300P" class="group-hover:scale-105 transition-transform duration-300">
+            <h3 class="font-medium">SAPLINGPINK_300P</h3>
+          </div>
+        </a>
+
+        <!-- Product 2 -->
+        <a href="/yelloow/6856cee603d002f2019026e6" class="product-card group">
+          <div class="zara-card p-4 h-full">
+            <img src="https://live.staticflickr.com/65535/54483123844_144752d2a2.jpg" 
+                 alt="LITTELYELLOW_164--P" class="group-hover:scale-105 transition-transform duration-300">
+            <h3 class="font-medium">LITTELYELLOW_164--P</h3>
+          </div>
+        </a>
+
+        <!-- Product 3 -->
+        <a href="/pink/6856cdd203d002f2019026df" class="product-card group">
+          <div class="zara-card p-4 h-full">
+            <img src="https://live.staticflickr.com/65535/54483127673_8c66470154.jpg" 
+                 alt="PONPONETTPINK_136P" class="group-hover:scale-105 transition-transform duration-300">
+            <h3 class="font-medium">PONPONETTPINK_136P</h3>
+          </div>
+        </a>
+
+        <!-- Product 4 -->
+        <a href="/pink/6856ce2803d002f2019026e1" class="product-card group">
+          <div class="zara-card p-4 h-full">
+            <img src="https://live.staticflickr.com/65535/54483127778_b9467fd333.jpg" 
+                 alt="LITEELPINK_134P" class="group-hover:scale-105 transition-transform duration-300">
+            <h3 class="font-medium">LITEELPINK_134P</h3>
+          </div>
+        </a>
+      </div>
+
+      <div class="text-center mt-8">
+        <a href="/shop" class="zara-btn inline-block">
+          View All Products
+        </a>
+      </div>
+    </section>
+
+    <!-- Features Section -->
+    <section class="section-spacing">
+      <div class="text-center mb-12">
+        <h2 class="text-2xl font-light tracking-wide uppercase mb-4">Our Expertise</h2>
+        <p class="text-sm text-gray-600 max-w-2xl mx-auto">
+          Comprehensive paint solutions for every surface and style
+        </p>
+      </div>
+
+      <div class="grid md:grid-cols-3 gap-8">
+        <!-- Interior Paint -->
+        <div class="text-center">
+          <div class="w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4">
+            <i class="fas fa-brush text-gray-600"></i>
+          </div>
+          <h3 class="text-sm font-medium uppercase tracking-wide mb-3">Interior Paint</h3>
+          <p class="text-xs text-gray-600 leading-relaxed">
+            تُصمم دهاناتنا الداخلية خصيصًا للجدران والأسقف والأسطح الداخلية. اختر دهانات الجدران والأسقف لإنشاء مجموعات ألوان فريدة.
+          </p>
         </div>
 
+        <!-- Facade Paint -->
+        <div class="text-center">
+          <div class="w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4">
+            <i class="fas fa-fill-drip text-gray-600"></i>
+          </div>
+          <h3 class="text-sm font-medium uppercase tracking-wide mb-3">Facade Paint</h3>
+          <p class="text-xs text-gray-600 leading-relaxed">
+            جهّز حديقتك بمجموعة الدهانات الخارجية لدينا. أضف الحياة إلى سقيفة منزلك بمجموعة ألوان الحدائق لدينا.
+          </p>
         </div>
-        <!-- Grid row -->
 
-   
- </section>
+        <!-- Paint Tools -->
+        <div class="text-center">
+          <div class="w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4">
+            <i class="fas fa-paint-roller text-gray-600"></i>
+          </div>
+          <h3 class="text-sm font-medium uppercase tracking-wide mb-3">Paint Tools</h3>
+          <p class="text-xs text-gray-600 leading-relaxed">
+            سلسلة من المعلومات والتلميحات والنصائح المفيدة لمساعدتك على البدء في مشروع الطلاء الخاص بك.
+          </p>
+        </div>
+      </div>
+    </section>
   </main>
-  <!-- Main content -->
-<script>
-  function closeGiftPopup() {
-    document.getElementById('giftPopup').style.display = 'none';
-  }
-  window.addEventListener('DOMContentLoaded', () => {
-    setTimeout(() => {
-      document.getElementById('giftPopup').style.display = 'block';
-    }, 4000);
-  });
-</script>
 
-  <%- include ("../partials/footer") %>.
+  <!-- Minimal Footer -->
+  <footer class="border-t border-gray-200 py-12 bg-white">
+    <div class="max-w-7xl mx-auto px-6">
+      <div class="text-center">
+        <p class="text-sm text-gray-600">© <%= new Date().getFullYear() %> Paintello</p>
+        <div class="flex justify-center gap-6 mt-4">
+          <a href="/contact" class="text-xs text-gray-500 hover:text-gray-700 uppercase tracking-wide">Contact</a>
+          <a href="/shipping" class="text-xs text-gray-500 hover:text-gray-700 uppercase tracking-wide">Shipping</a>
+          <a href="/returns" class="text-xs text-gray-500 hover:text-gray-700 uppercase tracking-wide">Returns</a>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Tawk.to -->
+  <script type="text/javascript">
+    var Tawk_API=Tawk_API||{}, Tawk_LoadStart=new Date();
+    (function(){
+      var s1=document.createElement("script"),s0=document.getElementsByTagName("script")[0];
+      s1.async=true;
+      s1.src='https://embed.tawk.to/682625d0a2b6be190d3ada7e/1irag7e08';
+      s1.charset='UTF-8';
+      s1.setAttribute('crossorigin','*');
+      s0.parentNode.insertBefore(s1,s0);
+    })();
+  </script>
+</body>
+</html>
