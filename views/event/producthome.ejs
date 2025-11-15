@@ -615,7 +615,11 @@
     <% if (user && user.numero) { %>ph: '<%= user.numero %>',<% } %>
   });
 
-  fbq('track', 'PageView');
+  // ✅ Track PageView with server-side event ID
+  fbq('track', 'PageView', {}, {
+    eventID: '<%= metaEventIdPageView %>'
+  });
+  
 
   // Track ViewContent with server-side event ID
 setTimeout(function() {
