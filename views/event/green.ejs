@@ -215,6 +215,163 @@
         transform: translateY(0);
       }
     }
+
+    /* Enhanced Lightbox Styles */
+    .lightbox-backdrop {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.95);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 9999;
+    }
+
+    .lightbox-backdrop.active {
+      display: flex;
+    }
+
+    .lightbox-close {
+      position: absolute;
+      top: 20px;
+      right: 20px;
+      background: rgba(255, 255, 255, 0.2);
+      border: none;
+      color: white;
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      z-index: 10000;
+    }
+
+    .lightbox-nav {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      background: rgba(255, 255, 255, 0.2);
+      border: none;
+      color: white;
+      width: 50px;
+      height: 50px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      z-index: 10000;
+    }
+
+    .lightbox-prev {
+      left: 20px;
+    }
+
+    .lightbox-next {
+      right: 20px;
+    }
+
+    .lightbox-content {
+      max-width: 90%;
+      max-height: 90%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .lightbox-image {
+      max-width: 100%;
+      max-height: 90vh;
+      object-fit: contain;
+    }
+
+    /* Stock message styles */
+    .flex-div-wrapper {
+      margin-top: 1rem;
+      padding: 1rem;
+      background-color: #f0f9f0;
+      border-radius: 8px;
+      border: 1px solid #d1f0d1;
+    }
+
+    .flex-div {
+      display: flex;
+      align-items: center;
+      margin-bottom: 0.5rem;
+    }
+
+    .flex-div2 {
+      display: flex;
+      align-items: center;
+    }
+
+    .green-dot {
+      width: 8px;
+      height: 8px;
+      background-color: #2c9814;
+      border-radius: 50%;
+      display: inline-block;
+    }
+
+    .devFreeShip {
+      color: #2c9814;
+      font-size: 0.875rem;
+    }
+
+    /* Guarantee section */
+    .guarantee-section {
+      margin-top: 1.5rem;
+      padding: 1rem;
+      background-color: #f8f9fa;
+      border-radius: 8px;
+    }
+
+    .guarantee-section .main {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+
+    .guarantee-section .icnt {
+      width: 24px;
+      height: 24px;
+      object-fit: contain;
+    }
+
+    .learn-more-link {
+      color: #007bff;
+      text-decoration: none;
+      font-size: 0.875rem;
+    }
+
+    .learn-more-link:hover {
+      text-decoration: underline;
+    }
+
+    /* Swipe hint */
+    .swipe-hint {
+      position: absolute;
+      bottom: 10px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: rgba(0, 0, 0, 0.7);
+      color: white;
+      padding: 5px 10px;
+      border-radius: 15px;
+      font-size: 12px;
+      display: none;
+    }
+
+    @media (max-width: 768px) {
+      .swipe-hint {
+        display: block;
+      }
+    }
   </style>
 </head>
 
@@ -258,272 +415,761 @@
   </header>
 
   <!-- Main Content -->
-  <main class="max-w-7xl mx-auto px-6 pt-24">
-    <!-- Product Section -->
-    <section class="section-spacing">
-      <div class="grid grid-cols-1 lg:grid-cols-2 gap-12">
-        <!-- Product Images -->
-        <div class="space-y-4">
-          <!-- Main Image -->
-          <div class="zara-card overflow-hidden">
-            <img 
-              id="mainImage"
-              src="<%= green.image[0] %>" 
-              alt="<%= green.title %>"
-              class="product-image"
-              loading="lazy"
-            >
+  <main class="max-w-7xl mx-auto px-6 lg:px-8 py-10 pt-24">
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-10">
+
+      <!-- Left: Images + gallery -->
+      <section class="lg:col-span-7 space-y-6">
+
+        <!-- Image + thumbnails layout -->
+        <div class="bg-white rounded-2xl shadow-sm overflow-hidden p-4">
+          <div class="flex flex-col lg:flex-row gap-6">
+            <!-- Thumbnails column -->
+            <div class="lg:w-24 flex lg:flex-col gap-3 order-2 lg:order-1 overflow-auto">
+              <% if (green && Array.isArray(green.image)) { %>
+                <% green.image.forEach(function(img, idx) { %>
+                  <button type="button" class="thumbnail shrink-0 rounded-lg border-2 border-transparent hover:border-black p-1 bg-white transition-all <%= idx === 0 ? 'active border-black' : '' %>" data-index="<%= idx %>" aria-label="Thumbnail <%= idx+1 %>">
+                    <img src="<%= img %>" alt="thumb <%= idx+1 %>" class="w-20 h-20 lg:w-full lg:h-20 object-cover rounded-md" />
+                  </button>
+                <% }); %>
+              <% } else { %>
+                <div class="text-sm text-gray-500">No images</div>
+              <% } %>
+            </div>
+
+            <!-- Main image slider -->
+            <div class="flex-1 order-1 lg:order-2 relative">
+              <div id="imageSlider" class="relative bg-gray-50 rounded-xl overflow-hidden">
+                <% if (green && Array.isArray(green.image)) { %>
+                  <% green.image.forEach(function(img, idx){ %>
+                    <img src="<%= img %>" 
+                         class="absolute inset-0 w-full h-full object-cover transition-opacity duration-700 ease-in-out <%= idx===0 ? 'opacity-100' : 'opacity-0' %> slider-img"
+                         alt="image <%= idx+1 %>" 
+                         data-index="<%= idx %>" />
+                  <% }); %>
+                <% } %>
+
+                <!-- Swipe hint -->
+                <div class="swipe-hint">
+                  <i class="fas fa-arrows-left-right mr-2"></i>Swipe to navigate
+                </div>
+
+                <!-- Zara-style transparent arrows -->
+                <button id="prevSlide" class="absolute left-4 top-1/2 -translate-y-1/2 bg-black/30 hover:bg-black/50 text-white p-2 rounded-full hidden lg:flex">
+                  <i class="fas fa-chevron-left"></i>
+                </button>
+                <button id="nextSlide" class="absolute right-4 top-1/2 -translate-y-1/2 bg-black/30 hover:bg-black/50 text-white p-2 rounded-full hidden lg:flex">
+                  <i class="fas fa-chevron-right"></i>
+                </button>
+              </div>
+
+              <div class="mt-3 text-center">
+                <button id="openLightboxBtn" class="text-sm text-black font-medium hover:underline">
+                  View full image
+                </button>
+              </div>
+            </div>
           </div>
-          
-          <!-- Thumbnails -->
-          <div class="flex gap-2 overflow-x-auto py-2">
-            <% green.image.forEach((img, i) => { %>
-              <img 
-                src="<%= img %>" 
-                alt="Thumbnail <%= i+1 %>"
-                class="thumbnail <%= i===0 ? 'active' : '' %>"
-                onclick="changeImage('<%= img %>', this)"
-                loading="lazy"
-              >
-            <% }) %>
+
+          <!-- Gallery small grid -->
+          <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mt-6">
+            <% if (green && Array.isArray(green.image)) { %>
+              <% green.image.slice(0,4).forEach(function(img, idx){ %>
+                <div class="rounded-lg overflow-hidden bg-white shadow-sm hover:shadow-md transition-shadow cursor-pointer gallery-item" data-index="<%= idx %>">
+                  <img src="<%= img %>" class="w-full h-32 md:h-40 object-cover hover:scale-105 transition-transform duration-300" alt="gallery <%= idx+1 %>"/>
+                </div>
+              <% }); %>
+            <% } %>
           </div>
         </div>
+      </section>
 
-        <!-- Product Details -->
-        <div class="space-y-6">
-          <div class="fade-in">
-            <h1 class="text-3xl font-light tracking-wide uppercase mb-2"><%= green.title %></h1>
-            <p class="text-2xl font-light text-gray-900 mb-6"><%= green.price.toFixed(2) %> DA</p>
+      <!-- Right: Product info -->
+      <aside class="lg:col-span-5">
+        <div class="bg-white rounded-2xl shadow-sm p-6 sticky top-24">
+          <div class="mb-4">
+            <h1 class="text-2xl font-semibold text-gray-900"><%= green && green.title ? green.title : '' %></h1>
+            <p class="mt-2 text-sm text-gray-600"><%= green && green.subtitle ? green.subtitle : '' %></p>
           </div>
 
-          <!-- Add to Cart -->
-          <div class="fade-in delay-1">
-            <form action="/add-to-cart-green/<%= green._id %>" method="GET" 
-                  onsubmit="return handleAddToCart(event, '<%= green.title %>', <%= green.price %>, '<%= green._id %>')">
-              <button type="submit" class="zara-btn w-full md:w-auto">
-                <i class="fas fa-shopping-bag mr-2"></i>Add to Cart
-              </button>
-            </form>
+          <div class="flex items-end gap-3 mt-4">
+            <% if (green && green.oldPrice && green.oldPrice > green.price) { %>
+              <div class="text-sm text-gray-400 line-through"><%= Number(green.oldPrice).toFixed(2) %> DA</div>
+            <% } %>
+            <div class="text-2xl font-bold text-black"><%= green && typeof green.price !== 'undefined' ? Number(green.price).toFixed(2) : '' %> DA</div>
           </div>
 
-          <!-- Product Info Tabs -->
-          <div class="fade-in delay-2">
-            <ul class="nav custom-tab mb-4" role="tablist">
-              <li class="nav-item">
-                <a class="nav-link active" id="desc-tab" data-toggle="tab" href="#desc" role="tab">
-                  Description
-                </a>
-              </li>
-              <li class="nav-item">
-                <a class="nav-link" id="info-tab" data-toggle="tab" href="#info" role="tab">
-                  Details
-                </a>
-              </li>
-            </ul>
+          <!-- ===== STOCK MESSAGE SECTION ===== -->
+          <div id="green_message" class="flex-div-wrapper">
+            <div class="flex-div">
+              <span style="margin-right: 14px; margin-left: 3px;" class="green-dot"></span>
+              <span style="color:#2c9814;" class="text">En stock, expédié le jour même</span>
+            </div>
+            <div class="flex-div2">
+              <svg width="18" height="18" style="width: 18px; height: 18px; margin-right: 5px; margin-left: 2px;" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 512">
+                <path d="M48 0C21.5 0 0 21.5 0 48V368c0 26.5 21.5 48 48 48H64c0 53 43 96 96 96s96-43 96-96H384c0 53 43 96 96 96s96-43 96-96h32c17.7 0 32-14.3 32-32s-14.3-32-32-32V288 256 237.3c0-17-6.7-33.3-18.7-45.3L512 114.7c-12-12-28.3-18.7-45.3-18.7H416V48c0-26.5-21.5-48-48-48H48zM416 160h50.7L544 237.3V256H416V160zM112 416a48 48 0 1 1 96 0 48 48 0 1 1 -96 0zm368-48a48 48 0 1 1 0 96 48 48 0 1 1 0-96z"></path>
+              </svg>
+              <span class="devFreeShip">Livraison gratuite offerte dans toutes les WILAYAS à partir de 5000 DA d'achat</span>
+            </div>
+          </div>
 
-            <div class="tab-content">
-              <div class="tab-pane fade show active" id="desc" role="tabpanel">
-                <div class="zara-card p-6">
-                  <p class="text-sm text-gray-600 leading-relaxed"><%= green.description %></p>
-                </div>
+          <!-- Add to cart form -->
+          <form id="addToCartForm" action="/add-to-cart-green/<%= green._id %>" method="GET" class="mt-6">
+            <div class="flex items-center gap-3">
+              <label class="text-sm text-gray-700 font-medium">Quantity</label>
+              <div class="flex items-center border rounded-full overflow-hidden w-36">
+                <button type="button" id="qtyMinus" class="px-4 py-2 text-gray-700 hover:bg-gray-50 transition-colors">-</button>
+                <input id="qtyInput" name="qty" value="1" class="w-12 text-center py-2 outline-none bg-transparent" />
+                <button type="button" id="qtyPlus" class="px-4 py-2 text-gray-700 hover:bg-gray-50 transition-colors">+</button>
               </div>
-              <div class="tab-pane fade" id="info" role="tabpanel">
-                <div class="zara-card p-6">
-                  <ul class="space-y-2">
-                    <% for (let key in green.details) { %>
-                      <li class="flex justify-between text-sm">
-                        <span class="font-medium text-gray-900"><%= key %>:</span>
-                        <span class="text-gray-600"><%= green.details[key] %></span>
-                      </li>
-                    <% } %>
+            </div>
+
+            <div class="mt-6 flex flex-col gap-3">
+              <button id="addToCartBtn" type="submit" class="w-full py-3 rounded-full text-white font-semibold hover:opacity-90 transition-opacity bg-black">
+                Add to cart
+              </button>
+
+              <!-- Buy it now button - will add to cart AND go to checkout -->
+              <button id="buyNowBtn" type="button" class="w-full py-3 rounded-full border border-gray-200 hover:border-gray-300 transition-colors bg-white text-gray-800 font-semibold">
+                Buy it now
+              </button>
+            </div>
+          </form>
+
+          <!-- ===== GUARANTEE SECTION ===== -->
+          <div class="guarantee-section">
+            <div class="main">
+              <img src="https://cdn.shopify.com/s/files/1/0508/9266/9116/files/12.jpg?v=1723026470" class="icnt">
+              <p>Garantie de Remboursement de 4 Jours</p>
+              <a href="/track-login" class="learn-more-link">En savoir plus</a>
+            </div>
+          </div>
+
+          <!-- Tabs -->
+          <div class="mt-8">
+            <div class="relative">
+              <!-- Scroll indicator for mobile -->
+              <div class="absolute right-0 top-0 bottom-0 w-6 bg-gradient-to-l from-white to-transparent pointer-events-none hidden md:hidden z-10" id="scrollIndicator"></div>
+              
+              <div class="flex gap-6 border-b border-gray-100 overflow-x-auto scroll-smooth" id="tabsContainer">
+                <button data-tab="desc" class="tab-btn text-sm py-4 px-1 font-semibold border-b-2 border-transparent active">
+                  <strong>Description</strong>
+                </button>
+                <button data-tab="shipping" class="tab-btn text-sm py-4 px-1 font-semibold border-b-2 border-transparent">
+                  <strong>Livraison</strong>
+                </button>
+                <button data-tab="guarantee" class="tab-btn text-sm py-4 px-1 font-semibold border-b-2 border-transparent">
+                  <strong>Notre Garantie</strong>
+                </button>
+                <button data-tab="info" class="tab-btn text-sm py-4 px-1 font-semibold border-b-2 border-transparent">
+                  <strong>Information</strong>
+                </button>
+              </div>
+            </div>
+
+            <div class="mt-6">
+              <!-- Description Tab -->
+              <div id="desc" class="tab-panel text-sm text-gray-700 leading-relaxed">
+                <%= green && green.description ? green.description : '' %>
+              </div>
+
+              <!-- Shipping Tab (French) -->
+              <div id="shipping" class="tab-panel hidden text-sm text-gray-700 leading-relaxed">
+                <p><strong>Options de Livraison :</strong></p>
+                <p class="mt-2">Nous proposons une livraison standard et express suivie sur toutes les commandes.</p>
+                
+                <p class="mt-4"><strong>Livraison Express Gratuite :</strong></p>
+                <p class="mt-2">La livraison express gratuite est automatiquement appliquée à la caisse lorsque votre commande est éligible.</p>
+                
+                <p class="mt-4"><strong>Délai d'Expédition :</strong></p>
+                <p class="mt-2">Toutes les commandes sont expédiées le même jour.</p>
+                
+                <div class="mt-6 p-4 bg-blue-50 rounded-lg">
+                  <p class="font-medium text-blue-800">Délais de Livraison Estimés :</p>
+                  <ul class="mt-2 space-y-1 text-blue-700">
+                    <li>• Livraison Standard : 3-5 jours ouvrables</li>
+                    <li>• Livraison Express : 1-2 jours ouvrables</li>
+                    <li>• Livraison Internationale : 7-14 jours ouvrables</li>
                   </ul>
                 </div>
               </div>
+
+              <!-- Guarantee Tab (French) -->
+              <div id="guarantee" class="tab-panel hidden text-sm text-gray-700 leading-relaxed">
+                <div class="p-4 bg-green-50 rounded-lg border border-green-200">
+                  <p class="font-semibold text-green-800">Garantie de Satisfaction 100%</p>
+                  <p class="mt-1 text-green-700">Garantie de satisfaction à 100% ou remboursement. Sans poser de questions.</p>
+                </div>
+                
+                <p class="mt-4"><strong>Notre Promesse :</strong></p>
+                <p class="mt-2">Nous sommes tellement sûrs que vous allez adorer vos articles de Silhouette Vases que nous offrons une garantie de remboursement de 4 jours.</p>
+                
+                <p class="mt-4"><strong>Comment Ça Marche :</strong></p>
+                <p class="mt-2">Si vous n'êtes pas entièrement satisfait de votre achat, contactez-nous simplement dans les 4 jours suivant la réception de votre commande pour initier un retour.</p>
+                <a href="/track-login" class="learn-more-link">En savoir plus</a>
+                <p class="mt-4"><strong>Assurance Qualité :</strong></p>
+                <p class="mt-2">Chaque produit subit des contrôles de qualité rigoureux avant l'expédition. Nous garantissons l'artisanat et la durabilité de nos articles.</p>
+                
+                <div class="mt-6 p-4 bg-amber-50 rounded-lg">
+                  <p class="font-medium text-amber-800">Politique de Retour :</p>
+                  <ul class="mt-2 space-y-1 text-amber-700">
+                    <li>• Garantie de remboursement de 4 jours</li>
+                    <li>• Sans poser de questions</li>
+                    <li>• Remboursement intégral sur le mode de paiement d'origine</li>
+                    <li>• L'article doit être dans son état d'origine</li>
+                  </ul>
+                </div>
+              </div>
+
+              <!-- Information Tab -->
+              <div id="info" class="tab-panel hidden text-sm text-gray-700">
+                <ul class="space-y-2">
+                  <% if (green && green.details) { for (let key in green.details) { %>
+                    <li class="flex border-b border-gray-100 py-2">
+                      <strong class="w-32 text-gray-900"><%= key %>:</strong>
+                      <span class="flex-1"><%= green.details[key] %></span>
+                    </li>
+                  <% } } %>
+                </ul>
+              </div>
             </div>
+          </div>
+
+          <!-- Share -->
+          <div class="mt-8 flex gap-3 items-center text-sm text-gray-500 pt-6 border-t border-gray-100">
+            <div class="font-medium">Share:</div>
+            <a class="hover:text-gray-900" href="#">Facebook</a>
+            <a class="hover:text-gray-900" href="#">Pinterest</a>
+            <a class="hover:text-gray-900" href="#">Instagram</a>
           </div>
         </div>
-      </div>
-    </section>
 
-    <!-- Related Products Section -->
-    <section class="section-spacing">
-      <div class="text-center mb-12">
-        <h2 class="text-2xl font-light tracking-wide uppercase mb-4">More Green Colors</h2>
-        <p class="text-sm text-gray-600 max-w-2xl mx-auto">
-          Discover other beautiful green tones from our collection
-        </p>
-      </div>
+        <!-- JSON-LD -->
+        <script type="application/ld+json">
+        {
+          "@context": "https://schema.org/",
+          "@type": "Product",
+          "name": "<%= green && green.title ? green.title : '' %>",
+          "image": "<%= (green && green.image && green.image[0]) ? green.image[0] : '' %>",
+          "description": "<%= green && green.description ? green.description : '' %>",
+          "sku": "<%= green && green._id ? green._id : '' %>",
+          "offers": { "@type": "Offer", "url": "https://<%= req.get('host') + req.originalUrl %>", "priceCurrency": "DZD", "price": "<%= green && green.price ? green.price : '' %>", "availability": "https://schema.org/InStock" }
+        }
+        </script>
+      </aside>
+    </div>
 
-      <div class="grid grid-cols-2 md:grid-cols-4 gap-6">
-        <!-- Related Product 1 -->
-        <a href="/green/6856c88203d002f2019026bf" class="group">
-          <div class="zara-card h-full overflow-hidden transition-all duration-300 hover:shadow-md">
-            <div class="overflow-hidden">
-              <img 
-                class="w-full h-48 object-cover transition-transform duration-500 group-hover:scale-105" 
-                src="https://live.staticflickr.com/65535/54481290707_f73e099c43.jpg" 
-                alt="FRESHOGREEN_758P"
-                loading="lazy"
-              >
-            </div>
-            <div class="p-4 text-center">
-              <h3 class="text-sm font-normal tracking-wide uppercase">FRESHOGREEN_758P</h3>
-              <p class="text-xs text-gray-500 mt-1">Fresh Spring Green</p>
-            </div>
+    <!-- Suggested products (horizontal scroll carousel) -->
+    <section class="mt-12">
+      <h2 class="text-xl font-semibold mb-4">You may also like</h2>
+      <div class="relative">
+        <!-- Arrows -->
+        <button id="prevRelated" class="absolute left-0 top-1/2 -translate-y-1/2 z-20 bg-white rounded-full shadow p-2 hidden md:block" aria-label="Previous">
+          <svg class="h-5 w-5 text-gray-700" viewBox="0 0 20 20" fill="currentColor">
+            <path fill-rule="evenodd" d="M12.707 14.707a1 1 0 01-1.414 0L6.586 10l4.707-4.707a1 1 0 011.414 1.414L9.414 10l3.293 3.293a1 1 0 010 1.414z" clip-rule="evenodd"/>
+          </svg>
+        </button>
+        <button id="nextRelated" class="absolute right-0 top-1/2 -translate-y-1/2 z-20 bg-white rounded-full shadow p-2 hidden md:block" aria-label="Next">
+          <svg class="h-5 w-5 text-gray-700" viewBox="0 0 20 20" fill="currentColor">
+            <path fill-rule="evenodd" d="M7.293 5.293a1 1 0 011.414 0L13.414 10l-4.707 4.707a1 1 0 01-1.414-1.414L10.586 10 7.293 6.707a1 1 0 010-1.414z" clip-rule="evenodd"/>
+          </svg>
+        </button>
+
+        <!-- Scroll container -->
+        <div id="relatedScroll" class="flex gap-4 overflow-x-auto snap-x py-2 px-2">
+          <!-- Manual related products entries -->
+          <div class="snap-child flex-none w-56 bg-white rounded-xl shadow-sm overflow-hidden hover:shadow-md transition-shadow duration-300">
+            <a href="/green/6856c88203d002f2019026bf" class="block group">
+              <div class="relative overflow-hidden">
+                <img src="https://live.staticflickr.com/65535/54481290707_f73e099c43.jpg" 
+                     alt="FRESHOGREEN_758P" 
+                     class="w-full h-36 object-cover group-hover:scale-105 transition-transform duration-300" />
+              </div>
+              <div class="p-3">
+                <div class="text-sm font-medium text-gray-900 truncate">FRESHOGREEN_758P</div>
+                <div class="text-sm font-semibold text-black mt-1">Fresh Spring Green</div>
+              </div>
+            </a>
           </div>
-        </a>
 
-        <!-- Related Product 2 -->
-        <a href="/green/6856c8e603d002f2019026c1" class="group">
-          <div class="zara-card h-full overflow-hidden transition-all duration-300 hover:shadow-md">
-            <div class="overflow-hidden">
-              <img 
-                class="w-full h-48 object-cover transition-transform duration-500 group-hover:scale-105" 
-                src="https://live.staticflickr.com/65535/54482500420_d33a1c9c1f.jpg" 
-                alt="DROPGREEN_176P"
-                loading="lazy"
-              >
-            </div>
-            <div class="p-4 text-center">
-              <h3 class="text-sm font-normal tracking-wide uppercase">DROPGREEN_176P</h3>
-              <p class="text-xs text-gray-500 mt-1">Soft Drop Green</p>
-            </div>
+          <div class="snap-child flex-none w-56 bg-white rounded-xl shadow-sm overflow-hidden hover:shadow-md transition-shadow duration-300">
+            <a href="/green/6856c8e603d002f2019026c1" class="block group">
+              <div class="relative overflow-hidden">
+                <img src="https://live.staticflickr.com/65535/54482500420_d33a1c9c1f.jpg" 
+                     alt="DROPGREEN_176P" 
+                     class="w-full h-36 object-cover group-hover:scale-105 transition-transform duration-300" />
+              </div>
+              <div class="p-3">
+                <div class="text-sm font-medium text-gray-900 truncate">DROPGREEN_176P</div>
+                <div class="text-sm font-semibold text-black mt-1">Soft Drop Green</div>
+              </div>
+            </a>
           </div>
-        </a>
 
-        <!-- Related Product 3 -->
-        <a href="/green/6856c94b03d002f2019026c3" class="group">
-          <div class="zara-card h-full overflow-hidden transition-all duration-300 hover:shadow-md">
-            <div class="overflow-hidden">
-              <img 
-                class="w-full h-48 object-cover transition-transform duration-500 group-hover:scale-105" 
-                src="https://live.staticflickr.com/65535/54482135126_bdc1a068c5.jpg" 
-                alt="BRIGDE_1188P"
-                loading="lazy"
-              >
-            </div>
-            <div class="p-4 text-center">
-              <h3 class="text-sm font-normal tracking-wide uppercase">BRIGDE_1188P</h3>
-              <p class="text-xs text-gray-500 mt-1">Bridge Moss Green</p>
-            </div>
+          <div class="snap-child flex-none w-56 bg-white rounded-xl shadow-sm overflow-hidden hover:shadow-md transition-shadow duration-300">
+            <a href="/green/6856c94b03d002f2019026c3" class="block group">
+              <div class="relative overflow-hidden">
+                <img src="https://live.staticflickr.com/65535/54482135126_bdc1a068c5.jpg" 
+                     alt="BRIGDE_1188P" 
+                     class="w-full h-36 object-cover group-hover:scale-105 transition-transform duration-300" />
+              </div>
+              <div class="p-3">
+                <div class="text-sm font-medium text-gray-900 truncate">BRIGDE_1188P</div>
+                <div class="text-sm font-semibold text-black mt-1">Bridge Moss Green</div>
+              </div>
+            </a>
           </div>
-        </a>
 
-        <!-- Related Product 4 -->
-        <a href="/green/6856c9ab03d002f2019026c5" class="group">
-          <div class="zara-card h-full overflow-hidden transition-all duration-300 hover:shadow-md">
-            <div class="overflow-hidden">
-              <img 
-                class="w-full h-48 object-cover transition-transform duration-500 group-hover:scale-105" 
-                src="https://live.staticflickr.com/65535/54482500685_f25f402b5b.jpg" 
-                alt="BLUSHGREEN_152P"
-                loading="lazy"
-              >
-            </div>
-            <div class="p-4 text-center">
-              <h3 class="text-sm font-normal tracking-wide uppercase">BLUSHGREEN_152P</h3>
-              <p class="text-xs text-gray-500 mt-1">Blush Sage Green</p>
-            </div>
+          <div class="snap-child flex-none w-56 bg-white rounded-xl shadow-sm overflow-hidden hover:shadow-md transition-shadow duration-300">
+            <a href="/green/6856c9ab03d002f2019026c5" class="block group">
+              <div class="relative overflow-hidden">
+                <img src="https://live.staticflickr.com/65535/54482500685_f25f402b5b.jpg" 
+                     alt="BLUSHGREEN_152P" 
+                     class="w-full h-36 object-cover group-hover:scale-105 transition-transform duration-300" />
+              </div>
+              <div class="p-3">
+                <div class="text-sm font-medium text-gray-900 truncate">BLUSHGREEN_152P</div>
+                <div class="text-sm font-semibold text-black mt-1">Blush Sage Green</div>
+              </div>
+            </a>
           </div>
-        </a>
+        </div>
       </div>
     </section>
   </main>
 
-  <!-- Schema.org Structured Data -->
-  <div itemscope itemtype="https://schema.org/Product">
-    <meta itemprop="productID" content="<%= green._id %>" />
-    <meta itemprop="name" content="<%= green.title %>" />
-    <meta itemprop="description" content="<%= green.description %>" />
-    <meta itemprop="image" content="<%= green.image[0] %>" />
+  <!-- Footer -->
+  <footer class="border-t border-gray-100 bg-white mt-16">
+    <div class="max-w-7xl mx-auto px-6 py-8 text-sm text-gray-600">© <%= new Date().getFullYear() %> Paintello — All rights reserved</div>
+  </footer>
 
-    <div itemprop="offers" itemscope itemtype="https://schema.org/Offer">
-      <meta itemprop="priceCurrency" content="DZD" />
-      <meta itemprop="price" content="<%= green.price %>" />
-      <meta itemprop="availability" content="https://schema.org/InStock" />
-      <meta itemprop="url" content="<%= req.protocol + '://' + req.get('host') + req.originalUrl %>" />
+  <!-- Enhanced Lightbox element -->
+  <div id="lightbox" class="lightbox-backdrop">
+    <button id="lightboxClose" class="lightbox-close">
+      <i class="fas fa-times"></i>
+    </button>
+    
+    <button id="lightboxPrev" class="lightbox-nav lightbox-prev">
+      <i class="fas fa-chevron-left"></i>
+    </button>
+    
+    <button id="lightboxNext" class="lightbox-nav lightbox-next">
+      <i class="fas fa-chevron-right"></i>
+    </button>
+    
+    <div class="lightbox-content">
+      <img id="lightboxImage" src="" alt="Full image" class="lightbox-image" />
     </div>
   </div>
 
-  <script type="application/ld+json">
-  {
-    "@context": "https://schema.org/",
-    "@type": "Product",
-    "name": "<%= green.title %>",
-    "image": "<%= green.image[0] %>",
-    "description": "<%= green.description %>",
-    "sku": "<%= green._id %>",
-    "offers": {
-      "@type": "Offer",
-      "url": "https://<%= req.get('host') + req.originalUrl %>",
-      "priceCurrency": "DZD",
-      "price": "<%= green.price %>",
-      "availability": "https://schema.org/InStock"
-    }
-  }
+  <!-- Global error handlers (helpful for Clarity) -->
+  <script>
+    window.addEventListener('error', function(e) {
+      try { console.error('JS Error caught:', e.message, 'at', (e.filename || e.fileName) + ':' + (e.lineno || e.lineNumber), e.error); } catch (err) {}
+    });
+    window.addEventListener('unhandledrejection', function(e) { console.warn('Unhandled promise rejection', e.reason); });
   </script>
 
+  <!-- Interaction scripts (lightbox, thumbnails, tabs, qty, addToCart tracking) -->
   <script>
-    // Image gallery functionality
-    function changeImage(src, element) {
-      document.getElementById('mainImage').src = src;
-      
-      // Remove active class from all thumbnails
-      document.querySelectorAll('.thumbnail').forEach(thumb => {
-        thumb.classList.remove('active');
-      });
-      
-      // Add active class to clicked thumbnail
-      element.classList.add('active');
-    }
+    document.addEventListener('DOMContentLoaded', function(){
+      // ---------- Image Slider Functionality ----------
+      const slides = document.querySelectorAll('.slider-img');
+      const prev = document.getElementById('prevSlide');
+      const next = document.getElementById('nextSlide');
+      const thumbnails = document.querySelectorAll('.thumbnail');
+      const galleryItems = document.querySelectorAll('.gallery-item');
+      const imageSlider = document.getElementById('imageSlider');
+      let currentSlide = 0;
 
-    // Facebook Pixel Add to Cart
-    function handleAddToCart(event, title, price, id) {
-      fbq('track', 'AddToCart', {
-        content_name: title,
-        content_ids: [id],
-        content_type: 'product',
-        value: price,
-        currency: 'DZD',
-        contents: [
-          {
-            id: id,
-            quantity: 1,
-            item_price: price
-          }
-        ]
-      }, {
-        eventID: '<%= metaEventIdCart %>'
-      });
+      function showSlide(index) {
+        // Validate index
+        if (index < 0) index = slides.length - 1;
+        if (index >= slides.length) index = 0;
+        
+        // Hide all slides
+        slides.forEach(slide => {
+          slide.classList.remove('opacity-100');
+          slide.classList.add('opacity-0');
+        });
+        
+        // Show selected slide
+        slides[index].classList.remove('opacity-0');
+        slides[index].classList.add('opacity-100');
+        
+        // Update active thumbnail
+        thumbnails.forEach(thumb => {
+          thumb.classList.remove('active', 'border-black');
+        });
+        
+        if (thumbnails[index]) {
+          thumbnails[index].classList.add('active', 'border-black');
+        }
+        
+        currentSlide = index;
+      }
 
-      return true;
-    }
+      function nextSlide() {
+        let nextIndex = (currentSlide + 1) % slides.length;
+        showSlide(nextIndex);
+      }
 
-    // Simple tab functionality
-    document.addEventListener('DOMContentLoaded', function() {
-      const tabLinks = document.querySelectorAll('.custom-tab .nav-link');
-      
-      tabLinks.forEach(link => {
-        link.addEventListener('click', function(e) {
-          e.preventDefault();
-          
-          // Remove active class from all tabs
-          tabLinks.forEach(tab => {
-            tab.classList.remove('active');
-          });
-          
-          // Add active class to clicked tab
-          this.classList.add('active');
-          
-          // Show corresponding content
-          const target = this.getAttribute('href');
-          document.querySelectorAll('.tab-pane').forEach(pane => {
-            pane.classList.remove('show', 'active');
-          });
-          document.querySelector(target).classList.add('show', 'active');
+      function prevSlide() {
+        let prevIndex = (currentSlide - 1 + slides.length) % slides.length;
+        showSlide(prevIndex);
+      }
+
+      // Event listeners for slider arrows
+      if (prev) prev.addEventListener('click', prevSlide);
+      if (next) next.addEventListener('click', nextSlide);
+
+      // Event listeners for thumbnails
+      thumbnails.forEach(thumb => {
+        thumb.addEventListener('click', function() {
+          const index = parseInt(this.getAttribute('data-index'));
+          showSlide(index);
         });
       });
-    });
+
+      // Event listeners for gallery items
+      galleryItems.forEach(item => {
+        item.addEventListener('click', function() {
+          const index = parseInt(this.getAttribute('data-index'));
+          showSlide(index);
+        });
+      });
+
+      // ---------- Enhanced Lightbox Functionality ----------
+      const lightbox = document.getElementById('lightbox');
+      const lightboxImage = document.getElementById('lightboxImage');
+      const lightboxClose = document.getElementById('lightboxClose');
+      const lightboxPrev = document.getElementById('lightboxPrev');
+      const lightboxNext = document.getElementById('lightboxNext');
+      const openLightboxBtn = document.getElementById('openLightboxBtn');
+
+      function openLightbox() {
+        const currentImageSrc = slides[currentSlide].getAttribute('src');
+        lightboxImage.setAttribute('src', currentImageSrc);
+        lightbox.classList.add('active');
+        document.body.style.overflow = 'hidden';
+      }
+
+      function closeLightbox() {
+        lightbox.classList.remove('active');
+        document.body.style.overflow = '';
+      }
+
+      // Open lightbox when clicking main image
+      imageSlider.addEventListener('click', openLightbox);
+      
+      // Open lightbox when clicking "View full image" button
+      if (openLightboxBtn) {
+        openLightboxBtn.addEventListener('click', openLightbox);
+      }
+
+      // Lightbox navigation
+      if (lightboxClose) {
+        lightboxClose.addEventListener('click', closeLightbox);
+      }
+      
+      if (lightboxPrev) {
+        lightboxPrev.addEventListener('click', function() {
+          prevSlide();
+          updateLightboxImage();
+        });
+      }
+      
+      if (lightboxNext) {
+        lightboxNext.addEventListener('click', function() {
+          nextSlide();
+          updateLightboxImage();
+        });
+      }
+
+      function updateLightboxImage() {
+        const currentImageSrc = slides[currentSlide].getAttribute('src');
+        lightboxImage.setAttribute('src', currentImageSrc);
+      }
+
+      // Close lightbox when clicking on backdrop
+      lightbox.addEventListener('click', function(e) {
+        if (e.target === lightbox) {
+          closeLightbox();
+        }
+      });
+
+      // Close lightbox with ESC key
+      document.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape' && lightbox.classList.contains('active')) {
+          closeLightbox();
+        } else if (lightbox.classList.contains('active')) {
+          if (e.key === 'ArrowLeft') {
+            prevSlide();
+            updateLightboxImage();
+          } else if (e.key === 'ArrowRight') {
+            nextSlide();
+            updateLightboxImage();
+          }
+        }
+      });
+
+      // ---------- Swipe Functionality for Main Image ----------
+      let startX = 0, endX = 0;
+
+      if (imageSlider) {
+        imageSlider.addEventListener('touchstart', e => { 
+          startX = e.touches[0].clientX; 
+        });
+        
+        imageSlider.addEventListener('touchmove', e => { 
+          endX = e.touches[0].clientX; 
+        });
+        
+        imageSlider.addEventListener('touchend', () => {
+          const diff = endX - startX;
+          if (Math.abs(diff) > 50) { // swipe threshold
+            if (diff > 0) prevSlide(); 
+            else nextSlide();
+          }
+          startX = endX = 0;
+        });
+        
+        // Mouse swipe for desktop
+        imageSlider.addEventListener('mousedown', function(e) {
+          startX = e.clientX;
+          document.addEventListener('mousemove', onMouseMove);
+          document.addEventListener('mouseup', onMouseUp);
+        });
+        
+        function onMouseMove(e) {
+          endX = e.clientX;
+        }
+        
+        function onMouseUp() {
+          const diff = startX - endX;
+          
+          if (Math.abs(diff) > 50) { // Minimum swipe distance
+            if (diff > 0) {
+              nextSlide();
+            } else {
+              prevSlide();
+            }
+          }
+          
+          document.removeEventListener('mousemove', onMouseMove);
+          document.removeEventListener('mouseup', onMouseUp);
+          startX = 0;
+          endX = 0;
+        }
+      }
+
+      // ---------- Tabs ----------
+      function initializeTabs() {
+        const tabButtons = document.querySelectorAll('.tab-btn');
+        
+        tabButtons.forEach(btn => {
+          btn.addEventListener('click', function(){
+            const target = this.dataset.tab;
+            if (!target) return;
+            
+            // Update button states
+            tabButtons.forEach(b => {
+              b.classList.remove('text-gray-900', 'active', 'border-black');
+              b.classList.add('text-gray-600', 'border-transparent');
+            });
+            
+            // Hide all panels
+            document.querySelectorAll('.tab-panel').forEach(p => {
+              p.classList.add('hidden');
+            });
+            
+            // Activate clicked button
+            this.classList.add('text-gray-900', 'active', 'border-black');
+            this.classList.remove('text-gray-600', 'border-transparent');
+            
+            // Show target panel
+            const panel = document.getElementById(target);
+            if (panel) {
+              panel.classList.remove('hidden');
+            }
+          });
+        });
+        
+        // Activate first tab by default
+        if (tabButtons.length > 0) {
+          tabButtons[0].click();
+        }
+      }
+
+      // Initialize tabs when DOM is ready
+      initializeTabs();
+
+      // ---------- Enhanced AddToCart tracking ----------
+      const addForm = document.getElementById('addToCartForm');
+      if (addForm) {
+        addForm.addEventListener('submit', function(e){
+          e.preventDefault();
+          
+          const quantity = parseInt(document.getElementById('qtyInput').value || 1);
+          
+          try {
+            if (window.fbq) {
+              // Use the SAME event ID that was pre-generated
+              const serverEventId = '<%= metaEventIdCart %>';
+              
+              window.fbq('track', 'AddToCart', {
+                content_name: '<%= green.title.replace(/'/g, "\\'") %>',
+                content_ids: ['<%= green._id %>'],
+                content_type: 'product',
+                value: <%= green.price %> * quantity,
+                currency: 'DZD',
+                contents: [{
+                  id: '<%= green._id %>',
+                  quantity: quantity,
+                  item_price: <%= green.price %>
+                }]
+              }, { 
+                eventID: serverEventId // Same ID as CAPI
+              });
+
+              console.log('🎯 Pixel AddToCart Event ID:', serverEventId);
+            }
+          } catch (err) { 
+            console.warn('fbq track AddToCart failed', err); 
+          }
+          
+          // Submit the form
+          const productId = '<%= green._id %>';
+          window.location.href = `/add-to-cart-green/${productId}?qty=${quantity}`;
+        });
+      }
+
+      // ---------- Buy Now functionality ----------
+      const buyNowBtn = document.getElementById('buyNowBtn');
+      if (buyNowBtn) {
+        buyNowBtn.addEventListener('click', async function(e) {
+          e.preventDefault();
+          
+          try {
+            // Show loading state
+            const originalText = buyNowBtn.innerHTML;
+            buyNowBtn.innerHTML = 'Adding to cart...';
+            buyNowBtn.disabled = true;
+            
+            // Get the quantity
+            const qtyInput = document.getElementById('qtyInput');
+            const quantity = qtyInput ? parseInt(qtyInput.value) || 1 : 1;
+            
+            // Track AddToCart avec le même Event ID que CAPI
+            if (window.fbq) {
+              const serverEventId = '<%= metaEventIdCart %>';
+              
+              window.fbq('track', 'AddToCart', {
+                content_name: '<%= green.title.replace(/'/g, "\\'") %>',
+                content_ids: ['<%= green._id %>'],
+                content_type: 'product',
+                value: <%= green.price %> * quantity,
+                currency: 'DZD',
+                contents: [{
+                  id: '<%= green._id %>',
+                  quantity: quantity,
+                  item_price: <%= green.price %>
+                }]
+              }, {
+                eventID: serverEventId // Même ID que CAPI
+              });
+
+              console.log('🎯 Buy Now - AddToCart Event ID:', serverEventId);
+              
+              // InitiateCheckout SANS Event ID (Meta génère automatiquement)
+              window.fbq('track', 'InitiateCheckout', {
+                content_name: '<%= green.title.replace(/'/g, "\\'") %>',
+                content_ids: ['<%= green._id %>'],
+                content_type: 'product',
+                value: <%= green.price %> * quantity,
+                currency: 'DZD',
+                contents: [{
+                  id: '<%= green._id %>',
+                  quantity: quantity,
+                  item_price: <%= green.price %>
+                }]
+              });
+            }
+            
+            // Add to cart and redirect to checkout
+            const productId = '<%= green._id %>';
+            const response = await fetch(`/add-to-cart-green/${productId}?qty=${quantity}&redirect=checkout`);
+            
+            if (response.ok) {
+              // Success - redirect to checkout
+              window.location.href = '/checkout';
+            } else {
+              throw new Error('Failed to add to cart');
+            }
+            
+          } catch (error) {
+            console.error('Buy Now error:', error);
+            buyNowBtn.innerHTML = 'Buy it now';
+            buyNowBtn.disabled = false;
+            alert('Sorry, there was an error adding the product to cart. Please try again.');
+          }
+        });
+      }
+
+      // ---------- Enhanced Quantity Controls ----------
+      const qtyInput = document.getElementById('qtyInput');
+      const plus = document.getElementById('qtyPlus');
+      const minus = document.getElementById('qtyMinus');
+
+      if (qtyInput) {
+        // Set initial value
+        qtyInput.value = qtyInput.value || 1;
+        
+        // Quantity plus
+        if (plus) {
+          plus.addEventListener('click', () => { 
+            qtyInput.value = parseInt(qtyInput.value || 1) + 1;
+          });
+        }
+        
+        // Quantity minus
+        if (minus) {
+          minus.addEventListener('click', () => { 
+            qtyInput.value = Math.max(1, parseInt(qtyInput.value || 1) - 1);
+          });
+        }
+      }
+
+      // ---------- Related products carousel controls ----------
+      const relatedScroll = document.getElementById('relatedScroll');
+      const prevBtn = document.getElementById('prevRelated');
+      const nextBtn = document.getElementById('nextRelated');
+
+      function scrollRelated(delta) {
+        if (!relatedScroll) return;
+        relatedScroll.scrollBy({ left: delta, behavior: 'smooth' });
+      }
+      if (prevBtn) prevBtn.addEventListener('click', () => scrollRelated(-280));
+      if (nextBtn) nextBtn.addEventListener('click', () => scrollRelated(280));
+
+      // show/hide arrows based on width
+      function updateRelatedArrows() {
+        if (!relatedScroll) return;
+        if (relatedScroll.scrollWidth > relatedScroll.clientWidth) {
+          prevBtn && prevBtn.classList.remove('hidden');
+          nextBtn && nextBtn.classList.remove('hidden');
+        } else {
+          prevBtn && prevBtn.classList.add('hidden');
+          nextBtn && nextBtn.classList.add('hidden');
+        }
+      }
+      setTimeout(updateRelatedArrows, 300);
+      window.addEventListener('resize', updateRelatedArrows);
+ 
+    }); // DOMContentLoaded end
   </script>
+
+  <!-- FontAwesome icons -->
+  <script src="https://kit.fontawesome.com/a2d9b6b9f4.js" crossorigin="anonymous" defer></script>
 </body>
 </html>
