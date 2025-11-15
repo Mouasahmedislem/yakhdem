@@ -367,6 +367,21 @@
       display: none;
     }
 
+    /* Image Slider Styles */
+    .slider-img {
+      transition: opacity 0.3s ease-in-out;
+    }
+    
+    .slider-img.active {
+      opacity: 1 !important;
+      position: relative !important;
+    }
+    
+    .slider-img:not(.active) {
+      opacity: 0 !important;
+      position: absolute !important;
+    }
+
     @media (max-width: 768px) {
       .swipe-hint {
         display: block;
@@ -437,16 +452,27 @@
               <% } %>
             </div>
 
-            <!-- Main image slider -->
+            <!-- Main image slider - FIXED VERSION -->
             <div class="flex-1 order-1 lg:order-2 relative">
-              <div id="imageSlider" class="relative bg-gray-50 rounded-xl overflow-hidden">
+              <div id="imageSlider" class="relative bg-gray-50 rounded-xl overflow-hidden" style="height: 500px;">
                 <% if (green && Array.isArray(green.image)) { %>
-                  <% green.image.forEach(function(img, idx){ %>
+                  <!-- First image - visible by default -->
+                  <img src="<%= green.image[0] %>" 
+                       class="w-full h-full object-cover slider-img active"
+                       alt="<%= green.title %>" 
+                       data-index="0" />
+                  
+                  <!-- Other images - hidden by default -->
+                  <% green.image.slice(1).forEach(function(img, idx){ %>
                     <img src="<%= img %>" 
-                         class="absolute inset-0 w-full h-full object-cover transition-opacity duration-700 ease-in-out <%= idx===0 ? 'opacity-100' : 'opacity-0' %> slider-img"
-                         alt="image <%= idx+1 %>" 
-                         data-index="<%= idx %>" />
+                         class="absolute inset-0 w-full h-full object-cover slider-img"
+                         alt="<%= green.title %> <%= idx+2 %>" 
+                         data-index="<%= idx+1 %>" />
                   <% }); %>
+                <% } else { %>
+                  <div class="w-full h-full flex items-center justify-center text-gray-500">
+                    No image available
+                  </div>
                 <% } %>
 
                 <!-- Swipe hint -->
@@ -773,7 +799,7 @@
   <!-- Interaction scripts (lightbox, thumbnails, tabs, qty, addToCart tracking) -->
   <script>
     document.addEventListener('DOMContentLoaded', function(){
-      // ---------- Image Slider Functionality ----------
+      // ---------- Image Slider Functionality - FIXED VERSION ----------
       const slides = document.querySelectorAll('.slider-img');
       const prev = document.getElementById('prevSlide');
       const next = document.getElementById('nextSlide');
@@ -782,6 +808,25 @@
       const imageSlider = document.getElementById('imageSlider');
       let currentSlide = 0;
 
+      // Initialize slider - make sure first image is visible
+      function initializeSlider() {
+        if (slides.length > 0) {
+          // Reset all slides
+          slides.forEach(slide => {
+            slide.classList.remove('active');
+            slide.style.opacity = '0';
+            slide.style.position = 'absolute';
+          });
+          
+          // Activate first slide
+          slides[0].classList.add('active');
+          slides[0].style.opacity = '1';
+          slides[0].style.position = 'relative';
+          
+          currentSlide = 0;
+        }
+      }
+
       function showSlide(index) {
         // Validate index
         if (index < 0) index = slides.length - 1;
@@ -789,13 +834,15 @@
         
         // Hide all slides
         slides.forEach(slide => {
-          slide.classList.remove('opacity-100');
-          slide.classList.add('opacity-0');
+          slide.classList.remove('active');
+          slide.style.opacity = '0';
+          slide.style.position = 'absolute';
         });
         
         // Show selected slide
-        slides[index].classList.remove('opacity-0');
-        slides[index].classList.add('opacity-100');
+        slides[index].classList.add('active');
+        slides[index].style.opacity = '1';
+        slides[index].style.position = 'relative';
         
         // Update active thumbnail
         thumbnails.forEach(thumb => {
@@ -818,6 +865,9 @@
         let prevIndex = (currentSlide - 1 + slides.length) % slides.length;
         showSlide(prevIndex);
       }
+
+      // Initialize slider on load
+      initializeSlider();
 
       // Event listeners for slider arrows
       if (prev) prev.addEventListener('click', prevSlide);
@@ -860,7 +910,9 @@
       }
 
       // Open lightbox when clicking main image
-      imageSlider.addEventListener('click', openLightbox);
+      if (imageSlider) {
+        imageSlider.addEventListener('click', openLightbox);
+      }
       
       // Open lightbox when clicking "View full image" button
       if (openLightboxBtn) {
@@ -892,11 +944,13 @@
       }
 
       // Close lightbox when clicking on backdrop
-      lightbox.addEventListener('click', function(e) {
-        if (e.target === lightbox) {
-          closeLightbox();
-        }
-      });
+      if (lightbox) {
+        lightbox.addEventListener('click', function(e) {
+          if (e.target === lightbox) {
+            closeLightbox();
+          }
+        });
+      }
 
       // Close lightbox with ESC key
       document.addEventListener('keydown', function(e) {
