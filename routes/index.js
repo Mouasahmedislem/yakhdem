@@ -62,100 +62,185 @@ var sample = require('../models/sample');
 var tool = require('../models/tool');
 
 
-router.get("/sale/furniteur", async function(req, res) {
+// Furniture Home Route - SYNC Event IDs (same structure as producthome)
+router.get("/furniture/:id", async (req, res) => {
   try {
-    const furniteurs = await furniteur.find({});
-    const headers = await header.find({});
-    
-    // ✅ Collect user or anonymous data
-    const user = req.user || {};
+    const furniture = await Furniteur.findById(req.params.id);
+    const relatedItems = await Furniteur.find({ _id: { $ne: req.params.id } }).limit(12);
+
+    // ✅ Generate event IDs for ALL events (PageView, ViewContent, AddToCart)
+    const eventIdPageView = generateEventId();
+    const eventIdView = generateEventId();
+    const eventIdCart = generateEventId();
+
     const userData = {
-      email: user.email,
-      numero: user.numero,
-      firstName: user.firstName,
-      lastName: user.lastName,
       ip: req.headers["x-forwarded-for"]?.split(",")[0] || req.socket.remoteAddress,
       userAgent: req.get("User-Agent"),
-         fbc: req.cookies._fbc || undefined,
-         fbp: req.cookies._fbp || undefined  
+      fbc: req.cookies._fbc,
+      fbp: req.cookies._fbp,
+      country: "algeria",
+      email: req.user?.email,
+      numero: req.user?.numero,
+      firstName: req.user?.firstName,
+      lastName: req.user?.lastName,
     };
 
-   const eventIdView = generateEventId(); // Use a proper UUID generator
-   const eventIdCart = generateEventId(); // prepare for AddToCart
-
-    // ✅ Send ViewContent event to Meta
-    await sendMetaCAPIEvent({
-      eventName: "ViewContent",
-      eventId: eventIdView,
-      userData,
-      customData: {
-        content_name: "Sale Furniteur Page",
-        content_type: "product_group",
-        anonymous_id: req.sessionID // optional for retargeting
-      },
-      testEventCode: "TEST12345"
+    console.log("🔍 UserData for Furniture Events:", {
+      hasUser: !!req.user,
+      hasFBP: !!userData.fbp,
+      hasFBC: !!userData.fbc,
+      eventIdPageView: eventIdPageView,
+      eventIdView: eventIdView,
+      eventIdCart: eventIdCart
     });
 
-    res.render("sale/furniteur", { furniteurs, headers,metaEventIdView: eventIdView,
-    metaEventIdCart: eventIdCart  });
+    // ✅ Send CAPI PageView with event ID
+    await sendMetaCAPIEvent({
+      eventName: "PageView",
+      eventId: eventIdPageView,
+      userData,
+      customData: {
+        content_name: furniture.title,
+        content_ids: [furniture.id],
+        content_type: "product",
+        value: furniture.price,
+        currency: "DZD"
+      },
+      eventSourceUrl: `https://${req.get('host')}${req.originalUrl}`
+    });
 
-  } catch (err) {
-    console.error("❌ Error loading sale/furniteur:", err);
-    res.status(500).send("Error loading page");
+    // ✅ Send CAPI ViewContent with the event ID
+    await sendMetaCAPIEvent({
+      eventName: "ViewContent",
+      eventId: eventIdView, // Same ID for CAPI
+      userData,
+      customData: {
+        content_name: furniture.title,
+        content_ids: [furniture.id],
+        contents: [{
+          id: furniture.id,
+          quantity: 1,
+          item_price: furniture.price
+        }],
+        content_type: "product",
+        value: furniture.price,
+        currency: "DZD"
+      },
+      eventSourceUrl: `https://${req.get('host')}${req.originalUrl}`
+    });
+
+    // ✅ Store AddToCart event ID in session for future use
+    req.session.preGeneratedEventIdCartFurniture = eventIdCart;
+
+    // 3D model settings (if applicable for furniture)
+    const has3DModel = !!(furniture.stlFile);
+    const stlFile = furniture.stlFile;
+    
+    let defaultColor = '#8CAAE6';
+    if (furniture.model3D && furniture.model3D.defaultColor) {
+      defaultColor = furniture.model3D.defaultColor.startsWith('#') 
+        ? furniture.model3D.defaultColor 
+        : `#${furniture.model3D.defaultColor}`;
+    }
+    
+    const model3DSettings = {
+      enabled: has3DModel,
+      stlFile: stlFile,
+      autoRotate: furniture.model3D?.autoRotate ?? true,
+      defaultColor: defaultColor
+    };
+
+    // Render template with ALL event IDs (same as producthome structure)
+    res.render("furniture/product", { 
+      furniture, 
+      relatedItems,
+      req,
+      metaEventIdPageView: eventIdPageView, // For Pixel PageView
+      metaEventIdView: eventIdView, // For Pixel ViewContent
+      metaEventIdCart: eventIdCart, // For Pixel AddToCart
+      has3DModel: has3DModel,
+      model3DSettings: model3DSettings,
+      user: req.user,
+      login: req.isAuthenticated()
+    });
+
+  } catch (error) {
+    console.error("Error in furniture route:", error);
+    res.status(500).send("Server Error");
   }
 });
 
-router.get("/add-to-cart-furniteur/:id", async function(req, res) {
-  const furniteurId = req.params.id;
-  const cart = new Cart(req.session.cart || {});
+// Add to Cart Furniture Route - USE SAME Event ID
+router.get("/add-to-cart-furniture/:id", async function(req, res) {
+  const furnitureId = req.params.id;
+  const quantity = parseInt(req.query.qty) || 1;
+  const redirectTo = req.query.redirect;
   
-  try {
-    const item = await furniteur.findById(furniteurId);
-    if (!item) return res.redirect("/sale/furniteur");
+  const cart = new Cart(req.session.cart ? req.session.cart : {});
+  const furniture = await Furniteur.findById(furnitureId);
 
-    cart.add(item, item.id);
-    req.session.cart = cart;
-    console.log("🛒 Item added to cart:", item.title);
+  if (!furniture) {
+    return res.redirect("/sale/furniteur");
+  }
 
-    // ✅ Prepare Meta CAPI AddToCart
-    const user = req.user || {};
-    const userData = {
-      email: user.email,
-      numero: user.numero,
-      firstName: user.firstName,
-      lastName: user.lastName,
-      ip: req.headers["x-forwarded-for"]?.split(",")[0] || req.socket.remoteAddress,
-      userAgent: req.get("User-Agent"),
-         fbc: req.cookies._fbc || undefined,
-         fbp: req.cookies._fbp || undefined  
-    };
+  // Add product to cart
+  for (let i = 0; i < quantity; i++) {
+    cart.add(furniture, furniture.id);
+  }
+  req.session.cart = cart;
 
-    const eventIdCart = generateEventId(); // Use a proper UUID generator
+  // ✅ User data
+  const user = req.user || {};
+  const userData = {
+    ip: req.headers["x-forwarded-for"]?.split(",")[0] || req.socket.remoteAddress,
+    userAgent: req.get("User-Agent"),
+    fbc: req.cookies._fbc,
+    fbp: req.cookies._fbp,
+    country: "algeria",
+    email: user.email,
+    numero: user.numero,
+    firstName: user.firstName,
+    lastName: user.lastName,
+  };
 
-    await sendMetaCAPIEvent({
-      eventName: "AddToCart",
-      eventId: eventIdCart,
-      userData,
-      customData: {
-        content_name: item.title,
-        content_ids: [item.id],
-        contents: [{  // ← ADD THIS
-      id: item.id,
-      quantity: 1  // Default quantity for view
-    }],
-        content_type: "product",
-        value: item.price,
-        currency: "DZD",
-        anonymous_id: req.sessionID
-      },
-      testEventCode: "TEST12345" // Optional for Meta test events
-    });
+  // ✅ Use the SAME event ID that was pre-generated from furniture view
+  const eventIdCart = req.session.preGeneratedEventIdCartFurniture || generateEventId();
 
-    res.redirect("/sale/furniteur");
+  console.log("🎯 Furniture AddToCart Event ID Sync:", {
+    eventId: eventIdCart,
+    source: req.session.preGeneratedEventIdCartFurniture ? "Pre-generated" : "New",
+    quantity: quantity,
+    value: furniture.price * quantity
+  });
 
-  } catch (err) {
-    console.error("❌ AddToCart Error:", err);
-    res.redirect("/sale/furniteur");
+  // ✅ Send CAPI event with SAME event ID
+  await sendMetaCAPIEvent({
+    eventName: "AddToCart",
+    eventId: eventIdCart, // Same ID as Pixel
+    userData,
+    customData: {
+      content_name: furniture.title,
+      content_ids: [furniture.id],
+      contents: [{
+        id: furniture.id,
+        quantity: quantity,
+        item_price: furniture.price
+      }],
+      content_type: "product",
+      value: furniture.price * quantity,
+      currency: "DZD"
+    },
+    eventSourceUrl: `https://${req.get('host')}${req.originalUrl}`
+  });
+
+  // Clear the pre-generated ID after use
+  delete req.session.preGeneratedEventIdCartFurniture;
+
+  // Redirect (same logic as producthome)
+  if (redirectTo === 'checkout') {
+    res.redirect('/checkout');
+  } else {
+    res.redirect('/sale/furniteur');
   }
 });
 
