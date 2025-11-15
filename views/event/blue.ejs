@@ -1,479 +1,500 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.1/crypto-js.min.js"></script>
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="referrer" content="strict-origin-when-cross-origin">
-<!-- Meta Pixel Code -->
-<% if (process.env.FB_PIXEL_ID) { %>
-<!-- Facebook Pixel Code -->
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="referrer" content="strict-origin-when-cross-origin">
 
+  <title><%= blue.title %> - Paintello Home</title>
 
-<script>
-!function(f,b,e,v,n,t,s)
-{if(f.fbq)return;n=f.fbq=function(){n.callMethod?
-n.callMethod.apply(n,arguments):n.queue.push(arguments)};
-if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
-n.queue=[];t=b.createElement(e);t.async=!0;
-t.src=v;s=b.getElementsByTagName(e)[0];
-s.parentNode.insertBefore(t,s)}(window, document,'script',
-'https://connect.facebook.net/en_US/fbevents.js');
-
-// Create config object dynamically
-var pixelConfig = {};
-
-// Only add parameters that have values
-<% if (user && user.email) { %> pixelConfig.em = '<%= user.email %>'; <% } %>
-<% if (user && user.firstName) { %> pixelConfig.fn = '<%= user.firstName %>'; <% } %>
-<% if (user && user.lastName) { %> pixelConfig.ln = '<%= user.lastName %>'; <% } %>
-<% if (user && user.numero) { %> pixelConfig.ph = '<%= user.numero %>'; <% } %>
-<% if (user && user._id) { %> pixelConfig.external_id = '<%= user._id %>'; <% } %>
-
-// Initialize with dynamic config
-fbq('init', '<%= process.env.FB_PIXEL_ID %>', pixelConfig);
-fbq('track', 'PageView');
-
-// Delay ViewContent to ensure pixel is loaded
-setTimeout(function() {
-  fbq('track', 'ViewContent', {
-    content_name: '<%= blue.title %>',
-    content_ids: ['<%= blue._id %>'],
-    content_type: 'product',
-    value: <%= blue.price %>,
-    currency: 'DZD',
-    contents: [{
-      id: '<%= blue._id %>',
-      quantity: 1,
-      item_price: <%= blue.price %>
-    }]
-  }, {
-    eventID: '<%= metaEventIdView %>'
-  });
-}, 2000);
-</script>
-<noscript>
-  <img height="1" width="1" style="display:none" 
-       src="https://www.facebook.com/tr?id=<%= process.env.FB_PIXEL_ID %>&ev=PageView&noscript=1"/>
-</noscript>
-<!-- End Facebook Pixel Code -->
-<% } %>
-
-<script type="text/javascript">
-    (function(c,l,a,r,i,t,y){
-        c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};
-        t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;
-        y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);
-    })(window, document, "clarity", "script", "t8r0mi7k1l");
-</script>
-
-<!-- Open Graph Meta Tags -->
-<meta property="og:type" content="product" />
-<meta property="og:title" content="<%= blue.title %>" />
-<meta property="og:description" content="<%= blue.description %>" />
-<meta property="og:image" content="<%= blue.image %>" />
-<meta property="og:url" content="https://<%= req.get('host') + req.originalUrl %>" />
-<meta property="og:site_name" content="Paintello" />
-<meta property="product:price:amount" content="<%= blue.price %>" />
-<meta property="product:price:currency" content="DZD" />
-
-
-
-
-  <title>Paintello Home</title>
-  <link rel="apple-touch-icon" sizes="180x180" href="/favicon/apple-touch-icon.png">
-<link rel="icon" type="image/png" sizes="32x32" href="/favicon/favicon-32x32.png">
-<link rel="icon" type="image/png" sizes="16x16" href="/favicon/favicon-16x16.png">
-<link rel="manifest" href="/favicon/site.webmanifest">  
-  <meta name="theme-color" content="#ffffff">  <link href='https://cdn.jsdelivr.net/npm/boxicons@2.0.5/css/boxicons.min.css' rel='stylesheet'>
-  <link rel="stylesheet" href="/assets/vendor/font-awesome/css/fontawesome-all.min.css">
-  <link rel="stylesheet" href="/assets/vendor/animate.css/animate.min.css">
-  <link rel="stylesheet" href="/assets/vendor/hs-megamenu/src/hs.megamenu.css">
-<!-- Bootstrap 4 CSS -->
-<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
-<!-- Font Awesome (optional for icons) -->
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
-
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
   <!-- Font Awesome -->
-  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.11.2/css/all.css">
-  <!-- Bootstrap core CSS -->
-   <!-- Bootstrap core CSS -->
-  <link href="../../css/bootstrap.min.css" rel="stylesheet">
-  <!-- Material Design Bootstrap -->
-  <link href="../../css/mdb.min.css" rel="stylesheet">
-<!-- Add the slick-theme.css if you want default styling -->
-<link rel="stylesheet" type="text/css" href="//cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.css"/>
-<!-- Add the slick-theme.css if you want default styling -->
-<link rel="stylesheet" type="text/css" href="//cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick-theme.css"/>
-  <!-- Material Design Bootstrap -->
-  <link href="/css/mdb.min.css" rel="stylesheet">
-  <link href="/css/magiczoomplus.css" rel="stylesheet">
-  <link href="/css/zoomm.css" rel="stylesheet">
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+  <!-- Meta Pixel Code -->
+  <% if (process.env.FB_PIXEL_ID) { %>
+  <script>
+    !function(f,b,e,v,n,t,s)
+    {if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+    n.callMethod.apply(n,arguments):n.queue.push(arguments)};
+    if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
+    n.queue=[];t=b.createElement(e);t.async=!0;
+    t.src=v;s=b.getElementsByTagName(e)[0];
+    s.parentNode.insertBefore(t,s)}(window,document,'script',
+    'https://connect.facebook.net/en_US/fbevents.js');
+
+    var pixelConfig = {};
+    <% if (user && user.email) { %> pixelConfig.em = '<%= user.email %>'; <% } %>
+    <% if (user && user.firstName) { %> pixelConfig.fn = '<%= user.firstName %>'; <% } %>
+    <% if (user && user.lastName) { %> pixelConfig.ln = '<%= user.lastName %>'; <% } %>
+    <% if (user && user.numero) { %> pixelConfig.ph = '<%= user.numero %>'; <% } %>
+    <% if (user && user._id) { %> pixelConfig.external_id = '<%= user._id %>'; <% } %>
+
+    fbq('init', '<%= process.env.FB_PIXEL_ID %>', pixelConfig);
+    fbq('track', 'PageView');
+
+    setTimeout(function() {
+      fbq('track', 'ViewContent', {
+        content_name: '<%= blue.title %>',
+        content_ids: ['<%= blue._id %>'],
+        content_type: 'product',
+        value: <%= blue.price %>,
+        currency: 'DZD',
+        contents: [{
+          id: '<%= blue._id %>',
+          quantity: 1,
+          item_price: <%= blue.price %>
+        }]
+      }, {
+        eventID: '<%= metaEventIdView %>'
+      });
+    }, 2000);
+  </script>
+  <noscript>
+    <img height="1" width="1" style="display:none" 
+         src="https://www.facebook.com/tr?id=<%= process.env.FB_PIXEL_ID %>&ev=PageView&noscript=1"/>
+  </noscript>
+  <% } %>
+
+  <!-- Clarity Script -->
+  <script type="text/javascript">
+    (function(c,l,a,r,i,t,y){
+      c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};
+      t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;
+      y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);
+    })(window, document, "clarity", "script", "t8r0mi7k1l");
+  </script>
+
+  <!-- Open Graph Meta Tags -->
+  <meta property="og:type" content="product" />
+  <meta property="og:title" content="<%= blue.title %>" />
+  <meta property="og:description" content="<%= blue.description %>" />
+  <meta property="og:image" content="<%= blue.image[0] %>" />
+  <meta property="og:url" content="https://<%= req.get('host') + req.originalUrl %>" />
+  <meta property="og:site_name" content="Paintello" />
+  <meta property="product:price:amount" content="<%= blue.price %>" />
+  <meta property="product:price:currency" content="DZD" />
+
+  <!-- Favicon -->
+  <link rel="apple-touch-icon" sizes="180x180" href="/favicon/apple-touch-icon.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/favicon/favicon-16x16.png">
+  <link rel="manifest" href="/favicon/site.webmanifest">  
+  <meta name="theme-color" content="#ffffff">
 
   <style>
-
- /* public/css/home.css */
-body {
-  font-family: 'Helvetica Neue', sans-serif;
-  margin: 0;
-  padding: 0;
-  background-color: #fdfdfd;
-  color: #333;
-}
-
-header, footer {
-  background: white;
-  padding: 20px 40px;
-  text-align: center;
-  border-bottom: 1px solid #ddd;
-}
-
-.logo {
-  font-size: 2.5rem;
-  font-weight: bold;
-  letter-spacing: 2px;
-}
-
-.banner {
-  width: 100%;
-  height: 80vh;
-  background-size: cover;
-  background-position: center;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-
-.banner-text {
-  background: rgba(255, 255, 255, 0.85);
-  padding: 40px;
-  font-size: 2rem;
-  text-transform: uppercase;
-}
-
-.section {
-  padding: 60px 20px;
-  max-width: 1200px;
-  margin: auto;
-}
-
-
-.section-title {
-  font-size: 2rem;
-  margin-bottom: 40px;
-  text-align: center;
-}
-
-.products {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-  gap: 30px;
-}
-
-.product {
-  text-align: center;
-}
-
-.product img {
-  width: 100%;
-  border: 1px solid #eee;
-  transition: transform 0.3s ease;
-}
-
-.product img:hover {
-  transform: scale(1.05);
-}
-
-footer {
-  margin-top: 60px;
-  font-size: 0.9rem;
-}
-
-.logo-img {
-  height: 60px;
-
-}
-
-
-
-.badge-danger {
-  position: absolute;
-  top: -5px;
-  right: -10px;
-  font-size: 0.75rem;
-}
-.logo {
-  font-size: 1.6rem;
-  font-weight: 600;
-  color: #222;
-}
-
-
-
-
-
-.cart-btn {
-  padding: 8px 16px;
-  background-color: #f0f0f0;
-  border-radius: 20px;
-  color: #222;
-  font-weight: 500;
-  transition: background-color 0.3s;
-}
-
-.cart-btn:hover {
-  background-color: #ddd;
-}
-.add-to-cart-button {
-  display: inline-block;
-  background-color: #f8f8f8;
-  color: #222;
-  padding: 8px 16px;
-  border: 1px solid #ccc;
-  border-radius: 25px;
-  text-decoration: none;
-  font-size: 0.9rem;
-  transition: background-color 0.3s;
-}
-
-.add-to-cart-button:hover {
-  background-color: #e0e0e0;
-}
-
-
-
-
-
-.product-title {
-  font-size: 2rem;
-  margin-bottom: .5rem;
-}
-
-.product-price {
-  font-size: 1.5rem;
-  color: #f4791f;
-  margin-bottom: 1rem;
-}
-
-/* Zoom-on-hover for carousel images */
-
-.zoomable:hover {
-  transform: scale(1.1);
-}
-
-/* Tab styling override (optional) */
-#infoTab .nav-link {
-  color: #555;
-}
-#infoTab .nav-link.active {
-  color: #f4791f;
-  border-color: #f4791f #f4791f #fff;
-}
-.zoomable {
-  transition: transform .2s ease;
-  cursor: zoom-in;
-}
-.zoomable:hover {
-  transform: scale(1.1);
-}
-.product-title { font-size: 2rem; margin-bottom: .5rem; }
-.product-price { font-size: 1.5rem; color: #f4791f; }
-.logo-img {
-  height: 45px;
-  width: auto;
-}
-
-.cart-badge {
-  position: absolute;
-  top: 0px;
-  right: 0px;
-  font-size: 0.7rem;
-  padding: 2px 6px;
-  border-radius: 50%;
-}
-</style>
-
-</head>
-<body>
-
-<header>
-
-    <!-- Navbar -->
-    <nav class="navbar navbar-expand-lg navbar-light fixed-top scrolling-navbar white">
-      <div class="container">
-        <a class="navbar-brand font-weight-bold title" href="/">Paintello</a>
-        <!--Navigation icons-->
-        <ul class="nav navbar-nav nav-flex-icons ml-auto">
-          <li class="nav-item dropdown">
-                       <a class="nav-link dropdown" id="menu1" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                        <i class="fas fa-user  black-text"></i>
-                      </a>
-                      <div class="dropdown-menu dropdown-menu-right bootstrap-menu  white scrollbar-default" aria-labelledby="menu1">
-                        <% if (login){ %>
-                          <a class="dropdown-item" href="/user/profile">profile</a>
-                           <a class="dropdown-item" href="/user/logout">Logout</a>
-                           <% } else{ %>
-                           <a class="dropdown-item" href="/user/signup">Register</a>
-                           <a class="dropdown-item" href="/user/signin">Sing up</a>
-                           <% } %>
-                 </div> 
-          </li>
-          <li class="nav-item ">
-                      <a class="nav-link " id="menu2" href="/shop" role="button"  aria-haspopup="true" aria-expanded="false">
-                        <i class="fas fa-shopping-cart black-text"></i>
-                        <% if(session.cart){ %>
-                      <span class="mycounter"><%= session.cart.totalQty %></span>
-                      <% } %>
-                      </a>
-          </li>
-    
-        </ul>
-        
-        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarTogglerDemo02"
-          aria-controls="navbarTogglerDemo02" aria-expanded="false" aria-label="Toggle navigation">
-          <span class="navbar-toggler-icon"></span>
-          
-        </button>
-        
-        
-        <div class="collapse navbar-collapse" id="navbarTogglerDemo02">
-          <ul class="list-unstyled navbar-nav mr-auto">
-         
-            
-            <li class="nav-item ml-4">
-             <a class="nav-link title" href="/contact" data-offset="90">Nos Services</a>
-            </li>
-            <li class="nav-item ml-4">
-              <a class="nav-link title" href="/sale/clean" data-offset="90">interior paint</a>
-            </li>
-            <li class="nav-item ml-4">
-              <a class="nav-link title" href="/sale/furniteur" data-offset="90">Vinyl paint</a>
-            </li>
-            <li class="nav-item ml-4">
-              <a class="nav-link title" href="/sale/wow" data-offset="90">outils</a>
-            </li>
-            <li class="nav-item ml-4">
-              <a class="nav-link title" href="/track-login" data-offset="90">Returns</a>
-            </li>
-            
-          </ul>
-          
-          <!-- Social Icon  -->
-         
-              </div>
-      </div>
-  
-         
-      </div>
-      </div>
-    </nav>
-</header> 
-
-  <div class="banner" style="background-image: url('https://live.staticflickr.com/65535/54424056395_fe456898d8_k.jpg');">
-   <div class="banner-text">
-                <h1 class="h1-responsive font-weight-bold mt-sm-5 mb-4 wow fadeInLeft" data-wow-delay="0.3s">Transform Your Home with Color & Comfort</h1>
-                <hr class="hr-light wow fadeInLeft" data-wow-delay="0.3s">
- <a class="btn btn-white btn-rounded btn-lg orange-text font-weight-bold ml-lg-0 wow fadeInLeft" data-wow-delay="0.4s" href="/"><img src="/favicon/android-chrome-192x192.png" alt="Paintello Logo" style="max-height: 80px;"></a>
- <a class="btn btn-white btn-rounded btn-lg orange-text font-weight-bold ml-lg-0 wow fadeInLeft" data-wow-delay="0.4s" href="/paintello"><img src="/img/logo.png" alt="Paintello Logo" style="max-height: 80px;"></a>
-              </div>
-            </div>
-          
-
-      
-
-
-
-  <div class="container my-5">
-  <div class="row">
-    <!-- IMAGE SLIDER -->
-    <div class="col-md-6">
-      <div id="productCarousel" class="carousel slide" data-ride="carousel">
-        <ol class="carousel-indicators">
-          <% blue.image.forEach((img, i) => { %>
-            <li data-target="#productCarousel" data-slide-to="<%= i %>" class="<%= i===0?'active':'' %>"></li>
-          <% }) %>
-        </ol>
-        <div class="carousel-inner">
-          <% blue.image.forEach((img, i) => { %>
-            <div class="carousel-item <%= i===0?'active':'' %>">
-              <img src="<%= img %>" class="d-block w-100 zoomable" alt="Slide <%= i+1 %>">
-            </div>
-          <% }) %>
-        </div>
-        <a class="carousel-control-prev" href="#productCarousel" role="button" data-slide="prev">
-          <span class="carousel-control-prev-icon"></span>
-        </a>
-        <a class="carousel-control-next" href="#productCarousel" role="button" data-slide="next">
-          <span class="carousel-control-next-icon"></span>
-        </a>
-      </div>
-    </div>
-
-    <!-- DETAILS -->
-    <div class="col-md-6">
-      <h1 class="product-title"><%= blue.title %></h1>
-      <p class="product-price"><%= blue.price.toFixed(2) %> DA</p>
-<form action="/add-to-cart-blue/<%= blue._id %>" method="GET" 
-      onsubmit="return handleAddToCart(event, '<%= blue.title %>', <%= blue.price %>, '<%= blue._id %>')">
-  <button type="submit" class="btn btn-primary btn-lg mb-4">
-    <i class="fas fa-cart-plus mr-2"></i>Add to Cart
-  </button>
-</form>
-
- 
-      <ul class="nav nav-tabs" id="infoTab" role="tablist">
-        <li class="nav-item">
-          <a class="nav-link active" id="desc-tab" data-toggle="tab" href="#desc" role="tab">Description</a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" id="info-tab" data-toggle="tab" href="#info" role="tab">Information</a>
-        </li>
-      </ul>
-      <div class="tab-content p-3 border border-top-0" id="infoTabContent">
-        <div class="tab-pane fade show active" id="desc" role="tabpanel">
-          <p><%= blue.description %></p>
-        </div>
-        <div class="tab-pane fade" id="info" role="tabpanel">
-          <ul class="list-unstyled">
-            <% for (let key in blue.details) { %>
-              <li><strong><%= key %>:</strong> <%= blue.details[key] %></li>
-            <% } %>
-          </ul>
-        </div>
-      </div>
-    </div>
-  </div>
-</div>
-</body>
- <script>
-    function toggleAccordion() {
-      document.getElementById("accordionContent").classList.toggle("open");
+    body {
+      font-family: 'Helvetica Neue', Arial, sans-serif;
+      background-color: #f8f8f8;
     }
-  </script>
-<script>
-  function handleAddToCart(event, title, price, id) {
-    // Fire AddToCart event
-    fbq('track', 'AddToCart', {
-      content_name: title,
-      content_ids: [id],
-      content_type: 'product',
-      value: price,
-      currency: 'DZD',
-      contents: [
-        {
-          id: id,
-          quantity: 1,
-          item_price: price
-        }
-      ]
-    }, {
-      eventID: '<%= metaEventIdCart %>'
+    
+    .zara-card {
+      background: white;
+      border-radius: 2px;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+      border: 1px solid #e5e5e5;
+      transition: all 0.3s ease;
+    }
+    
+    .zara-card:hover {
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    }
+    
+    .zara-btn {
+      background: #000;
+      color: white;
+      border: 1px solid #000;
+      padding: 12px 24px;
+      font-size: 13px;
+      letter-spacing: 0.5px;
+      transition: all 0.3s ease;
+      text-transform: uppercase;
+    }
+    
+    .zara-btn:hover {
+      background: #333;
+    }
+    
+    .zara-btn-secondary {
+      background: transparent;
+      color: #000;
+      border: 1px solid #000;
+    }
+    
+    .zara-btn-secondary:hover {
+      background: #000;
+      color: white;
+    }
+
+    /* Product Image Styles */
+    .product-image {
+      width: 100%;
+      height: 500px;
+      object-fit: cover;
+      transition: transform 0.3s ease;
+    }
+
+    .product-image:hover {
+      transform: scale(1.02);
+    }
+
+    .thumbnail {
+      width: 80px;
+      height: 80px;
+      object-fit: cover;
+      cursor: pointer;
+      border: 2px solid transparent;
+      transition: all 0.3s ease;
+    }
+
+    .thumbnail.active {
+      border-color: #000;
+    }
+
+    .thumbnail:hover {
+      border-color: #666;
+    }
+
+    /* Section spacing */
+    .section-spacing {
+      padding: 4rem 0;
+    }
+
+    /* Tab Styles */
+    .custom-tab {
+      border: none;
+      background: transparent;
+    }
+
+    .custom-tab .nav-link {
+      border: none;
+      color: #666;
+      font-size: 13px;
+      letter-spacing: 0.5px;
+      text-transform: uppercase;
+      padding: 12px 24px;
+      background: transparent;
+    }
+
+    .custom-tab .nav-link.active {
+      color: #000;
+      border-bottom: 2px solid #000;
+      background: transparent;
+    }
+
+    .custom-tab .nav-link:hover {
+      color: #000;
+      border-bottom: 2px solid #ccc;
+    }
+
+    /* Fade-in animation */
+    .fade-in {
+      opacity: 0;
+      transform: translateY(20px);
+      animation: fadeInUp 1s ease-out forwards;
+    }
+
+    .fade-in.delay-1 { animation-delay: 0.4s; }
+    .fade-in.delay-2 { animation-delay: 0.8s; }
+
+    @keyframes fadeInUp {
+      from {
+        opacity: 0;
+        transform: translateY(30px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+  </style>
+</head>
+
+<body class="min-h-screen bg-white">
+  <!-- Minimal Header -->
+  <header class="border-b border-gray-200 bg-white fixed top-0 left-0 w-full z-50">
+    <div class="max-w-7xl mx-auto px-6 py-4">
+      <div class="flex items-center justify-between">
+        <!-- Logo -->
+        <a href="/" class="flex items-center gap-4">
+          <img src="/favicon/android-chrome-192x192.png" alt="Paintello" class="h-12 w-12">
+        </a>
+
+        <!-- Navigation -->
+        <nav class="hidden md:flex items-center gap-8">
+          <a href="/" class="text-sm text-gray-600 hover:text-gray-900 uppercase tracking-wide">Accueil</a>
+          <a href="/shop" class="text-sm text-gray-600 hover:text-gray-900 uppercase tracking-wide">Boutique</a>
+          <a href="/track-login" class="text-sm text-gray-600 hover:text-gray-900 uppercase tracking-wide">Suivi</a>
+        </nav>
+
+        <!-- Icons -->
+        <div class="flex items-center gap-4">
+          <a href="/shop" class="relative text-gray-600 hover:text-gray-900">
+            <i class="fa-solid fa-bag-shopping text-lg"></i>
+            <% if (session.cart && session.cart.totalQty > 0) { %>
+              <span class="absolute -top-2 -right-2 bg-black text-white text-xs w-4 h-4 flex items-center justify-center rounded-full">
+                <%= session.cart.totalQty %>
+              </span>
+            <% } %>
+          </a>
+          
+          <a href="/user/profile" class="text-gray-600 hover:text-gray-900">
+            <i class="fa-regular fa-user text-lg"></i>
+          </a>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Content -->
+  <main class="max-w-7xl mx-auto px-6 pt-24">
+    <!-- Product Section -->
+    <section class="section-spacing">
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-12">
+        <!-- Product Images -->
+        <div class="space-y-4">
+          <!-- Main Image -->
+          <div class="zara-card overflow-hidden">
+            <img 
+              id="mainImage"
+              src="<%= blue.image[0] %>" 
+              alt="<%= blue.title %>"
+              class="product-image"
+              loading="lazy"
+            >
+          </div>
+          
+          <!-- Thumbnails -->
+          <div class="flex gap-2 overflow-x-auto py-2">
+            <% blue.image.forEach((img, i) => { %>
+              <img 
+                src="<%= img %>" 
+                alt="Thumbnail <%= i+1 %>"
+                class="thumbnail <%= i===0 ? 'active' : '' %>"
+                onclick="changeImage('<%= img %>', this)"
+                loading="lazy"
+              >
+            <% }) %>
+          </div>
+        </div>
+
+        <!-- Product Details -->
+        <div class="space-y-6">
+          <div class="fade-in">
+            <h1 class="text-3xl font-light tracking-wide uppercase mb-2"><%= blue.title %></h1>
+            <p class="text-2xl font-light text-gray-900 mb-6"><%= blue.price.toFixed(2) %> DA</p>
+          </div>
+
+          <!-- Add to Cart -->
+          <div class="fade-in delay-1">
+            <form action="/add-to-cart-blue/<%= blue._id %>" method="GET" 
+                  onsubmit="return handleAddToCart(event, '<%= blue.title %>', <%= blue.price %>, '<%= blue._id %>')">
+              <button type="submit" class="zara-btn w-full md:w-auto">
+                <i class="fas fa-shopping-bag mr-2"></i>Add to Cart
+              </button>
+            </form>
+          </div>
+
+          <!-- Product Info Tabs -->
+          <div class="fade-in delay-2">
+            <ul class="nav custom-tab mb-4" role="tablist">
+              <li class="nav-item">
+                <a class="nav-link active" id="desc-tab" data-toggle="tab" href="#desc" role="tab">
+                  Description
+                </a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" id="info-tab" data-toggle="tab" href="#info" role="tab">
+                  Details
+                </a>
+              </li>
+            </ul>
+
+            <div class="tab-content">
+              <div class="tab-pane fade show active" id="desc" role="tabpanel">
+                <div class="zara-card p-6">
+                  <p class="text-sm text-gray-600 leading-relaxed"><%= blue.description %></p>
+                </div>
+              </div>
+              <div class="tab-pane fade" id="info" role="tabpanel">
+                <div class="zara-card p-6">
+                  <ul class="space-y-2">
+                    <% for (let key in blue.details) { %>
+                      <li class="flex justify-between text-sm">
+                        <span class="font-medium text-gray-900"><%= key %>:</span>
+                        <span class="text-gray-600"><%= blue.details[key] %></span>
+                      </li>
+                    <% } %>
+                  </ul>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Related Products Section -->
+    <section class="section-spacing">
+      <div class="text-center mb-12">
+        <h2 class="text-2xl font-light tracking-wide uppercase mb-4">More Blue Colors</h2>
+        <p class="text-sm text-gray-600 max-w-2xl mx-auto">
+          Discover other beautiful blue tones from our collection
+        </p>
+      </div>
+
+      <div class="grid grid-cols-2 md:grid-cols-4 gap-6">
+        <!-- Related Product 1 -->
+        <a href="/blue/6856aff84a3d222983fe7688" class="group">
+          <div class="zara-card h-full overflow-hidden transition-all duration-300 hover:shadow-md">
+            <div class="overflow-hidden">
+              <img 
+                class="w-full h-48 object-cover transition-transform duration-500 group-hover:scale-105" 
+                src="https://live.staticflickr.com/65535/54481135987_b23529b174.jpg" 
+                alt="BLUEDROP_756P"
+                loading="lazy"
+              >
+            </div>
+            <div class="p-4 text-center">
+              <h3 class="text-sm font-normal tracking-wide uppercase">BLUEDROP_756P</h3>
+              <p class="text-xs text-gray-500 mt-1">Serene Sky Blue</p>
+            </div>
+          </div>
+        </a>
+
+        <!-- Related Product 2 -->
+        <a href="/blue/6856b93e4a3d222983fe768e" class="group">
+          <div class="zara-card h-full overflow-hidden transition-all duration-300 hover:shadow-md">
+            <div class="overflow-hidden">
+              <img 
+                class="w-full h-48 object-cover transition-transform duration-500 group-hover:scale-105" 
+                src="https://live.staticflickr.com/65535/54482180389_5e8774ddf9.jpg" 
+                alt="COOLMORA_744P"
+                loading="lazy"
+              >
+            </div>
+            <div class="p-4 text-center">
+              <h3 class="text-sm font-normal tracking-wide uppercase">COOLMORA_744P</h3>
+              <p class="text-xs text-gray-500 mt-1">Cool Ocean Blue</p>
+            </div>
+          </div>
+        </a>
+
+        <!-- Related Product 3 -->
+        <a href="/blue/6856b9a24a3d222983fe7690" class="group">
+          <div class="zara-card h-full overflow-hidden transition-all duration-300 hover:shadow-md">
+            <div class="overflow-hidden">
+              <img 
+                class="w-full h-48 object-cover transition-transform duration-500 group-hover:scale-105" 
+                src="https://live.staticflickr.com/65535/54482263638_167c17c6e5.jpg" 
+                alt="FRESHOBLUE_742P"
+                loading="lazy"
+              >
+            </div>
+            <div class="p-4 text-center">
+              <h3 class="text-sm font-normal tracking-wide uppercase">FRESHOBLUE_742P</h3>
+              <p class="text-xs text-gray-500 mt-1">Fresh Aqua Blue</p>
+            </div>
+          </div>
+        </a>
+
+        <!-- Related Product 4 -->
+        <a href="/blue/6856b9eb4a3d222983fe7692" class="group">
+          <div class="zara-card h-full overflow-hidden transition-all duration-300 hover:shadow-md">
+            <div class="overflow-hidden">
+              <img 
+                class="w-full h-48 object-cover transition-transform duration-500 group-hover:scale-105" 
+                src="https://live.staticflickr.com/65535/54481135862_0261d66c2a.jpg" 
+                alt="TWEEDIA_752P"
+                loading="lazy"
+              >
+            </div>
+            <div class="p-4 text-center">
+              <h3 class="text-sm font-normal tracking-wide uppercase">TWEEDIA_752P</h3>
+              <p class="text-xs text-gray-500 mt-1">Deep Navy Blue</p>
+            </div>
+          </div>
+        </a>
+      </div>
+    </section>
+  </main>
+
+  <!-- Minimal Footer -->
+  <footer class="border-t border-gray-200 py-12 bg-white">
+    <div class="max-w-7xl mx-auto px-6">
+      <div class="text-center">
+        <p class="text-sm text-gray-600">© <%= new Date().getFullYear() %> Paintello</p>
+        <div class="flex justify-center gap-6 mt-4">
+          <a href="/contact" class="text-xs text-gray-500 hover:text-gray-700 uppercase tracking-wide">Contact</a>
+          <a href="/shipping" class="text-xs text-gray-500 hover:text-gray-700 uppercase tracking-wide">Shipping</a>
+          <a href="/returns" class="text-xs text-gray-500 hover:text-gray-700 uppercase tracking-wide">Returns</a>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    // Image gallery functionality
+    function changeImage(src, element) {
+      document.getElementById('mainImage').src = src;
+      
+      // Remove active class from all thumbnails
+      document.querySelectorAll('.thumbnail').forEach(thumb => {
+        thumb.classList.remove('active');
+      });
+      
+      // Add active class to clicked thumbnail
+      element.classList.add('active');
+    }
+
+    // Facebook Pixel Add to Cart
+    function handleAddToCart(event, title, price, id) {
+      fbq('track', 'AddToCart', {
+        content_name: title,
+        content_ids: [id],
+        content_type: 'product',
+        value: price,
+        currency: 'DZD',
+        contents: [
+          {
+            id: id,
+            quantity: 1,
+            item_price: price
+          }
+        ]
+      }, {
+        eventID: '<%= metaEventIdCart %>'
+      });
+
+      return true;
+    }
+
+    // Simple tab functionality
+    document.addEventListener('DOMContentLoaded', function() {
+      const tabLinks = document.querySelectorAll('.custom-tab .nav-link');
+      
+      tabLinks.forEach(link => {
+        link.addEventListener('click', function(e) {
+          e.preventDefault();
+          
+          // Remove active class from all tabs
+          tabLinks.forEach(tab => {
+            tab.classList.remove('active');
+          });
+          
+          // Add active class to clicked tab
+          this.classList.add('active');
+          
+          // Show corresponding content
+          const target = this.getAttribute('href');
+          document.querySelectorAll('.tab-pane').forEach(pane => {
+            pane.classList.remove('show', 'active');
+          });
+          document.querySelector(target).classList.add('show', 'active');
+        });
+      });
     });
-
-    return true; // let the form submit continue
-  }
-</script>
-
-
-<%- include ("../partials/footer") %>.
+  </script>
+</body>
+</html>
