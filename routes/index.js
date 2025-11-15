@@ -1039,7 +1039,7 @@ router.get("/green/:id", async (req, res) => {
   res.render("event/green", { green, req,
     metaEventIdView: eventIdView,
     metaEventIdCart: eventIdCart,
-    metaEventIdPageView: eventIdPageView, // For Pixel PageView
+ 
       user: req.user,
       login: req.isAuthenticated() 
                             });
@@ -1057,7 +1057,7 @@ router.get("/add-to-cart-green/:id", async function(req, res) {
 
  // Add product to cart
   for (let i = 0; i < quantity; i++) {
-    cart.add(producthome, producthome.id);
+    cart.add(green, green.id);
   }
   req.session.cart = cart;
 
