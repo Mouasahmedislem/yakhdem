@@ -4,12 +4,9 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="referrer" content="strict-origin-when-cross-origin">
-  <meta name="facebook-domain-verification" content="yb7g1gekm0w90kxdm7yjazn8df8ad0" />
+
   <title> Paintello </title>
- <link rel="apple-touch-icon" sizes="180x180" href="/favicon/apple-touch-icon.png">
- <link rel="icon" type="image/png" sizes="32x32" href="/favicon/favicon-32x32.png">
- <link rel="icon" type="image/png" sizes="16x16" href="/favicon/favicon-16x16.png">
- <link rel="manifest" href="/favicon/site.webmanifest"> 
+
   <!-- Tailwind CSS -->
   <script src="https://cdn.tailwindcss.com"></script>
   <!-- Font Awesome -->
@@ -162,9 +159,16 @@
     /* Product grid */
     .product-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-      gap: 2rem;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 1rem;
       padding: 2rem 0;
+    }
+
+    @media (min-width: 768px) {
+      .product-grid {
+        grid-template-columns: repeat(4, 1fr);
+        gap: 2rem;
+      }
     }
 
     .product-card {
@@ -178,9 +182,8 @@
 
     .product-card img {
       width: 100%;
-      height: 200px;
+      height: 12rem;
       object-fit: cover;
-      margin-bottom: 1rem;
     }
 
     .product-card h3 {
@@ -398,37 +401,53 @@
       <div class="product-grid">
         <!-- Product 1 -->
         <a href="/pink/6856cd8203d002f2019026dd" class="product-card group">
-          <div class="zara-card p-4 h-full">
-            <img src="https://live.staticflickr.com/65535/54483207460_1e36b3f486.jpg" 
-                 alt="SAPLINGPINK_300P" class="group-hover:scale-105 transition-transform duration-300">
-            <h3 class="font-medium">SAPLINGPINK_300P</h3>
+          <div class="zara-card h-full flex flex-col">
+            <div class="overflow-hidden flex-grow">
+              <img src="https://live.staticflickr.com/65535/54483207460_1e36b3f486.jpg" 
+                   alt="SAPLINGPINK_300P" class="w-full h-48 object-cover group-hover:scale-105 transition-transform duration-300">
+            </div>
+            <div class="p-4">
+              <h3 class="font-medium text-sm">SAPLINGPINK_300P</h3>
+            </div>
           </div>
         </a>
 
         <!-- Product 2 -->
         <a href="/yelloow/6856cee603d002f2019026e6" class="product-card group">
-          <div class="zara-card p-4 h-full">
-            <img src="https://live.staticflickr.com/65535/54483123844_144752d2a2.jpg" 
-                 alt="LITTELYELLOW_164--P" class="group-hover:scale-105 transition-transform duration-300">
-            <h3 class="font-medium">LITTELYELLOW_164--P</h3>
+          <div class="zara-card h-full flex flex-col">
+            <div class="overflow-hidden flex-grow">
+              <img src="https://live.staticflickr.com/65535/54483123844_144752d2a2.jpg" 
+                   alt="LITTELYELLOW_164--P" class="w-full h-48 object-cover group-hover:scale-105 transition-transform duration-300">
+            </div>
+            <div class="p-4">
+              <h3 class="font-medium text-sm">LITTELYELLOW_164--P</h3>
+            </div>
           </div>
         </a>
 
         <!-- Product 3 -->
         <a href="/pink/6856cdd203d002f2019026df" class="product-card group">
-          <div class="zara-card p-4 h-full">
-            <img src="https://live.staticflickr.com/65535/54483127673_8c66470154.jpg" 
-                 alt="PONPONETTPINK_136P" class="group-hover:scale-105 transition-transform duration-300">
-            <h3 class="font-medium">PONPONETTPINK_136P</h3>
+          <div class="zara-card h-full flex flex-col">
+            <div class="overflow-hidden flex-grow">
+              <img src="https://live.staticflickr.com/65535/54483127673_8c66470154.jpg" 
+                   alt="PONPONETTPINK_136P" class="w-full h-48 object-cover group-hover:scale-105 transition-transform duration-300">
+            </div>
+            <div class="p-4">
+              <h3 class="font-medium text-sm">PONPONETTPINK_136P</h3>
+            </div>
           </div>
         </a>
 
         <!-- Product 4 -->
         <a href="/pink/6856ce2803d002f2019026e1" class="product-card group">
-          <div class="zara-card p-4 h-full">
-            <img src="https://live.staticflickr.com/65535/54483127778_b9467fd333.jpg" 
-                 alt="LITEELPINK_134P" class="group-hover:scale-105 transition-transform duration-300">
-            <h3 class="font-medium">LITEELPINK_134P</h3>
+          <div class="zara-card h-full flex flex-col">
+            <div class="overflow-hidden flex-grow">
+              <img src="https://live.staticflickr.com/65535/54483127778_b9467fd333.jpg" 
+                   alt="LITEELPINK_134P" class="w-full h-48 object-cover group-hover:scale-105 transition-transform duration-300">
+            </div>
+            <div class="p-4">
+              <h3 class="font-medium text-sm">LITEELPINK_134P</h3>
+            </div>
           </div>
         </a>
       </div>
