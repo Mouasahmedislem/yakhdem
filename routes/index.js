@@ -990,7 +990,7 @@ router.get("/coulors/greens", async function(req, res) {
 router.get("/green/:id", async (req, res) => {
   const green = await Green.findById(req.params.id);
  // ✅ Generate event IDs for ALL events (PageView, ViewContent, AddToCart)
-    const eventIdPageView = generateEventId();
+    
     const eventIdView = generateEventId();
     const eventIdCart = generateEventId();
 
@@ -1011,23 +1011,9 @@ router.get("/green/:id", async (req, res) => {
       hasFBP: !!userData.fbp,
       hasFBC: !!userData.fbc,
       eventIdView: eventIdView,
-      eventIdCart: eventIdCart,
-      eventIdPageView: eventIdPageView
+      eventIdCart: eventIdCart
     });
-// ✅ Send CAPI PageView with event ID
-    await sendMetaCAPIEvent({
-      eventName: "PageView",
-      eventId: eventIdPageView,
-      userData,
-      customData: {
-        content_name: producthome.title,
-        content_ids: [producthome.id],
-        content_type: "product",
-        value: producthome.price,
-        currency: "DZD"
-      },
-      eventSourceUrl: `https://${req.get('host')}${req.originalUrl}`
-    });
+
 
   await sendMetaCAPIEvent({
     eventName: "ViewContent",
