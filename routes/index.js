@@ -1055,11 +1055,9 @@ router.get("/green/:id", async (req, res) => {
     metaEventIdCart: eventIdCart,
     metaEventIdPageView: eventIdPageView, // For Pixel PageView
       user: req.user,
-      login: req.isAuthenticated()  });
-  } catch (error) {
-    console.error("Error in producthome route:", error);
-    res.status(500).send("Server Error");
-  }
+      login: req.isAuthenticated() 
+                            });
+ 
 });
 
 
