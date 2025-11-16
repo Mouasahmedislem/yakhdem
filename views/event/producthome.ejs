@@ -1481,7 +1481,10 @@ if (addForm) {
     
     // Submit the form - redirect to cart
     const productId = '<%= producthome._id %>';
-    window.location.href = `/add-to-cart-producthome/${productId}?qty=${quantity}`;
+    setTimeout(() => {
+  window.location.href = `/add-to-cart-producthome/${productId}?qty=${quantity}`;
+}, 150);
+
   });
 }
 
