@@ -245,569 +245,13 @@ router.get("/add-to-cart-furniture/:id", async function(req, res) {
 });
 
 
-router.get("/sale/cuisin", async function(req, res) {
-  try {
-    const cuisins = await cuisin.find({});
-    const headers = await header.find({});
 
-    // ✅ Collect user or anonymous data
-    const user = req.user || {};
-    const userData = {
-      email: user.email,
-      numero: user.numero,
-      firstName: user.firstName,
-      lastName: user.lastName,
-      ip: req.headers["x-forwarded-for"]?.split(",")[0] || req.socket.remoteAddress,
-      userAgent: req.get("User-Agent"),
-        fbc: req.cookies._fbc || undefined,
-        fbp: req.cookies._fbp || undefined  
-    };
-
-      const eventIdView = generateEventId(); // Use a proper UUID generator
-   const eventIdCart = generateEventId(); // prepare for AddToCart
-
-    // ✅ Send ViewContent event to Meta
-    await sendMetaCAPIEvent({
-      eventName: "ViewContent",
-       eventId: eventIdView,
-      userData,
-      customData: {
-        content_name: "sale cuisin Page",
-        content_type: "product_group",
-        anonymous_id: req.sessionID // optional for retargeting
-      }
-    });
-
-    res.render("sale/cuisin", { cuisins, headers,metaEventIdView: eventIdView,
-    metaEventIdCart: eventIdCart  });
-
-  } catch (err) {
-    console.error("❌ Error loading /sale/cuisin:", err);
-    res.status(500).send("Error loading page");
-  }
-});
-
-router.get("/add-to-cart-cuisin/:id", async function(req, res) {
-  const cuisinId = req.params.id;
-  const cart = new Cart(req.session.cart || {});
-
-  try {
-    const item = await cuisin.findById(cuisinId);
-    if (!item) return res.redirect("/sale/cuisin");
-
-    cart.add(item, item.id);
-    req.session.cart = cart;
-    console.log("🛒 Item added to cart:", item.title);
-
-    // ✅ Prepare Meta CAPI AddToCart
-    const user = req.user || {};
-    const userData = {
-      email: user.email,
-      numero: user.numero,
-      firstName: user.firstName,
-      lastName: user.lastName,
-      ip: req.headers["x-forwarded-for"]?.split(",")[0] || req.socket.remoteAddress,
-      userAgent: req.get("User-Agent"),
-        fbc: req.cookies._fbc || undefined,
-        fbp: req.cookies._fbp || undefined  
-    };
-
-    const eventIdCart = generateEventId(); // Use a proper UUID generator
-
-    await sendMetaCAPIEvent({
-      eventName: "AddToCart",
-      eventId: eventIdCart,
-      userData,
-      customData: {
-        content_name: item.title,
-        content_ids: [item.id],
-        contents: [{  // ← ADD THIS
-      id: item.id,
-      quantity: 1  // Default quantity for view
-        }],
-        content_type: "product",
-        value: item.price,
-        currency: "DZD",
-        anonymous_id: req.sessionID
-      }
-    });
-
-    res.redirect("/sale/cuisin");
-
-  } catch (err) {
-    console.error("❌ AddToCart Error:", err);
-    res.redirect("/sale/cuisin");
-  }
-});
-
-router.get("/sale/clean", async function(req, res) {
-  try {
-    const cleans = await clean.find({});
-    const headers = await header.find({});
-
-    // ✅ Collect user or anonymous data
-    const user = req.user || {};
-    const userData = {
-      email: user.email,
-      numero: user.numero,
-      firstName: user.firstName,
-      lastName: user.lastName,
-      ip: req.headers["x-forwarded-for"]?.split(",")[0] || req.socket.remoteAddress,
-      userAgent: req.get("User-Agent"),
-        fbc: req.cookies._fbc || undefined,
-        fbp: req.cookies._fbp || undefined  
-    };
-
-     const eventIdView = generateEventId(); // Use a proper UUID generator
-   const eventIdCart = generateEventId(); // prepare for AddToCart
-
-    // ✅ Send ViewContent event to Meta
-    await sendMetaCAPIEvent({
-      eventName: "ViewContent",
-     eventId: eventIdView,
-      userData,
-      customData: {
-        content_name: "sale clean Page",
-        content_type: "product_group",
-        anonymous_id: req.sessionID // optional for retargeting
-      }
-    });
-
-    res.render("sale/clean", { cleans, headers,metaEventIdView: eventIdView,
-    metaEventIdCart: eventIdCart});
-
-  } catch (err) {
-    console.error("❌ Error loading /sale/cuisin:", err);
-    res.status(500).send("Error loading page");
-  }
-});
-
-router.get("/add-to-cart-clean/:id", async function(req, res) {
-  const cleanId = req.params.id;
-  const cart = new Cart(req.session.cart || {});
-
-  try {
-    const item = await clean.findById(cleanId);
-    if (!item) return res.redirect("/sale/clean");
-
-    cart.add(item, item.id);
-    req.session.cart = cart;
-    console.log("🛒 Item added to cart:", item.title);
-
-    // ✅ Prepare Meta CAPI AddToCart
-    const user = req.user || {};
-    const userData = {
-      email: user.email,
-      numero: user.numero,
-      firstName: user.firstName,
-      lastName: user.lastName,
-      ip: req.headers["x-forwarded-for"]?.split(",")[0] || req.socket.remoteAddress,
-      userAgent: req.get("User-Agent"),
-        fbc: req.cookies._fbc || undefined,
-        fbp: req.cookies._fbp || undefined  
-    };
-
-    const eventIdCart = generateEventId(); // Use a proper UUID generator
-    await sendMetaCAPIEvent({
-      eventName: "AddToCart",
-      eventId: eventIdCart,
-      userData,
-      customData: {
-        content_name: item.title,
-        content_ids: [item.id],
-        contents: [{  // ← ADD THIS
-      id: item.id,
-      quantity: 1  // Default quantity for view
-    }],
-        content_type: "product",
-        value: item.price,
-        currency: "DZD",
-        anonymous_id: req.sessionID
-      }
-    });
-
-    res.redirect("/sale/clean");
-
-  } catch (err) {
-    console.error("❌ AddToCart Error:", err);
-    res.redirect("/sale/clean");
-  }
-});
-
-router.get("/sale/coat", async function(req, res) {
-  try {
-    const coats = await coat.find({});
-    const headers = await header.find({});
-
-    // ✅ Collect user or anonymous data
-    const user = req.user || {};
-    const userData = {
-      email: user.email,
-      numero: user.numero,
-      firstName: user.firstName,
-      lastName: user.lastName,
-      ip: req.headers["x-forwarded-for"]?.split(",")[0] || req.socket.remoteAddress,
-      userAgent: req.get("User-Agent"),
-        fbc: req.cookies._fbc || undefined,
-        fbp: req.cookies._fbp || undefined  
-    };
-
-    const eventIdView = generateEventId(); // Use a proper UUID generator
-   const eventIdCart = generateEventId(); // prepare for AddToCart
-
-    // ✅ Send ViewContent event to Meta
-    await sendMetaCAPIEvent({
-      eventName: "ViewContent",
-      eventId: eventIdView,
-      userData,
-      customData: {
-        content_name: "Sale coat Page",
-        content_type: "product_group",
-        anonymous_id: req.sessionID // optional for retargeting
-      }
-    });
-
-    res.render("sale/coat", { coats, headers,metaEventIdView: eventIdView,
-    metaEventIdCart: eventIdCart });
-
-  } catch (err) {
-    console.error("❌ Error loading sale/furniteur:", err);
-    res.status(500).send("Error loading page");
-  }
-});
-
-router.get("/add-to-cart-coat/:id", async function(req, res) {
-  const coatId = req.params.id;
-  const cart = new Cart(req.session.cart || {});
-
-  try {
-    const item = await coat.findById(coatId);
-    if (!item) return res.redirect("/sale/coat");
-
-    cart.add(item, item.id);
-    req.session.cart = cart;
-    console.log("🛒 Item added to cart:", item.title);
-
-    // ✅ Prepare Meta CAPI AddToCart
-    const user = req.user || {};
-    const userData = {
-      email: user.email,
-      numero: user.numero,
-      firstName: user.firstName,
-      lastName: user.lastName,
-      ip: req.headers["x-forwarded-for"]?.split(",")[0] || req.socket.remoteAddress,
-      userAgent: req.get("User-Agent"),
-        fbc: req.cookies._fbc || undefined,
-        fbp: req.cookies._fbp || undefined  
-    };
-
-    const eventIdCart = generateEventId(); // Use a proper UUID generator
-    await sendMetaCAPIEvent({
-      eventName: "AddToCart",
-      eventId: eventIdCart,
-      userData,
-      customData: {
-        content_name: item.title,
-        content_ids: [item.id],
-        contents: [{  // ← ADD THIS
-      id: item.id,
-      quantity: 1  // Default quantity for view
-    }],
-        content_type: "product",
-        value: item.price,
-        currency: "DZD",
-        anonymous_id: req.sessionID
-      }
-    });
-
-    res.redirect("/sale/coat");
-
-  } catch (err) {
-    console.error("❌ AddToCart Error:", err);
-    res.redirect("/sale/coat");
-  }
-});
-
-router.get("/sale/sample", async function(req, res) {
-  try {
-    const samples = await sample.find({});
-    const headers = await header.find({});
-
-    // ✅ Collect user or anonymous data
-    const user = req.user || {};
-    const userData = {
-      email: user.email,
-      numero: user.numero,
-      firstName: user.firstName,
-      lastName: user.lastName,
-      ip: req.headers["x-forwarded-for"]?.split(",")[0] || req.socket.remoteAddress,
-      userAgent: req.get("User-Agent"),
-        fbc: req.cookies._fbc || undefined,
-        fbp: req.cookies._fbp || undefined  
-    };
-
-     const eventIdView = generateEventId(); // Use a proper UUID generator
-   const eventIdCart = generateEventId(); // prepare for AddToCart
-
-    // ✅ Send ViewContent event to Meta
-    await sendMetaCAPIEvent({
-      eventName: "ViewContent",
-       eventId: eventIdView,
-      userData,
-      customData: {
-        content_name: "Sale Furniteur Page",
-        content_type: "product_group",
-        anonymous_id: req.sessionID // optional for retargeting
-      }
-    });
-
-    res.render("sale/sample", { samples, headers,metaEventIdView: eventIdView,
-    metaEventIdCart: eventIdCart });
-
-  } catch (err) {
-    console.error("❌ Error loading sale/furniteur:", err);
-    res.status(500).send("Error loading page");
-  }
-});
-
-router.get("/add-to-cart-sample/:id", async function(req, res) {
-  const sampleId = req.params.id;
-  const cart = new Cart(req.session.cart || {});
-
-  try {
-    const item = await sample.findById(sampleId);
-    if (!item) return res.redirect("/sale/sample");
-
-    cart.add(item, item.id);
-    req.session.cart = cart;
-    console.log("🛒 Item added to cart:", item.title);
-
-    // ✅ Prepare Meta CAPI AddToCart
-    const user = req.user || {};
-    const userData = {
-      email: user.email,
-      numero: user.numero,
-      firstName: user.firstName,
-      lastName: user.lastName,
-      ip: req.headers["x-forwarded-for"]?.split(",")[0] || req.socket.remoteAddress,
-      userAgent: req.get("User-Agent"),
-        fbc: req.cookies._fbc || undefined,
-        fbp: req.cookies._fbp || undefined  
-    };
-
-    const eventIdCart = generateEventId(); // Use a proper UUID generator
-    await sendMetaCAPIEvent({
-      eventName: "AddToCart",
-      eventId: eventIdCart,
-      userData,
-      customData: {
-        content_name: item.title,
-        content_ids: [item.id],
-        contents: [{  // ← ADD THIS
-      id: item.id,
-      quantity: 1  // Default quantity for view
-    }],
-        content_type: "product",
-        value: item.price,
-        currency: "DZD",
-        anonymous_id: req.sessionID
-      }
-    });
-
-    res.redirect("/sale/sample");
-
-  } catch (err) {
-    console.error("❌ AddToCart Error:", err);
-    res.redirect("/sale/sample");
-  }
-});
-
-
-router.get("/sale/tool", async function(req, res) {
-  try {
-    const tools = await tool.find({});
-    const headers = await header.find({});
-
-    // ✅ Collect user or anonymous data
-    const user = req.user || {};
-    const userData = {
-      email: user.email,
-      numero: user.numero,
-      firstName: user.firstName,
-      lastName: user.lastName,
-      ip: req.headers["x-forwarded-for"]?.split(",")[0] || req.socket.remoteAddress,
-      userAgent: req.get("User-Agent"),
-        fbc: req.cookies._fbc || undefined,
-        fbp: req.cookies._fbp || undefined  
-    };
-
-     const eventIdView = generateEventId(); // Use a proper UUID generator
-   const eventIdCart = generateEventId(); // prepare for AddToCart
-
-    // ✅ Send ViewContent event to Meta
-    await sendMetaCAPIEvent({
-      eventName: "ViewContent",
-      eventId: eventIdView,
-      userData,
-      customData: {
-        content_name: "Sale coat Page",
-        content_type: "product_group",
-        anonymous_id: req.sessionID // optional for retargeting
-      }
-    });
-
-    res.render("sale/tool", { tools, headers,metaEventIdView: eventIdView,
-    metaEventIdCart: eventIdCart });
-
-  } catch (err) {
-    console.error("❌ Error loading sale/furniteur:", err);
-    res.status(500).send("Error loading page");
-  }
-});
-
-router.get("/add-to-cart-tool/:id", async function(req, res) {
-  const toolId = req.params.id;
-  const cart = new Cart(req.session.cart || {});
-
-  try {
-    const item = await tool.findById(toolId);
-    if (!item) return res.redirect("/sale/tool");
-
-    cart.add(item, item.id);
-    req.session.cart = cart;
-    console.log("🛒 Item added to cart:", item.title);
-
-    // ✅ Prepare Meta CAPI AddToCart
-    const user = req.user || {};
-    const userData = {
-      email: user.email,
-      numero: user.numero,
-      firstName: user.firstName,
-      lastName: user.lastName,
-      ip: req.headers["x-forwarded-for"]?.split(",")[0] || req.socket.remoteAddress,
-      userAgent: req.get("User-Agent"),
-        fbc: req.cookies._fbc || undefined,
-        fbp: req.cookies._fbp || undefined  
-    };
-
-    const eventIdCart = generateEventId(); // Use a proper UUID generator
-    await sendMetaCAPIEvent({
-      eventName: "AddToCart",
-     eventId: eventIdCart,
-      userData,
-      customData: {
-        content_name: item.title,
-        content_ids: [item.id],
-        contents: [{  // ← ADD THIS
-      id: item.id,
-      quantity: 1  // Default quantity for view
-    }],
-        content_type: "product",
-        value: item.price,
-        currency: "DZD",
-        anonymous_id: req.sessionID
-      }
-    });
-
-    res.redirect("/sale/tool");
-
-  } catch (err) {
-    console.error("❌ AddToCart Error:", err);
-    res.redirect("/sale/tool");
-  }
-});
 
 var Cart = require("../models/cart");
 
 var sale = require('../models/saleH');
 var header = require('../models/header');
 var shipping = require('../models/shipping');
-
-router.get("/myfixateur/fixateur", async function(req, res) {
-  try {
-    
-    const headers = await header.find({});
-
-    // ✅ Collect user or anonymous data
-    const user = req.user || {};
-    const userData = {
-      email: user.email,
-      numero: user.numero,
-      firstName: user.firstName,
-      lastName: user.lastName,
-      ip: req.headers["x-forwarded-for"]?.split(",")[0] || req.socket.remoteAddress,
-      userAgent: req.get("User-Agent"),
-        fbc: req.cookies._fbc || undefined,
-        fbp: req.cookies._fbp || undefined  
-    };
-
-    const eventIdView = generateEventId(); // Use a proper UUID generator
-   const eventIdCart = generateEventId(); // prepare for AddToCart
-
-    // ✅ Send ViewContent event to Meta
-    await sendMetaCAPIEvent({
-      eventName: "ViewContent",
-     eventId: eventIdView,
-      userData,
-      customData: {
-        content_name: "Sale fixateur Page",
-        content_type: "product",
-        anonymous_id: req.sessionID // optional for retargeting
-      }
-    });
-
-    res.render("myfixateur/fixateur", { headers, headers,metaEventIdView: eventIdView,
-    metaEventIdCart: eventIdCart });
-
-  } catch (err) {
-    console.error("❌ Error loading sale/furniteur:", err);
-    res.status(500).send("Error loading page");
-  }
-});
-
-
-router.get("/paintellomac/paintellomac", async function(req, res) {
-  try {
-    
-    const headers = await header.find({});
-
-    // ✅ Collect user or anonymous data
-    const user = req.user || {};
-    const userData = {
-      email: user.email,
-      numero: user.numero,
-      firstName: user.firstName,
-      lastName: user.lastName,
-      ip: req.headers["x-forwarded-for"]?.split(",")[0] || req.socket.remoteAddress,
-      userAgent: req.get("User-Agent"),
-        fbc: req.cookies._fbc || undefined,
-        fbp: req.cookies._fbp || undefined  
-    };
-
-    const eventIdView = generateEventId(); // Use a proper UUID generator
-   const eventIdCart = generateEventId(); // prepare for AddToCart
-
-    // ✅ Send ViewContent event to Meta
-    await sendMetaCAPIEvent({
-      eventName: "ViewContent",
-       eventId: eventIdView,
-      userData,
-      customData: {
-        content_name: "Sale fixateur Page",
-        content_type: "product",
-        anonymous_id: req.sessionID // optional for retargeting
-      }
-    });
-
-    res.render("paintellomac/paintellomac", { headers, headers,metaEventIdView: eventIdView,
-    metaEventIdCart: eventIdCart });
-
-  } catch (err) {
-    console.error("❌ Error loading sale/furniteur:", err);
-    res.status(500).send("Error loading page");
-  }
-});
-
 
 
 router.get("/coulors/blue", async function(req, res) {
@@ -879,7 +323,7 @@ router.get("/blue/:id", async (req, res) => {
     eventId: eventIdView,
     userData,
     customData: {
-      content_name: c.title,
+      content_name: blue.title,
       content_ids: [blue.id],
       contents: [{  // ← ADD THIS
       id: blue.id,
@@ -950,51 +394,10 @@ router.get("/coulors/greens", async function(req, res) {
   try {
     
     const headers = await header.find({});
-
+    const eventIdPageView = generateEventId();
     // ✅ Collect user or anonymous data
     const user = req.user || {};
     const userData = {
-      email: user.email,
-      numero: user.numero,
-      firstName: user.firstName,
-      lastName: user.lastName,
-      ip: req.headers["x-forwarded-for"]?.split(",")[0] || req.socket.remoteAddress,
-      userAgent: req.get("User-Agent"),
-        fbc: req.cookies._fbc || undefined,
-        fbp: req.cookies._fbp || undefined  
-    };
-
-    const eventId = generateEventId(); // Use a proper UUID generator
-
-    // ✅ Send ViewContent event to Meta
-    await sendMetaCAPIEvent({
-      eventName: "PageView",
-      eventId,
-      userData,
-      customData: {
-        content_name: "Sale green Page",
-        content_type: "product_group",
-        anonymous_id: req.sessionID // optional for retargeting
-      },
-      testEventCode: "TEST12345"
-    });
-
-    res.render("coulors/greens", { headers, headers,eventId });
-
-  } catch (err) {
-    console.error("❌ Error loading sale/furniteur:", err);
-    res.status(500).send("Error loading page");
-  }
-});
-
-router.get("/green/:id", async (req, res) => {
-  const green = await Green.findById(req.params.id);
- // ✅ Generate event IDs for ALL events (PageView, ViewContent, AddToCart)
-    
-    const eventIdView = generateEventId();
-    const eventIdCart = generateEventId();
-
-  const userData = {
       ip: req.headers["x-forwarded-for"]?.split(",")[0] || req.socket.remoteAddress,
       userAgent: req.get("User-Agent"),
       fbc: req.cookies._fbc,
@@ -1006,14 +409,56 @@ router.get("/green/:id", async (req, res) => {
       lastName: req.user?.lastName,
     };
 
-    console.log("🔍 UserData for ViewContent:", {
-      hasUser: !!req.user,
-      hasFBP: !!userData.fbp,
-      hasFBC: !!userData.fbc,
-      eventIdView: eventIdView,
-      eventIdCart: eventIdCart
+    // ✅ Send ViewContent event to Meta
+      await sendMetaCAPIEvent({
+      eventName: "PageView",
+      eventId: eventIdPageView,
+      userData,
+      customData: {
+        content_name: " green colors Page",
+        content_type: "product_group",
+        anonymous_id: req.sessionID // optional for retargeting
+      },
+      eventSourceUrl: `https://${req.get('host')}${req.originalUrl}`
     });
 
+    res.render("coulors/greens", { headers, headers,req,metaEventIdPageView: eventIdPageView,
+      user: req.user });
+
+  } catch (err) {
+    console.error("❌ Error loading sale/furniteur:", err);
+    res.status(500).send("Error loading page");
+  }
+});
+
+router.get("/green/:id", async (req, res) => {
+  const green = await Green.findById(req.params.id);
+  
+  // ✅ Generate event IDs for ALL events (PageView, ViewContent, AddToCart, InitiateCheckout)
+  const eventIdView = generateEventId();
+  const eventIdCart = generateEventId();
+  const eventIdCheckout = generateEventId(); // NEW: For InitiateCheckout
+
+  const userData = {
+    ip: req.headers["x-forwarded-for"]?.split(",")[0] || req.socket.remoteAddress,
+    userAgent: req.get("User-Agent"),
+    fbc: req.cookies._fbc,
+    fbp: req.cookies._fbp,
+    country: "algeria",
+    email: req.user?.email,
+    numero: req.user?.numero,
+    firstName: req.user?.firstName,
+    lastName: req.user?.lastName,
+  };
+
+  console.log("🔍 UserData for ViewContent:", {
+    hasUser: !!req.user,
+    hasFBP: !!userData.fbp,
+    hasFBC: !!userData.fbc,
+    eventIdView: eventIdView,
+    eventIdCart: eventIdCart,
+    eventIdCheckout: eventIdCheckout // NEW
+  });
 
   await sendMetaCAPIEvent({
     eventName: "ViewContent",
@@ -1022,9 +467,9 @@ router.get("/green/:id", async (req, res) => {
     customData: {
       content_name: green.title,
       content_ids: [green.id],
-      contents: [{  // ← ADD THIS
-      id: green.id,
-      quantity: 1  // Default quantity for view
+      contents: [{
+        id: green.id,
+        quantity: 1
       }],
       content_type: "product",
       value: green.price,
@@ -1033,19 +478,22 @@ router.get("/green/:id", async (req, res) => {
     eventSourceUrl: `https://${req.get('host')}${req.originalUrl}`
   });
 
- // ✅ Store AddToCart event ID in session for future use
-    req.session.preGeneratedEventIdCart = eventIdCart;
+  // ✅ Store ALL event IDs in session for future use
+  req.session.preGeneratedEventIds = {
+    cart: eventIdCart,
+    checkout: eventIdCheckout // NEW
+  };
   
-  res.render("event/green", { green, req,
+  res.render("event/green", { 
+    green, 
+    req,
     metaEventIdView: eventIdView,
     metaEventIdCart: eventIdCart,
- 
-      user: req.user,
-      login: req.isAuthenticated() 
-                            });
- 
+    metaEventIdCheckout: eventIdCheckout, // NEW: Pass to template
+    user: req.user,
+    login: req.isAuthenticated() 
+  });
 });
-
 
 router.get("/add-to-cart-green/:id", async function(req, res) {
   const greenId = req.params.id;
@@ -1055,13 +503,13 @@ router.get("/add-to-cart-green/:id", async function(req, res) {
   const cart = new Cart(req.session.cart ? req.session.cart : {});
   const green = await Green.findById(greenId);
 
- // Add product to cart
+  // Add product to cart
   for (let i = 0; i < quantity; i++) {
     cart.add(green, green.id);
   }
   req.session.cart = cart;
 
-   // ✅ User data
+  // ✅ User data
   const user = req.user || {};
   const userData = {
     ip: req.headers["x-forwarded-for"]?.split(",")[0] || req.socket.remoteAddress,
@@ -1074,31 +522,57 @@ router.get("/add-to-cart-green/:id", async function(req, res) {
     firstName: user.firstName,
     lastName: user.lastName,
   };
-  // ✅ Use the SAME event ID that was pre-generated
-  const eventIdCart = req.session.preGeneratedEventIdCart || generateEventId();
 
-  // ✅ Send CAPI event
+  // ✅ Use the SAME event IDs that were pre-generated
+  const eventIds = req.session.preGeneratedEventIds || {};
+  const eventIdCart = eventIds.cart || generateEventId();
+  const eventIdCheckout = eventIds.checkout || generateEventId(); // NEW
+
+  // ✅ Send AddToCart CAPI event
   await sendMetaCAPIEvent({
     eventName: "AddToCart",
-   eventId: eventIdCart,
+    eventId: eventIdCart,
     userData,
     customData: {
       content_name: green.title,
       content_ids: [green.id],
-      contents: [{  // ← ADD THIS
-      id: green.id,
-      quantity: quantity ,
-        item_price: green.price // Default quantity for view
-    }],
+      contents: [{
+        id: green.id,
+        quantity: quantity,
+        item_price: green.price
+      }],
       content_type: "product",
       value: green.price * quantity,
       currency: "DZD"
     },
-     eventSourceUrl: `https://${req.get('host')}${req.originalUrl}`
+    eventSourceUrl: `https://${req.get('host')}${req.originalUrl}`
   });
 
-  // Clear the pre-generated ID after use
-  delete req.session.preGeneratedEventIdCart;
+  // ✅ If redirecting to checkout, also send InitiateCheckout event
+  if (redirectTo === 'checkout') {
+    await sendMetaCAPIEvent({
+      eventName: "InitiateCheckout",
+      eventId: eventIdCheckout, // NEW: Use pre-generated checkout event ID
+      userData,
+      customData: {
+        content_name: green.title,
+        content_ids: [green.id],
+        contents: [{
+          id: green.id,
+          quantity: quantity,
+          item_price: green.price
+        }],
+        content_type: "product",
+        value: green.price * quantity,
+        currency: "DZD",
+        num_items: cart.totalQty || quantity // Use cart total or current quantity
+      },
+      eventSourceUrl: `https://${req.get('host')}/checkout`
+    });
+  }
+
+  // Clear the pre-generated IDs after use
+  delete req.session.preGeneratedEventIds;
 
   // Redirect
   if (redirectTo === 'checkout') {
