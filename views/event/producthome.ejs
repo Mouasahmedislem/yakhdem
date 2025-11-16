@@ -1445,97 +1445,97 @@ if (document.readyState === 'loading') {
     initializeTabs();
 }
 
-<script>
-// ---------- Enhanced AddToCart tracking ----------
+
+// ---------- Enhanced AddToCart tracking (PRODUCT HOME VERSION) ----------
 const addForm = document.getElementById('addToCartForm');
-
 if (addForm) {
-  addForm.addEventListener('submit', function (e) {
+  addForm.addEventListener('submit', function(e){
     e.preventDefault();
-
-    const quantity = parseInt(document.getElementById('qtyInput')?.value || 1);
-    const productId = '<%= producthome._id %>';
-    const productPrice = <%= producthome.price %>;
-    const productName = `<%- producthome.title.replace(/'/g, "\\'") %>`;
-    const serverEventId = '<%= metaEventIdCart %>';
-
-    // 🔥 Fire Pixel AddToCart
+    
+    const quantity = parseInt(document.getElementById('qtyInput').value || 1);
+    
     try {
       if (window.fbq) {
-        fbq('track', 'AddToCart', {
-          content_name: productName,
-          content_ids: [productId],
+        const serverEventId = '<%= metaEventIdCart %>';
+        
+        window.fbq('track', 'AddToCart', {
+          content_name: '<%= producthome.title.replace(/'/g, "\\'") %>',
+          content_ids: ['<%= producthome._id %>'],
           content_type: 'product',
-          value: productPrice * quantity,
+          value: <%= producthome.price %> * quantity,
           currency: 'DZD',
           contents: [{
-            id: productId,
+            id: '<%= producthome._id %>',
             quantity: quantity,
-            item_price: productPrice
+            item_price: <%= producthome.price %>
           }]
-        }, {
+        }, { 
           eventID: serverEventId
         });
 
-        console.log("🎯 AddToCart Event:", serverEventId);
+        console.log('🎯 Pixel AddToCart Event (producthome) ID:', serverEventId);
       }
-    } catch (err) {
-      console.warn('fbq AddToCart error:', err);
+    } catch (err) { 
+      console.warn('fbq track AddToCart failed', err); 
     }
-
-    // ⏳ Allow 150ms to fire event before redirect
-    setTimeout(() => {
-      window.location.href = `/add-to-cart-producthome/${productId}?qty=${quantity}`;
-    }, 150);
+    
+    // Submit the form - redirect to cart
+    const productId = '<%= producthome._id %>';
+    window.location.href = `/add-to-cart-producthome/${productId}?qty=${quantity}`;
   });
 }
 
-// ---------- Buy Now functionality ----------
+// ---------- Buy Now functionality (PRODUCT HOME VERSION) ----------
 const buyNowBtn = document.getElementById('buyNowBtn');
-
 if (buyNowBtn) {
-  buyNowBtn.addEventListener('click', function (e) {
+  buyNowBtn.addEventListener('click', function(e) {
     e.preventDefault();
-
-    buyNowBtn.disabled = true;
+    
+    // Show loading state
     const originalText = buyNowBtn.innerHTML;
     buyNowBtn.innerHTML = 'Adding to cart...';
-
-    const quantity = parseInt(document.getElementById('qtyInput')?.value || 1);
-    const productId = '<%= producthome._id %>';
-    const productPrice = <%= producthome.price %>;
-    const serverEventId = '<%= metaEventIdCart %>';
-
-    // 🔥 Pixel AddToCart for Buy Now
+    buyNowBtn.disabled = true;
+    
+    // Get the quantity
+    const qtyInput = document.getElementById('qtyInput');
+    const quantity = qtyInput ? parseInt(qtyInput.value) || 1 : 1;
+    
     try {
       if (window.fbq) {
-        fbq('track', 'AddToCart', {
-          content_ids: [productId],
+        const serverEventIdCart = '<%= metaEventIdCart %>';
+        
+        window.fbq('track', 'AddToCart', {
+          content_name: '<%= producthome.title.replace(/'/g, "\\'") %>',
+          content_ids: ['<%= producthome._id %>'],
           content_type: 'product',
-          value: productPrice * quantity,
+          value: <%= producthome.price %> * quantity,
           currency: 'DZD',
           contents: [{
-            id: productId,
+            id: '<%= producthome._id %>',
             quantity: quantity,
-            item_price: productPrice
+            item_price: <%= producthome.price %>
           }]
         }, {
-          eventID: serverEventId
+          eventID: serverEventIdCart
         });
 
-        console.log("🎯 Buy Now AddToCart:", serverEventId);
+        console.log('🎯 Buy Now - AddToCart (producthome) Event ID:', serverEventIdCart);
       }
-    } catch (err) {
-      console.warn('Buy Now tracking failed:', err);
-    }
-
-    // 🔄 finish redirect (checkout mode)
-    setTimeout(() => {
+      
+      // Use the SAME approach as Add to Cart - simple redirect
+      const productId = '<%= producthome._id %>';
       window.location.href = `/add-to-cart-producthome/${productId}?qty=${quantity}&redirect=checkout`;
-    }, 150);
+      
+    } catch (error) {
+      console.error('Buy Now error:', error);
+      buyNowBtn.innerHTML = originalText;
+      buyNowBtn.disabled = false;
+      alert('Sorry, there was an error. Please try again.');
+    }
   });
 }
-</script>
+
+
 
 // ---------- Enhanced Quantity Controls ----------
 const qtyInput = document.getElementById('qtyInput');
