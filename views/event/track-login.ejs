@@ -80,7 +80,9 @@
     <% if (user && user.lastName) { %>ln: '<%= user.lastName %>',<% } %>
     <% if (user && user.numero) { %>ph: '<%= user.numero %>',<% } %>
   });
-    fbq('track', 'PageView');
+    fbq('track', 'PageView', {}, {
+    eventID: '<%= metaEventIdPageView %>'
+  });
   </script>
   <% } %>
   <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
