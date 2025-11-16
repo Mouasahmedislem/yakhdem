@@ -2597,11 +2597,13 @@ router.get("/add-to-cart-producthome/:id", async function(req, res) {
     lastName: user.lastName,
   };
 
-   const eventIds = req.session.preGeneratedEventIds || {};
+  // ✅ Use the SAME pattern as Green route
+  const eventIds = req.session.preGeneratedEventIds || {};
+  const eventIdCart = eventIds.cart || generateEventId();
 
   console.log("🎯 AddToCart Event ID Sync:", {
     eventId: eventIdCart,
-    source: req.session.preGeneratedEventIdCart ? "Pre-generated" : "New",
+    source: eventIds.cart ? "Pre-generated" : "New",
     quantity: quantity,
     value: producthome.price * quantity
   });
@@ -2609,7 +2611,7 @@ router.get("/add-to-cart-producthome/:id", async function(req, res) {
   // ✅ Send CAPI event with SAME event ID
   await sendMetaCAPIEvent({
     eventName: "AddToCart",
-   eventId: eventIds.cart || generateEventId(),
+    eventId: eventIdCart, // Use the resolved event ID
     userData,
     customData: {
       content_name: producthome.title,
@@ -2626,8 +2628,8 @@ router.get("/add-to-cart-producthome/:id", async function(req, res) {
     eventSourceUrl: `https://${req.get('host')}${req.originalUrl}`
   });
 
-  // Clear the pre-generated ID after use
-  delete req.session.preGeneratedEventIdCart;
+  // ✅ Clear the SAME way as Green route
+  delete req.session.preGeneratedEventIds;
 
   // Redirect
   if (redirectTo === 'checkout') {
