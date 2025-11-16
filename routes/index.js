@@ -258,66 +258,82 @@ router.get("/coulors/blue", async function(req, res) {
   try {
     
     const headers = await header.find({});
-
+    const eventIdPageView = generateEventId();
     // ✅ Collect user or anonymous data
     const user = req.user || {};
     const userData = {
-      email: user.email,
-      numero: user.numero,
-      firstName: user.firstName,
-      lastName: user.lastName,
       ip: req.headers["x-forwarded-for"]?.split(",")[0] || req.socket.remoteAddress,
       userAgent: req.get("User-Agent"),
-        fbc: req.cookies._fbc || undefined,
-        fbp: req.cookies._fbp || undefined  
+      fbc: req.cookies._fbc,
+      fbp: req.cookies._fbp,
+      country: "algeria",
+      email: req.user?.email,
+      numero: req.user?.numero,
+      firstName: req.user?.firstName,
+      lastName: req.user?.lastName,
     };
 
-    const eventId = generateEventId(); // Use a proper UUID generator
-
     // ✅ Send ViewContent event to Meta
-    await sendMetaCAPIEvent({
+      await sendMetaCAPIEvent({
       eventName: "PageView",
-      eventId,
+      eventId: eventIdPageView,
       userData,
       customData: {
-        content_name: "Sale blue Page",
+        content_name: "blue colors Page",
         content_type: "product_group",
         anonymous_id: req.sessionID // optional for retargeting
-      }
+      },
+      eventSourceUrl: `https://${req.get('host')}${req.originalUrl}`
     });
 
-    res.render("coulors/blue", { headers, headers,eventId });
+    res.render("coulors/blue", { 
+      headers, 
+      req,
+      metaEventIdPageView: eventIdPageView,
+      user: req.user 
+    });
 
   } catch (err) {
-    console.error("❌ Error loading sale/furniteur:", err);
+    console.error("❌ Error loading coulors/blue:", err);
     res.status(500).send("Error loading page");
   }
 });
 
 router.get("/blue/:id", async (req, res) => {
   const blue = await Blue.findById(req.params.id);
- const eventIdView = generateEventId(); // Use a proper UUID generator
-  const eventIdCart = generateEventId(); // prepare for AddToCart
-
-
-  // ✅ Use req.user directly — no fallback needed
-  console.log("✅ req.user", req.user); // debug
-
+  
+  // ✅ Generate event IDs for ALL events
+  const eventIdView = generateEventId();
+  const eventIdCart = generateEventId();
+  const eventIdCheckout = generateEventId();
+  const eventIdPageView = generateEventId();
+  
   const userData = {
-    email: req.user?.email || undefined,
-    numero: req.user?.numero || undefined,
-    firstName: req.user?.firstName || undefined,
-    lastName: req.user?.lastName || undefined,
-    country: "algeria",
     ip: req.headers["x-forwarded-for"]?.split(",")[0] || req.socket.remoteAddress,
     userAgent: req.get("User-Agent"),
-        fbc: req.cookies._fbc || undefined,
-        fbp: req.cookies._fbp || undefined  
+    fbc: req.cookies._fbc,
+    fbp: req.cookies._fbp,
+    country: "algeria",
+    email: req.user?.email,
+    numero: req.user?.numero,
+    firstName: req.user?.firstName,
+    lastName: req.user?.lastName,
   };
 
-  console.log("🔍 Raw userData before hashing:", userData);
+  // ✅ Send PageView event to Meta
+  await sendMetaCAPIEvent({
+    eventName: "PageView",
+    eventId: eventIdPageView,
+    userData,
+    customData: {
+      content_name: blue.title,
+      content_type: "product_group",
+      anonymous_id: req.sessionID
+    },
+    eventSourceUrl: `https://${req.get('host')}${req.originalUrl}`
+  });
 
-
+  // ✅ Send ViewContent event to Meta
   await sendMetaCAPIEvent({
     eventName: "ViewContent",
     eventId: eventIdView,
@@ -325,69 +341,85 @@ router.get("/blue/:id", async (req, res) => {
     customData: {
       content_name: blue.title,
       content_ids: [blue.id],
-      contents: [{  // ← ADD THIS
-      id: blue.id,
-      quantity: 1  // Default quantity for view
-      }],
+      contents: [{ id: blue.id, quantity: 1 }],
       content_type: "product",
       value: blue.price,
       currency: "DZD"
     },
-    
+    eventSourceUrl: `https://${req.get('host')}${req.originalUrl}`
   });
 
-  res.render("event/blue", { blue, req,
+  // ✅ Store ALL event IDs in session
+  req.session.preGeneratedEventIds = {
+    cart: eventIdCart,
+    checkout: eventIdCheckout
+  };
+  
+  res.render("event/blue", { 
+    blue, 
+    req,
     metaEventIdView: eventIdView,
-    metaEventIdCart: eventIdCart  });
+    metaEventIdCart: eventIdCart,
+    metaEventIdCheckout: eventIdCheckout,
+    metaEventIdPageView: eventIdPageView,
+    user: req.user,
+    login: req.isAuthenticated() 
+  });
 });
-
-
 
 router.get("/add-to-cart-blue/:id", async function(req, res) {
   const blueId = req.params.id;
+  const quantity = parseInt(req.query.qty) || 1;
+  const redirectTo = req.query.redirect;
+  
   const cart = new Cart(req.session.cart ? req.session.cart : {});
   const blue = await Blue.findById(blueId);
 
-  cart.add(blue, blue.id);
+  // Add product to cart with quantity support
+  for (let i = 0; i < quantity; i++) {
+    cart.add(blue, blue.id);
+  }
   req.session.cart = cart;
 
-  // ✅ User data from req.user
   const user = req.user || {};
   const userData = {
+    ip: req.headers["x-forwarded-for"]?.split(",")[0] || req.socket.remoteAddress,
+    userAgent: req.get("User-Agent"),
+    fbc: req.cookies._fbc,
+    fbp: req.cookies._fbp,
+    country: "algeria",
     email: user.email,
     numero: user.numero,
     firstName: user.firstName,
     lastName: user.lastName,
-    country: "algeria",
-    ip: req.headers["x-forwarded-for"]?.split(",")[0] || req.socket.remoteAddress,
-    userAgent: req.get("User-Agent"),
-        fbc: req.cookies._fbc || undefined,
-        fbp: req.cookies._fbp || undefined  
   };
 
-  // ✅ Unique event ID
-  const eventIdCart = generateEventId(); // Use a proper UUID generator
-
-  // ✅ Send CAPI event
+  const eventIds = req.session.preGeneratedEventIds || {};
+  
+  // ✅ ALWAYS send AddToCart event
   await sendMetaCAPIEvent({
     eventName: "AddToCart",
-    eventId: eventIdCart,
+    eventId: eventIds.cart || generateEventId(),
     userData,
     customData: {
       content_name: blue.title,
       content_ids: [blue.id],
-      contents: [{  // ← ADD THIS
-      id: blue.id,
-      quantity: 1  // Default quantity for view
-    }],
+      contents: [{ id: blue.id, quantity: quantity, item_price: blue.price }],
       content_type: "product",
-      value: blue.price,
+      value: blue.price * quantity,
       currency: "DZD"
     },
-    // Change to real test code if needed
+    eventSourceUrl: `https://${req.get('host')}${req.originalUrl}`
   });
 
-  res.redirect("/shop");
+  delete req.session.preGeneratedEventIds;
+
+  // Redirect with checkout support
+  if (redirectTo === 'checkout') {
+    res.redirect('/checkout');
+  } else {
+    res.redirect('/shop');
+  }
 });
 
 router.get("/coulors/greens", async function(req, res) {
@@ -556,200 +588,249 @@ router.get("/coulors/grey", async function(req, res) {
   try {
     
     const headers = await header.find({});
-
+    const eventIdPageView = generateEventId();
     // ✅ Collect user or anonymous data
     const user = req.user || {};
     const userData = {
-      email: user.email,
-      numero: user.numero,
-      firstName: user.firstName,
-      lastName: user.lastName,
       ip: req.headers["x-forwarded-for"]?.split(",")[0] || req.socket.remoteAddress,
       userAgent: req.get("User-Agent"),
-        fbc: req.cookies._fbc || undefined,
-        fbp: req.cookies._fbp || undefined  
+      fbc: req.cookies._fbc,
+      fbp: req.cookies._fbp,
+      country: "algeria",
+      email: req.user?.email,
+      numero: req.user?.numero,
+      firstName: req.user?.firstName,
+      lastName: req.user?.lastName,
     };
 
-    const eventId = generateEventId(); // Use a proper UUID generator
-
     // ✅ Send ViewContent event to Meta
-    await sendMetaCAPIEvent({
+      await sendMetaCAPIEvent({
       eventName: "PageView",
-      eventId,
+      eventId: eventIdPageView,
       userData,
       customData: {
-        content_name: "Sale grey Page",
+        content_name: "grey colors Page",
         content_type: "product_group",
         anonymous_id: req.sessionID // optional for retargeting
       },
-      testEventCode: "TEST12345"
+      eventSourceUrl: `https://${req.get('host')}${req.originalUrl}`
     });
 
-    res.render("coulors/grey", { headers, headers ,eventId});
+    res.render("coulors/grey", { 
+      headers, 
+      req,
+      metaEventIdPageView: eventIdPageView,
+      user: req.user 
+    });
 
   } catch (err) {
-    console.error("❌ Error loading sale/furniteur:", err);
+    console.error("❌ Error loading coulors/grey:", err);
     res.status(500).send("Error loading page");
   }
 });
 
 router.get("/grey/:id", async (req, res) => {
   const grey = await Grey.findById(req.params.id);
-  const eventIdView = generateEventId(); // Use a proper UUID generator
-  const eventIdCart = generateEventId(); // prepare for AddToCart
-
-  // ✅ Use req.user directly — no fallback needed
-  console.log("✅ req.user", req.user); // debug
-
+  
+  // ✅ Generate event IDs for ALL events
+  const eventIdView = generateEventId();
+  const eventIdCart = generateEventId();
+  const eventIdCheckout = generateEventId();
+  const eventIdPageView = generateEventId();
+  
   const userData = {
-    email: req.user?.email || undefined,
-    numero: req.user?.numero || undefined,
-    firstName: req.user?.firstName || undefined,
-    lastName: req.user?.lastName || undefined,
-    country: "algeria",
     ip: req.headers["x-forwarded-for"]?.split(",")[0] || req.socket.remoteAddress,
     userAgent: req.get("User-Agent"),
-        fbc: req.cookies._fbc || undefined,
-        fbp: req.cookies._fbp || undefined  
+    fbc: req.cookies._fbc,
+    fbp: req.cookies._fbp,
+    country: "algeria",
+    email: req.user?.email,
+    numero: req.user?.numero,
+    firstName: req.user?.firstName,
+    lastName: req.user?.lastName,
   };
 
-  console.log("🔍 Raw userData before hashing:", userData);
+  // ✅ Send PageView event to Meta
+  await sendMetaCAPIEvent({
+    eventName: "PageView",
+    eventId: eventIdPageView,
+    userData,
+    customData: {
+      content_name: grey.title,
+      content_type: "product_group",
+      anonymous_id: req.sessionID
+    },
+    eventSourceUrl: `https://${req.get('host')}${req.originalUrl}`
+  });
 
-
+  // ✅ Send ViewContent event to Meta
   await sendMetaCAPIEvent({
     eventName: "ViewContent",
-   eventId: eventIdView,
+    eventId: eventIdView,
     userData,
     customData: {
       content_name: grey.title,
       content_ids: [grey.id],
-      contents: [{  // ← ADD THIS
-      id: grey.id,
-      quantity: 1  // Default quantity for view
-      }],
+      contents: [{ id: grey.id, quantity: 1 }],
       content_type: "product",
       value: grey.price,
       currency: "DZD"
     },
-    
+    eventSourceUrl: `https://${req.get('host')}${req.originalUrl}`
   });
 
-  res.render("event/grey", { grey, req,
+  // ✅ Store ALL event IDs in session
+  req.session.preGeneratedEventIds = {
+    cart: eventIdCart,
+    checkout: eventIdCheckout
+  };
+  
+  res.render("event/grey", { 
+    grey, 
+    req,
     metaEventIdView: eventIdView,
-    metaEventIdCart: eventIdCart });
+    metaEventIdCart: eventIdCart,
+    metaEventIdCheckout: eventIdCheckout,
+    metaEventIdPageView: eventIdPageView,
+    user: req.user,
+    login: req.isAuthenticated() 
+  });
 });
-
-
 
 router.get("/add-to-cart-grey/:id", async function(req, res) {
   const greyId = req.params.id;
+  const quantity = parseInt(req.query.qty) || 1;
+  const redirectTo = req.query.redirect;
+  
   const cart = new Cart(req.session.cart ? req.session.cart : {});
   const grey = await Grey.findById(greyId);
 
-  cart.add(grey, grey.id);
+  // Add product to cart with quantity support
+  for (let i = 0; i < quantity; i++) {
+    cart.add(grey, grey.id);
+  }
   req.session.cart = cart;
 
-  // ✅ User data from req.user
   const user = req.user || {};
   const userData = {
+    ip: req.headers["x-forwarded-for"]?.split(",")[0] || req.socket.remoteAddress,
+    userAgent: req.get("User-Agent"),
+    fbc: req.cookies._fbc,
+    fbp: req.cookies._fbp,
+    country: "algeria",
     email: user.email,
     numero: user.numero,
     firstName: user.firstName,
     lastName: user.lastName,
-    country: "algeria",
-    ip: req.headers["x-forwarded-for"]?.split(",")[0] || req.socket.remoteAddress,
-    userAgent: req.get("User-Agent"),
-        fbc: req.cookies._fbc || undefined,
-        fbp: req.cookies._fbp || undefined  
   };
 
-  // ✅ Unique event ID
-  const eventIdCart = generateEventId(); // Use a proper UUID generator
-  // ✅ Send CAPI event
+  const eventIds = req.session.preGeneratedEventIds || {};
+  
+  // ✅ ALWAYS send AddToCart event
   await sendMetaCAPIEvent({
     eventName: "AddToCart",
-   eventId: eventIdCart,
+    eventId: eventIds.cart || generateEventId(),
     userData,
     customData: {
       content_name: grey.title,
       content_ids: [grey.id],
-      contents: [{  // ← ADD THIS
-      id: grey.id,
-      quantity: 1  // Default quantity for view
-    }],
+      contents: [{ id: grey.id, quantity: quantity, item_price: grey.price }],
       content_type: "product",
-      value: grey.price,
+      value: grey.price * quantity,
       currency: "DZD"
     },
-    // Change to real test code if needed
+    eventSourceUrl: `https://${req.get('host')}${req.originalUrl}`
   });
 
-  res.redirect("/shop");
+  delete req.session.preGeneratedEventIds;
+
+  // Redirect with checkout support
+  if (redirectTo === 'checkout') {
+    res.redirect('/checkout');
+  } else {
+    res.redirect('/shop');
+  }
 });
-    router.get("/coulors/yellowv2", async function(req, res) {
+  router.get("/coulors/yellowv2", async function(req, res) {
   try {
     
     const headers = await header.find({});
-
+    const eventIdPageView = generateEventId();
     // ✅ Collect user or anonymous data
     const user = req.user || {};
     const userData = {
-      email: user.email,
-      numero: user.numero,
-      firstName: user.firstName,
-      lastName: user.lastName,
       ip: req.headers["x-forwarded-for"]?.split(",")[0] || req.socket.remoteAddress,
       userAgent: req.get("User-Agent"),
-        fbc: req.cookies._fbc || undefined,
-        fbp: req.cookies._fbp || undefined  
+      fbc: req.cookies._fbc,
+      fbp: req.cookies._fbp,
+      country: "algeria",
+      email: req.user?.email,
+      numero: req.user?.numero,
+      firstName: req.user?.firstName,
+      lastName: req.user?.lastName,
     };
 
-    const eventId = generateEventId(); // Use a proper UUID generator
-
     // ✅ Send ViewContent event to Meta
-    await sendMetaCAPIEvent({
+      await sendMetaCAPIEvent({
       eventName: "PageView",
-      eventId,
+      eventId: eventIdPageView,
       userData,
       customData: {
-        content_name: "Sale yellowv2 Page",
+        content_name: "yellow colors Page",
         content_type: "product_group",
         anonymous_id: req.sessionID // optional for retargeting
       },
-      testEventCode: "TEST12345"
+      eventSourceUrl: `https://${req.get('host')}${req.originalUrl}`
     });
 
-    res.render("coulors/yellowv2", { headers, headers,eventId });
+    res.render("coulors/yellowv2", { 
+      headers, 
+      req,
+      metaEventIdPageView: eventIdPageView,
+      user: req.user 
+    });
 
   } catch (err) {
-    console.error("❌ Error loading sale/furniteur:", err);
+    console.error("❌ Error loading coulors/yellowv2:", err);
     res.status(500).send("Error loading page");
   }
 });
 
 router.get("/yelloow/:id", async (req, res) => {
   const yelloow = await Yelloow.findById(req.params.id);
-   const eventIdView = generateEventId(); // Use a proper UUID generator
-  const eventIdCart = generateEventId(); // prepare for AddToCart
-
-  // ✅ Use req.user directly — no fallback needed
-  console.log("✅ req.user", req.user); // debug
-
+  
+  // ✅ Generate event IDs for ALL events
+  const eventIdView = generateEventId();
+  const eventIdCart = generateEventId();
+  const eventIdCheckout = generateEventId();
+  const eventIdPageView = generateEventId();
+  
   const userData = {
-    email: req.user?.email || undefined,
-    numero: req.user?.numero || undefined,
-    firstName: req.user?.firstName || undefined,
-    lastName: req.user?.lastName || undefined,
-    country: "algeria",
     ip: req.headers["x-forwarded-for"]?.split(",")[0] || req.socket.remoteAddress,
     userAgent: req.get("User-Agent"),
-        fbc: req.cookies._fbc || undefined,
-        fbp: req.cookies._fbp || undefined  
+    fbc: req.cookies._fbc,
+    fbp: req.cookies._fbp,
+    country: "algeria",
+    email: req.user?.email,
+    numero: req.user?.numero,
+    firstName: req.user?.firstName,
+    lastName: req.user?.lastName,
   };
 
-  console.log("🔍 Raw userData before hashing:", userData);
+  // ✅ Send PageView event to Meta
+  await sendMetaCAPIEvent({
+    eventName: "PageView",
+    eventId: eventIdPageView,
+    userData,
+    customData: {
+      content_name: yelloow.title,
+      content_type: "product_group",
+      anonymous_id: req.sessionID
+    },
+    eventSourceUrl: `https://${req.get('host')}${req.originalUrl}`
+  });
 
-
+  // ✅ Send ViewContent event to Meta
   await sendMetaCAPIEvent({
     eventName: "ViewContent",
     eventId: eventIdView,
@@ -757,380 +838,428 @@ router.get("/yelloow/:id", async (req, res) => {
     customData: {
       content_name: yelloow.title,
       content_ids: [yelloow.id],
-      contents: [{  // ← ADD THIS
-      id: yelloow.id,
-      quantity: 1  // Default quantity for view
-      }],
+      contents: [{ id: yelloow.id, quantity: 1 }],
       content_type: "product",
       value: yelloow.price,
       currency: "DZD"
     },
-    
+    eventSourceUrl: `https://${req.get('host')}${req.originalUrl}`
   });
 
-  res.render("event/yelloow", { yelloow, req,
+  // ✅ Store ALL event IDs in session
+  req.session.preGeneratedEventIds = {
+    cart: eventIdCart,
+    checkout: eventIdCheckout
+  };
+  
+  res.render("event/yelloow", { 
+    yelloow, 
+    req,
     metaEventIdView: eventIdView,
-    metaEventIdCart: eventIdCart });
+    metaEventIdCart: eventIdCart,
+    metaEventIdCheckout: eventIdCheckout,
+    metaEventIdPageView: eventIdPageView,
+    user: req.user,
+    login: req.isAuthenticated() 
+  });
 });
-
-
 
 router.get("/add-to-cart-yelloow/:id", async function(req, res) {
   const yelloowId = req.params.id;
+  const quantity = parseInt(req.query.qty) || 1;
+  const redirectTo = req.query.redirect;
+  
   const cart = new Cart(req.session.cart ? req.session.cart : {});
   const yelloow = await Yelloow.findById(yelloowId);
 
-  cart.add(yelloow, yelloow.id);
+  // Add product to cart with quantity support
+  for (let i = 0; i < quantity; i++) {
+    cart.add(yelloow, yelloow.id);
+  }
   req.session.cart = cart;
 
-  // ✅ User data from req.user
   const user = req.user || {};
   const userData = {
+    ip: req.headers["x-forwarded-for"]?.split(",")[0] || req.socket.remoteAddress,
+    userAgent: req.get("User-Agent"),
+    fbc: req.cookies._fbc,
+    fbp: req.cookies._fbp,
+    country: "algeria",
     email: user.email,
     numero: user.numero,
     firstName: user.firstName,
     lastName: user.lastName,
-    country: "algeria",
-    ip: req.headers["x-forwarded-for"]?.split(",")[0] || req.socket.remoteAddress,
-    userAgent: req.get("User-Agent"),
-        fbc: req.cookies._fbc || undefined,
-        fbp: req.cookies._fbp || undefined  
   };
 
-  // ✅ Unique event ID
-  const eventIdCart = generateEventId(); // Use a proper UUID generator
-  // ✅ Send CAPI event
+  const eventIds = req.session.preGeneratedEventIds || {};
+  
+  // ✅ ALWAYS send AddToCart event
   await sendMetaCAPIEvent({
     eventName: "AddToCart",
- eventId: eventIdCart,
+    eventId: eventIds.cart || generateEventId(),
     userData,
     customData: {
       content_name: yelloow.title,
       content_ids: [yelloow.id],
-      contents: [{  // ← ADD THIS
-      id: yelloow.id,
-      quantity: 1  // Default quantity for view
-    }],
+      contents: [{ id: yelloow.id, quantity: quantity, item_price: yelloow.price }],
       content_type: "product",
-      value: yelloow.price,
+      value: yelloow.price * quantity,
       currency: "DZD"
     },
-    // Change to real test code if needed
+    eventSourceUrl: `https://${req.get('host')}${req.originalUrl}`
   });
 
-  res.redirect("/shop");
+  delete req.session.preGeneratedEventIds;
+
+  // Redirect with checkout support
+  if (redirectTo === 'checkout') {
+    res.redirect('/checkout');
+  } else {
+    res.redirect('/shop');
+  }
 });
 
  router.get("/coulors/pink", async function(req, res) {
   try {
     
     const headers = await header.find({});
-
+    const eventIdPageView = generateEventId();
     // ✅ Collect user or anonymous data
     const user = req.user || {};
     const userData = {
-      email: user.email,
-      numero: user.numero,
-      firstName: user.firstName,
-      lastName: user.lastName,
       ip: req.headers["x-forwarded-for"]?.split(",")[0] || req.socket.remoteAddress,
       userAgent: req.get("User-Agent"),
-        fbc: req.cookies._fbc || undefined,
-        fbp: req.cookies._fbp || undefined  
+      fbc: req.cookies._fbc,
+      fbp: req.cookies._fbp,
+      country: "algeria",
+      email: req.user?.email,
+      numero: req.user?.numero,
+      firstName: req.user?.firstName,
+      lastName: req.user?.lastName,
     };
 
-    const eventId = generateEventId(); // Use a proper UUID generator
-
     // ✅ Send ViewContent event to Meta
-    await sendMetaCAPIEvent({
+      await sendMetaCAPIEvent({
       eventName: "PageView",
-      eventId,
+      eventId: eventIdPageView,
       userData,
       customData: {
-        content_name: "Sale pink Page",
+        content_name: "pink colors Page",
         content_type: "product_group",
         anonymous_id: req.sessionID // optional for retargeting
-      }
+      },
+      eventSourceUrl: `https://${req.get('host')}${req.originalUrl}`
     });
 
-    res.render("coulors/pink", { headers, headers,eventId });
+    res.render("coulors/pink", { 
+      headers, 
+      req,
+      metaEventIdPageView: eventIdPageView,
+      user: req.user 
+    });
 
   } catch (err) {
-    console.error("❌ Error loading sale/furniteur:", err);
+    console.error("❌ Error loading coulors/pink:", err);
     res.status(500).send("Error loading page");
   }
 });
 
 router.get("/pink/:id", async (req, res) => {
   const pink = await Pink.findById(req.params.id);
-const eventIdView = generateEventId(); // Use a proper UUID generator
-  const eventIdCart = generateEventId(); // prepare for AddToCart
-  // ✅ Use req.user directly — no fallback needed
-  console.log("✅ req.user", req.user); // debug
-
+  
+  // ✅ Generate event IDs for ALL events
+  const eventIdView = generateEventId();
+  const eventIdCart = generateEventId();
+  const eventIdCheckout = generateEventId();
+  const eventIdPageView = generateEventId();
+  
   const userData = {
-    email: req.user?.email || undefined,
-    numero: req.user?.numero || undefined,
-    firstName: req.user?.firstName || undefined,
-    lastName: req.user?.lastName || undefined,
-    country: "algeria",
     ip: req.headers["x-forwarded-for"]?.split(",")[0] || req.socket.remoteAddress,
     userAgent: req.get("User-Agent"),
-        fbc: req.cookies._fbc || undefined,
-        fbp: req.cookies._fbp || undefined  
+    fbc: req.cookies._fbc,
+    fbp: req.cookies._fbp,
+    country: "algeria",
+    email: req.user?.email,
+    numero: req.user?.numero,
+    firstName: req.user?.firstName,
+    lastName: req.user?.lastName,
   };
 
-  console.log("🔍 Raw userData before hashing:", userData);
+  // ✅ Send PageView event to Meta
+  await sendMetaCAPIEvent({
+    eventName: "PageView",
+    eventId: eventIdPageView,
+    userData,
+    customData: {
+      content_name: pink.title,
+      content_type: "product_group",
+      anonymous_id: req.sessionID
+    },
+    eventSourceUrl: `https://${req.get('host')}${req.originalUrl}`
+  });
 
-
+  // ✅ Send ViewContent event to Meta
   await sendMetaCAPIEvent({
     eventName: "ViewContent",
-     eventId: eventIdView,
+    eventId: eventIdView,
     userData,
     customData: {
       content_name: pink.title,
       content_ids: [pink.id],
-      contents: [{  // ← ADD THIS
-      id: pink.id,
-      quantity: 1  // Default quantity for view
-      }],
+      contents: [{ id: pink.id, quantity: 1 }],
       content_type: "product",
       value: pink.price,
       currency: "DZD"
     },
-    
+    eventSourceUrl: `https://${req.get('host')}${req.originalUrl}`
   });
 
-  res.render("event/pink", { pink, req,
+  // ✅ Store ALL event IDs in session
+  req.session.preGeneratedEventIds = {
+    cart: eventIdCart,
+    checkout: eventIdCheckout
+  };
+  
+  res.render("event/pink", { 
+    pink, 
+    req,
     metaEventIdView: eventIdView,
-    metaEventIdCart: eventIdCart });
+    metaEventIdCart: eventIdCart,
+    metaEventIdCheckout: eventIdCheckout,
+    metaEventIdPageView: eventIdPageView,
+    user: req.user,
+    login: req.isAuthenticated() 
+  });
 });
-
-
 
 router.get("/add-to-cart-pink/:id", async function(req, res) {
   const pinkId = req.params.id;
+  const quantity = parseInt(req.query.qty) || 1;
+  const redirectTo = req.query.redirect;
+  
   const cart = new Cart(req.session.cart ? req.session.cart : {});
   const pink = await Pink.findById(pinkId);
 
-  cart.add(pink, pink.id);
+  // Add product to cart with quantity support
+  for (let i = 0; i < quantity; i++) {
+    cart.add(pink, pink.id);
+  }
   req.session.cart = cart;
 
-  // ✅ User data from req.user
   const user = req.user || {};
   const userData = {
+    ip: req.headers["x-forwarded-for"]?.split(",")[0] || req.socket.remoteAddress,
+    userAgent: req.get("User-Agent"),
+    fbc: req.cookies._fbc,
+    fbp: req.cookies._fbp,
+    country: "algeria",
     email: user.email,
     numero: user.numero,
     firstName: user.firstName,
     lastName: user.lastName,
-    country: "algeria",
-    ip: req.headers["x-forwarded-for"]?.split(",")[0] || req.socket.remoteAddress,
-    userAgent: req.get("User-Agent"),
-        fbc: req.cookies._fbc || undefined,
-        fbp: req.cookies._fbp || undefined  
   };
 
-  // ✅ Unique event ID
-   const eventIdCart = generateEventId(); // Use a proper UUID generator
-
-  // ✅ Send CAPI event
+  const eventIds = req.session.preGeneratedEventIds || {};
+  
+  // ✅ ALWAYS send AddToCart event
   await sendMetaCAPIEvent({
     eventName: "AddToCart",
-   eventId: eventIdCart,
+    eventId: eventIds.cart || generateEventId(),
     userData,
     customData: {
       content_name: pink.title,
       content_ids: [pink.id],
-      contents: [{  // ← ADD THIS
-      id: pink.id,
-      quantity: 1  // Default quantity for view
-    }],
+      contents: [{ id: pink.id, quantity: quantity, item_price: pink.price }],
       content_type: "product",
-      value: pink.price,
+      value: pink.price * quantity,
       currency: "DZD"
     },
-    // Change to real test code if needed
+    eventSourceUrl: `https://${req.get('host')}${req.originalUrl}`
   });
 
-  res.redirect("/shop");
+  delete req.session.preGeneratedEventIds;
+
+  // Redirect with checkout support
+  if (redirectTo === 'checkout') {
+    res.redirect('/checkout');
+  } else {
+    res.redirect('/shop');
+  }
 });
 
- router.get("/coulors/neutral", async function(req, res) {
+router.get("/coulors/neutral", async function(req, res) {
   try {
     
     const headers = await header.find({});
-
+    const eventIdPageView = generateEventId();
     // ✅ Collect user or anonymous data
     const user = req.user || {};
     const userData = {
-      email: user.email,
-      numero: user.numero,
-      firstName: user.firstName,
-      lastName: user.lastName,
-      country: "algeria",
       ip: req.headers["x-forwarded-for"]?.split(",")[0] || req.socket.remoteAddress,
       userAgent: req.get("User-Agent"),
-        fbc: req.cookies._fbc || undefined,
-        fbp: req.cookies._fbp || undefined  
+      fbc: req.cookies._fbc,
+      fbp: req.cookies._fbp,
+      country: "algeria",
+      email: req.user?.email,
+      numero: req.user?.numero,
+      firstName: req.user?.firstName,
+      lastName: req.user?.lastName,
     };
 
-    const eventId = generateEventId(); // Use a proper UUID generator
-
     // ✅ Send ViewContent event to Meta
-    await sendMetaCAPIEvent({
+      await sendMetaCAPIEvent({
       eventName: "PageView",
-      eventId,
+      eventId: eventIdPageView,
       userData,
       customData: {
-        content_name: "Sale neutral Page",
+        content_name: "neutral colors Page",
         content_type: "product_group",
         anonymous_id: req.sessionID // optional for retargeting
-      }
+      },
+      eventSourceUrl: `https://${req.get('host')}${req.originalUrl}`
     });
 
-    res.render("coulors/neutral", { headers, headers,eventId });
+    res.render("coulors/neutral", { 
+      headers, 
+      req,
+      metaEventIdPageView: eventIdPageView,
+      user: req.user 
+    });
 
   } catch (err) {
-    console.error("❌ Error loading sale/furniteur:", err);
+    console.error("❌ Error loading coulors/neutral:", err);
     res.status(500).send("Error loading page");
   }
 });
 
 router.get("/neutral/:id", async (req, res) => {
   const neutral = await Neutral.findById(req.params.id);
-const eventIdView = generateEventId(); // Use a proper UUID generator
-  const eventIdCart = generateEventId(); // prepare for AddToCart
-  // ✅ Use req.user directly — no fallback needed
-  console.log("✅ req.user", req.user); // debug
-
+  
+  // ✅ Generate event IDs for ALL events
+  const eventIdView = generateEventId();
+  const eventIdCart = generateEventId();
+  const eventIdCheckout = generateEventId();
+  const eventIdPageView = generateEventId();
+  
   const userData = {
-    email: req.user?.email || undefined,
-    numero: req.user?.numero || undefined,
-    firstName: req.user?.firstName || undefined,
-    lastName: req.user?.lastName || undefined,
-    country: "algeria",
     ip: req.headers["x-forwarded-for"]?.split(",")[0] || req.socket.remoteAddress,
     userAgent: req.get("User-Agent"),
-        fbc: req.cookies._fbc || undefined,
-        fbp: req.cookies._fbp || undefined  
+    fbc: req.cookies._fbc,
+    fbp: req.cookies._fbp,
+    country: "algeria",
+    email: req.user?.email,
+    numero: req.user?.numero,
+    firstName: req.user?.firstName,
+    lastName: req.user?.lastName,
   };
 
-  console.log("🔍 Raw userData before hashing:", userData);
+  // ✅ Send PageView event to Meta
+  await sendMetaCAPIEvent({
+    eventName: "PageView",
+    eventId: eventIdPageView,
+    userData,
+    customData: {
+      content_name: neutral.title,
+      content_type: "product_group",
+      anonymous_id: req.sessionID
+    },
+    eventSourceUrl: `https://${req.get('host')}${req.originalUrl}`
+  });
 
-
+  // ✅ Send ViewContent event to Meta
   await sendMetaCAPIEvent({
     eventName: "ViewContent",
-     eventId: eventIdView,
+    eventId: eventIdView,
     userData,
     customData: {
       content_name: neutral.title,
       content_ids: [neutral.id],
-      contents: [{  // ← ADD THIS
-      id: neutral.id,
-      quantity: 1  // Default quantity for view
-      }],
+      contents: [{ id: neutral.id, quantity: 1 }],
       content_type: "product",
       value: neutral.price,
       currency: "DZD"
     },
-    
+    eventSourceUrl: `https://${req.get('host')}${req.originalUrl}`
   });
 
-  res.render("event/neutral", { neutral, req,
+  // ✅ Store ALL event IDs in session
+  req.session.preGeneratedEventIds = {
+    cart: eventIdCart,
+    checkout: eventIdCheckout
+  };
+  
+  res.render("event/neutral", { 
+    neutral, 
+    req,
     metaEventIdView: eventIdView,
-    metaEventIdCart: eventIdCart});
+    metaEventIdCart: eventIdCart,
+    metaEventIdCheckout: eventIdCheckout,
+    metaEventIdPageView: eventIdPageView,
+    user: req.user,
+    login: req.isAuthenticated() 
+  });
 });
-
-
 
 router.get("/add-to-cart-neutral/:id", async function(req, res) {
   const neutralId = req.params.id;
+  const quantity = parseInt(req.query.qty) || 1;
+  const redirectTo = req.query.redirect;
+  
   const cart = new Cart(req.session.cart ? req.session.cart : {});
   const neutral = await Neutral.findById(neutralId);
 
-  cart.add(neutral, neutral.id);
+  // Add product to cart with quantity support
+  for (let i = 0; i < quantity; i++) {
+    cart.add(neutral, neutral.id);
+  }
   req.session.cart = cart;
 
-  // ✅ User data from req.user
   const user = req.user || {};
   const userData = {
+    ip: req.headers["x-forwarded-for"]?.split(",")[0] || req.socket.remoteAddress,
+    userAgent: req.get("User-Agent"),
+    fbc: req.cookies._fbc,
+    fbp: req.cookies._fbp,
+    country: "algeria",
     email: user.email,
     numero: user.numero,
     firstName: user.firstName,
     lastName: user.lastName,
-    country: "algeria",
-    ip: req.headers["x-forwarded-for"]?.split(",")[0] || req.socket.remoteAddress,
-    userAgent: req.get("User-Agent"),
-        fbc: req.cookies._fbc || undefined,
-        fbp: req.cookies._fbp || undefined  
   };
 
-  // ✅ Unique event ID
-  const eventIdCart = generateEventId(); // Use a proper UUID generator
-  // ✅ Send CAPI event
+  const eventIds = req.session.preGeneratedEventIds || {};
+  
+  // ✅ ALWAYS send AddToCart event
   await sendMetaCAPIEvent({
     eventName: "AddToCart",
-    eventId: eventIdCart,
+    eventId: eventIds.cart || generateEventId(),
     userData,
     customData: {
       content_name: neutral.title,
       content_ids: [neutral.id],
-      contents: [{  // ← ADD THIS
-      id: neutral.id,
-      quantity: 1  // Default quantity for view
-    }],
+      contents: [{ id: neutral.id, quantity: quantity, item_price: neutral.price }],
       content_type: "product",
-      value: neutral.price,
+      value: neutral.price * quantity,
       currency: "DZD"
     },
-    // Change to real test code if needed
+    eventSourceUrl: `https://${req.get('host')}${req.originalUrl}`
   });
 
-  res.redirect("/shop");
+  delete req.session.preGeneratedEventIds;
+
+  // Redirect with checkout support
+  if (redirectTo === 'checkout') {
+    res.redirect('/checkout');
+  } else {
+    res.redirect('/shop');
+  }
 });
 
 router.get("/favicon.ico", function(req, res){
      res.render("views/favicon");
     });
 
-router.get("/power", async function(req, res) {
-  try {
-    var errMsg = req.flash('error')[0];
-    // ✅ Collect user or anonymous data
-    const user = req.user || {};
-    const userData = {
-      email: user.email,
-      numero: user.numero,
-      firstName: user.firstName,
-      lastName: user.lastName,
-      country: "algeria",
-      ip: req.headers["x-forwarded-for"]?.split(",")[0] || req.socket.remoteAddress,
-      userAgent: req.get("User-Agent"),
-        fbc: req.cookies._fbc || undefined,
-        fbp: req.cookies._fbp || undefined  
-    };
 
-    const eventId = generateEventId(); // Use a proper UUID generator
-
-    // ✅ Send ViewContent event to Meta
-    await sendMetaCAPIEvent({
-      eventName: "PageView",
-      eventId,
-      userData,
-      customData: {
-        content_name: "power Page",
-        content_type: "product_group",
-        anonymous_id: req.sessionID // optional for retargeting
-      }
-    });
-
-    res.render("event/power", { errMsg: errMsg, noError: !errMsg ,eventId });
-
-  } catch (err) {
-    console.error("❌ Error loading sale/furniteur:", err);
-    res.status(500).send("Error loading page");
-  }
-});
 
 router.get('/shop', async (req, res) => {
   try {
@@ -1171,40 +1300,45 @@ router.get("/", async function(req, res) {
   try {
     var successMsg = req.flash('success')[0];
     const headers = await header.find({});
-
+    const eventIdPageView = generateEventId();
+    
     // ✅ Collect user or anonymous data
     const user = req.user || {};
     const userData = {
-      email: user.email,
-      numero: user.numero,
-      firstName: user.firstName,
-      lastName: user.lastName,
-      country: "algeria",
       ip: req.headers["x-forwarded-for"]?.split(",")[0] || req.socket.remoteAddress,
       userAgent: req.get("User-Agent"),
-        fbc: req.cookies._fbc || undefined,
-        fbp: req.cookies._fbp || undefined  
+      fbc: req.cookies._fbc,
+      fbp: req.cookies._fbp,
+      country: "algeria",
+      email: req.user?.email,
+      numero: req.user?.numero,
+      firstName: req.user?.firstName,
+      lastName: req.user?.lastName,
     };
 
-    const eventId = generateEventId(); // Use a proper UUID generator
-
-    // ✅ Send ViewContent event to Meta
+    // ✅ Send PageView event to Meta
     await sendMetaCAPIEvent({
       eventName: "PageView",
-      eventId,
+      eventId: eventIdPageView,
       userData,
       customData: {
-        content_name: "Sale home Page",
-        content_type: "product_group",
+        content_name: "Home Page",
+        content_type: "website",
         anonymous_id: req.sessionID // optional for retargeting
       },
-   
+      eventSourceUrl: `https://${req.get('host')}${req.originalUrl}`
     });
 
-    res.render("event/home", { headers, headers , successMsg: successMsg ,eventId  });
+    res.render("event/home", { 
+      headers, 
+      req,
+      successMsg: successMsg,
+      metaEventIdPageView: eventIdPageView,
+      user: req.user 
+    });
 
   } catch (err) {
-    console.error("❌ Error loading sale/furniteur:", err);
+    console.error("❌ Error loading home page:", err);
     res.status(500).send("Error loading page");
   }
 });
@@ -1638,51 +1772,71 @@ await sendAdminOrderEmail({
     return res.redirect('/checkout');
   }
 });
-router.get('/confirmation', (req, res) => {
-  const data = req.session.confirmationData;
-  if (!data) {
-    return res.redirect('/'); // No confirmation data, send home
+router.get('/confirmation', async (req, res) => {
+  try {
+    const data = req.session.confirmationData;
+    if (!data) {
+      return res.redirect('/'); // No confirmation data, send home
+    }
+
+    const eventIdPageView = generateEventId();
+    
+    // ✅ Collect user or anonymous data
+    const user = req.user || {};
+    const userData = {
+      ip: req.headers["x-forwarded-for"]?.split(",")[0] || req.socket.remoteAddress,
+      userAgent: req.get("User-Agent"),
+      fbc: req.cookies._fbc,
+      fbp: req.cookies._fbp,
+      country: "algeria",
+      email: req.user?.email,
+      numero: req.user?.numero,
+      firstName: req.user?.firstName,
+      lastName: req.user?.lastName,
+    };
+
+    // ✅ Send PageView event to Meta
+    await sendMetaCAPIEvent({
+      eventName: "PageView",
+      eventId: eventIdPageView,
+      userData,
+      customData: {
+        content_name: "Order Confirmation Page",
+        content_type: "website",
+        anonymous_id: req.sessionID // optional for retargeting
+      },
+      eventSourceUrl: `https://${req.get('host')}${req.originalUrl}`
+    });
+
+    console.log("✅ Confirmation page render called");
+
+    // Merge the tracking data with existing confirmation data
+    const renderData = {
+      ...data,
+      req,
+      metaEventIdPageView: eventIdPageView,
+      user: req.user
+    };
+
+    res.render('event/confirmation', renderData);
+
+    // Clear session data after rendering
+    req.session.confirmationData = null;
+
+  } catch (err) {
+    console.error("❌ Error loading confirmation page:", err);
+    // Even if tracking fails, still try to render the confirmation page
+    const data = req.session.confirmationData;
+    if (data) {
+      res.render('event/confirmation', data);
+      req.session.confirmationData = null;
+    } else {
+      res.redirect('/');
+    }
   }
-
-  console.log("✅ Confirmation page render called");
-
- res.render('event/confirmation', data);  // ✅ this is correct
-
-  // Clear session data after rendering
-  req.session.confirmationData = null;
 });
 
 
-router.post('/power', function(req, res, next) {
-            
-           
-              let powers = new Powers({
-                
-                chambre: req.body.chambre,
-                help: req.body.help,
-                etat: req.body.etat,
-                product: req.body.product,
-                owner: req.body.owner,
-                time: req.body.time,
-                etape: req.body.etape,
-                budge: req.body.budge,
-                contactemail: req.body.contactemail,
-                contactnum: req.body.contactnum
-                
-              });
-              powers.save(function(err, result) {
-                if (err) {
-                    
-                    req.flash('error', err.message);
-                    
-                 return res.redirect('/power');
-                }
-                else{
-                req.flash('success', 'Successfully order painter!');
-                res.redirect('/')};
-              });
-           
-          })
 
 router.get('/shipping-fee/:wilaya', (req, res) => {
   const { wilaya } = req.params;
@@ -1791,62 +1945,134 @@ await transporter.sendMail(mailOptions);
 });
 
 
-router.get("/contact", function(req, res){
-    
-    
-        res.render("event/contact");
-    
+router.get("/contact", async function(req, res){
+    try {
+        const eventIdPageView = generateEventId();
+        
+        // ✅ Collect user or anonymous data
+        const user = req.user || {};
+        const userData = {
+            ip: req.headers["x-forwarded-for"]?.split(",")[0] || req.socket.remoteAddress,
+            userAgent: req.get("User-Agent"),
+            fbc: req.cookies._fbc,
+            fbp: req.cookies._fbp,
+            country: "algeria",
+            email: req.user?.email,
+            numero: req.user?.numero,
+            firstName: req.user?.firstName,
+            lastName: req.user?.lastName,
+        };
+
+        // ✅ Send PageView event to Meta
+        await sendMetaCAPIEvent({
+            eventName: "PageView",
+            eventId: eventIdPageView,
+            userData,
+            customData: {
+                content_name: "Contact Page",
+                content_type: "website",
+                anonymous_id: req.sessionID // optional for retargeting
+            },
+            eventSourceUrl: `https://${req.get('host')}${req.originalUrl}`
+        });
+
+        res.render("event/contact", {
+            req,
+            metaEventIdPageView: eventIdPageView,
+            user: req.user
+        });
+    } catch (err) {
+        console.error("❌ Error loading contact page:", err);
+        res.status(500).send("Error loading contact page");
+    }
 });
 
 // Track Login Page
-router.get("/track-login", function(req, res){
-    // Helper functions
-    const getStatusText = (status) => {
-        const statusMap = {
-            'pending': 'En Attente',
-            'confirmed': 'Confirmée',
-            'processing': 'En Préparation',
-            'ready_for_pickup': 'Prête à Expédier',
-            'shipped': 'Expédiée',
-            'out_for_delivery': 'En Livraison',
-            'delivered': 'Livrée',
-            'cancelled': 'Annulée',
-            'refunded': 'Remboursée',
-            'on_hold': 'En Attente'
+router.get("/track-login", async function(req, res){
+    try {
+        const eventIdPageView = generateEventId();
+        
+        // ✅ Collect user or anonymous data
+        const user = req.user || {};
+        const userData = {
+            ip: req.headers["x-forwarded-for"]?.split(",")[0] || req.socket.remoteAddress,
+            userAgent: req.get("User-Agent"),
+            fbc: req.cookies._fbc,
+            fbp: req.cookies._fbp,
+            country: "algeria",
+            email: req.user?.email,
+            numero: req.user?.numero,
+            firstName: req.user?.firstName,
+            lastName: req.user?.lastName,
         };
-        return statusMap[status] || status;
-    };
 
-    const getReturnStatusText = (status) => {
-        const statusMap = {
-            'none': 'Aucun',
-            'requested': 'Demandé',
-            'approved': 'Approuvé',
-            'rejected': 'Rejeté',
-            'processing': 'En Cours',
-            'completed': 'Terminé'
+        // ✅ Send PageView event to Meta
+        await sendMetaCAPIEvent({
+            eventName: "PageView",
+            eventId: eventIdPageView,
+            userData,
+            customData: {
+                content_name: "Track Login Page",
+                content_type: "website",
+                anonymous_id: req.sessionID // optional for retargeting
+            },
+            eventSourceUrl: `https://${req.get('host')}${req.originalUrl}`
+        });
+
+        // Helper functions
+        const getStatusText = (status) => {
+            const statusMap = {
+                'pending': 'En Attente',
+                'confirmed': 'Confirmée',
+                'processing': 'En Préparation',
+                'ready_for_pickup': 'Prête à Expédier',
+                'shipped': 'Expédiée',
+                'out_for_delivery': 'En Livraison',
+                'delivered': 'Livrée',
+                'cancelled': 'Annulée',
+                'refunded': 'Remboursée',
+                'on_hold': 'En Attente'
+            };
+            return statusMap[status] || status;
         };
-        return statusMap[status] || status;
-    };
 
-    const getPaymentStatusText = (status) => {
-        const statusMap = {
-            'pending': 'En Attente',
-            'paid': 'Payé',
-            'failed': 'Échoué',
-            'refunded': 'Remboursé',
-            'partially_refunded': 'Partiellement Remboursé'
+        const getReturnStatusText = (status) => {
+            const statusMap = {
+                'none': 'Aucun',
+                'requested': 'Demandé',
+                'approved': 'Approuvé',
+                'rejected': 'Rejeté',
+                'processing': 'En Cours',
+                'completed': 'Terminé'
+            };
+            return statusMap[status] || status;
         };
-        return statusMap[status] || 'En Attente';
-    };
 
-    res.render("event/track-login", {
-        error: req.flash('error')[0],
-        success: req.flash('success')[0],
-        getStatusText,
-        getReturnStatusText,
-        getPaymentStatusText
-    });
+        const getPaymentStatusText = (status) => {
+            const statusMap = {
+                'pending': 'En Attente',
+                'paid': 'Payé',
+                'failed': 'Échoué',
+                'refunded': 'Remboursé',
+                'partially_refunded': 'Partiellement Remboursé'
+            };
+            return statusMap[status] || 'En Attente';
+        };
+
+        res.render("event/track-login", {
+            error: req.flash('error')[0],
+            success: req.flash('success')[0],
+            getStatusText,
+            getReturnStatusText,
+            getPaymentStatusText,
+            req,
+            metaEventIdPageView: eventIdPageView,
+            user: req.user
+        });
+    } catch (err) {
+        console.error("❌ Error loading track-login page:", err);
+        res.status(500).send("Error loading track login page");
+    }
 });
 // Process Track Login
 router.post('/track-login', async (req, res) => {
@@ -1977,14 +2203,45 @@ router.get('/track-order', async (req, res) => {
                               path: 'returnRequest',
                               options: { strictPopulate: false } // Bypass the check
                             });
+
+    const eventIdPageView = generateEventId();
     
-    res.render('event/track-order', { orders,
-  phoneNumber: numero,
-  success: req.flash('success')[0],
-  error: req.flash('error')[0],
-  getStatusText,
-  getReturnStatusText,
-  getPaymentStatusText });
+    // ✅ Collect user or anonymous data
+    const userData = {
+      ip: req.headers["x-forwarded-for"]?.split(",")[0] || req.socket.remoteAddress,
+      userAgent: req.get("User-Agent"),
+      fbc: req.cookies._fbc,
+      fbp: req.cookies._fbp,
+      country: "algeria",
+      numero: req.session.trackingUser, // Use tracking session number
+      // Note: email, firstName, lastName may not be available for tracking users
+    };
+
+    // ✅ Send PageView event to Meta
+    await sendMetaCAPIEvent({
+      eventName: "PageView",
+      eventId: eventIdPageView,
+      userData,
+      customData: {
+        content_name: "Track Order Page",
+        content_type: "website",
+        anonymous_id: req.sessionID // optional for retargeting
+      },
+      eventSourceUrl: `https://${req.get('host')}${req.originalUrl}`
+    });
+    
+    res.render('event/track-order', { 
+      orders,
+      phoneNumber: req.session.trackingUser, // Fixed variable reference
+      success: req.flash('success')[0],
+      error: req.flash('error')[0],
+      getStatusText,
+      getReturnStatusText,
+      getPaymentStatusText,
+      req,
+      metaEventIdPageView: eventIdPageView,
+      user: { numero: req.session.trackingUser } // Provide minimal user object
+    });
   } catch (err) {
     console.error('Error fetching orders:', err);
     req.flash('error', 'Error loading your orders');
@@ -1999,12 +2256,44 @@ router.get('/start-return/:orderId', async (req, res) => {
             req.flash('error', 'الطلب غير موجود');
             return res.redirect('/track-login');
         }
+
+        const eventIdPageView = generateEventId();
+        
+        // ✅ Collect user or anonymous data
+        const user = req.user || {};
+        const userData = {
+            ip: req.headers["x-forwarded-for"]?.split(",")[0] || req.socket.remoteAddress,
+            userAgent: req.get("User-Agent"),
+            fbc: req.cookies._fbc,
+            fbp: req.cookies._fbp,
+            country: "algeria",
+            email: req.user?.email,
+            numero: req.user?.numero,
+            firstName: req.user?.firstName,
+            lastName: req.user?.lastName,
+        };
+
+        // ✅ Send PageView event to Meta
+        await sendMetaCAPIEvent({
+            eventName: "PageView",
+            eventId: eventIdPageView,
+            userData,
+            customData: {
+                content_name: "Start Return Process",
+                content_type: "website",
+                anonymous_id: req.sessionID // optional for retargeting
+            },
+            eventSourceUrl: `https://${req.get('host')}${req.originalUrl}`
+        });
         
         res.render('event/start-return', { 
             order,
             title: 'طلب إرجاع المنتج',
             error: req.flash('error')[0],
-            success: req.flash('success')[0]
+            success: req.flash('success')[0],
+            req,
+            metaEventIdPageView: eventIdPageView,
+            user: req.user
         });
     } catch (err) {
         console.error('Error starting return:', err);
@@ -2287,38 +2576,44 @@ router.get("/add-to-cart-producthome/:id", async function(req, res) {
 router.get('/paintello', async (req, res) => {
   try {
     const paintellos = await Paintello.find({});
+    const eventIdPageView = generateEventId();
 
-    const isLoggedIn = !!req.user;
-
+    // ✅ Collect user or anonymous data
+    const user = req.user || {};
     const userData = {
-      email: isLoggedIn ? req.user.email : undefined,
-      numero: isLoggedIn ? req.user.numero : undefined,
-      firstName: isLoggedIn ? req.user.firstName : undefined,
-      lastName: isLoggedIn ? req.user.lastName : undefined,
-      country: "algeria",
       ip: req.headers["x-forwarded-for"]?.split(",")[0] || req.socket.remoteAddress,
       userAgent: req.get("User-Agent"),
-        fbc: req.cookies._fbc || undefined,
-        fbp: req.cookies._fbp || undefined  
+      fbc: req.cookies._fbc,
+      fbp: req.cookies._fbp,
+      country: "algeria",
+      email: req.user?.email,
+      numero: req.user?.numero,
+      firstName: req.user?.firstName,
+      lastName: req.user?.lastName,
     };
 
-    const eventId = generateEventId(); // Use a proper UUID generator
-
+    // ✅ Send PageView event to Meta
     await sendMetaCAPIEvent({
       eventName: "PageView",
-      eventId,
+      eventId: eventIdPageView,
       userData,
       customData: {
         content_name: "Paintello Home Page",
-        content_type: "product_group",
+        content_type: "website",
         anonymous_id: req.sessionID // optional for retargeting
       },
-     
+      eventSourceUrl: `https://${req.get('host')}${req.originalUrl}`
     });
 
-    res.render('event/paintellohome', { paintellos, req, eventId });
+    res.render('event/paintellohome', { 
+      paintellos, 
+      req,
+      metaEventIdPageView: eventIdPageView,
+      user: req.user 
+    });
   } catch (err) {
-    res.status(500).send('Error loading home products');
+    console.error("❌ Error loading paintello page:", err);
+    res.status(500).send('Error loading paintello products');
   }
 });
 
