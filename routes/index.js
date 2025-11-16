@@ -2462,10 +2462,12 @@ router.get("/producthome/:id", async (req, res) => {
     const paintellos = await Paintello.find({}).limit(12);
 
      // ✅ Generate event IDs for ALL events (PageView, ViewContent, AddToCart)
-    const eventIdPageView = generateEventId();
-    const eventIdView = generateEventId();
-    const eventIdCart = generateEventId();
-
+      // ✅ Generate event IDs for ALL events
+  const eventIdView = generateEventId();
+  const eventIdCart = generateEventId();
+  const eventIdCheckout = generateEventId();
+  const eventIdPageView = generateEventId();
+    
     const userData = {
       ip: req.headers["x-forwarded-for"]?.split(",")[0] || req.socket.remoteAddress,
       userAgent: req.get("User-Agent"),
@@ -2523,9 +2525,11 @@ router.get("/producthome/:id", async (req, res) => {
       eventSourceUrl: `https://${req.get('host')}${req.originalUrl}`
     });
 
-    // ✅ Store AddToCart event ID in session for future use
-    req.session.preGeneratedEventIdCart = eventIdCart;
-
+   // ✅ Store ALL event IDs in session
+  req.session.preGeneratedEventIds = {
+    cart: eventIdCart,
+    checkout: eventIdCheckout
+  };
     const has3DModel = !!(producthome.stlFile);
     const stlFile = producthome.stlFile;
     
@@ -2548,9 +2552,10 @@ router.get("/producthome/:id", async (req, res) => {
       producthome, 
       paintellos,
       req,
-      metaEventIdPageView: eventIdPageView, // For Pixel PageView
-      metaEventIdView: eventIdView, // For Pixel ViewContent
-      metaEventIdCart: eventIdCart, // For Pixel AddToCart
+     metaEventIdView: eventIdView,
+    metaEventIdCart: eventIdCart,
+    metaEventIdCheckout: eventIdCheckout,
+    metaEventIdPageView: eventIdPageView,
       has3DModel: has3DModel,
       model3DSettings: model3DSettings,
       user: req.user,
@@ -2592,8 +2597,7 @@ router.get("/add-to-cart-producthome/:id", async function(req, res) {
     lastName: user.lastName,
   };
 
-  // ✅ Use the SAME event ID that was pre-generated
-  const eventIdCart = req.session.preGeneratedEventIdCart || generateEventId();
+   const eventIds = req.session.preGeneratedEventIds || {};
 
   console.log("🎯 AddToCart Event ID Sync:", {
     eventId: eventIdCart,
@@ -2605,7 +2609,7 @@ router.get("/add-to-cart-producthome/:id", async function(req, res) {
   // ✅ Send CAPI event with SAME event ID
   await sendMetaCAPIEvent({
     eventName: "AddToCart",
-    eventId: eventIdCart, // Same ID as Pixel
+   eventId: eventIds.cart || generateEventId(),
     userData,
     customData: {
       content_name: producthome.title,
