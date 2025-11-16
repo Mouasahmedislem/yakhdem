@@ -1099,7 +1099,7 @@
       }
 
       // ---------- Buy Now functionality ----------
-     // In your EJS template - Buy Now button JavaScript
+    
 const buyNowBtn = document.getElementById('buyNowBtn');
 if (buyNowBtn) {
   buyNowBtn.addEventListener('click', async function(e) {
@@ -1115,13 +1115,12 @@ if (buyNowBtn) {
       const qtyInput = document.getElementById('qtyInput');
       const quantity = qtyInput ? parseInt(qtyInput.value) || 1 : 1;
       
-      // ✅ ONLY track InitiateCheckout for Buy Now (not AddToCart)
+      // ✅ Track ONLY AddToCart for Buy Now button
+      // InitiateCheckout will fire on the checkout page
       if (window.fbq) {
-        const serverEventIdCheckout = '<%= metaEventIdCheckout %>';
+        const serverEventIdCart = '<%= metaEventIdCart %>';
         
-        // ❌ REMOVE AddToCart tracking for Buy Now
-        // ✅ ONLY track InitiateCheckout
-        window.fbq('track', 'InitiateCheckout', {
+        window.fbq('track', 'AddToCart', {
           content_name: '<%= green.title.replace(/'/g, "\\'") %>',
           content_ids: ['<%= green._id %>'],
           content_type: 'product',
@@ -1131,13 +1130,12 @@ if (buyNowBtn) {
             id: '<%= green._id %>',
             quantity: quantity,
             item_price: <%= green.price %>
-          }],
-          num_items: quantity
+          }]
         }, {
-          eventID: serverEventIdCheckout
+          eventID: serverEventIdCart
         });
 
-        console.log('🎯 Buy Now - InitiateCheckout Event ID:', serverEventIdCheckout);
+        console.log('🎯 Buy Now - AddToCart Event ID:', serverEventIdCart);
       }
       
       // Add to cart and redirect to checkout
