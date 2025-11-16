@@ -1445,7 +1445,7 @@ if (document.readyState === 'loading') {
     initializeTabs();
 }
 
- // ---------- Enhanced AddToCart tracking ----------
+// ---------- Enhanced AddToCart tracking ----------
 const addForm = document.getElementById('addToCartForm');
 if (addForm) {
   addForm.addEventListener('submit', function(e){
@@ -1478,7 +1478,7 @@ if (addForm) {
       console.warn('fbq track AddToCart failed', err); 
     }
     
-    // Submit the form - redirect to SHOP
+    // Submit the form - redirect to cart
     const productId = '<%= producthome._id %>';
     window.location.href = `/add-to-cart-producthome/${productId}?qty=${quantity}`;
   });
@@ -1521,7 +1521,7 @@ if (buyNowBtn) {
         console.log('🎯 Buy Now - AddToCart Event ID:', serverEventIdCart);
       }
       
-      // Use the SAME approach as Add to Cart - redirect to CHECKOUT
+      // Use the SAME approach as Add to Cart - simple redirect
       const productId = '<%= producthome._id %>';
       window.location.href = `/add-to-cart-producthome/${productId}?qty=${quantity}&redirect=checkout`;
       
