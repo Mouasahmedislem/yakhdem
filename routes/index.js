@@ -2105,7 +2105,7 @@ router.get("/track-login", async function(req, res){
 });
 // Process Track Login
 router.post('/track-login', async (req, res) => {
-     let { numero } = req.body;
+    let { numero } = req.body;
     
     // Validate Algerian phone number
     if (!/^0[5-7][0-9]{8}$/.test(numero)) {
@@ -2117,6 +2117,31 @@ router.post('/track-login', async (req, res) => {
     const cleanNumero = '213' + numero.replace(/^0+/, '').replace(/\D/g, '');
     
     try {
+        const eventIdPageView = generateEventId(); // ✅ ADD THIS
+        
+        // ✅ Collect user or anonymous data
+        const userData = {
+            ip: req.headers["x-forwarded-for"]?.split(",")[0] || req.socket.remoteAddress,
+            userAgent: req.get("User-Agent"),
+            fbc: req.cookies._fbc,
+            fbp: req.cookies._fbp,
+            country: "algeria",
+            numero: numero, // Use the tracking number
+        };
+
+        // ✅ Send PageView event to Meta
+        await sendMetaCAPIEvent({
+            eventName: "PageView",
+            eventId: eventIdPageView,
+            userData,
+            customData: {
+                content_name: "Track Order Results Page",
+                content_type: "website",
+                anonymous_id: req.sessionID
+            },
+            eventSourceUrl: `https://${req.get('host')}/track-order`
+        });
+
         const orders = await Order.find({ numero: cleanNumero })
                                 .sort({ createdAt: -1 })
                                 .populate('returnRequest');
@@ -2197,7 +2222,10 @@ router.post('/track-login', async (req, res) => {
                 getReturnStatusText,
                 getPaymentStatusText,
                 getProgressWidth,
-                getTimelineStatus
+                getTimelineStatus,
+                req, // ✅ ADD THIS
+                metaEventIdPageView: eventIdPageView, // ✅ ADD THIS
+                user: { numero: numero } // ✅ ADD THIS
             });
         }
 
@@ -2211,7 +2239,10 @@ router.post('/track-login', async (req, res) => {
             getReturnStatusText,
             getPaymentStatusText,
             getProgressWidth,
-            getTimelineStatus
+            getTimelineStatus,
+            req, // ✅ ADD THIS
+            metaEventIdPageView: eventIdPageView, // ✅ ADD THIS
+            user: { numero: numero } // ✅ ADD THIS
         });
 
     } catch (err) {
