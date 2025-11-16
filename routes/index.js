@@ -434,10 +434,10 @@ router.get("/coulors/greens", async function(req, res) {
 router.get("/green/:id", async (req, res) => {
   const green = await Green.findById(req.params.id);
   
-  // ✅ Generate event IDs for ALL events (PageView, ViewContent, AddToCart, InitiateCheckout)
+  // ✅ Generate event IDs for ALL events
   const eventIdView = generateEventId();
   const eventIdCart = generateEventId();
-  const eventIdCheckout = generateEventId(); // NEW: For InitiateCheckout
+  const eventIdCheckout = generateEventId();
 
   const userData = {
     ip: req.headers["x-forwarded-for"]?.split(",")[0] || req.socket.remoteAddress,
@@ -451,15 +451,6 @@ router.get("/green/:id", async (req, res) => {
     lastName: req.user?.lastName,
   };
 
-  console.log("🔍 UserData for ViewContent:", {
-    hasUser: !!req.user,
-    hasFBP: !!userData.fbp,
-    hasFBC: !!userData.fbc,
-    eventIdView: eventIdView,
-    eventIdCart: eventIdCart,
-    eventIdCheckout: eventIdCheckout // NEW
-  });
-
   await sendMetaCAPIEvent({
     eventName: "ViewContent",
     eventId: eventIdView,
@@ -467,10 +458,7 @@ router.get("/green/:id", async (req, res) => {
     customData: {
       content_name: green.title,
       content_ids: [green.id],
-      contents: [{
-        id: green.id,
-        quantity: 1
-      }],
+      contents: [{ id: green.id, quantity: 1 }],
       content_type: "product",
       value: green.price,
       currency: "DZD"
@@ -478,10 +466,10 @@ router.get("/green/:id", async (req, res) => {
     eventSourceUrl: `https://${req.get('host')}${req.originalUrl}`
   });
 
-  // ✅ Store ALL event IDs in session for future use
+  // ✅ Store ALL event IDs in session
   req.session.preGeneratedEventIds = {
     cart: eventIdCart,
-    checkout: eventIdCheckout // NEW
+    checkout: eventIdCheckout
   };
   
   res.render("event/green", { 
@@ -489,7 +477,7 @@ router.get("/green/:id", async (req, res) => {
     req,
     metaEventIdView: eventIdView,
     metaEventIdCart: eventIdCart,
-    metaEventIdCheckout: eventIdCheckout, // NEW: Pass to template
+    metaEventIdCheckout: eventIdCheckout,
     user: req.user,
     login: req.isAuthenticated() 
   });
@@ -509,7 +497,6 @@ router.get("/add-to-cart-green/:id", async function(req, res) {
   }
   req.session.cart = cart;
 
-  // ✅ User data
   const user = req.user || {};
   const userData = {
     ip: req.headers["x-forwarded-for"]?.split(",")[0] || req.socket.remoteAddress,
@@ -523,24 +510,17 @@ router.get("/add-to-cart-green/:id", async function(req, res) {
     lastName: user.lastName,
   };
 
-  // ✅ Use the SAME event IDs that were pre-generated
   const eventIds = req.session.preGeneratedEventIds || {};
-  const eventIdCart = eventIds.cart || generateEventId();
-  const eventIdCheckout = eventIds.checkout || generateEventId(); // NEW
-
-  // ✅ Send AddToCart CAPI event
+  
+  // ✅ ALWAYS send AddToCart event
   await sendMetaCAPIEvent({
     eventName: "AddToCart",
-    eventId: eventIdCart,
+    eventId: eventIds.cart || generateEventId(),
     userData,
     customData: {
       content_name: green.title,
       content_ids: [green.id],
-      contents: [{
-        id: green.id,
-        quantity: quantity,
-        item_price: green.price
-      }],
+      contents: [{ id: green.id, quantity: quantity, item_price: green.price }],
       content_type: "product",
       value: green.price * quantity,
       currency: "DZD"
@@ -548,30 +528,7 @@ router.get("/add-to-cart-green/:id", async function(req, res) {
     eventSourceUrl: `https://${req.get('host')}${req.originalUrl}`
   });
 
-  // ✅ If redirecting to checkout, also send InitiateCheckout event
-  if (redirectTo === 'checkout') {
-    await sendMetaCAPIEvent({
-      eventName: "InitiateCheckout",
-      eventId: eventIdCheckout, // NEW: Use pre-generated checkout event ID
-      userData,
-      customData: {
-        content_name: green.title,
-        content_ids: [green.id],
-        contents: [{
-          id: green.id,
-          quantity: quantity,
-          item_price: green.price
-        }],
-        content_type: "product",
-        value: green.price * quantity,
-        currency: "DZD",
-        num_items: cart.totalQty || quantity // Use cart total or current quantity
-      },
-      eventSourceUrl: `https://${req.get('host')}/checkout`
-    });
-  }
 
-  // Clear the pre-generated IDs after use
   delete req.session.preGeneratedEventIds;
 
   // Redirect
@@ -1256,46 +1213,106 @@ router.get("/", async function(req, res) {
             req.session.cart = cart;
             res.redirect('/shop');
         });
+
         
-      router.get('/checkout', function(req, res, next) {
+router.get('/checkout', async function(req, res, next) {
   if (!req.session.cart) {
-    return res.redirect('event/shop', { products: null });
+    return res.redirect('/shop');
   }
+  
   var cart = new Cart(req.session.cart);
   var errMsg = req.flash('error')[0];
 
-  // ✅ Add Meta CAPI InitiateCheckout tracking here
-  const user = req.user || {};
-  const userData = {
-    email: user.email,
-    numero: user.numero,
-    firstName: user.firstName,
-    lastName: user.lastName,
-    country: "algeria",
-    ip: req.headers["x-forwarded-for"]?.split(",")[0] || req.socket.remoteAddress,
-    userAgent: req.get("User-Agent"),
-        fbc: req.cookies._fbc || undefined,
-        fbp: req.cookies._fbp || undefined  
-  };
+  try {
+    // ✅ Generate proper event IDs
+    const eventIdPageView = generateEventId();
+    const eventIdInitiateCheckout = generateEventId();
 
-  const eventId = `checkout_${Date.now()}`;
+    // ✅ Complete userData with all required fields
+    const userData = {
+      ip: req.headers["x-forwarded-for"]?.split(",")[0] || req.socket.remoteAddress,
+      userAgent: req.get("User-Agent"),
+      fbc: req.cookies._fbc,
+      fbp: req.cookies._fbp,
+      country: "algeria",
+      email: req.user?.email,
+      numero: req.user?.numero,
+      firstName: req.user?.firstName,
+      lastName: req.user?.lastName,
+    };
 
-  // ✅ Fire InitiateCheckout
-  sendMetaCAPIEvent({
-    eventName: "InitiateCheckout",
-    eventId,
-    userData,
-    customData: {
-      content_type: "product",
-      value: cart.totalPrice,
-      currency: "DZD"
+    console.log("🔍 Checkout UserData:", {
+      hasUser: !!req.user,
+      hasFBP: !!userData.fbp,
+      hasFBC: !!userData.fbc,
+      eventIdPageView: eventIdPageView,
+      eventIdInitiateCheckout: eventIdInitiateCheckout
+    });
+
+    // ✅ Fire PageView event for checkout page
+    await sendMetaCAPIEvent({
+      eventName: "PageView",
+      eventId: eventIdPageView,
+      userData: userData,
+      customData: {
+        content_type: "product",
+        content_category: "checkout"
+      },
+      eventSourceUrl: `https://${req.get('host')}${req.originalUrl}`
+    });
+
+    // ✅ Prepare cart contents for Meta CAPI
+    const contents = [];
+    const content_ids = [];
+    
+    if (cart.items) {
+      for (let id in cart.items) {
+        const item = cart.items[id];
+        contents.push({
+          id: item.item._id || item.item.id,
+          quantity: item.qty,
+          item_price: item.price
+        });
+        content_ids.push(item.item._id || item.item.id);
+      }
     }
-  });
+
+    // ✅ Fire InitiateCheckout with proper parameters
+    await sendMetaCAPIEvent({
+      eventName: "InitiateCheckout",
+      eventId: eventIdInitiateCheckout,
+      userData: userData,
+      customData: {
+        content_ids: content_ids,
+        contents: contents,
+        content_type: "product",
+        value: cart.totalPrice,
+        currency: "DZD",
+        num_items: cart.totalQty || 0
+      },
+      eventSourceUrl: `https://${req.get('host')}${req.originalUrl}`
+    });
+
+    console.log('✅ Checkout CAPI Events Sent:', {
+      pageViewEventId: eventIdPageView,
+      initiateCheckoutEventId: eventIdInitiateCheckout,
+      value: cart.totalPrice,
+      num_items: cart.totalQty,
+      items_count: content_ids.length
+    });
+
+  } catch (error) {
+    console.error('❌ Checkout CAPI Error:', error);
+    // Don't break the page if tracking fails
+  }
 
   res.render('event/checkout', {
     totalPrice: cart.totalPrice,
     errMsg: errMsg,
-    noError: !errMsg
+    noError: !errMsg,
+    cart: cart,
+    metaEventIdCheckout: eventIdInitiateCheckout, // Pass to template for browser pixel
+    user: req.user
   });
 });
 
