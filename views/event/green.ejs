@@ -32,7 +32,7 @@
     <% if (user && user._id) { %> pixelConfig.external_id = '<%= user._id %>'; <% } %>
 
     fbq('init', '<%= process.env.FB_PIXEL_ID %>', pixelConfig);
-    fbq('track', 'PageView');
+    
 
     setTimeout(function() {
       fbq('track', 'ViewContent', {
@@ -1099,76 +1099,65 @@
       }
 
       // ---------- Buy Now functionality ----------
-      const buyNowBtn = document.getElementById('buyNowBtn');
-      if (buyNowBtn) {
-        buyNowBtn.addEventListener('click', async function(e) {
-          e.preventDefault();
-          
-          try {
-            // Show loading state
-            const originalText = buyNowBtn.innerHTML;
-            buyNowBtn.innerHTML = 'Adding to cart...';
-            buyNowBtn.disabled = true;
-            
-            // Get the quantity
-            const qtyInput = document.getElementById('qtyInput');
-            const quantity = qtyInput ? parseInt(qtyInput.value) || 1 : 1;
-            
-            // Track AddToCart avec le même Event ID que CAPI
-            if (window.fbq) {
-              const serverEventId = '<%= metaEventIdCart %>';
-              
-              window.fbq('track', 'AddToCart', {
-                content_name: '<%= green.title.replace(/'/g, "\\'") %>',
-                content_ids: ['<%= green._id %>'],
-                content_type: 'product',
-                value: <%= green.price %> * quantity,
-                currency: 'DZD',
-                contents: [{
-                  id: '<%= green._id %>',
-                  quantity: quantity,
-                  item_price: <%= green.price %>
-                }]
-              }, {
-                eventID: serverEventId // Même ID que CAPI
-              });
-
-              console.log('🎯 Buy Now - AddToCart Event ID:', serverEventId);
-              
-              // InitiateCheckout SANS Event ID (Meta génère automatiquement)
-              window.fbq('track', 'InitiateCheckout', {
-                content_name: '<%= green.title.replace(/'/g, "\\'") %>',
-                content_ids: ['<%= green._id %>'],
-                content_type: 'product',
-                value: <%= green.price %> * quantity,
-                currency: 'DZD',
-                contents: [{
-                  id: '<%= green._id %>',
-                  quantity: quantity,
-                  item_price: <%= green.price %>
-                }]
-              });
-            }
-            
-            // Add to cart and redirect to checkout
-            const productId = '<%= green._id %>';
-            const response = await fetch(`/add-to-cart-green/${productId}?qty=${quantity}&redirect=checkout`);
-            
-            if (response.ok) {
-              // Success - redirect to checkout
-              window.location.href = '/checkout';
-            } else {
-              throw new Error('Failed to add to cart');
-            }
-            
-          } catch (error) {
-            console.error('Buy Now error:', error);
-            buyNowBtn.innerHTML = 'Buy it now';
-            buyNowBtn.disabled = false;
-            alert('Sorry, there was an error adding the product to cart. Please try again.');
-          }
+     // In your EJS template - Buy Now button JavaScript
+const buyNowBtn = document.getElementById('buyNowBtn');
+if (buyNowBtn) {
+  buyNowBtn.addEventListener('click', async function(e) {
+    e.preventDefault();
+    
+    try {
+      // Show loading state
+      const originalText = buyNowBtn.innerHTML;
+      buyNowBtn.innerHTML = 'Adding to cart...';
+      buyNowBtn.disabled = true;
+      
+      // Get the quantity
+      const qtyInput = document.getElementById('qtyInput');
+      const quantity = qtyInput ? parseInt(qtyInput.value) || 1 : 1;
+      
+      // ✅ ONLY track InitiateCheckout for Buy Now (not AddToCart)
+      if (window.fbq) {
+        const serverEventIdCheckout = '<%= metaEventIdCheckout %>';
+        
+        // ❌ REMOVE AddToCart tracking for Buy Now
+        // ✅ ONLY track InitiateCheckout
+        window.fbq('track', 'InitiateCheckout', {
+          content_name: '<%= green.title.replace(/'/g, "\\'") %>',
+          content_ids: ['<%= green._id %>'],
+          content_type: 'product',
+          value: <%= green.price %> * quantity,
+          currency: 'DZD',
+          contents: [{
+            id: '<%= green._id %>',
+            quantity: quantity,
+            item_price: <%= green.price %>
+          }],
+          num_items: quantity
+        }, {
+          eventID: serverEventIdCheckout
         });
+
+        console.log('🎯 Buy Now - InitiateCheckout Event ID:', serverEventIdCheckout);
       }
+      
+      // Add to cart and redirect to checkout
+      const productId = '<%= green._id %>';
+      const response = await fetch(`/add-to-cart-green/${productId}?qty=${quantity}&redirect=checkout`);
+      
+      if (response.ok) {
+        window.location.href = '/checkout';
+      } else {
+        throw new Error('Failed to add to cart');
+      }
+      
+    } catch (error) {
+      console.error('Buy Now error:', error);
+      buyNowBtn.innerHTML = 'Buy it now';
+      buyNowBtn.disabled = false;
+      alert('Sorry, there was an error adding the product to cart. Please try again.');
+    }
+  });
+}
 
       // ---------- Enhanced Quantity Controls ----------
       const qtyInput = document.getElementById('qtyInput');
