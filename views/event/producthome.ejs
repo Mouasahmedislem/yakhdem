@@ -4,7 +4,7 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="referrer" content="strict-origin-when-cross-origin">
-
+  <meta name="facebook-domain-verification" content="yb7g1gekm0w90kxdm7yjazn8df8ad0" />
   <title><%= producthome && producthome.title ? producthome.title : 'Product' %> — Paintello Home</title>
 
   <!-- Bootstrap CSS for navbar -->
@@ -1445,7 +1445,7 @@ if (document.readyState === 'loading') {
     initializeTabs();
 }
 
-  // ---------- Enhanced AddToCart tracking ----------
+ // ---------- Enhanced AddToCart tracking ----------
 const addForm = document.getElementById('addToCartForm');
 if (addForm) {
   addForm.addEventListener('submit', function(e){
@@ -1455,7 +1455,6 @@ if (addForm) {
     
     try {
       if (window.fbq) {
-        // ✅ Use the SAME event ID that was pre-generated
         const serverEventId = '<%= metaEventIdCart %>';
         
         window.fbq('track', 'AddToCart', {
@@ -1470,7 +1469,7 @@ if (addForm) {
             item_price: <%= producthome.price %>
           }]
         }, { 
-          eventID: serverEventId // ✅ Same ID as CAPI
+          eventID: serverEventId
         });
 
         console.log('🎯 Pixel AddToCart Event ID:', serverEventId);
@@ -1479,30 +1478,30 @@ if (addForm) {
       console.warn('fbq track AddToCart failed', err); 
     }
     
-    // Submit the form
+    // Submit the form - redirect to SHOP
     const productId = '<%= producthome._id %>';
     window.location.href = `/add-to-cart-producthome/${productId}?qty=${quantity}`;
   });
 }
-// ---------- Buy Now functionality SANS Event ID ----------
+
+// ---------- Buy Now functionality ----------
 const buyNowBtn = document.getElementById('buyNowBtn');
 if (buyNowBtn) {
-  buyNowBtn.addEventListener('click', async function(e) {
+  buyNowBtn.addEventListener('click', function(e) {
     e.preventDefault();
     
+    // Show loading state
+    const originalText = buyNowBtn.innerHTML;
+    buyNowBtn.innerHTML = 'Adding to cart...';
+    buyNowBtn.disabled = true;
+    
+    // Get the quantity
+    const qtyInput = document.getElementById('qtyInput');
+    const quantity = qtyInput ? parseInt(qtyInput.value) || 1 : 1;
+    
     try {
-      // Show loading state
-      const originalText = buyNowBtn.innerHTML;
-      buyNowBtn.innerHTML = 'Adding to cart...';
-      buyNowBtn.disabled = true;
-      
-      // Get the quantity
-      const qtyInput = document.getElementById('qtyInput');
-      const quantity = qtyInput ? parseInt(qtyInput.value) || 1 : 1;
-      
-      // ✅ Track ONLY AddToCart avec le même Event ID que CAPI
       if (window.fbq) {
-        const serverEventId = '<%= metaEventIdCart %>';
+        const serverEventIdCart = '<%= metaEventIdCart %>';
         
         window.fbq('track', 'AddToCart', {
           content_name: '<%= producthome.title.replace(/'/g, "\\'") %>',
@@ -1516,47 +1515,24 @@ if (buyNowBtn) {
             item_price: <%= producthome.price %>
           }]
         }, {
-          eventID: serverEventId // ✅ Même ID que CAPI
+          eventID: serverEventIdCart
         });
 
-        console.log('🎯 Buy Now - AddToCart Event ID:', serverEventId);
-        
-        // ✅ InitiateCheckout SANS Event ID (Meta génère automatiquement)
-        window.fbq('track', 'InitiateCheckout', {
-          content_name: '<%= producthome.title.replace(/'/g, "\\'") %>',
-          content_ids: ['<%= producthome._id %>'],
-          content_type: 'product',
-          value: <%= producthome.price %> * quantity,
-          currency: 'DZD',
-          contents: [{
-            id: '<%= producthome._id %>',
-            quantity: quantity,
-            item_price: <%= producthome.price %>
-          }]
-        });
-        // ❌ PAS de eventID pour InitiateCheckout - Meta le génère
+        console.log('🎯 Buy Now - AddToCart Event ID:', serverEventIdCart);
       }
       
-      // Add to cart and redirect to checkout
+      // Use the SAME approach as Add to Cart - redirect to CHECKOUT
       const productId = '<%= producthome._id %>';
-      const response = await fetch(`/add-to-cart-producthome/${productId}?qty=${quantity}&redirect=checkout`);
-      
-      if (response.ok) {
-        // Success - redirect to checkout
-        window.location.href = '/checkout';
-      } else {
-        throw new Error('Failed to add to cart');
-      }
+      window.location.href = `/add-to-cart-producthome/${productId}?qty=${quantity}&redirect=checkout`;
       
     } catch (error) {
       console.error('Buy Now error:', error);
-      buyNowBtn.innerHTML = 'Buy it now';
+      buyNowBtn.innerHTML = originalText;
       buyNowBtn.disabled = false;
-      alert('Sorry, there was an error adding the product to cart. Please try again.');
+      alert('Sorry, there was an error. Please try again.');
     }
   });
 }
-
 // ---------- Enhanced Quantity Controls ----------
 const qtyInput = document.getElementById('qtyInput');
 const plus = document.getElementById('qtyPlus');
