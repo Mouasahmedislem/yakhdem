@@ -32,7 +32,10 @@
     <% if (user && user._id) { %> pixelConfig.external_id = '<%= user._id %>'; <% } %>
 
     fbq('init', '<%= process.env.FB_PIXEL_ID %>', pixelConfig);
-    
+    // ✅ Track PageView with server-side event ID
+  fbq('track', 'PageView', {}, {
+    eventID: '<%= metaEventIdPageView %>'
+  });
 
     setTimeout(function() {
       fbq('track', 'ViewContent', {
