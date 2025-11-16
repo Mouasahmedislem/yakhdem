@@ -102,7 +102,9 @@
 
     // Initialize with dynamic config
     fbq('init', '<%= process.env.FB_PIXEL_ID %>', pixelConfig);
-    fbq('track', 'PageView');
+    fbq('track', 'PageView', {}, {
+    eventID: '<%= metaEventIdPageView %>'
+  });
     </script>
     <noscript>
       <img height="1" width="1" style="display:none" 
