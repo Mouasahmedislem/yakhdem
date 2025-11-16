@@ -1260,11 +1260,38 @@ router.get("/favicon.ico", function(req, res){
     });
 
 
-
 router.get('/shop', async (req, res) => {
   try {
     const cart = new Cart(req.session.cart || {});
     const shippings = await shipping.find({});
+    const eventIdPageView = generateEventId();
+
+    // ✅ Collect user or anonymous data
+    const user = req.user || {};
+    const userData = {
+      ip: req.headers["x-forwarded-for"]?.split(",")[0] || req.socket.remoteAddress,
+      userAgent: req.get("User-Agent"),
+      fbc: req.cookies._fbc,
+      fbp: req.cookies._fbp,
+      country: "algeria",
+      email: req.user?.email,
+      numero: req.user?.numero,
+      firstName: req.user?.firstName,
+      lastName: req.user?.lastName,
+    };
+
+    // ✅ Send PageView event to Meta
+    await sendMetaCAPIEvent({
+      eventName: "PageView",
+      eventId: eventIdPageView,
+      userData,
+      customData: {
+        content_name: "Shop Page",
+        content_type: "website",
+        anonymous_id: req.sessionID // optional for retargeting
+      },
+      eventSourceUrl: `https://${req.get('host')}${req.originalUrl}`
+    });
 
     // Check for pending Meta events
     const metaEvent = req.session.metaEventData ? {
@@ -1285,9 +1312,11 @@ router.get('/shop', async (req, res) => {
       shippings: shippings,
       totalPrice: cart.totalPrice,
       price: shippings.price,
-      user: req.user || null, // Important for pixel initialization
-      _fbp: req.cookies._fbp || null, // Facebook click ID
-      _fbc: req.cookies._fbc || null // Facebook browser ID
+      user: req.user || null,
+      _fbp: req.cookies._fbp || null,
+      _fbc: req.cookies._fbc || null,
+      req, // Added request object
+      metaEventIdPageView: eventIdPageView // Added page view event ID
     });
 
   } catch (err) {
