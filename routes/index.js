@@ -438,7 +438,7 @@ router.get("/green/:id", async (req, res) => {
   const eventIdView = generateEventId();
   const eventIdCart = generateEventId();
   const eventIdCheckout = generateEventId();
-
+  const eventIdPageView = generateEventId();
   const userData = {
     ip: req.headers["x-forwarded-for"]?.split(",")[0] || req.socket.remoteAddress,
     userAgent: req.get("User-Agent"),
@@ -450,6 +450,18 @@ router.get("/green/:id", async (req, res) => {
     firstName: req.user?.firstName,
     lastName: req.user?.lastName,
   };
+  // ✅ Send ViewContent event to Meta
+      await sendMetaCAPIEvent({
+      eventName: "PageView",
+      eventId: eventIdPageView,
+      userData,
+      customData: {
+        content_name: green.title,
+        content_type: "product_group",
+        anonymous_id: req.sessionID // optional for retargeting
+      },
+      eventSourceUrl: `https://${req.get('host')}${req.originalUrl}`
+    });
 
   await sendMetaCAPIEvent({
     eventName: "ViewContent",
@@ -478,6 +490,7 @@ router.get("/green/:id", async (req, res) => {
     metaEventIdView: eventIdView,
     metaEventIdCart: eventIdCart,
     metaEventIdCheckout: eventIdCheckout,
+    metaEventIdPageView: eventIdPageView,
     user: req.user,
     login: req.isAuthenticated() 
   });
