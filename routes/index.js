@@ -1223,10 +1223,14 @@ router.get('/checkout', async function(req, res, next) {
   var cart = new Cart(req.session.cart);
   var errMsg = req.flash('error')[0];
 
+  // ✅ Define eventIdInitiateCheckout at the top level so it's accessible everywhere
+  let eventIdInitiateCheckout;
+  let eventIdPageView;
+
   try {
     // ✅ Generate proper event IDs
-    const eventIdPageView = generateEventId();
-    const eventIdInitiateCheckout = generateEventId();
+    eventIdPageView = generateEventId();
+    eventIdInitiateCheckout = generateEventId();
 
     // ✅ Complete userData with all required fields
     const userData = {
@@ -1303,15 +1307,22 @@ router.get('/checkout', async function(req, res, next) {
 
   } catch (error) {
     console.error('❌ Checkout CAPI Error:', error);
-    // Don't break the page if tracking fails
+    // If there was an error, generate fallback event IDs
+    if (!eventIdInitiateCheckout) {
+      eventIdInitiateCheckout = generateEventId();
+    }
+    if (!eventIdPageView) {
+      eventIdPageView = generateEventId();
+    }
   }
 
+  // ✅ Now eventIdInitiateCheckout is accessible here
   res.render('event/checkout', {
     totalPrice: cart.totalPrice,
     errMsg: errMsg,
     noError: !errMsg,
     cart: cart,
-    metaEventIdCheckout: eventIdInitiateCheckout, // Pass to template for browser pixel
+    metaEventIdCheckout: eventIdInitiateCheckout, // This will now work
     user: req.user
   });
 });
