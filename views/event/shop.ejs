@@ -95,7 +95,9 @@
     <% if (user && user._id) { %> pixelConfig.external_id = '<%= user._id %>'; <% } %>
 
     fbq('init', '<%= process.env.FB_PIXEL_ID %>', pixelConfig);
-    fbq('track', 'PageView');
+    fbq('track', 'PageView', {}, {
+    eventID: '<%= metaEventIdPageView %>'
+  });
   </script>
   <% } %>
   
