@@ -1223,7 +1223,7 @@ router.get('/checkout', async function(req, res, next) {
   var cart = new Cart(req.session.cart);
   var errMsg = req.flash('error')[0];
 
-  // ✅ Define eventIdInitiateCheckout at the top level so it's accessible everywhere
+  // ✅ Define event IDs at the top level so they're accessible everywhere
   let eventIdInitiateCheckout;
   let eventIdPageView;
 
@@ -1308,25 +1308,25 @@ router.get('/checkout', async function(req, res, next) {
   } catch (error) {
     console.error('❌ Checkout CAPI Error:', error);
     // If there was an error, generate fallback event IDs
-    if (!eventIdInitiateCheckout) {
-      eventIdInitiateCheckout = generateEventId();
-    }
     if (!eventIdPageView) {
       eventIdPageView = generateEventId();
     }
+    if (!eventIdInitiateCheckout) {
+      eventIdInitiateCheckout = generateEventId();
+    }
   }
 
-  // ✅ Now eventIdInitiateCheckout is accessible here
+  // ✅ Now pass BOTH event IDs to the template
   res.render('event/checkout', {
     totalPrice: cart.totalPrice,
     errMsg: errMsg,
     noError: !errMsg,
     cart: cart,
-    metaEventIdCheckout: eventIdInitiateCheckout, // This will now work
+    metaEventIdPageView: eventIdPageView, // NEW: Pass PageView event ID
+    metaEventIdCheckout: eventIdInitiateCheckout, // Pass Checkout event ID
     user: req.user
   });
 });
-
           
      router.post('/checkout', async function(req, res) {
 console.log("📨 Received form data:", {
