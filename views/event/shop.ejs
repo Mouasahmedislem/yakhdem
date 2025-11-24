@@ -377,18 +377,6 @@
       removeBtns.forEach((btn) =>
         btn.addEventListener("click", () => removeItem(btn.dataset.id))
       );
-
-      // Meta Pixel checkout tracking
-      const checkoutBtn = document.querySelector('form[action="/checkout"] button');
-      if (checkoutBtn) {
-        checkoutBtn.addEventListener("click", function () {
-          const totalText = document.getElementById("total-price")?.innerText || "0";
-          const numericTotal = parseFloat(totalText.replace(/[^\d.]/g, "")) || 0;
-          if (window.fbq) {
-            fbq("track", "InitiateCheckout", { value: numericTotal, currency: "DZD" });
-          }
-        });
-      }
     });
   </script>
 
