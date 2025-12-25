@@ -88,6 +88,7 @@ setTimeout(function() {
   })(window,document,'script','dataLayer','GTM-K8PWQM45');</script>
 
   <style>
+
     /* Navbar Styles */
     .scrolling-navbar {
       transition: background 0.3s ease-in-out;
@@ -442,48 +443,10 @@ setTimeout(function() {
       border-color: var(--accent) !important;
     }
     
-    /* === MODIFIED: Main Image Container - Show Images in Real Dimensions === */
+    /* Larger main image */
     #imageSlider {
-      min-height: 400px; /* Reduced from 650px for better aspect ratio */
-      max-height: 700px; /* Maximum height to prevent overflow */
-      height: auto !important; /* Allow natural height */
-      width: 100%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
+      height: 650px !important;
       cursor: pointer;
-      background-color: #f8f9fa;
-      overflow: hidden;
-    }
-    
-    .slider-img {
-      width: auto !important;
-      height: auto !important;
-      max-width: 100%;
-      max-height: 100%;
-      object-fit: contain !important; /* Changed from cover to contain */
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-    }
-    
-    /* === MODIFIED: Thumbnails - Show Images in Real Dimensions === */
-    .thumbnail img {
-      width: auto !important;
-      height: auto !important;
-      max-width: 100%;
-      max-height: 100px; /* Keep thumbnails manageable */
-      object-fit: contain !important; /* Changed from cover to contain */
-    }
-    
-    /* === MODIFIED: Gallery Images - Show Images in Real Dimensions === */
-    .gallery-item img {
-      width: auto !important;
-      height: auto !important;
-      max-width: 100%;
-      max-height: 100%;
-      object-fit: contain !important; /* Changed from cover to contain */
     }
     
     /* Swipe hint */
@@ -691,22 +654,6 @@ setTimeout(function() {
         height: 100%;
     }
 }
-
-/* === NEW: Mobile Responsive Adjustments for Real Dimension Images === */
-@media (max-width: 768px) {
-  #imageSlider {
-    min-height: 300px;
-    max-height: 500px;
-  }
-  
-  .thumbnail img {
-    max-height: 80px; /* Smaller thumbnails on mobile */
-  }
-  
-  .gallery-item img {
-    max-height: 120px; /* Smaller gallery images on mobile */
-  }
-}
   </style>
 
   <!-- Rest of your head content remains the same -->
@@ -861,7 +808,7 @@ setTimeout(function() {
               <% if (producthome && Array.isArray(producthome.image)) { %>
                 <% producthome.image.forEach(function(img, idx) { %>
                   <button type="button" class="thumbnail shrink-0 rounded-lg border-2 border-transparent hover:border-[color:var(--accent)] p-1 bg-white transition-all <%= idx === 0 ? 'active border-[color:var(--accent)]' : '' %>" data-index="<%= idx %>" aria-label="Thumbnail <%= idx+1 %>">
-                    <img src="<%= img %>" alt="thumb <%= idx+1 %>" class="w-20 h-20 lg:w-full lg:h-20 object-contain rounded-md" />
+                    <img src="<%= img %>" alt="thumb <%= idx+1 %>" class="w-20 h-20 lg:w-full lg:h-20 object-cover rounded-md" />
                   </button>
                 <% }); %>
               <% } else { %>
@@ -875,7 +822,7 @@ setTimeout(function() {
     <% if (producthome && Array.isArray(producthome.image)) { %>
       <% producthome.image.forEach(function(img, idx){ %>
         <img src="<%= img %>" 
-             class="absolute inset-0 w-full h-full object-contain transition-opacity duration-700 ease-in-out <%= idx===0 ? 'opacity-100' : 'opacity-0' %> slider-img"
+             class="absolute inset-0 w-full h-full object-cover transition-opacity duration-700 ease-in-out <%= idx===0 ? 'opacity-100' : 'opacity-0' %> slider-img"
              alt="image <%= idx+1 %>" 
              data-index="<%= idx %>" />
       <% }); %>
@@ -907,7 +854,7 @@ setTimeout(function() {
           <% if (producthome && Array.isArray(producthome.image)) { %>
             <% producthome.image.slice(0,4).forEach(function(img, idx){ %>
               <div class="rounded-lg overflow-hidden bg-white shadow-sm hover:shadow-md transition-shadow cursor-pointer gallery-item" data-index="<%= idx %>">
-                <img src="<%= img %>" class="w-full h-32 md:h-40 object-contain hover:scale-105 transition-transform duration-300" alt="gallery <%= idx+1 %>"/>
+                <img src="<%= img %>" class="w-full h-32 md:h-40 object-cover hover:scale-105 transition-transform duration-300" alt="gallery <%= idx+1 %>"/>
               </div>
             <% }); %>
           <% } %>
@@ -1154,7 +1101,7 @@ setTimeout(function() {
                 <div class="relative overflow-hidden">
                   <img src="<%= (p.image && p.image[0]) ? p.image[0] : '/img/placeholder.png' %>" 
                        alt="<%= p.title %>" 
-                       class="w-full h-36 object-contain group-hover:scale-105 transition-transform duration-300" />
+                       class="w-full h-36 object-cover group-hover:scale-105 transition-transform duration-300" />
                   <% if (p.disponible && p.disponible.includes('Sale')) { %>
                     <span class="absolute top-2 left-2 bg-red-500 text-white text-xs px-2 py-1 rounded">Sale</span>
                   <% } %>
@@ -1191,7 +1138,7 @@ setTimeout(function() {
         <% for (let i=0; i<6; i++){ %>
           <div class="snap-child flex-none w-56 bg-white rounded-xl shadow-sm overflow-hidden">
             <a href="#" class="block">
-              <img src="/img/placeholder.png" alt="placeholder" class="w-full h-36 object-contain" />
+              <img src="/img/placeholder.png" alt="placeholder" class="w-full h-36 object-cover" />
               <div class="p-3">
                 <div class="text-sm font-medium text-gray-900 truncate">Featured Product <%= i+1 %></div>
                 <div class="text-sm text-[color:var(--accent)] mt-1">199.99 DA</div>
