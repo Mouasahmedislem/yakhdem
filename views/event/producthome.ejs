@@ -469,12 +469,21 @@ setTimeout(function() {
       opacity: 1;
     }
 
-    /* ===== NEW STYLES FOR STOCK MESSAGE AND GUARANTEE ===== */
+    /* ===== NEW STYLES FOR STOCK MESSAGE ===== */
     .green-dot {
       display: inline-block;
       width: 8px;
       height: 8px;
       background-color: #2c9814;
+      border-radius: 50%;
+      animation: pulse 2s infinite;
+    }
+    
+    .red-dot {
+      display: inline-block;
+      width: 8px;
+      height: 8px;
+      background-color: #dc2626;
       border-radius: 50%;
       animation: pulse 2s infinite;
     }
@@ -488,6 +497,18 @@ setTimeout(function() {
     .flex-div-wrapper {
       margin-top: 1rem;
       margin-bottom: 1rem;
+      padding: 12px;
+      border-radius: 8px;
+    }
+
+    .in-stock-message {
+      background-color: #f0fdf4;
+      border-left: 4px solid #2c9814;
+    }
+
+    .out-of-stock-message {
+      background-color: #fef2f2;
+      border-left: 4px solid #dc2626;
     }
 
     .flex-div, .flex-div2 {
@@ -509,6 +530,16 @@ setTimeout(function() {
       font-size: 0.875rem;
       color: #2c9814;
       font-weight: 500;
+    }
+    
+    /* Style for out of stock message */
+    .out-of-stock-text {
+      color: #dc2626 !important;
+    }
+    
+    /* Hide buttons when out of stock */
+    .out-of-stock .add-to-cart-buttons {
+      display: none !important;
     }
 
     /* ===== GUARANTEE SECTION ENHANCEMENTS ===== */
@@ -654,9 +685,47 @@ setTimeout(function() {
         height: 100%;
     }
 }
+
+/* ===== ZARA-STYLE NOTIFICATION MODAL ===== */
+.notify-spinner {
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+/* Zara-style input focus */
+.zara-input-focused {
+  border-color: #000 !important;
+}
+
+/* Custom checkboxes */
+input[type="checkbox"]:checked {
+  background-color: #000;
+  background-image: url("data:image/svg+xml,%3csvg viewBox='0 0 16 16' fill='white' xmlns='http://www.w3.org/2000/svg'%3e%3cpath d='M12.207 4.793a1 1 0 010 1.414l-5 5a1 1 0 01-1.414 0l-2-2a1 1 0 011.414-1.414L6.5 9.086l4.293-4.293a1 1 0 011.414 0z'/%3e%3c/svg%3e");
+  border-color: #000;
+}
+
+/* Modal animations */
+.modal-enter {
+  opacity: 0;
+  transform: scale(0.95);
+}
+
+.modal-enter-active {
+  opacity: 1;
+  transform: scale(1);
+  transition: opacity 300ms, transform 300ms;
+}
+
+/* Real-time validation */
+.border-red-500 {
+  border-color: #dc2626 !important;
+}
   </style>
 
-  <!-- Rest of your head content remains the same -->
   <!-- THREE.js assets (deferred) -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js" defer></script>
   <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/loaders/STLLoader.js" defer></script>
@@ -862,7 +931,7 @@ setTimeout(function() {
       </section>
 
       <!-- Right: Product info -->
-      <aside class="lg:col-span-5">
+      <aside class="lg:col-span-5 <%= producthome && producthome.disponible === false ? 'out-of-stock' : '' %>">
         <div class="bg-white rounded-2xl shadow-sm p-6 sticky top-24">
           <div class="mb-4">
             <h1 class="text-2xl font-semibold text-gray-900"><%= producthome && producthome.title ? producthome.title : '' %></h1>
@@ -877,41 +946,81 @@ setTimeout(function() {
           </div>
 
           <!-- ===== STOCK MESSAGE SECTION ===== -->
-          <div id="green_message" class="flex-div-wrapper">
-            <div class="flex-div">
-              <span style="margin-right: 14px; margin-left: 3px;" class="green-dot"></span>
-              <span style="color:#2c9814;" class="text">En stock, expédié le jour même</span>
-            </div>
-            <div class="flex-div2">
-              <svg width="18" height="18" style="width: 18px; height: 18px; margin-right: 5px; margin-left: 2px;" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 512">
-                <path d="M48 0C21.5 0 0 21.5 0 48V368c0 26.5 21.5 48 48 48H64c0 53 43 96 96 96s96-43 96-96H384c0 53 43 96 96 96s96-43 96-96h32c17.7 0 32-14.3 32-32s-14.3-32-32-32V288 256 237.3c0-17-6.7-33.3-18.7-45.3L512 114.7c-12-12-28.3-18.7-45.3-18.7H416V48c0-26.5-21.5-48-48-48H48zM416 160h50.7L544 237.3V256H416V160zM112 416a48 48 0 1 1 96 0 48 48 0 1 1 -96 0zm368-48a48 48 0 1 1 0 96 48 48 0 1 1 0-96z"></path>
-              </svg>
-              <span class="devFreeShip">Livraison gratuite offerte dans toutes les WILAYAS à partir de 5000 DA d'achat <span id="devCountry"></span> orders</span>
-            </div>
+          <div id="green_message" class="flex-div-wrapper <%= producthome && producthome.disponible !== false ? 'in-stock-message' : 'out-of-stock-message' %>">
+            <% if (producthome && producthome.disponible !== false) { %>
+              <!-- IN STOCK MESSAGE -->
+              <div class="flex-div">
+                <span style="margin-right: 14px; margin-left: 3px;" class="green-dot"></span>
+                <span style="color:#2c9814;" class="text">En stock, expédié le jour même</span>
+              </div>
+              <div class="flex-div2">
+                <svg width="18" height="18" style="width: 18px; height: 18px; margin-right: 5px; margin-left: 2px;" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 512">
+                  <path d="M48 0C21.5 0 0 21.5 0 48V368c0 26.5 21.5 48 48 48H64c0 53 43 96 96 96s96-43 96-96H384c0 53 43 96 96 96s96-43 96-96h32c17.7 0 32-14.3 32-32s-14.3-32-32-32V288 256 237.3c0-17-6.7-33.3-18.7-45.3L512 114.7c-12-12-28.3-18.7-45.3-18.7H416V48c0-26.5-21.5-48-48-48H48zM416 160h50.7L544 237.3V256H416V160zM112 416a48 48 0 1 1 96 0 48 48 0 1 1 -96 0zm368-48a48 48 0 1 1 0 96 48 48 0 1 1 0-96z"></path>
+                </svg>
+                <span class="devFreeShip">Livraison gratuite offerte dans toutes les WILAYAS à partir de 5000 DA d'achat</span>
+              </div>
+            <% } else { %>
+              <!-- OUT OF STOCK MESSAGE -->
+              <div class="flex-div">
+                <span style="margin-right: 14px; margin-left: 3px;" class="red-dot"></span>
+                <span style="color:#dc2626;" class="text out-of-stock-text">Out of stock - Disponible à bientôt</span>
+              </div>
+              <div class="flex-div2">
+                <svg width="18" height="18" style="width: 18px; height: 18px; margin-right: 5px; margin-left: 2px; fill: #dc2626;" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 512">
+                  <path d="M48 0C21.5 0 0 21.5 0 48V368c0 26.5 21.5 48 48 48H64c0 53 43 96 96 96s96-43 96-96H384c0 53 43 96 96 96s96-43 96-96h32c17.7 0 32-14.3 32-32s-14.3-32-32-32V288 256 237.3c0-17-6.7-33.3-18.7-45.3L512 114.7c-12-12-28.3-18.7-45.3-18.7H416V48c0-26.5-21.5-48-48-48H48zM416 160h50.7L544 237.3V256H416V160zM112 416a48 48 0 1 1 96 0 48 48 0 1 1 -96 0zm368-48a48 48 0 1 1 0 96 48 48 0 1 1 0-96z"></path>
+                </svg>
+                <span style="color:#dc2626;" class="devFreeShip">Produit temporairement indisponible</span>
+              </div>
+            <% } %>
           </div>
 
-          <!-- Add to cart form -->
-<form id="addToCartForm" action="/add-to-cart-producthome/<%= producthome._id %>" method="GET" class="mt-6">
-  <div class="flex items-center gap-3">
-    <label class="text-sm text-gray-700 font-medium">Quantity</label>
-    <div class="flex items-center border rounded-full overflow-hidden w-36">
-      <button type="button" id="qtyMinus" class="px-4 py-2 text-gray-700 hover:bg-gray-50 transition-colors">-</button>
-      <input id="qtyInput" name="qty" value="1" class="w-12 text-center py-2 outline-none bg-transparent" />
-      <button type="button" id="qtyPlus" class="px-4 py-2 text-gray-700 hover:bg-gray-50 transition-colors">+</button>
-    </div>
-  </div>
+          <!-- Add to cart form - Only show if product is available -->
+          <% if (producthome && producthome.disponible !== false) { %>
+          <form id="addToCartForm" action="/add-to-cart-producthome/<%= producthome._id %>" method="GET" class="mt-6 add-to-cart-buttons">
+            <div class="flex items-center gap-3">
+              <label class="text-sm text-gray-700 font-medium">Quantity</label>
+              <div class="flex items-center border rounded-full overflow-hidden w-36">
+                <button type="button" id="qtyMinus" class="px-4 py-2 text-gray-700 hover:bg-gray-50 transition-colors">-</button>
+                <input id="qtyInput" name="qty" value="1" class="w-12 text-center py-2 outline-none bg-transparent" />
+                <button type="button" id="qtyPlus" class="px-4 py-2 text-gray-700 hover:bg-gray-50 transition-colors">+</button>
+              </div>
+            </div>
 
-  <div class="mt-6 flex flex-col gap-3">
-    <button id="addToCartBtn" type="submit" class="w-full py-3 rounded-full text-white font-semibold hover:opacity-90 transition-opacity" style="background:var(--accent);">
-      Add to cart
-    </button>
+            <div class="mt-6 flex flex-col gap-3">
+              <button id="addToCartBtn" type="submit" class="w-full py-3 rounded-full text-white font-semibold hover:opacity-90 transition-opacity" style="background:var(--accent);">
+                Add to cart
+              </button>
 
-    <!-- Buy it now button - will add to cart AND go to checkout -->
-    <button id="buyNowBtn" type="button" class="w-full py-3 rounded-full border border-gray-200 hover:border-gray-300 transition-colors bg-white text-gray-800 font-semibold">
-      Buy it now
-    </button>
-  </div>
-</form>
+              <!-- Buy it now button - will add to cart AND go to checkout -->
+              <button id="buyNowBtn" type="button" class="w-full py-3 rounded-full border border-gray-200 hover:border-gray-300 transition-colors bg-white text-gray-800 font-semibold">
+                Buy it now
+              </button>
+            </div>
+          </form>
+          <% } else { %>
+            <!-- Out of stock message with Zara-style notification button -->
+            <div class="mt-6 p-6 bg-gray-50 rounded-lg border border-gray-200 text-center">
+              <p class="text-gray-800 font-medium mb-3 text-lg">Produit temporairement indisponible</p>
+              <p class="text-sm text-gray-600 mb-6 max-w-md mx-auto">
+                Nous travaillons au réapprovisionnement de cet article.
+              </p>
+              
+              <!-- Zara-style notification button -->
+              <button id="openNotifyModal" 
+                      class="inline-flex items-center justify-center px-8 py-3 border border-gray-800 text-gray-800 text-sm font-medium tracking-wide uppercase hover:bg-gray-800 hover:text-white transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-800">
+                <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"></path>
+                </svg>
+                Me notifier
+              </button>
+              
+              <!-- Optional: Contact alternative -->
+              <p class="mt-4 text-xs text-gray-500">
+                Besoin d'aide? 
+                <a href="/contact" class="underline hover:text-gray-800">Contactez-nous</a>
+              </p>
+            </div>
+          <% } %>
 
           <!-- ===== GUARANTEE SECTION ===== -->
 <div class="guarantee-section">
@@ -1061,7 +1170,13 @@ setTimeout(function() {
           "image": "<%= (producthome && producthome.image && producthome.image[0]) ? producthome.image[0] : '' %>",
           "description": "<%= producthome && producthome.description ? producthome.description : '' %>",
           "sku": "<%= producthome && producthome._id ? producthome._id : '' %>",
-          "offers": { "@type": "Offer", "url": "https://<%= req.get('host') + req.originalUrl %>", "priceCurrency": "DZD", "price": "<%= producthome && producthome.price ? producthome.price : '' %>", "availability": "https://schema.org/InStock" }
+          "offers": { 
+            "@type": "Offer", 
+            "url": "https://<%= req.get('host') + req.originalUrl %>", 
+            "priceCurrency": "DZD", 
+            "price": "<%= producthome && producthome.price ? producthome.price : '' %>", 
+            "availability": "<%= producthome && producthome.disponible !== false ? 'https://schema.org/InStock' : 'https://schema.org/OutOfStock' %>" 
+          }
         }
         </script>
       </aside>
@@ -1177,6 +1292,116 @@ setTimeout(function() {
     </div>
   </div>
 
+  <!-- Zara-style Notification Modal -->
+  <div id="notifyModal" class="hidden fixed inset-0 bg-black bg-opacity-40 flex items-center justify-center z-50 p-4 transition-opacity duration-300">
+    <div class="bg-white rounded-none shadow-xl max-w-md w-full transform transition-all duration-300 scale-95 opacity-0" id="modalContent">
+      <div class="p-8">
+        <!-- Header -->
+        <div class="mb-6">
+          <h3 class="text-xl font-light tracking-wide text-gray-900 mb-2">NOTIFICATION</h3>
+          <p class="text-sm text-gray-600">
+            Soyez informé de la disponibilité de<br>
+            <span class="font-medium"><%= producthome && producthome.title ? producthome.title : '' %></span>
+          </p>
+        </div>
+        
+        <!-- Form -->
+        <form id="notifyForm" class="space-y-5">
+          <input type="hidden" id="productId" value="<%= producthome && producthome._id ? producthome._id : '' %>">
+          
+          <!-- Email Field -->
+          <div>
+            <label for="email" class="block text-xs uppercase tracking-wider text-gray-700 mb-2">ADRESSE EMAIL *</label>
+            <input 
+              type="email" 
+              id="email" 
+              name="email"
+              required
+              placeholder="email@exemple.com"
+              class="w-full px-0 py-3 border-0 border-b border-gray-300 bg-transparent text-gray-900 placeholder-gray-400 focus:outline-none focus:border-gray-900 focus:ring-0 transition-colors duration-300"
+              autocomplete="email"
+            >
+          </div>
+          
+          <!-- Phone Field (Optional) -->
+          <div>
+            <label for="phone" class="block text-xs uppercase tracking-wider text-gray-700 mb-2">TÉLÉPHONE (OPTIONNEL)</label>
+            <input 
+              type="tel" 
+              id="phone" 
+              name="phone"
+              placeholder="+213 XX XX XX XX"
+              class="w-full px-0 py-3 border-0 border-b border-gray-300 bg-transparent text-gray-900 placeholder-gray-400 focus:outline-none focus:border-gray-900 focus:ring-0 transition-colors duration-300"
+            >
+          </div>
+          
+          <!-- Consent -->
+          <div class="flex items-start pt-2">
+            <input 
+              type="checkbox" 
+              id="consent" 
+              name="consent"
+              required
+              class="mt-1 h-4 w-4 text-gray-900 border-gray-300 rounded-none focus:ring-gray-900 focus:ring-offset-0"
+            >
+            <label for="consent" class="ml-3 block text-xs text-gray-600 leading-snug">
+              J'accepte de recevoir des notifications par email concernant la disponibilité de ce produit.
+              <br>
+              <a href="/privacy" class="underline hover:text-gray-900">Politique de confidentialité</a>
+            </label>
+          </div>
+          
+          <!-- Buttons -->
+          <div class="flex gap-4 pt-6">
+            <button 
+              type="button" 
+              id="cancelNotify"
+              class="flex-1 py-3 border border-gray-900 text-gray-900 text-sm font-medium uppercase tracking-wide hover:bg-gray-900 hover:text-white transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-900"
+            >
+              Retour
+            </button>
+            <button 
+              type="submit" 
+              id="submitNotify"
+              class="flex-1 py-3 bg-gray-900 text-white text-sm font-medium uppercase tracking-wide hover:bg-gray-800 transition-all duration-300 flex items-center justify-center focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-900"
+            >
+              <span id="submitText">Confirmer</span>
+              <svg id="loadingSpinner" class="hidden w-5 h-5 ml-2 animate-spin" fill="none" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+              </svg>
+            </button>
+          </div>
+        </form>
+        
+        <!-- Messages -->
+        <div id="successMessage" class="hidden mt-6 p-4 bg-green-50 border border-green-200">
+          <div class="flex items-start">
+            <svg class="w-5 h-5 text-green-500 mr-3 mt-0.5" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+              <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>
+            </svg>
+            <div>
+              <p class="text-sm font-medium text-green-800" id="successText"></p>
+              <p class="text-xs text-green-700 mt-1">Vous recevrez un email dès que le produit sera disponible.</p>
+            </div>
+          </div>
+        </div>
+        
+        <div id="errorMessage" class="hidden mt-6 p-4 bg-red-50 border border-red-200">
+          <div class="flex items-start">
+            <svg class="w-5 h-5 text-red-500 mr-3 mt-0.5" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+              <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd"></path>
+            </svg>
+            <div>
+              <p class="text-sm font-medium text-red-800" id="errorText"></p>
+              <p class="text-xs text-red-700 mt-1">Veuillez réessayer ou nous contacter.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
   <!-- Global error handlers (helpful for Clarity) -->
   <script>
     window.addEventListener('error', function(e) {
@@ -1287,134 +1512,13 @@ setTimeout(function() {
       });
     })();
   </script>
-<script>
-document.addEventListener('DOMContentLoaded', function() {
-  const userBtn = document.getElementById('userMenuBtn');
-  const userMenu = document.getElementById('userDropdown');
-  const mobileBtn = document.getElementById('mobileMenuBtn');
-  const mobileMenu = document.getElementById('mobileMenu');
-
-  // Toggle user dropdown
-  userBtn?.addEventListener('click', (e) => {
-    e.stopPropagation();
-    userMenu.classList.toggle('hidden');
-  });
-
-  // Close dropdown when clicking outside
-  document.addEventListener('click', (e) => {
-    if (!userMenu?.contains(e.target) && !userBtn?.contains(e.target)) {
-      userMenu?.classList.add('hidden');
-    }
-  });
-
-  // Toggle mobile menu
-  mobileBtn?.addEventListener('click', () => {
-    mobileMenu.classList.toggle('hidden');
-  });
-});
-</script>
+<% } %>
 
 <!-- FontAwesome icons -->
   <script src="https://kit.fontawesome.com/a2d9b6b9f4.js" crossorigin="anonymous" defer></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-  <% } %>
 
-
-<script>
-// Enhanced Tabs with Scroll Detection
-function initializeTabs() {
-  const tabsContainer = document.getElementById('tabsContainer');
-  const scrollIndicator = document.getElementById('scrollIndicator');
-  
-  // Update scroll indicator
-  function updateScrollIndicator() {
-    if (!tabsContainer || !scrollIndicator) return;
-    
-    const isScrollable = tabsContainer.scrollWidth > tabsContainer.clientWidth;
-    const isAtEnd = tabsContainer.scrollLeft + tabsContainer.clientWidth >= tabsContainer.scrollWidth - 10;
-    
-    if (isScrollable && !isAtEnd) {
-      scrollIndicator.classList.add('visible');
-    } else {
-      scrollIndicator.classList.remove('visible');
-    }
-  }
-  
-  // Check scroll on load and resize
-  updateScrollIndicator();
-  window.addEventListener('resize', updateScrollIndicator);
-  tabsContainer.addEventListener('scroll', updateScrollIndicator);
-  
-  // Tab functionality
-  const tabButtons = document.querySelectorAll('.tab-btn');
-  
-  tabButtons.forEach(btn => {
-    btn.addEventListener('click', function(){
-      const target = this.dataset.tab;
-      if (!target) return;
-      
-      // Update button states
-      tabButtons.forEach(b => {
-        b.classList.remove('text-gray-900', 'active', 'border-[color:var(--accent)]');
-        b.classList.add('text-gray-600', 'border-transparent');
-      });
-      
-      // Hide all panels
-      document.querySelectorAll('.tab-panel').forEach(p => {
-        p.classList.add('hidden');
-      });
-      
-      // Activate clicked button
-      this.classList.add('text-gray-900', 'active', 'border-[color:var(--accent)]');
-      this.classList.remove('text-gray-600', 'border-transparent');
-      
-      // Show target panel
-      const panel = document.getElementById(target);
-      if (panel) panel.classList.remove('hidden');
-      
-      // Center the active tab in view (for mobile)
-      if (window.innerWidth < 768) {
-        const container = tabsContainer;
-        const button = this;
-        const containerWidth = container.clientWidth;
-        const buttonLeft = button.offsetLeft;
-        const buttonWidth = button.offsetWidth;
-        
-        container.scrollTo({
-          left: buttonLeft - (containerWidth - buttonWidth) / 2,
-          behavior: 'smooth'
-        });
-      }
-
-      // Trigger resize for 3D viewer if needed
-      if (target === 'model3d') {
-        setTimeout(() => window.dispatchEvent(new Event('resize')), 120);
-      }
-    });
-  });
-  
-  // Add temporary scroll hint for first-time users on mobile
-  if (window.innerWidth < 768) {
-    setTimeout(() => {
-      const isScrollable = tabsContainer.scrollWidth > tabsContainer.clientWidth;
-      if (isScrollable) {
-        const scrollHint = document.createElement('div');
-        scrollHint.className = 'scroll-hint';
-        scrollHint.innerHTML = '💫 Scroll';
-        tabsContainer.parentElement.appendChild(scrollHint);
-        
-        setTimeout(() => {
-          scrollHint.remove();
-        }, 3000);
-      }
-    }, 1000);
-  }
-}
-
-// Initialize when ready
-document.addEventListener('DOMContentLoaded', initializeTabs);
-</script>
-  <!-- Interaction scripts (lightbox, thumbnails, tabs, qty, addToCart tracking) -->
+<!-- Interaction scripts (lightbox, thumbnails, tabs, qty, addToCart tracking) -->
   <script>
     document.addEventListener('DOMContentLoaded', function(){
       // ---------- Image Slider Functionality ----------
@@ -1822,10 +1926,226 @@ if (qtyInput) {
     }); // DOMContentLoaded end
   </script>
 
+  <!-- Zara-style Notification Modal Script -->
+  <script>
+    // Zara-style Notification Modal
+    document.addEventListener('DOMContentLoaded', function() {
+      const openNotifyModal = document.getElementById('openNotifyModal');
+      const notifyModal = document.getElementById('notifyModal');
+      const modalContent = document.getElementById('modalContent');
+      const closeNotifyModal = document.getElementById('cancelNotify');
+      const notifyForm = document.getElementById('notifyForm');
+      const submitNotify = document.getElementById('submitNotify');
+      const submitText = document.getElementById('submitText');
+      const loadingSpinner = document.getElementById('loadingSpinner');
+      const successMessage = document.getElementById('successMessage');
+      const errorMessage = document.getElementById('errorMessage');
+      const successText = document.getElementById('successText');
+      const errorText = document.getElementById('errorText');
+      
+      // Open modal with animation
+      if (openNotifyModal && notifyModal) {
+        openNotifyModal.addEventListener('click', function() {
+          notifyModal.classList.remove('hidden');
+          
+          // Trigger reflow for animation
+          void notifyModal.offsetWidth;
+          
+          // Animate backdrop
+          notifyModal.style.opacity = '0';
+          setTimeout(() => {
+            notifyModal.style.opacity = '1';
+          }, 10);
+          
+          // Animate modal content
+          modalContent.style.opacity = '0';
+          modalContent.style.transform = 'scale(0.95)';
+          
+          setTimeout(() => {
+            modalContent.style.opacity = '1';
+            modalContent.style.transform = 'scale(1)';
+          }, 50);
+          
+          document.body.style.overflow = 'hidden';
+        });
+        
+        // Close modal with animation
+        function closeModal() {
+          // Animate out
+          modalContent.style.opacity = '0';
+          modalContent.style.transform = 'scale(0.95)';
+          notifyModal.style.opacity = '0';
+          
+          setTimeout(() => {
+            notifyModal.classList.add('hidden');
+            document.body.style.overflow = '';
+            // Reset form
+            if (notifyForm) notifyForm.reset();
+            if (successMessage) successMessage.classList.add('hidden');
+            if (errorMessage) errorMessage.classList.add('hidden');
+            // Reset modal styles
+            modalContent.style.opacity = '';
+            modalContent.style.transform = '';
+            notifyModal.style.opacity = '';
+          }, 300);
+        }
+        
+        if (closeNotifyModal) {
+          closeNotifyModal.addEventListener('click', closeModal);
+        }
+        
+        // Close on backdrop click
+        notifyModal.addEventListener('click', function(e) {
+          if (e.target === notifyModal) {
+            closeModal();
+          }
+        });
+        
+        // Close with ESC key
+        document.addEventListener('keydown', function(e) {
+          if (e.key === 'Escape' && !notifyModal.classList.contains('hidden')) {
+            closeModal();
+          }
+        });
+        
+        // Form submission with Zara-style validation
+        if (notifyForm) {
+          notifyForm.addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            const email = document.getElementById('email').value.trim();
+            const phone = document.getElementById('phone').value.trim();
+            const productId = document.getElementById('productId').value;
+            const consent = document.getElementById('consent').checked;
+            
+            // Zara-style validation
+            if (!consent) {
+              showError('Veuillez accepter les conditions de notification');
+              document.getElementById('consent').focus();
+              return;
+            }
+            
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            if (!emailRegex.test(email)) {
+              showError('Format d\'email invalide');
+              document.getElementById('email').focus();
+              return;
+            }
+            
+            // Show elegant loading state
+            submitNotify.disabled = true;
+            submitText.textContent = 'En cours...';
+            loadingSpinner.classList.remove('hidden');
+            errorMessage.classList.add('hidden');
+            
+            try {
+              const response = await fetch(`/notify-me/${productId}`, {
+                method: 'POST',
+                headers: {
+                  'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ email, phone })
+              });
+              
+              const data = await response.json();
+              
+              if (data.success) {
+                showSuccess(data.message);
+                // Clear form
+                notifyForm.reset();
+                // Auto-close after 3 seconds (Zara-style brief confirmation)
+                setTimeout(() => {
+                  closeModal();
+                }, 2500);
+              } else {
+                showError(data.message || 'Une erreur est survenue');
+              }
+            } catch (error) {
+              console.error('Notification error:', error);
+              showError('Erreur de connexion. Veuillez réessayer.');
+            } finally {
+              // Reset button state
+              submitNotify.disabled = false;
+              submitText.textContent = 'Confirmer';
+              loadingSpinner.classList.add('hidden');
+            }
+          });
+        }
+        
+        function showSuccess(message) {
+          successText.textContent = message;
+          successMessage.classList.remove('hidden');
+          errorMessage.classList.add('hidden');
+          // Hide form on success (Zara style)
+          notifyForm.classList.add('hidden');
+        }
+        
+        function showError(message) {
+          errorText.textContent = message;
+          errorMessage.classList.remove('hidden');
+          successMessage.classList.add('hidden');
+          // Smooth scroll to error
+          errorMessage.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+        }
+        
+        // Zara-style input focus effects
+        if (notifyForm) {
+          const inputs = notifyForm.querySelectorAll('input');
+          inputs.forEach(input => {
+            input.addEventListener('focus', function() {
+              this.parentElement.classList.add('zara-input-focused');
+            });
+            
+            input.addEventListener('blur', function() {
+              this.parentElement.classList.remove('zara-input-focused');
+            });
+          });
+          
+          // Add real-time email validation
+          const emailInput = document.getElementById('email');
+          emailInput.addEventListener('input', function() {
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            if (this.value && !emailRegex.test(this.value)) {
+              this.classList.add('border-red-500');
+              this.classList.remove('border-gray-300');
+            } else {
+              this.classList.remove('border-red-500');
+              this.classList.add('border-gray-300');
+            }
+          });
+        }
+      }
+    });
+  </script>
 
-   
+  <!-- User dropdown and mobile menu script -->
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      const userBtn = document.getElementById('userMenuBtn');
+      const userMenu = document.getElementById('userDropdown');
+      const mobileBtn = document.getElementById('mobileMenuBtn');
+      const mobileMenu = document.getElementById('mobileMenu');
 
- 
+      // Toggle user dropdown
+      userBtn?.addEventListener('click', (e) => {
+        e.stopPropagation();
+        userMenu.classList.toggle('hidden');
+      });
+
+      // Close dropdown when clicking outside
+      document.addEventListener('click', (e) => {
+        if (!userMenu?.contains(e.target) && !userBtn?.contains(e.target)) {
+          userMenu?.classList.add('hidden');
+        }
+      });
+
+      // Toggle mobile menu
+      mobileBtn?.addEventListener('click', () => {
+        mobileMenu.classList.toggle('hidden');
+      });
+    });
+  </script>
+
 <script>
 console.log("👉 producthome AddToCart script LOADED");
 console.log("👉 addToCartForm exists:", !!document.getElementById('addToCartForm'));
