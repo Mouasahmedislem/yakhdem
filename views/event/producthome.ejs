@@ -1252,89 +1252,20 @@ input[type="checkbox"]:checked {
                 Nous travaillons au réapprovisionnement de cet article.
               </p>
               
-              <!-- Zara-style Notification Modal -->
-<div id="notifyModal" class="notify-modal-backdrop">
-  <div class="notify-modal-content">
-    <!-- Close Button -->
-    <button class="modal-close-btn" id="modalCloseBtn">
-      <svg width="20" height="20" viewBox="0 0 20 20" fill="currentColor">
-        <path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd"/>
-      </svg>
-    </button>
-    
-    <!-- Header -->
-    <div class="modal-header">
-      <h3>NOTIFICATION</h3>
-      <p>Soyez informé de la disponibilité de "<%= producthome && producthome.title ? producthome.title : 'ce produit' %>"</p>
-    </div>
-    
-    <!-- Form -->
-    <form id="notifyForm" class="modal-body">
-      <input type="hidden" id="productId" value="<%= producthome && producthome._id ? producthome._id : '' %>">
-      
-      <!-- Email Field -->
-      <div class="mb-6">
-        <label for="email" class="input-label">ADRESSE EMAIL *</label>
-        <input 
-          type="email" 
-          id="email" 
-          name="email"
-          required
-          placeholder="email@exemple.com"
-          class="modal-input"
-          autocomplete="email"
-        >
-      </div>
-      
-      <!-- Phone Field (Optional) -->
-      <div class="mb-6">
-        <label for="phone" class="input-label">TÉLÉPHONE (OPTIONNEL)</label>
-        <input 
-          type="tel" 
-          id="phone" 
-          name="phone"
-          placeholder="+213 XX XX XX XX"
-          class="modal-input"
-        >
-      </div>
-      
-      <!-- Consent -->
-      <div class="consent-checkbox">
-        <input type="checkbox" id="consent" name="consent" required>
-        <label for="consent">
-          J'accepte de recevoir des notifications par email concernant la disponibilité de ce produit.
-          <a href="/privacy" target="_blank">Politique de confidentialité</a>
-        </label>
-      </div>
-      
-      <!-- Messages -->
-      <div id="successMessage" class="message success hidden">
-        <svg class="message-icon" width="20" height="20" viewBox="0 0 20 20" fill="currentColor">
-          <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
-        </svg>
-        <div class="message-text" id="successText"></div>
-      </div>
-      
-      <div id="errorMessage" class="message error hidden">
-        <svg class="message-icon" width="20" height="20" viewBox="0 0 20 20" fill="currentColor">
-          <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd"/>
-        </svg>
-        <div class="message-text" id="errorText"></div>
-      </div>
-    </form>
-    
-    <!-- Footer with Buttons -->
-    <div class="modal-footer">
-      <button type="button" id="cancelNotify" class="modal-btn">
-        Retour
-      </button>
-      <button type="submit" id="submitNotify" class="modal-btn submit" form="notifyForm">
-        <span id="submitText">Confirmer</span>
-        <span id="loadingSpinner" class="loading-spinner hidden"></span>
-      </button>
-    </div>
-  </div>
-</div>
+             <!-- Zara-style notification button -->
+              <button id="openNotifyModal" 
+                      class="inline-flex items-center justify-center px-8 py-3 border border-gray-800 text-gray-800 text-sm font-medium tracking-wide uppercase hover:bg-gray-800 hover:text-white transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-800">
+                <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"></path>
+                </svg>
+                Me notifier
+              </button>
+              
+              <!-- Optional: Contact alternative -->
+              <p class="mt-4 text-xs text-gray-500">
+                Besoin d'aide? 
+                <a href="/contact" class="underline hover:text-gray-800">Contactez-nous</a>
+              </p>
             </div>
           <% } %>
 
@@ -1609,85 +1540,89 @@ input[type="checkbox"]:checked {
   </div>
 
   <!-- Zara-style Notification Modal -->
-  <div id="notifyModal" class="hidden fixed inset-0 bg-black bg-opacity-40 flex items-center justify-center z-50 p-4 transition-opacity duration-300">
-    <div class="bg-white rounded-none shadow-xl max-w-md w-full transform transition-all duration-300 scale-95 opacity-0" id="modalContent">
-      <div class="p-8">
-        <!-- Header -->
-        <div class="mb-6">
-          <h3 class="text-xl font-light tracking-wide text-gray-900 mb-2">NOTIFICATION</h3>
-          <p class="text-sm text-gray-600">
-            Soyez informé de la disponibilité de<br>
-            <span class="font-medium"><%= producthome && producthome.title ? producthome.title : '' %></span>
-          </p>
-        </div>
-        
-        <!-- Form -->
-        <form id="notifyForm" class="space-y-5">
-          <input type="hidden" id="productId" value="<%= producthome && producthome._id ? producthome._id : '' %>">
-          
-          <!-- Email Field -->
-          <div>
-            <label for="email" class="block text-xs uppercase tracking-wider text-gray-700 mb-2">ADRESSE EMAIL *</label>
-            <input 
-              type="email" 
-              id="email" 
-              name="email"
-              required
-              placeholder="email@exemple.com"
-              class="w-full px-0 py-3 border-0 border-b border-gray-300 bg-transparent text-gray-900 placeholder-gray-400 focus:outline-none focus:border-gray-900 focus:ring-0 transition-colors duration-300"
-              autocomplete="email"
-            >
-          </div>
-          
-          <!-- Phone Field (Optional) -->
-          <div>
-            <label for="phone" class="block text-xs uppercase tracking-wider text-gray-700 mb-2">TÉLÉPHONE (OPTIONNEL)</label>
-            <input 
-              type="tel" 
-              id="phone" 
-              name="phone"
-              placeholder="+213 XX XX XX XX"
-              class="w-full px-0 py-3 border-0 border-b border-gray-300 bg-transparent text-gray-900 placeholder-gray-400 focus:outline-none focus:border-gray-900 focus:ring-0 transition-colors duration-300"
-            >
-          </div>
-          
-          <!-- Consent -->
-          <div class="flex items-start pt-2">
-            <input 
-              type="checkbox" 
-              id="consent" 
-              name="consent"
-              required
-              class="mt-1 h-4 w-4 text-gray-900 border-gray-300 rounded-none focus:ring-gray-900 focus:ring-offset-0"
-            >
-            <label for="consent" class="ml-3 block text-xs text-gray-600 leading-snug">
-              J'accepte de recevoir des notifications par email concernant la disponibilité de ce produit.
-              <br>
-              <a href="/privacy" class="underline hover:text-gray-900">Politique de confidentialité</a>
-            </label>
-          </div>
-          
-          <!-- Buttons -->
-          <div class="flex gap-4 pt-6">
-            <button 
-              type="button" 
-              id="cancelNotify"
-              class="flex-1 py-3 border border-gray-900 text-gray-900 text-sm font-medium uppercase tracking-wide hover:bg-gray-900 hover:text-white transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-900"
-            >
-              Retour
-            </button>
-            <button 
-              type="submit" 
-              id="submitNotify"
-              class="flex-1 py-3 bg-gray-900 text-white text-sm font-medium uppercase tracking-wide hover:bg-gray-800 transition-all duration-300 flex items-center justify-center focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-900"
-            >
-              <span id="submitText">Confirmer</span>
-              <svg id="loadingSpinner" class="hidden w-5 h-5 ml-2 animate-spin" fill="none" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
-                <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-              </svg>
-            </button>
-          </div>
+   <!-- Zara-style Notification Modal -->
+<div id="notifyModal" class="notify-modal-backdrop">
+  <div class="notify-modal-content">
+    <!-- Close Button -->
+    <button class="modal-close-btn" id="modalCloseBtn">
+      <svg width="20" height="20" viewBox="0 0 20 20" fill="currentColor">
+        <path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd"/>
+      </svg>
+    </button>
+    
+    <!-- Header -->
+    <div class="modal-header">
+      <h3>NOTIFICATION</h3>
+      <p>Soyez informé de la disponibilité de "<%= producthome && producthome.title ? producthome.title : 'ce produit' %>"</p>
+    </div>
+    
+    <!-- Form -->
+    <form id="notifyForm" class="modal-body">
+      <input type="hidden" id="productId" value="<%= producthome && producthome._id ? producthome._id : '' %>">
+      
+      <!-- Email Field -->
+      <div class="mb-6">
+        <label for="email" class="input-label">ADRESSE EMAIL *</label>
+        <input 
+          type="email" 
+          id="email" 
+          name="email"
+          required
+          placeholder="email@exemple.com"
+          class="modal-input"
+          autocomplete="email"
+        >
+      </div>
+      
+      <!-- Phone Field (Optional) -->
+      <div class="mb-6">
+        <label for="phone" class="input-label">TÉLÉPHONE (OPTIONNEL)</label>
+        <input 
+          type="tel" 
+          id="phone" 
+          name="phone"
+          placeholder="+213 XX XX XX XX"
+          class="modal-input"
+        >
+      </div>
+      
+      <!-- Consent -->
+      <div class="consent-checkbox">
+        <input type="checkbox" id="consent" name="consent" required>
+        <label for="consent">
+          J'accepte de recevoir des notifications par email concernant la disponibilité de ce produit.
+          <a href="/privacy" target="_blank">Politique de confidentialité</a>
+        </label>
+      </div>
+      
+      <!-- Messages -->
+      <div id="successMessage" class="message success hidden">
+        <svg class="message-icon" width="20" height="20" viewBox="0 0 20 20" fill="currentColor">
+          <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
+        </svg>
+        <div class="message-text" id="successText"></div>
+      </div>
+      
+      <div id="errorMessage" class="message error hidden">
+        <svg class="message-icon" width="20" height="20" viewBox="0 0 20 20" fill="currentColor">
+          <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd"/>
+        </svg>
+        <div class="message-text" id="errorText"></div>
+      </div>
+    </form>
+    
+    <!-- Footer with Buttons -->
+    <div class="modal-footer">
+      <button type="button" id="cancelNotify" class="modal-btn">
+        Retour
+      </button>
+      <button type="submit" id="submitNotify" class="modal-btn submit" form="notifyForm">
+        <span id="submitText">Confirmer</span>
+        <span id="loadingSpinner" class="loading-spinner hidden"></span>
+      </button>
+    </div>
+  </div>
+</div>
         </form>
         
         <!-- Messages -->
