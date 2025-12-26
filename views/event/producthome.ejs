@@ -2178,8 +2178,8 @@ if (qtyInput) {
   </script>
 
   <!-- Zara-style Notification Modal Script -->
- <script>
-// Fixed Notification Modal Script
+<script>
+// WORKING NOTIFICATION MODAL SCRIPT WITH MONGODB SAVING
 document.addEventListener('DOMContentLoaded', function() {
   const openNotifyModal = document.getElementById('openNotifyModal');
   const notifyModal = document.getElementById('notifyModal');
@@ -2194,27 +2194,39 @@ document.addEventListener('DOMContentLoaded', function() {
   const successText = document.getElementById('successText');
   const errorText = document.getElementById('errorText');
   
-  // Open modal
+  // Open modal when clicking "Me notifier" button
   if (openNotifyModal) {
     openNotifyModal.addEventListener('click', function() {
-      notifyModal.classList.add('active');
-      document.body.style.overflow = 'hidden';
+      // Make sure modal exists before trying to open it
+      if (notifyModal) {
+        notifyModal.classList.add('active');
+        document.body.style.overflow = 'hidden';
+      } else {
+        console.error('Notification modal not found!');
+        alert('Le système de notification n\'est pas disponible pour le moment.');
+      }
     });
   }
   
   // Close modal function
   function closeModal() {
-    notifyModal.classList.remove('active');
-    document.body.style.overflow = '';
-    
-    // Reset form after animation completes
-    setTimeout(() => {
-      if (notifyForm) notifyForm.reset();
-      if (successMessage) successMessage.classList.add('hidden');
-      if (errorMessage) errorMessage.classList.add('hidden');
-      if (successMessage) successMessage.classList.remove('hidden');
-      if (errorMessage) errorMessage.classList.remove('hidden');
-    }, 300);
+    if (notifyModal) {
+      notifyModal.classList.remove('active');
+      document.body.style.overflow = '';
+      
+      // Reset form and messages
+      setTimeout(() => {
+        if (notifyForm) notifyForm.reset();
+        if (successMessage) {
+          successMessage.classList.add('hidden');
+          successMessage.classList.remove('hidden');
+        }
+        if (errorMessage) {
+          errorMessage.classList.add('hidden');
+          errorMessage.classList.remove('hidden');
+        }
+      }, 300);
+    }
   }
   
   // Close modal with close button
@@ -2243,7 +2255,7 @@ document.addEventListener('DOMContentLoaded', function() {
     }
   });
   
-  // Form submission
+  // Form submission - ACTUAL API CALL
   if (notifyForm && submitNotify) {
     notifyForm.addEventListener('submit', async function(e) {
       e.preventDefault();
@@ -2273,23 +2285,24 @@ document.addEventListener('DOMContentLoaded', function() {
       successMessage.classList.add('hidden');
       
       try {
-        // Simulate API call - replace with your actual endpoint
-        await new Promise(resolve => setTimeout(resolve, 1500)); // Simulate network delay
+        // ✅ ACTUAL API CALL TO SAVE TO MONGODB
+        const response = await fetch(`/notify-me/${productId}`, {
+          method: 'POST',
+          headers: { 
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({ 
+            email: email,
+            phone: phone || null  // Send phone even if empty
+          })
+        });
         
-        // For now, just show success
-        // Replace this with your actual API call:
-        // const response = await fetch(`/notify-me/${productId}`, {
-        //   method: 'POST',
-        //   headers: { 'Content-Type': 'application/json' },
-        //   body: JSON.stringify({ email, phone })
-        // });
-        // const data = await response.json();
-        
-        // Simulated success response
-        const data = { success: true, message: 'Vous serez notifié lorsque le produit sera disponible!' };
+        const data = await response.json();
         
         if (data.success) {
           showSuccess(data.message);
+          // Clear form on success
+          notifyForm.reset();
           // Auto-close after 3 seconds
           setTimeout(() => {
             closeModal();
@@ -2298,8 +2311,8 @@ document.addEventListener('DOMContentLoaded', function() {
           showError(data.message || 'Une erreur est survenue');
         }
       } catch (error) {
-        console.error('Notification error:', error);
-        showError('Erreur de connexion. Veuillez réessayer.');
+        console.error('Notification API error:', error);
+        showError('Erreur de connexion au serveur. Veuillez réessayer.');
       } finally {
         // Reset button state
         submitNotify.disabled = false;
@@ -2327,18 +2340,24 @@ document.addEventListener('DOMContentLoaded', function() {
     }
   }
   
-  // Real-time email validation
+  // Real-time email validation (optional)
   const emailInput = document.getElementById('email');
   if (emailInput) {
     emailInput.addEventListener('blur', function() {
       const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
       if (this.value && !emailRegex.test(this.value)) {
-        this.classList.add('error');
+        this.style.borderBottomColor = '#ef4444';
       } else {
-        this.classList.remove('error');
+        this.style.borderBottomColor = '#d1d5db';
       }
     });
   }
+  
+  // Debug: Log to console when modal opens
+  console.log('Notification system loaded');
+  console.log('Open button:', openNotifyModal ? 'Found' : 'Not found');
+  console.log('Modal:', notifyModal ? 'Found' : 'Not found');
+  console.log('Form:', notifyForm ? 'Found' : 'Not found');
 });
 </script>
 
