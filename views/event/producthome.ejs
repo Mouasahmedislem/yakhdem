@@ -1091,7 +1091,7 @@ setTimeout(function() {
           // Filter out current product if it exists in paintellos
           const relatedProducts = paintellos.filter(p => {
             return !(producthome && producthome._id && p._id && producthome._id.toString() === p._id.toString());
-          }).slice(0, 12); // Limit to 8 products
+          }).slice(0, 25); // Limit to 25 products
         %>
         
         <% if (relatedProducts.length > 0) { %>
