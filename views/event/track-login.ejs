@@ -61,8 +61,119 @@
       padding: 4px 8px;
       border-radius: 1px;
     }
+    
+    /* Guarantee Section Styles */
+    .guarantee-section {
+      background-color: #f8f9fa;
+      border-left: 4px solid #c9b59a;
+      border-radius: 2px;
+    }
+    
+    .learn-more-link {
+      color: #c9b59a;
+      text-decoration: none;
+      font-size: 12px;
+      letter-spacing: 0.5px;
+      padding: 6px 12px;
+      border: 1px solid #c9b59a;
+      transition: all 0.3s ease;
+      display: inline-block;
+      margin-top: 8px;
+    }
+    
+    .learn-more-link:hover {
+      background-color: #c9b59a;
+      color: white;
+      text-decoration: none;
+    }
+    
+    /* Guarantee Tabs Styles */
+    .guarantee-tabs {
+      display: flex;
+      gap: 0;
+      border-bottom: 1px solid #e5e5e5;
+      margin-bottom: 24px;
+    }
+    
+    .guarantee-tab {
+      padding: 12px 24px;
+      background: transparent;
+      border: none;
+      border-bottom: 2px solid transparent;
+      font-size: 13px;
+      letter-spacing: 0.5px;
+      color: #666;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+    
+    .guarantee-tab:hover {
+      color: #000;
+    }
+    
+    .guarantee-tab.active {
+      color: #000;
+      border-bottom-color: #000;
+    }
+    
+    .tab-content {
+      display: none;
+    }
+    
+    .tab-content.active {
+      display: block;
+    }
+    
+    /* Flash Messages */
+    .error-message {
+      background: #fef2f2;
+      border: 1px solid #fecaca;
+      color: #dc2626;
+      padding: 12px 16px;
+      border-radius: 2px;
+      font-size: 13px;
+      letter-spacing: 0.5px;
+    }
+    
+    .success-message {
+      background: #f0fdf4;
+      border: 1px solid #bbf7d0;
+      color: #166534;
+      padding: 12px 16px;
+      border-radius: 2px;
+      font-size: 13px;
+      letter-spacing: 0.5px;
+    }
+    
+    /* Guarantee Icon */
+    .guarantee-icon {
+      width: 24px;
+      height: 24px;
+      object-fit: contain;
+    }
+    
+    /* Responsive */
+    @media (max-width: 768px) {
+      .guarantee-tabs {
+        overflow-x: auto;
+        white-space: nowrap;
+        -webkit-overflow-scrolling: touch;
+        scrollbar-width: none;
+      }
+      
+      .guarantee-tabs::-webkit-scrollbar {
+        display: none;
+      }
+      
+      .guarantee-tab {
+        min-width: max-content;
+        flex-shrink: 0;
+        padding: 12px 16px;
+      }
+    }
   </style>
-<!-- Pixel, GTM, Clarity -->
+  
+  <!-- Pixel, GTM, Clarity -->
   <% if (process.env.FB_PIXEL_ID) { %>
   <script>
     !function(f,b,e,v,n,t,s)
@@ -139,20 +250,21 @@
 
   <!-- Main Content -->
   <main class="py-12">
-<!-- Flash Messages -->
-<% if (typeof error !== 'undefined' && error) { %>
-    <div class="error-message max-w-md mx-auto mb-8">
-        <i class="fas fa-exclamation-circle mr-2"></i>
-        <%= error %>
-    </div>
-<% } %>
+    <!-- Flash Messages -->
+    <% if (typeof error !== 'undefined' && error) { %>
+        <div class="error-message max-w-4xl mx-auto mb-8 px-6">
+            <i class="fas fa-exclamation-circle mr-2"></i>
+            <%= error %>
+        </div>
+    <% } %>
 
-<% if (typeof success !== 'undefined' && success) { %>
-    <div class="success-message max-w-md mx-auto mb-8">
-        <i class="fas fa-check-circle mr-2"></i>
-        <%= success %>
-    </div>
-<% } %>
+    <% if (typeof success !== 'undefined' && success) { %>
+        <div class="success-message max-w-4xl mx-auto mb-8 px-6">
+            <i class="fas fa-check-circle mr-2"></i>
+            <%= success %>
+        </div>
+    <% } %>
+    
     <div class="max-w-4xl mx-auto px-6">
       
       <!-- Return Policy Banner - Zara Style -->
@@ -181,6 +293,250 @@
             </div>
             <h3 class="text-sm font-medium uppercase tracking-wide mb-2">4 Jours</h3>
             <p class="text-xs text-gray-600 leading-relaxed">Délai pour demander un retour après réception</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Detailed Guarantee Policy Section -->
+      <div class="zara-card p-8 mb-12">
+        <h2 class="text-xl font-light tracking-wide mb-6 text-center">NOTRE GARANTIE PAINTELLO HOME</h2>
+        
+        <!-- Tabs Navigation -->
+        <div class="guarantee-tabs">
+          <button class="guarantee-tab active" data-tab="policy">Politique de Retour</button>
+          <button class="guarantee-tab" data-tab="process">Processus</button>
+          <button class="guarantee-tab" data-tab="quality">Qualité</button>
+          <button class="guarantee-tab" data-tab="faq">FAQ</button>
+        </div>
+        
+        <!-- Tab Contents -->
+        <div id="policy" class="tab-content active">
+          <div class="space-y-6">
+            <!-- Main Guarantee Card -->
+            <div class="p-6 bg-green-50 rounded-lg border border-green-200">
+              <div class="flex items-start gap-4">
+                <img src="https://cdn.shopify.com/s/files/1/0508/9266/9116/files/12.jpg?v=1723026470" 
+                     alt="Garantie" 
+                     class="guarantee-icon flex-shrink-0">
+                <div>
+                  <p class="font-semibold text-green-800 text-sm uppercase tracking-wide">Garantie de Satisfaction 100%</p>
+                  <p class="mt-2 text-green-700 text-sm">Garantie de satisfaction à 100% ou remboursement. Sans poser de questions.</p>
+                </div>
+              </div>
+            </div>
+            
+            <!-- Our Promise -->
+            <div>
+              <p class="text-sm font-medium uppercase tracking-wide mb-3">Notre Promesse :</p>
+              <p class="text-sm text-gray-700 leading-relaxed">
+                Nous sommes tellement sûrs que vous allez adorer vos articles de Paintello Home Vases que nous offrons une garantie de remboursement de 4 jours.
+              </p>
+            </div>
+            
+            <!-- How It Works -->
+            <div>
+              <p class="text-sm font-medium uppercase tracking-wide mb-3">Comment Ça Marche :</p>
+              <p class="text-sm text-gray-700 leading-relaxed mb-4">
+                Si vous n'êtes pas entièrement satisfait de votre achat, contactez-nous simplement dans les 4 jours suivant la réception de votre commande pour initier un retour.
+              </p>
+            </div>
+            
+            <!-- Quality Assurance -->
+            <div>
+              <p class="text-sm font-medium uppercase tracking-wide mb-3">Assurance Qualité :</p>
+              <p class="text-sm text-gray-700 leading-relaxed">
+                Chaque produit subit des contrôles de qualité rigoureux avant l'expédition. Nous garantissons l'artisanat et la durabilité de nos articles.
+              </p>
+            </div>
+            
+            <!-- Return Policy Details -->
+            <div class="p-6 bg-amber-50 rounded-lg border border-amber-200">
+              <p class="font-medium text-amber-800 text-sm uppercase tracking-wide mb-4">Politique de Retour Détailée :</p>
+              <ul class="space-y-3 text-sm text-amber-700">
+                <li class="flex items-start gap-2">
+                  <span class="flex-shrink-0 mt-0.5">•</span>
+                  <span>Garantie de remboursement de 4 jours à partir de la date de réception</span>
+                </li>
+                <li class="flex items-start gap-2">
+                  <span class="flex-shrink-0 mt-0.5">•</span>
+                  <span>Sans poser de questions - Processus simplifié</span>
+                </li>
+                <li class="flex items-start gap-2">
+                  <span class="flex-shrink-0 mt-0.5">•</span>
+                  <span>Remboursement intégral sur le mode de paiement d'origine</span>
+                </li>
+                <li class="flex items-start gap-2">
+                  <span class="flex-shrink-0 mt-0.5">•</span>
+                  <span>L'article doit être dans son état d'origine avec l'emballage</span>
+                </li>
+                <li class="flex items-start gap-2">
+                  <span class="flex-shrink-0 mt-0.5">•</span>
+                  <span>Les frais de retour sont à la charge du client sauf en cas de produit défectueux</span>
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+        
+        <div id="process" class="tab-content hidden">
+          <div class="space-y-6">
+            <!-- Process Steps -->
+            <div class="grid md:grid-cols-3 gap-6">
+              <div class="text-center p-6 border border-gray-200">
+                <div class="w-10 h-10 bg-black text-white rounded-full flex items-center justify-center mx-auto mb-4">
+                  <span class="text-sm font-medium">1</span>
+                </div>
+                <h3 class="text-sm font-medium uppercase tracking-wide mb-2">Demande</h3>
+                <p class="text-xs text-gray-600 leading-relaxed">
+                  Remplissez le formulaire de retour dans les 4 jours suivant la réception
+                </p>
+              </div>
+              
+              <div class="text-center p-6 border border-gray-200">
+                <div class="w-10 h-10 bg-black text-white rounded-full flex items-center justify-center mx-auto mb-4">
+                  <span class="text-sm font-medium">2</span>
+                </div>
+                <h3 class="text-sm font-medium uppercase tracking-wide mb-2">Retour</h3>
+                <p class="text-xs text-gray-600 leading-relaxed">
+                  Emballer l'article avec soin et l'expédier à notre centre de retour
+                </p>
+              </div>
+              
+              <div class="text-center p-6 border border-gray-200">
+                <div class="w-10 h-10 bg-black text-white rounded-full flex items-center justify-center mx-auto mb-4">
+                  <span class="text-sm font-medium">3</span>
+                </div>
+                <h3 class="text-sm font-medium uppercase tracking-wide mb-2">Remboursement</h3>
+                <p class="text-xs text-gray-600 leading-relaxed">
+                  Remboursement traité sous 3-5 jours ouvrables après réception
+                </p>
+              </div>
+            </div>
+            
+            <!-- Important Notes -->
+            <div class="p-6 bg-blue-50 rounded-lg border border-blue-200">
+              <p class="font-medium text-blue-800 text-sm uppercase tracking-wide mb-3">Informations Importantes :</p>
+              <ul class="space-y-2 text-sm text-blue-700">
+                <li class="flex items-start gap-2">
+                  <i class="fas fa-info-circle mt-0.5 flex-shrink-0"></i>
+                  <span>Le délai de 4 jours commence à partir de la date de réception confirmée par le transporteur</span>
+                </li>
+                <li class="flex items-start gap-2">
+                  <i class="fas fa-info-circle mt-0.5 flex-shrink-0"></i>
+                  <span>Les articles personnalisés ou sur mesure ne sont pas éligibles au retour</span>
+                </li>
+                <li class="flex items-start gap-2">
+                  <i class="fas fa-info-circle mt-0.5 flex-shrink-0"></i>
+                  <span>Conservez toujours votre preuve d'achat et l'emballage d'origine</span>
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+        
+        <div id="quality" class="tab-content hidden">
+          <div class="space-y-6">
+            <!-- Quality Commitment -->
+            <div class="p-6 bg-gray-50 rounded-lg border border-gray-200">
+              <div class="flex items-start gap-4">
+                <div class="w-12 h-12 bg-gray-100 rounded-full flex items-center justify-center flex-shrink-0">
+                  <i class="fas fa-award text-gray-600"></i>
+                </div>
+                <div>
+                  <p class="font-medium text-gray-800 text-sm uppercase tracking-wide mb-2">Notre Engagement Qualité</p>
+                  <p class="text-sm text-gray-700 leading-relaxed">
+                    Chaque produit Paintello Home est fabriqué avec des matériaux de haute qualité et subit plusieurs contrôles qualité avant l'expédition.
+                  </p>
+                </div>
+              </div>
+            </div>
+            
+            <!-- Quality Standards -->
+            <div class="grid md:grid-cols-2 gap-6">
+              <div class="space-y-4">
+                <div>
+                  <p class="text-sm font-medium uppercase tracking-wide mb-2">Contrôles Rigoureux</p>
+                  <p class="text-xs text-gray-600 leading-relaxed">
+                    Inspection visuelle, tests de durabilité et vérification des finitions pour chaque article
+                  </p>
+                </div>
+                
+                <div>
+                  <p class="text-sm font-medium uppercase tracking-wide mb-2">Matériaux Durables</p>
+                  <p class="text-xs text-gray-600 leading-relaxed">
+                    Sélection minutieuse des matériaux pour assurer longévité et satisfaction
+                  </p>
+                </div>
+              </div>
+              
+              <div class="space-y-4">
+                <div>
+                  <p class="text-sm font-medium uppercase tracking-wide mb-2">Emballage Sécurisé</p>
+                  <p class="text-xs text-gray-600 leading-relaxed">
+                    Emballage spécialement conçu pour protéger vos articles pendant le transport
+                  </p>
+                </div>
+                
+                <div>
+                  <p class="text-sm font-medium uppercase tracking-wide mb-2">Support Continu</p>
+                  <p class="text-xs text-gray-600 leading-relaxed">
+                    Notre équipe est disponible pour répondre à toutes vos questions sur l'entretien et l'utilisation
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        <div id="faq" class="tab-content hidden">
+          <div class="space-y-6">
+            <!-- FAQ Items -->
+            <div class="space-y-4">
+              <div class="border-b border-gray-200 pb-4">
+                <p class="text-sm font-medium uppercase tracking-wide mb-2">
+                  Q: Combien de temps ai-je pour demander un retour ?
+                </p>
+                <p class="text-sm text-gray-600 leading-relaxed">
+                  Vous avez 4 jours à partir de la date de réception de votre commande pour initier un retour.
+                </p>
+              </div>
+              
+              <div class="border-b border-gray-200 pb-4">
+                <p class="text-sm font-medium uppercase tracking-wide mb-2">
+                  Q: Combien de temps pour recevoir mon remboursement ?
+                </p>
+                <p class="text-sm text-gray-600 leading-relaxed">
+                  Une fois que nous recevons l'article retourné, le remboursement est traité dans les 3-5 jours ouvrables.
+                </p>
+              </div>
+              
+              <div class="border-b border-gray-200 pb-4">
+                <p class="text-sm font-medium uppercase tracking-wide mb-2">
+                  Q: Puis-je échanger mon article contre un autre ?
+                </p>
+                <p class="text-sm text-gray-600 leading-relaxed">
+                  Oui, vous pouvez demander un échange contre un autre article de valeur égale ou supérieure.
+                </p>
+              </div>
+              
+              <div class="pb-4">
+                <p class="text-sm font-medium uppercase tracking-wide mb-2">
+                  Q: Qui paie les frais de retour ?
+                </p>
+                <p class="text-sm text-gray-600 leading-relaxed">
+                  Les frais de retour sont à la charge du client, sauf si l'article est défectueux ou incorrect.
+                </p>
+              </div>
+            </div>
+            
+            <!-- Contact Info -->
+            <div class="p-6 bg-gray-50 rounded-lg border border-gray-200 text-center">
+              <p class="text-sm font-medium uppercase tracking-wide mb-2">Besoin d'aide supplémentaire ?</p>
+              <p class="text-sm text-gray-600 mb-4">Notre équipe support est disponible pour vous aider</p>
+              <a href="/contact" class="zara-btn text-sm uppercase tracking-wide inline-block">
+                Contactez le Support
+              </a>
+            </div>
           </div>
         </div>
       </div>
@@ -339,7 +695,71 @@
   <footer class="border-t border-gray-200 py-8">
     <div class="max-w-7xl mx-auto px-6 text-center">
       <p class="text-sm text-gray-600">© <%= new Date().getFullYear() %> Paintello</p>
+      <div class="mt-2 flex justify-center gap-6 text-xs text-gray-500">
+        <a href="/privacy" class="hover:text-gray-700">Confidentialité</a>
+        <a href="/terms" class="hover:text-gray-700">Conditions</a>
+        <a href="/contact" class="hover:text-gray-700">Contact</a>
+      </div>
     </div>
   </footer>
+
+  <!-- JavaScript for Tab Functionality -->
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      // Tab functionality
+      const tabs = document.querySelectorAll('.guarantee-tab');
+      const tabContents = document.querySelectorAll('.tab-content');
+      
+      tabs.forEach(tab => {
+        tab.addEventListener('click', function() {
+          // Remove active class from all tabs and contents
+          tabs.forEach(t => t.classList.remove('active'));
+          tabContents.forEach(content => content.classList.remove('active'));
+          
+          // Add active class to clicked tab
+          this.classList.add('active');
+          
+          // Show corresponding content
+          const tabId = this.getAttribute('data-tab');
+          const content = document.getElementById(tabId);
+          if (content) {
+            content.classList.add('active');
+          }
+        });
+      });
+      
+      // Phone number formatting
+      const phoneInput = document.querySelector('input[type="tel"]');
+      if (phoneInput) {
+        phoneInput.addEventListener('input', function(e) {
+          let value = this.value.replace(/\D/g, '');
+          
+          // Format as Algerian phone number
+          if (value.length > 0) {
+            if (value.length <= 2) {
+              value = '0' + value;
+            }
+            if (value.length > 2 && value.length <= 5) {
+              value = value.substring(0, 2) + ' ' + value.substring(2);
+            }
+            if (value.length > 5 && value.length <= 8) {
+              value = value.substring(0, 5) + ' ' + value.substring(5);
+            }
+            if (value.length > 8) {
+              value = value.substring(0, 8) + ' ' + value.substring(8, 10);
+            }
+          }
+          
+          this.value = value;
+        });
+      }
+      
+      // Initialize first tab as active
+      if (tabs.length > 0 && tabContents.length > 0) {
+        tabs[0].classList.add('active');
+        tabContents[0].classList.add('active');
+      }
+    });
+  </script>
 </body>
 </html>
