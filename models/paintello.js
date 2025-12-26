@@ -5,7 +5,7 @@ const paintelloSchema = new mongoose.Schema({
   price: Number,
   image: [String],
   href: String,
-  disponible: String
+  status: String
 });
 
 module.exports = mongoose.model('Paintello', paintelloSchema);
