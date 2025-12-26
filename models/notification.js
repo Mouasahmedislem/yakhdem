@@ -9,7 +9,13 @@ const notificationSchema = new mongoose.Schema({
   },
   email: {
     type: String,
-    required: true
+    required: true,
+    trim: true,
+    lowercase: true
+  },
+  phone: {
+    type: String,
+    trim: true
   },
   notified: {
     type: Boolean,
@@ -20,5 +26,8 @@ const notificationSchema = new mongoose.Schema({
     default: Date.now
   }
 });
+
+// Add index for faster lookups
+notificationSchema.index({ productId: 1, email: 1 }, { unique: false });
 
 module.exports = mongoose.model('Notification', notificationSchema);
