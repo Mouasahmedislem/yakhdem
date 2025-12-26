@@ -4,15 +4,19 @@ const mongoose = require('mongoose');
 const producthomeSchema = new mongoose.Schema({
   title: String,
   price: Number,
-  oldPrice: {          // 👈 add this field for promo
+  oldPrice: {          
     type: Number,
     default: null
   },
-  image: [String],         // For image slider
-  description: String,     // Description tab
-  details: Object,         // Info tab
-  type: String,            // Optional: used for add-to-cart route logic
-  videoId: String,         // Store YouTube video ID here
+  disponible: {  // 👈 ADD THIS FIELD
+    type: Boolean,
+    default: true  // true = in stock, false = out of stock
+  },
+  image: [String],         
+  description: String,     
+  details: Object,         
+  type: String,            
+  videoId: String,         
   // Add 3D model support
   stlFile: {
     type: String,
@@ -24,7 +28,6 @@ const producthomeSchema = new mongoose.Schema({
       type: Boolean,
       default: false
     },
-    // You can add more 3D-specific settings here if needed
     autoRotate: {
       type: Boolean,
       default: true
@@ -34,7 +37,7 @@ const producthomeSchema = new mongoose.Schema({
     }
   }
 }, {
-  timestamps: true // Optional: adds createdAt and updatedAt fields
+  timestamps: true
 });
 
 // Virtual property to check if product has 3D model
