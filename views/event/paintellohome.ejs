@@ -85,25 +85,32 @@
       opacity: 0.9;
     }
 
-    /* Products Grid - Zara Style */
+    /* Products Grid - Zara Style with LARGER IMAGES */
     .products-grid-zara {
       display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-      gap: 40px;
-      padding: 60px 20px;
-      max-width: 1400px;
+      grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+      gap: 50px;
+      padding: 60px 40px;
+      max-width: 1600px;
       margin: 0 auto;
+    }
+
+    @media (max-width: 1200px) {
+      .products-grid-zara {
+        grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+        gap: 40px;
+      }
     }
 
     @media (max-width: 768px) {
       .products-grid-zara {
-        grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+        grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
         gap: 30px;
-        padding: 40px 15px;
+        padding: 40px 20px;
       }
     }
 
-    /* Product Card - Zara Style */
+    /* Product Card - Zara Style with LARGER IMAGES */
     .product-card-zara {
       position: relative;
       overflow: hidden;
@@ -115,11 +122,30 @@
       transform: translateY(-5px);
     }
 
+    /* LARGER IMAGE CONTAINER */
     .product-image-container-zara {
       position: relative;
       overflow: hidden;
-      height: 400px;
+      height: 500px; /* Increased from 400px */
       background: var(--zara-gray);
+    }
+
+    @media (max-width: 1200px) {
+      .product-image-container-zara {
+        height: 450px;
+      }
+    }
+
+    @media (max-width: 768px) {
+      .product-image-container-zara {
+        height: 400px;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .product-image-container-zara {
+        height: 350px;
+      }
     }
 
     .product-image-zara {
@@ -133,76 +159,88 @@
       transform: scale(1.05);
     }
 
+    /* STATUS BADGES - ON IMAGE */
     .product-badges-zara {
       position: absolute;
-      top: 15px;
-      left: 15px;
+      top: 20px;
+      left: 20px;
       z-index: 2;
       display: flex;
       flex-direction: column;
-      gap: 8px;
+      gap: 10px;
     }
 
     .badge-zara {
-      padding: 6px 12px;
-      font-size: 0.7rem;
-      font-weight: 600;
-      letter-spacing: 1px;
+      padding: 8px 16px;
+      font-size: 0.75rem;
+      font-weight: 700;
+      letter-spacing: 1.5px;
       text-transform: uppercase;
       background: white;
       color: var(--zara-black);
+      border-radius: 0;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
     }
 
+    /* Different badge colors based on status */
     .badge-new {
       background: var(--zara-black);
       color: white;
     }
 
-    .badge-sale {
+    .badge-promo {
       background: #e65540;
       color: white;
     }
 
-    .badge-stock {
+    .badge-in-stock {
       background: #2c9814;
       color: white;
-      font-size: 0.65rem;
-      padding: 4px 10px;
     }
 
     .badge-out-of-stock {
       background: #dc2626;
       color: white;
-      font-size: 0.65rem;
-      padding: 4px 10px;
+    }
+
+    /* If multiple badges, add offset */
+    .badge-zara:nth-child(2) {
+      margin-top: 40px;
+    }
+
+    .badge-zara:nth-child(3) {
+      margin-top: 80px;
     }
 
     .product-info-zara {
-      padding: 20px 0;
+      padding: 25px 0;
       text-align: center;
     }
 
     .product-title-zara {
-      font-size: 0.875rem;
+      font-size: 0.9rem;
       font-weight: 400;
-      letter-spacing: 1px;
+      letter-spacing: 1.2px;
       text-transform: uppercase;
-      margin-bottom: 8px;
+      margin-bottom: 10px;
       color: var(--zara-black);
+      line-height: 1.4;
     }
 
     .product-price-zara {
-      font-size: 0.875rem;
+      font-size: 0.9rem;
       font-weight: 600;
       letter-spacing: 1px;
       color: var(--zara-black);
+      margin-bottom: 8px;
     }
 
     .product-old-price-zara {
-      font-size: 0.75rem;
+      font-size: 0.8rem;
       color: var(--zara-dark-gray);
       text-decoration: line-through;
-      margin-left: 8px;
+      margin-left: 10px;
+      font-weight: 400;
     }
 
     /* Carousel Controls - Zara Style */
@@ -210,124 +248,54 @@
       position: absolute;
       top: 50%;
       transform: translateY(-50%);
-      width: 40px;
-      height: 40px;
-      background: rgba(255, 255, 255, 0.9);
+      width: 45px;
+      height: 45px;
+      background: rgba(255, 255, 255, 0.95);
       border: none;
       border-radius: 0;
       opacity: 0;
-      transition: opacity 0.3s;
+      transition: all 0.3s;
       z-index: 3;
+      display: flex;
+      align-items: center;
+      justify-content: center;
     }
 
     .product-image-container-zara:hover .carousel-control-zara {
       opacity: 1;
     }
 
+    .carousel-control-zara:hover {
+      background: white;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    }
+
     .carousel-control-prev-zara {
-      left: 15px;
+      left: 20px;
     }
 
     .carousel-control-next-zara {
-      right: 15px;
+      right: 20px;
     }
 
     .carousel-control-icon-zara {
-      width: 16px;
-      height: 16px;
+      width: 18px;
+      height: 18px;
       color: var(--zara-black);
     }
 
-    /* Stock Status Indicator */
-    .stock-indicator {
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-      font-size: 0.75rem;
-      font-weight: 500;
-      letter-spacing: 0.5px;
-      padding: 4px 10px;
-      border-radius: 2px;
-      margin-top: 8px;
-    }
-
-    .stock-in {
-      background: #f0fdf4;
-      color: #2c9814;
-      border: 1px solid #bbf7d0;
-    }
-
-    .stock-out {
-      background: #fef2f2;
-      color: #dc2626;
-      border: 1px solid #fecaca;
-    }
-
-    .stock-dot {
-      width: 6px;
-      height: 6px;
-      border-radius: 50%;
-    }
-
-    .stock-dot-in {
-      background: #2c9814;
-      animation: pulse 2s infinite;
-    }
-
-    .stock-dot-out {
-      background: #dc2626;
-      animation: pulse 2s infinite;
-    }
-
-    @keyframes pulse {
-      0%, 100% { opacity: 1; }
-      50% { opacity: 0.5; }
-    }
-
-    /* Section Title */
-    .section-title-zara {
-      font-size: 1.5rem;
-      font-weight: 300;
-      letter-spacing: 2px;
-      text-transform: uppercase;
-      text-align: center;
-      padding: 60px 20px 20px;
-      color: var(--zara-black);
-      position: relative;
-    }
-
-    .section-title-zara::after {
-      content: '';
-      position: absolute;
-      bottom: 10px;
-      left: 50%;
-      transform: translateX(-50%);
-      width: 60px;
-      height: 1px;
-      background: var(--zara-black);
-    }
-
-    /* Footer */
-    .footer-zara {
-      border-top: 1px solid var(--zara-light-gray);
-      padding: 40px 20px;
-      text-align: center;
-      color: var(--zara-dark-gray);
-      font-size: 0.75rem;
-      letter-spacing: 1px;
-    }
-
-    /* Quick View Overlay */
+    /* VIEW PRODUCT BUTTON - KEPT SAME */
     .quick-view-overlay {
       position: absolute;
       bottom: 0;
       left: 0;
       right: 0;
       background: white;
-      padding: 15px;
+      padding: 20px;
       transform: translateY(100%);
       transition: transform 0.3s cubic-bezier(0.165, 0.84, 0.44, 1);
       text-align: center;
+      border-top: 1px solid var(--zara-light-gray);
     }
 
     .product-card-zara:hover .quick-view-overlay {
@@ -336,20 +304,81 @@
 
     .quick-view-btn {
       width: 100%;
-      padding: 12px;
+      padding: 14px;
       background: var(--zara-black);
       color: white;
       border: none;
       font-size: 0.75rem;
       font-weight: 600;
-      letter-spacing: 1px;
+      letter-spacing: 1.5px;
       text-transform: uppercase;
       cursor: pointer;
-      transition: background 0.3s;
+      transition: all 0.3s;
     }
 
     .quick-view-btn:hover {
       background: #333;
+      letter-spacing: 2px;
+    }
+
+    /* Section Title */
+    .section-title-zara {
+      font-size: 1.8rem;
+      font-weight: 300;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      text-align: center;
+      padding: 80px 20px 30px;
+      color: var(--zara-black);
+      position: relative;
+    }
+
+    .section-title-zara::after {
+      content: '';
+      position: absolute;
+      bottom: 15px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 80px;
+      height: 1px;
+      background: var(--zara-black);
+    }
+
+    /* Footer */
+    .footer-zara {
+      border-top: 1px solid var(--zara-light-gray);
+      padding: 50px 20px;
+      text-align: center;
+      color: var(--zara-dark-gray);
+      font-size: 0.75rem;
+      letter-spacing: 1px;
+    }
+
+    /* Carousel Indicators */
+    .carousel-indicators-zara {
+      position: absolute;
+      bottom: 20px;
+      left: 0;
+      right: 0;
+      display: flex;
+      justify-content: center;
+      gap: 8px;
+      z-index: 2;
+    }
+
+    .carousel-indicator-zara {
+      width: 8px;
+      height: 8px;
+      background: rgba(255, 255, 255, 0.5);
+      border: none;
+      border-radius: 50%;
+      padding: 0;
+      cursor: pointer;
+      transition: background 0.3s;
+    }
+
+    .carousel-indicator-zara.active {
+      background: white;
     }
 
     /* Loading Animation */
@@ -374,8 +403,19 @@
         font-size: 0.875rem;
       }
       
-      .product-image-container-zara {
-        height: 350px;
+      .section-title-zara {
+        font-size: 1.5rem;
+        padding: 60px 20px 25px;
+      }
+      
+      .product-badges-zara {
+        top: 15px;
+        left: 15px;
+      }
+      
+      .badge-zara {
+        padding: 6px 12px;
+        font-size: 0.7rem;
       }
     }
 
@@ -384,8 +424,31 @@
         grid-template-columns: 1fr;
       }
       
-      .product-image-container-zara {
-        height: 300px;
+      .section-title-zara {
+        font-size: 1.3rem;
+        letter-spacing: 2px;
+      }
+    }
+
+    /* Fade-in animations */
+    .fade-in {
+      opacity: 0;
+      transform: translateY(20px);
+      animation: fadeInUp 1s ease-out forwards;
+    }
+
+    .fade-in.delay-1 { animation-delay: 0.4s; }
+    .fade-in.delay-2 { animation-delay: 0.8s; }
+    .fade-in.delay-3 { animation-delay: 1.2s; }
+
+    @keyframes fadeInUp {
+      from {
+        opacity: 0;
+        transform: translateY(30px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
       }
     }
   </style>
@@ -557,39 +620,67 @@
     <h2 class="section-title-zara">New Arrivals</h2>
     
     <div class="products-grid-zara">
-      <% paintellos.forEach((paintello, index) => { %>
-        <article class="product-card-zara">
+      <% paintellos.forEach((product, index) => { %>
+        <article class="product-card-zara fade-in" style="animation-delay: <%= (index % 6) * 0.1 %>s">
           <div class="product-image-container-zara">
-            <!-- Product Badges -->
+            <!-- STATUS BADGES - ON IMAGE (Based on product.status) -->
             <div class="product-badges-zara">
-              <% if (index < 3) { %>
-                <span class="badge-zara badge-new">New</span>
-              <% } %>
-              
-              <% if (paintello.oldPrice && paintello.oldPrice > paintello.price) { %>
-                <span class="badge-zara badge-sale">Sale</span>
-              <% } %>
-              
-              <!-- STOCK STATUS BADGE -->
-              <% if (paintello.disponible === true) { %>
-                <span class="badge-zara badge-stock">In Stock</span>
-              <% } else if (paintello.disponible === false) { %>
-                <span class="badge-zara badge-out-of-stock">Out of Stock</span>
-              <% } %>
+              <% 
+                // Determine which badges to show based on product status
+                const badges = [];
+                
+                // Check for "New" status
+                if (product.status && product.status.toLowerCase().includes('new')) {
+                  badges.push({ type: 'new', text: 'New' });
+                }
+                
+                // Check for "Promo" status or if oldPrice exists
+                if ((product.status && product.status.toLowerCase().includes('promo')) || 
+                    (product.oldPrice && product.oldPrice > product.price)) {
+                  badges.push({ type: 'promo', text: 'Promo' });
+                }
+                
+                // Check for stock status
+                if (product.disponible === true || product.disponible === 'true') {
+                  badges.push({ type: 'in-stock', text: 'In Stock' });
+                } else if (product.disponible === false || product.disponible === 'false') {
+                  badges.push({ type: 'out-of-stock', text: 'Out of Stock' });
+                }
+                
+                // Show badges (limit to 3)
+                badges.slice(0, 3).forEach((badge, badgeIndex) => {
+              %>
+                <span class="badge-zara badge-<%= badge.type %>" style="margin-top: <%= badgeIndex * 40 %>px">
+                  <%= badge.text %>
+                </span>
+              <% }); %>
             </div>
 
             <!-- Product Images Carousel -->
             <div id="carousel-<%= index %>" class="carousel slide h-full" data-ride="carousel">
               <div class="carousel-inner h-full">
-                <% paintello.image.forEach((img, i) => { %>
+                <% product.image.forEach((img, i) => { %>
                   <div class="carousel-item <%= i === 0 ? 'active' : '' %> h-full">
-                    <img class="product-image-zara" src="<%= img %>" alt="<%= paintello.title %> - Image <%= i + 1 %>">
+                    <img class="product-image-zara" src="<%= img %>" alt="<%= product.title %> - Image <%= i + 1 %>">
                   </div>
                 <% }) %>
               </div>
               
+              <!-- Carousel Indicators -->
+              <% if (product.image.length > 1) { %>
+                <div class="carousel-indicators-zara">
+                  <% product.image.forEach((img, i) => { %>
+                    <button type="button" 
+                            class="carousel-indicator-zara <%= i === 0 ? 'active' : '' %>" 
+                            data-target="#carousel-<%= index %>" 
+                            data-slide-to="<%= i %>">
+                    </button>
+                  <% }) %>
+                </div>
+              <% } %>
+              
               <!-- Carousel Controls -->
-              <% if (paintello.image.length > 1) { %>
+              <% if (product.image.length > 1) { %>
                 <button class="carousel-control-zara carousel-control-prev-zara" type="button" data-target="#carousel-<%= index %>" data-slide="prev">
                   <span class="carousel-control-icon-zara">
                     <i class="fas fa-chevron-left"></i>
@@ -603,9 +694,9 @@
               <% } %>
             </div>
 
-            <!-- Quick View Overlay -->
+            <!-- VIEW PRODUCT BUTTON - SAME AS BEFORE -->
             <div class="quick-view-overlay">
-              <a href="<%= paintello.href || '/product/' + paintello._id %>" class="quick-view-btn">
+              <a href="<%= product.href || '/product/' + product._id %>" class="quick-view-btn">
                 View Product
               </a>
             </div>
@@ -613,25 +704,24 @@
 
           <div class="product-info-zara">
             <h3 class="product-title-zara">
-              <a href="<%= paintello.href || '/product/' + paintello._id %>" class="hover:opacity-70 transition">
-                <%= paintello.title %>
+              <a href="<%= product.href || '/product/' + product._id %>" class="hover:opacity-70 transition">
+                <%= product.title %>
               </a>
             </h3>
             
             <div class="product-price-zara">
-              <span><%= paintello.price.toFixed(2) %> DA</span>
-              <% if (paintello.oldPrice && paintello.oldPrice > paintello.price) { %>
-                <span class="product-old-price-zara"><%= paintello.oldPrice.toFixed(2) %> DA</span>
+              <span><%= typeof product.price === 'number' ? product.price.toFixed(2) : product.price %> DA</span>
+              <% if (product.oldPrice && product.oldPrice > product.price) { %>
+                <span class="product-old-price-zara">
+                  <%= typeof product.oldPrice === 'number' ? product.oldPrice.toFixed(2) : product.oldPrice %> DA
+                </span>
               <% } %>
             </div>
             
-            <!-- Stock Status Indicator -->
-            <% if (paintello.disponible !== undefined) { %>
-              <div class="stock-indicator <%= paintello.disponible === true ? 'stock-in' : 'stock-out' %>">
-                <span class="stock-dot <%= paintello.disponible === true ? 'stock-dot-in' : 'stock-dot-out' %>"></span>
-                <span>
-                  <%= paintello.disponible === true ? 'En stock • Expédié le jour même' : 'Out of stock • Disponible bientôt' %>
-                </span>
+            <!-- Optional: Show status as text below price -->
+            <% if (product.status && !product.status.toLowerCase().includes('new') && !product.status.toLowerCase().includes('promo')) { %>
+              <div class="text-xs text-gray-500 mt-2 uppercase tracking-wider">
+                <%= product.status %>
               </div>
             <% } %>
           </div>
@@ -693,46 +783,93 @@
         });
       }
 
-      // Initialize carousels
-      document.querySelectorAll('.carousel').forEach(carousel => {
+      // Custom Carousel Functionality
+      function initCarousel(carousel) {
         const items = carousel.querySelectorAll('.carousel-item');
+        const indicators = carousel.querySelectorAll('.carousel-indicator-zara');
         const prevBtn = carousel.querySelector('[data-slide="prev"]');
         const nextBtn = carousel.querySelector('[data-slide="next"]');
         let currentIndex = 0;
+        let autoSlideInterval;
 
         function showSlide(index) {
+          // Update items
           items.forEach((item, i) => {
             item.classList.toggle('active', i === index);
           });
+          
+          // Update indicators
+          indicators.forEach((indicator, i) => {
+            indicator.classList.toggle('active', i === index);
+          });
+          
           currentIndex = index;
         }
 
+        function nextSlide() {
+          let newIndex = currentIndex + 1;
+          if (newIndex >= items.length) newIndex = 0;
+          showSlide(newIndex);
+        }
+
+        function prevSlide() {
+          let newIndex = currentIndex - 1;
+          if (newIndex < 0) newIndex = items.length - 1;
+          showSlide(newIndex);
+        }
+
+        // Previous button
         if (prevBtn) {
           prevBtn.addEventListener('click', (e) => {
             e.preventDefault();
-            let newIndex = currentIndex - 1;
-            if (newIndex < 0) newIndex = items.length - 1;
-            showSlide(newIndex);
+            prevSlide();
+            resetAutoSlide();
           });
         }
 
+        // Next button
         if (nextBtn) {
           nextBtn.addEventListener('click', (e) => {
             e.preventDefault();
-            let newIndex = currentIndex + 1;
-            if (newIndex >= items.length) newIndex = 0;
-            showSlide(newIndex);
+            nextSlide();
+            resetAutoSlide();
           });
         }
 
-        // Auto-rotate if multiple images
-        if (items.length > 1) {
-          setInterval(() => {
-            let newIndex = currentIndex + 1;
-            if (newIndex >= items.length) newIndex = 0;
-            showSlide(newIndex);
-          }, 5000);
+        // Indicators
+        indicators.forEach((indicator, index) => {
+          indicator.addEventListener('click', () => {
+            showSlide(index);
+            resetAutoSlide();
+          });
+        });
+
+        // Auto slide
+        function startAutoSlide() {
+          if (items.length > 1) {
+            autoSlideInterval = setInterval(nextSlide, 4000);
+          }
         }
+
+        function resetAutoSlide() {
+          clearInterval(autoSlideInterval);
+          startAutoSlide();
+        }
+
+        // Pause on hover
+        carousel.addEventListener('mouseenter', () => {
+          clearInterval(autoSlideInterval);
+        });
+
+        carousel.addEventListener('mouseleave', startAutoSlide);
+
+        // Initialize
+        startAutoSlide();
+      }
+
+      // Initialize all carousels
+      document.querySelectorAll('.carousel').forEach(carousel => {
+        initCarousel(carousel);
       });
 
       // Track product views for Meta Pixel
@@ -754,9 +891,21 @@
 
         observer.observe(card);
       });
+
+      // Add hover effect to cards
+      document.querySelectorAll('.product-card-zara').forEach(card => {
+        card.addEventListener('mouseenter', function() {
+          this.style.zIndex = '10';
+        });
+        
+        card.addEventListener('mouseleave', function() {
+          this.style.zIndex = '1';
+        });
+      });
     });
 
-
+   
+   
   </script>
 
   <!-- Bootstrap JS -->
