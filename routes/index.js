@@ -2783,44 +2783,68 @@ function getPaymentStatusText(status) {
 router.post('/notify-me/:productId', async (req, res) => {
   try {
     const { productId } = req.params;
-    const { email } = req.body;
+    const { email, phone } = req.body;  // ✅ Get phone from body
+
+    console.log('📧 Notification request received:', { productId, email, phone });
 
     // Validate email
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!emailRegex.test(email)) {
-      return res.status(400).json({ success: false, message: 'Invalid email format' });
+      console.log('❌ Invalid email format:', email);
+      return res.status(400).json({ 
+        success: false, 
+        message: 'Format d\'email invalide' 
+      });
     }
 
     // Check if product exists
     const product = await Producthome.findById(productId);
     if (!product) {
-      return res.status(404).json({ success: false, message: 'Product not found' });
+      console.log('❌ Product not found:', productId);
+      return res.status(404).json({ 
+        success: false, 
+        message: 'Produit non trouvé' 
+      });
     }
 
     // Check if already subscribed
     const existing = await Notification.findOne({ productId, email });
     if (existing) {
+      console.log('ℹ️ Already subscribed:', email);
       return res.json({ 
         success: true, 
-        message: 'You are already subscribed to notifications for this product' 
+        message: 'Vous êtes déjà inscrit aux notifications pour ce produit' 
       });
     }
 
     // Create new notification subscription
     const notification = new Notification({
       productId,
-      email
+      email,
+      phone: phone || null,  // ✅ Save phone if provided
+      notified: false,
+      createdAt: new Date()
     });
 
     await notification.save();
+    
+    console.log('✅ Notification saved to MongoDB:', {
+      id: notification._id,
+      productId: productId,
+      email: email,
+      phone: phone || 'none'
+    });
 
     res.json({ 
       success: true, 
-      message: 'You will be notified when this product is back in stock!' 
+      message: 'Vous serez notifié lorsque ce produit sera de nouveau en stock!' 
     });
   } catch (error) {
-    console.error('Notification error:', error);
-    res.status(500).json({ success: false, message: 'Server error' });
+    console.error('❌ Notification error:', error);
+    res.status(500).json({ 
+      success: false, 
+      message: 'Erreur serveur. Veuillez réessayer.' 
+    });
   }
 });
 
