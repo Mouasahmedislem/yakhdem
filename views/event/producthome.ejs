@@ -724,6 +724,253 @@ input[type="checkbox"]:checked {
 .border-red-500 {
   border-color: #dc2626 !important;
 }
+
+/* ===== FIXED ZARA-STYLE MODAL STYLES ===== */
+
+/* Modal Backdrop */
+.notify-modal-backdrop {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.4);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 99999;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.3s ease, visibility 0.3s ease;
+}
+
+.notify-modal-backdrop.active {
+  opacity: 1;
+  visibility: visible;
+}
+
+/* Modal Content */
+.notify-modal-content {
+  background-color: white;
+  width: 90%;
+  max-width: 420px;
+  transform: translateY(-20px);
+  opacity: 0;
+  transition: transform 0.4s cubic-bezier(0.165, 0.84, 0.44, 1), opacity 0.4s ease;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.15);
+}
+
+.notify-modal-backdrop.active .notify-modal-content {
+  transform: translateY(0);
+  opacity: 1;
+}
+
+/* Modal Header */
+.modal-header {
+  padding: 24px 24px 16px;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.modal-header h3 {
+  font-size: 1.125rem;
+  font-weight: 400;
+  letter-spacing: 0.5px;
+  color: #111827;
+  margin-bottom: 4px;
+}
+
+.modal-header p {
+  font-size: 0.875rem;
+  color: #6b7280;
+}
+
+/* Modal Body */
+.modal-body {
+  padding: 24px;
+}
+
+/* Modal Footer */
+.modal-footer {
+  padding: 16px 24px 24px;
+  border-top: 1px solid #e5e7eb;
+  display: flex;
+  gap: 12px;
+}
+
+/* Input Styles */
+.modal-input {
+  width: 100%;
+  padding: 0 0 10px 0;
+  border: none;
+  border-bottom: 1px solid #d1d5db;
+  background: transparent;
+  font-size: 0.875rem;
+  color: #111827;
+  transition: border-color 0.3s ease;
+}
+
+.modal-input:focus {
+  outline: none;
+  border-bottom-color: #111827;
+}
+
+.modal-input::placeholder {
+  color: #9ca3af;
+}
+
+/* Label Styles */
+.input-label {
+  display: block;
+  font-size: 0.75rem;
+  font-weight: 500;
+  letter-spacing: 0.5px;
+  color: #374151;
+  margin-bottom: 8px;
+  text-transform: uppercase;
+}
+
+/* Checkbox Styles */
+.consent-checkbox {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  margin-top: 20px;
+}
+
+.consent-checkbox input[type="checkbox"] {
+  width: 16px;
+  height: 16px;
+  margin-top: 2px;
+  accent-color: #111827;
+}
+
+.consent-checkbox label {
+  font-size: 0.75rem;
+  color: #4b5563;
+  line-height: 1.5;
+}
+
+.consent-checkbox a {
+  color: #111827;
+  text-decoration: underline;
+}
+
+.consent-checkbox a:hover {
+  color: #374151;
+}
+
+/* Button Styles */
+.modal-btn {
+  flex: 1;
+  padding: 12px 20px;
+  font-size: 0.875rem;
+  font-weight: 500;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+  border: 1px solid #111827;
+  background: transparent;
+  color: #111827;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.modal-btn:hover {
+  background-color: #111827;
+  color: white;
+}
+
+.modal-btn.submit {
+  background-color: #111827;
+  color: white;
+}
+
+.modal-btn.submit:hover {
+  background-color: #374151;
+  border-color: #374151;
+}
+
+/* Loading Spinner */
+.loading-spinner {
+  display: inline-block;
+  width: 16px;
+  height: 16px;
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  border-radius: 50%;
+  border-top-color: white;
+  animation: spin 1s linear infinite;
+  margin-left: 8px;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+/* Message Styles */
+.message {
+  padding: 12px 16px;
+  border-radius: 4px;
+  margin-top: 16px;
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+}
+
+.message.success {
+  background-color: #f0fdf4;
+  border: 1px solid #bbf7d0;
+}
+
+.message.error {
+  background-color: #fef2f2;
+  border: 1px solid #fecaca;
+}
+
+.message-icon {
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+
+.message-text {
+  font-size: 0.875rem;
+}
+
+.message.success .message-text {
+  color: #166534;
+}
+
+.message.error .message-text {
+  color: #991b1b;
+}
+
+/* Close Button */
+.modal-close-btn {
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  background: transparent;
+  border: none;
+  padding: 8px;
+  cursor: pointer;
+  color: #6b7280;
+  transition: color 0.3s ease;
+  z-index: 10;
+}
+
+.modal-close-btn:hover {
+  color: #111827;
+}
+
+/* Responsive */
+@media (max-width: 640px) {
+  .notify-modal-content {
+    width: 95%;
+    margin: 0 16px;
+  }
+  
+  .modal-footer {
+    flex-direction: column;
+  }
+}
   </style>
 
   <!-- THREE.js assets (deferred) -->
@@ -1005,20 +1252,89 @@ input[type="checkbox"]:checked {
                 Nous travaillons au réapprovisionnement de cet article.
               </p>
               
-              <!-- Zara-style notification button -->
-              <button id="openNotifyModal" 
-                      class="inline-flex items-center justify-center px-8 py-3 border border-gray-800 text-gray-800 text-sm font-medium tracking-wide uppercase hover:bg-gray-800 hover:text-white transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-800">
-                <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"></path>
-                </svg>
-                Me notifier
-              </button>
-              
-              <!-- Optional: Contact alternative -->
-              <p class="mt-4 text-xs text-gray-500">
-                Besoin d'aide? 
-                <a href="/contact" class="underline hover:text-gray-800">Contactez-nous</a>
-              </p>
+              <!-- Zara-style Notification Modal -->
+<div id="notifyModal" class="notify-modal-backdrop">
+  <div class="notify-modal-content">
+    <!-- Close Button -->
+    <button class="modal-close-btn" id="modalCloseBtn">
+      <svg width="20" height="20" viewBox="0 0 20 20" fill="currentColor">
+        <path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd"/>
+      </svg>
+    </button>
+    
+    <!-- Header -->
+    <div class="modal-header">
+      <h3>NOTIFICATION</h3>
+      <p>Soyez informé de la disponibilité de "<%= producthome && producthome.title ? producthome.title : 'ce produit' %>"</p>
+    </div>
+    
+    <!-- Form -->
+    <form id="notifyForm" class="modal-body">
+      <input type="hidden" id="productId" value="<%= producthome && producthome._id ? producthome._id : '' %>">
+      
+      <!-- Email Field -->
+      <div class="mb-6">
+        <label for="email" class="input-label">ADRESSE EMAIL *</label>
+        <input 
+          type="email" 
+          id="email" 
+          name="email"
+          required
+          placeholder="email@exemple.com"
+          class="modal-input"
+          autocomplete="email"
+        >
+      </div>
+      
+      <!-- Phone Field (Optional) -->
+      <div class="mb-6">
+        <label for="phone" class="input-label">TÉLÉPHONE (OPTIONNEL)</label>
+        <input 
+          type="tel" 
+          id="phone" 
+          name="phone"
+          placeholder="+213 XX XX XX XX"
+          class="modal-input"
+        >
+      </div>
+      
+      <!-- Consent -->
+      <div class="consent-checkbox">
+        <input type="checkbox" id="consent" name="consent" required>
+        <label for="consent">
+          J'accepte de recevoir des notifications par email concernant la disponibilité de ce produit.
+          <a href="/privacy" target="_blank">Politique de confidentialité</a>
+        </label>
+      </div>
+      
+      <!-- Messages -->
+      <div id="successMessage" class="message success hidden">
+        <svg class="message-icon" width="20" height="20" viewBox="0 0 20 20" fill="currentColor">
+          <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
+        </svg>
+        <div class="message-text" id="successText"></div>
+      </div>
+      
+      <div id="errorMessage" class="message error hidden">
+        <svg class="message-icon" width="20" height="20" viewBox="0 0 20 20" fill="currentColor">
+          <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd"/>
+        </svg>
+        <div class="message-text" id="errorText"></div>
+      </div>
+    </form>
+    
+    <!-- Footer with Buttons -->
+    <div class="modal-footer">
+      <button type="button" id="cancelNotify" class="modal-btn">
+        Retour
+      </button>
+      <button type="submit" id="submitNotify" class="modal-btn submit" form="notifyForm">
+        <span id="submitText">Confirmer</span>
+        <span id="loadingSpinner" class="loading-spinner hidden"></span>
+      </button>
+    </div>
+  </div>
+</div>
             </div>
           <% } %>
 
@@ -1927,196 +2243,169 @@ if (qtyInput) {
   </script>
 
   <!-- Zara-style Notification Modal Script -->
-  <script>
-    // Zara-style Notification Modal
-    document.addEventListener('DOMContentLoaded', function() {
-      const openNotifyModal = document.getElementById('openNotifyModal');
-      const notifyModal = document.getElementById('notifyModal');
-      const modalContent = document.getElementById('modalContent');
-      const closeNotifyModal = document.getElementById('cancelNotify');
-      const notifyForm = document.getElementById('notifyForm');
-      const submitNotify = document.getElementById('submitNotify');
-      const submitText = document.getElementById('submitText');
-      const loadingSpinner = document.getElementById('loadingSpinner');
-      const successMessage = document.getElementById('successMessage');
-      const errorMessage = document.getElementById('errorMessage');
-      const successText = document.getElementById('successText');
-      const errorText = document.getElementById('errorText');
-      
-      // Open modal with animation
-      if (openNotifyModal && notifyModal) {
-        openNotifyModal.addEventListener('click', function() {
-          notifyModal.classList.remove('hidden');
-          
-          // Trigger reflow for animation
-          void notifyModal.offsetWidth;
-          
-          // Animate backdrop
-          notifyModal.style.opacity = '0';
-          setTimeout(() => {
-            notifyModal.style.opacity = '1';
-          }, 10);
-          
-          // Animate modal content
-          modalContent.style.opacity = '0';
-          modalContent.style.transform = 'scale(0.95)';
-          
-          setTimeout(() => {
-            modalContent.style.opacity = '1';
-            modalContent.style.transform = 'scale(1)';
-          }, 50);
-          
-          document.body.style.overflow = 'hidden';
-        });
-        
-        // Close modal with animation
-        function closeModal() {
-          // Animate out
-          modalContent.style.opacity = '0';
-          modalContent.style.transform = 'scale(0.95)';
-          notifyModal.style.opacity = '0';
-          
-          setTimeout(() => {
-            notifyModal.classList.add('hidden');
-            document.body.style.overflow = '';
-            // Reset form
-            if (notifyForm) notifyForm.reset();
-            if (successMessage) successMessage.classList.add('hidden');
-            if (errorMessage) errorMessage.classList.add('hidden');
-            // Reset modal styles
-            modalContent.style.opacity = '';
-            modalContent.style.transform = '';
-            notifyModal.style.opacity = '';
-          }, 300);
-        }
-        
-        if (closeNotifyModal) {
-          closeNotifyModal.addEventListener('click', closeModal);
-        }
-        
-        // Close on backdrop click
-        notifyModal.addEventListener('click', function(e) {
-          if (e.target === notifyModal) {
-            closeModal();
-          }
-        });
-        
-        // Close with ESC key
-        document.addEventListener('keydown', function(e) {
-          if (e.key === 'Escape' && !notifyModal.classList.contains('hidden')) {
-            closeModal();
-          }
-        });
-        
-        // Form submission with Zara-style validation
-        if (notifyForm) {
-          notifyForm.addEventListener('submit', async function(e) {
-            e.preventDefault();
-            
-            const email = document.getElementById('email').value.trim();
-            const phone = document.getElementById('phone').value.trim();
-            const productId = document.getElementById('productId').value;
-            const consent = document.getElementById('consent').checked;
-            
-            // Zara-style validation
-            if (!consent) {
-              showError('Veuillez accepter les conditions de notification');
-              document.getElementById('consent').focus();
-              return;
-            }
-            
-            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-            if (!emailRegex.test(email)) {
-              showError('Format d\'email invalide');
-              document.getElementById('email').focus();
-              return;
-            }
-            
-            // Show elegant loading state
-            submitNotify.disabled = true;
-            submitText.textContent = 'En cours...';
-            loadingSpinner.classList.remove('hidden');
-            errorMessage.classList.add('hidden');
-            
-            try {
-              const response = await fetch(`/notify-me/${productId}`, {
-                method: 'POST',
-                headers: {
-                  'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({ email, phone })
-              });
-              
-              const data = await response.json();
-              
-              if (data.success) {
-                showSuccess(data.message);
-                // Clear form
-                notifyForm.reset();
-                // Auto-close after 3 seconds (Zara-style brief confirmation)
-                setTimeout(() => {
-                  closeModal();
-                }, 2500);
-              } else {
-                showError(data.message || 'Une erreur est survenue');
-              }
-            } catch (error) {
-              console.error('Notification error:', error);
-              showError('Erreur de connexion. Veuillez réessayer.');
-            } finally {
-              // Reset button state
-              submitNotify.disabled = false;
-              submitText.textContent = 'Confirmer';
-              loadingSpinner.classList.add('hidden');
-            }
-          });
-        }
-        
-        function showSuccess(message) {
-          successText.textContent = message;
-          successMessage.classList.remove('hidden');
-          errorMessage.classList.add('hidden');
-          // Hide form on success (Zara style)
-          notifyForm.classList.add('hidden');
-        }
-        
-        function showError(message) {
-          errorText.textContent = message;
-          errorMessage.classList.remove('hidden');
-          successMessage.classList.add('hidden');
-          // Smooth scroll to error
-          errorMessage.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-        }
-        
-        // Zara-style input focus effects
-        if (notifyForm) {
-          const inputs = notifyForm.querySelectorAll('input');
-          inputs.forEach(input => {
-            input.addEventListener('focus', function() {
-              this.parentElement.classList.add('zara-input-focused');
-            });
-            
-            input.addEventListener('blur', function() {
-              this.parentElement.classList.remove('zara-input-focused');
-            });
-          });
-          
-          // Add real-time email validation
-          const emailInput = document.getElementById('email');
-          emailInput.addEventListener('input', function() {
-            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-            if (this.value && !emailRegex.test(this.value)) {
-              this.classList.add('border-red-500');
-              this.classList.remove('border-gray-300');
-            } else {
-              this.classList.remove('border-red-500');
-              this.classList.add('border-gray-300');
-            }
-          });
-        }
+ <script>
+// Fixed Notification Modal Script
+document.addEventListener('DOMContentLoaded', function() {
+  const openNotifyModal = document.getElementById('openNotifyModal');
+  const notifyModal = document.getElementById('notifyModal');
+  const modalCloseBtn = document.getElementById('modalCloseBtn');
+  const cancelNotify = document.getElementById('cancelNotify');
+  const notifyForm = document.getElementById('notifyForm');
+  const submitNotify = document.getElementById('submitNotify');
+  const submitText = document.getElementById('submitText');
+  const loadingSpinner = document.getElementById('loadingSpinner');
+  const successMessage = document.getElementById('successMessage');
+  const errorMessage = document.getElementById('errorMessage');
+  const successText = document.getElementById('successText');
+  const errorText = document.getElementById('errorText');
+  
+  // Open modal
+  if (openNotifyModal) {
+    openNotifyModal.addEventListener('click', function() {
+      notifyModal.classList.add('active');
+      document.body.style.overflow = 'hidden';
+    });
+  }
+  
+  // Close modal function
+  function closeModal() {
+    notifyModal.classList.remove('active');
+    document.body.style.overflow = '';
+    
+    // Reset form after animation completes
+    setTimeout(() => {
+      if (notifyForm) notifyForm.reset();
+      if (successMessage) successMessage.classList.add('hidden');
+      if (errorMessage) errorMessage.classList.add('hidden');
+      if (successMessage) successMessage.classList.remove('hidden');
+      if (errorMessage) errorMessage.classList.remove('hidden');
+    }, 300);
+  }
+  
+  // Close modal with close button
+  if (modalCloseBtn) {
+    modalCloseBtn.addEventListener('click', closeModal);
+  }
+  
+  // Close modal with cancel button
+  if (cancelNotify) {
+    cancelNotify.addEventListener('click', closeModal);
+  }
+  
+  // Close modal when clicking on backdrop
+  if (notifyModal) {
+    notifyModal.addEventListener('click', function(e) {
+      if (e.target === notifyModal) {
+        closeModal();
       }
     });
-  </script>
+  }
+  
+  // Close modal with ESC key
+  document.addEventListener('keydown', function(e) {
+    if (e.key === 'Escape' && notifyModal && notifyModal.classList.contains('active')) {
+      closeModal();
+    }
+  });
+  
+  // Form submission
+  if (notifyForm && submitNotify) {
+    notifyForm.addEventListener('submit', async function(e) {
+      e.preventDefault();
+      
+      const email = document.getElementById('email').value.trim();
+      const phone = document.getElementById('phone').value.trim();
+      const productId = document.getElementById('productId').value;
+      const consent = document.getElementById('consent').checked;
+      
+      // Validation
+      if (!consent) {
+        showError('Veuillez accepter les conditions de notification');
+        return;
+      }
+      
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      if (!emailRegex.test(email)) {
+        showError('Format d\'email invalide');
+        return;
+      }
+      
+      // Show loading state
+      submitNotify.disabled = true;
+      submitText.textContent = 'En cours...';
+      loadingSpinner.classList.remove('hidden');
+      errorMessage.classList.add('hidden');
+      successMessage.classList.add('hidden');
+      
+      try {
+        // Simulate API call - replace with your actual endpoint
+        await new Promise(resolve => setTimeout(resolve, 1500)); // Simulate network delay
+        
+        // For now, just show success
+        // Replace this with your actual API call:
+        // const response = await fetch(`/notify-me/${productId}`, {
+        //   method: 'POST',
+        //   headers: { 'Content-Type': 'application/json' },
+        //   body: JSON.stringify({ email, phone })
+        // });
+        // const data = await response.json();
+        
+        // Simulated success response
+        const data = { success: true, message: 'Vous serez notifié lorsque le produit sera disponible!' };
+        
+        if (data.success) {
+          showSuccess(data.message);
+          // Auto-close after 3 seconds
+          setTimeout(() => {
+            closeModal();
+          }, 3000);
+        } else {
+          showError(data.message || 'Une erreur est survenue');
+        }
+      } catch (error) {
+        console.error('Notification error:', error);
+        showError('Erreur de connexion. Veuillez réessayer.');
+      } finally {
+        // Reset button state
+        submitNotify.disabled = false;
+        submitText.textContent = 'Confirmer';
+        loadingSpinner.classList.add('hidden');
+      }
+    });
+  }
+  
+  // Show success message
+  function showSuccess(message) {
+    if (successText && successMessage) {
+      successText.textContent = message;
+      successMessage.classList.remove('hidden');
+      errorMessage.classList.add('hidden');
+    }
+  }
+  
+  // Show error message
+  function showError(message) {
+    if (errorText && errorMessage) {
+      errorText.textContent = message;
+      errorMessage.classList.remove('hidden');
+      successMessage.classList.add('hidden');
+    }
+  }
+  
+  // Real-time email validation
+  const emailInput = document.getElementById('email');
+  if (emailInput) {
+    emailInput.addEventListener('blur', function() {
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      if (this.value && !emailRegex.test(this.value)) {
+        this.classList.add('error');
+      } else {
+        this.classList.remove('error');
+      }
+    });
+  }
+});
+</script>
 
   <!-- User dropdown and mobile menu script -->
   <script>
