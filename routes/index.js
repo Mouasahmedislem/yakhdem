@@ -7,6 +7,7 @@ const nodemailer = require('nodemailer');
 const axios = require('axios');
 require('dotenv').config();
 const twilio = require('twilio');
+const Notification = require('../models/notification');
 var Producthome = require('../models/producthome');
 var Paintello = require('../models/paintello');
 const client = twilio(process.env.TWILIO_ACCOUNT_SID, process.env.TWILIO_AUTH_TOKEN);
@@ -2777,6 +2778,51 @@ function getPaymentStatusText(status) {
   };
   return statusMap[status] || 'En Attente';
 }
+
+// Subscribe to notification
+router.post('/notify-me/:productId', async (req, res) => {
+  try {
+    const { productId } = req.params;
+    const { email } = req.body;
+
+    // Validate email
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(email)) {
+      return res.status(400).json({ success: false, message: 'Invalid email format' });
+    }
+
+    // Check if product exists
+    const product = await Producthome.findById(productId);
+    if (!product) {
+      return res.status(404).json({ success: false, message: 'Product not found' });
+    }
+
+    // Check if already subscribed
+    const existing = await Notification.findOne({ productId, email });
+    if (existing) {
+      return res.json({ 
+        success: true, 
+        message: 'You are already subscribed to notifications for this product' 
+      });
+    }
+
+    // Create new notification subscription
+    const notification = new Notification({
+      productId,
+      email
+    });
+
+    await notification.save();
+
+    res.json({ 
+      success: true, 
+      message: 'You will be notified when this product is back in stock!' 
+    });
+  } catch (error) {
+    console.error('Notification error:', error);
+    res.status(500).json({ success: false, message: 'Server error' });
+  }
+});
 
     
 module.exports = router
