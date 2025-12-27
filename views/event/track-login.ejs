@@ -541,7 +541,8 @@
         </div>
       </div>
 
-      <!-- Tracking Section -->
+    
+       <!-- Tracking Section -->
       <% if (typeof orders === 'undefined') { %>
         <!-- Tracking Form -->
         <div class="zara-card p-12 text-center max-w-md mx-auto">
@@ -703,63 +704,5 @@
     </div>
   </footer>
 
-  <!-- JavaScript for Tab Functionality -->
-  <script>
-    document.addEventListener('DOMContentLoaded', function() {
-      // Tab functionality
-      const tabs = document.querySelectorAll('.guarantee-tab');
-      const tabContents = document.querySelectorAll('.tab-content');
-      
-      tabs.forEach(tab => {
-        tab.addEventListener('click', function() {
-          // Remove active class from all tabs and contents
-          tabs.forEach(t => t.classList.remove('active'));
-          tabContents.forEach(content => content.classList.remove('active'));
-          
-          // Add active class to clicked tab
-          this.classList.add('active');
-          
-          // Show corresponding content
-          const tabId = this.getAttribute('data-tab');
-          const content = document.getElementById(tabId);
-          if (content) {
-            content.classList.add('active');
-          }
-        });
-      });
-      
-      // Phone number formatting
-      const phoneInput = document.querySelector('input[type="tel"]');
-      if (phoneInput) {
-        phoneInput.addEventListener('input', function(e) {
-          let value = this.value.replace(/\D/g, '');
-          
-          // Format as Algerian phone number
-          if (value.length > 0) {
-            if (value.length <= 2) {
-              value = '0' + value;
-            }
-            if (value.length > 2 && value.length <= 5) {
-              value = value.substring(0, 2) + ' ' + value.substring(2);
-            }
-            if (value.length > 5 && value.length <= 8) {
-              value = value.substring(0, 5) + ' ' + value.substring(5);
-            }
-            if (value.length > 8) {
-              value = value.substring(0, 8) + ' ' + value.substring(8, 10);
-            }
-          }
-          
-          this.value = value;
-        });
-      }
-      
-      // Initialize first tab as active
-      if (tabs.length > 0 && tabContents.length > 0) {
-        tabs[0].classList.add('active');
-        tabContents[0].classList.add('active');
-      }
-    });
-  </script>
 </body>
 </html>
