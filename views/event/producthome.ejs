@@ -88,7 +88,203 @@ setTimeout(function() {
   })(window,document,'script','dataLayer','GTM-K8PWQM45');</script>
 
   <style>
+/* ===== ZARA-STYLE HERO SECTION STYLES ===== */
+.hero-zara {
+  position: relative;
+  height: 90vh;
+  overflow: hidden;
+  margin-top: -80px;
+}
 
+.hero-overlay-zara {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to bottom, rgba(0,0,0,0.2), rgba(0,0,0,0.5));
+  z-index: 2;
+}
+
+.hero-content-zara {
+  position: relative;
+  z-index: 3;
+  color: white;
+  padding: 0 20px;
+}
+
+.hero-title-zara {
+  font-size: 3.5rem;
+  font-weight: 300;
+  letter-spacing: 2px;
+  margin-bottom: 1rem;
+  font-family: 'Helvetica Neue', Arial, sans-serif;
+}
+
+.hero-subtitle-zara {
+  font-size: 1rem;
+  font-weight: 300;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  opacity: 0.9;
+  max-width: 600px;
+  margin: 0 auto;
+  font-family: 'Helvetica Neue', Arial, sans-serif;
+}
+
+/* FIXED BUTTONS CONTAINER */
+.hero-buttons-container {
+  display: flex;
+  flex-direction: row;
+  gap: 20px;
+  margin-top: 40px;
+  width: 100%;
+  max-width: 500px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+/* FIXED BUTTON STYLES - SAME SIZE */
+.hero-button-zara {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  background: white;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  padding: 14px 20px;
+  min-width: 0;
+  transition: all 0.3s ease;
+  text-decoration: none;
+  border-radius: 0;
+}
+
+.hero-button-zara:hover {
+  background: rgba(255, 255, 255, 0.95);
+  transform: translateY(-2px);
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+}
+
+.hero-button-image {
+  width: 32px;
+  height: 32px;
+  object-fit: contain;
+  flex-shrink: 0;
+}
+
+.hero-button-text {
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: #111;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  font-family: 'Helvetica Neue', Arial, sans-serif;
+}
+
+/* Video containers for Zara hero */
+.video-img-container {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+}
+
+.video-desktop { display: none; }
+.video-mobile { display: block; }
+
+@media (min-width: 768px) {
+  .video-desktop { display: block; }
+  .video-mobile { display: none; }
+}
+
+/* Responsive adjustments for Zara hero */
+@media (max-width: 768px) {
+  .hero-zara {
+    height: calc(100vh - 70px);
+  }
+  
+  .hero-buttons-container {
+    flex-direction: column;
+    gap: 15px;
+    max-width: 300px;
+  }
+  
+  .hero-button-zara {
+    padding: 16px 20px;
+    width: 100%;
+  }
+  
+  .hero-title-zara {
+    font-size: 2.5rem;
+  }
+  
+  .hero-subtitle-zara {
+    font-size: 0.875rem;
+    padding: 0 10px;
+  }
+  
+  .hero-button-image {
+    width: 28px;
+    height: 28px;
+  }
+  
+  .hero-button-text {
+    font-size: 0.813rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .hero-title-zara {
+    font-size: 2rem;
+  }
+  
+  .hero-subtitle-zara {
+    font-size: 0.75rem;
+  }
+  
+  .hero-buttons-container {
+    max-width: 280px;
+  }
+  
+  .hero-button-zara {
+    padding: 14px 16px;
+  }
+}
+
+/* Remove old hero styles */
+.coat.hero-container,
+.coat.hero-content,
+.coat.hero-heading p,
+.coat.hero-subheading {
+  display: none;
+}
+
+/* Ensure body padding accounts for fixed navbar */
+body {
+  padding-top: 80px;
+}
+
+@media (max-width: 768px) {
+  body {
+    padding-top: 70px;
+  }
+  
+  .hero-zara {
+    margin-top: -70px;
+  }
+} 
+/* Update video containers to match Zara style */
+.video-img-container {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+}
+
+.video-desktop { display: none; }
+.video-mobile { display: block; }
+
+@media (min-width: 768px) {
+  .video-desktop { display: block; }
+  .video-mobile { display: none; }
+}
     /* Navbar Styles */
     .scrolling-navbar {
       transition: background 0.3s ease-in-out;
@@ -222,10 +418,7 @@ setTimeout(function() {
         padding-top: 70px;
       }
       
-      .hero-video {
-        height: calc(100vh - 70px);
-        margin-top: -70px;
-      }
+      
     }
 
     :root {
@@ -323,17 +516,7 @@ setTimeout(function() {
     .snap-x { scroll-snap-type: x mandatory; -webkit-overflow-scrolling: touch; }
     .snap-child { scroll-snap-align: start; }
 
-    /* ===== Paintello Hero Section (Based on Coat) ===== */
-    .coat.hero-container {
-      position: relative;
-      width: 100%;
-      height: 100vh;
-      overflow: hidden;
-      color: white;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
+  
 
     /* Video containers */
     .video-img-container {
@@ -356,47 +539,14 @@ setTimeout(function() {
       .video-mobile { display: none; }
     }
 
-    /* Overlay for readability */
-    .coat.hero-container.overlay::after {
-      content: "";
-      position: absolute;
-      inset: 0;
-      background: rgba(0, 0, 0, 0.35);
-      z-index: 2;
-    }
+   
 
-    /* Content styles */
-    .coat.hero-content {
-      position: relative;
-      z-index: 3;
-      text-align: center;
-      max-width: 750px;
-      padding: 0 1rem;
-    }
+    
 
-    .coat.hero-heading p {
-      font-size: 2.5rem;
-      font-weight: 700;
-      letter-spacing: 2px;
-      margin: 0;
-    }
+    
 
-    .coat.hero-subheading {
-      font-size: 1rem;
-      font-weight: 400;
-      line-height: 1.6;
-      margin-top: 1rem;
-      color: #f9f9f9;
-    }
-
-    @media (min-width: 768px) {
-      .coat.hero-heading p {
-        font-size: 3.5rem;
-      }
-      .coat.hero-subheading {
-        font-size: 1.2rem;
-      }
-    }
+   
+    
 
     /* ===== Fade-in animation ===== */
     .fade-in {
@@ -420,19 +570,7 @@ setTimeout(function() {
       }
     }
 
-    /* ===== Button polish ===== */
-    .coat.hero-content a {
-      background-color: #fff;
-      color: #222;
-      text-decoration: none;
-      font-weight: 500;
-      transition: all 0.3s ease;
-    }
-
-    .coat.hero-content a:hover {
-      box-shadow: 0 6px 18px rgba(0, 0, 0, 0.1);
-      transform: translateY(-2px);
-    }
+    
     
     :root {
       --accent: #c9b59a; /* Soft beige (Zara-like) */
@@ -1063,48 +1201,52 @@ input[type="checkbox"]:checked {
 </header>
 <!-- ===================== /NAVBAR END ===================== -->
 
- <!-- Your hero section and content -->
-<section class="hero-video">
-  <!-- Your existing hero content -->
-  <div class="coat hero-container overlay">
-    <div class="video-img-container">
-      <!-- Mobile GIF -->
-      <div class="coat video-mobile">
-        <img src="https://www.paintello.uk/uploads/painthome.gif" 
-             alt="Paintello mobile preview" 
-             class="w-full h-auto block" />
-      </div>
-
-      <!-- Desktop Video -->
-      <div class="coat video-desktop">
-        <video playsinline loop autoplay muted preload="auto">
-          <source src="/uploads/Designsanstitre(2).mp4" type="video/mp4">
-          <img src="//coatpaints.com/cdn/shop/files/preview_images/3617af9fd8254f5688fdeef051307a00.thumbnail.0000000000_2800x.jpg?v=1749051004" alt="Paintello desktop preview">
-        </video>
-      </div>
+ 
+<!-- ===================== ZARA-STYLE HERO SECTION ===================== -->
+<section class="hero-zara">
+  <div class="video-img-container h-full">
+    <!-- Mobile GIF -->
+    <div class="video-mobile h-full">
+      <img src="https://www.paintello.uk/uploads/painthome.gif" 
+           alt="Paintello mobile preview" 
+           class="w-full h-full object-cover" />
     </div>
 
-    <div class="coat hero-content text-center text-white">
-      <h1 class="coat hero-heading fade-in"><p><em>This is</em></p></h1>
-      <h1 class="coat hero-heading fade-in delay-1"><p>PAINTELLO HOME</p></h1>
-      <p class="coat hero-subheading fade-in delay-2">
-        Sustainable paint & décor — crafted in Algeria for homes that inspire.
-      </p>
+    <!-- Desktop Video -->
+    <div class="video-desktop h-full">
+      <video playsinline loop autoplay muted preload="auto" class="w-full h-full object-cover">
+        <source src="/uploads/Designsanstitre(2).mp4" type="video/mp4">
+        <img src="//coatpaints.com/cdn/shop/files/preview_images/3617af9fd8254f5688fdeef051307a00.thumbnail.0000000000_2800x.jpg?v=1749051004" alt="Paintello desktop preview">
+      </video>
+    </div>
+  </div>
+  
+  <div class="hero-overlay-zara"></div>
+  
+  <div class="hero-content-zara absolute inset-0 flex flex-col items-center justify-center px-4">
+    <h1 class="hero-title-zara fade-in text-center"><em>This is</em></h1>
+    <h1 class="hero-title-zara fade-in delay-1 text-center">PAINTELLO HOME</h1>
+    <p class="hero-subtitle-zara fade-in delay-2 text-center">
+      Sustainable paint & décor — crafted in Algeria for homes that inspire.
+    </p>
 
-      <!-- FIXED BUTTONS WITH SAME DIMENSIONS -->
-      <div class="flex items-center justify-center gap-4 mt-6 fade-in delay-3 flex-wrap sm:flex-nowrap">
-        <a href="/"
-           class="inline-flex items-center gap-3 bg-white border border-gray-200 rounded-lg py-3 px-4 hover:shadow-lg transition-all min-w-[200px] justify-center">
-          <img src="/favicon/android-chrome-192x192.png" alt="Paintello" class="h-10 w-10 object-contain flex-shrink-0"/>
-          <span class="text-sm font-medium text-gray-800 whitespace-nowrap">Paintello</span>
-        </a>
+    <!-- FIXED BUTTONS CONTAINER - SAME SIZE -->
+    <div class="hero-buttons-container fade-in delay-3">
+      <!-- Paintello Button -->
+      <a href="/" class="hero-button-zara">
+        <img src="/favicon/android-chrome-192x192.png" 
+             alt="Paintello" 
+             class="hero-button-image">
+        <span class="hero-button-text">Paintello</span>
+      </a>
 
-        <a href="/paintello"
-           class="inline-flex items-center gap-3 bg-white border border-gray-200 rounded-lg py-3 px-4 hover:shadow-lg transition-all min-w-[200px] justify-center">
-          <img src="/img/logo.png" alt="Paintello Home" class="h-10 w-auto object-contain flex-shrink-0 max-w-[40px]"/>
-          <span class="text-sm font-medium text-gray-800 whitespace-nowrap">Paintello Home</span>
-        </a>
-      </div>
+      <!-- Paintello Home Button -->
+      <a href="/paintello" class="hero-button-zara">
+        <img src="/img/logo.png" 
+             alt="Paintello Home" 
+             class="hero-button-image">
+        <span class="hero-button-text">Paintello Home</span>
+      </a>
     </div>
   </div>
 </section>
